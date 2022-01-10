@@ -15,4 +15,8 @@ router.get("/about.json", (req, res) => {
     res.json(aboutJson);
 });
 
+router.get("/", (req, res) => {
+    res.send("OK");
+});
+
 export default router;
