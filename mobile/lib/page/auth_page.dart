@@ -5,6 +5,10 @@ void callbackSignIn() {
   // TODO FILL THIS
 }
 
+void callbackSignUpMode() {
+  // TODO FILL THIS
+}
+
 class auth_page extends StatefulWidget {
   const auth_page() : super();
 
@@ -65,12 +69,54 @@ class _auth_pageState extends State<auth_page> {
               'Sign in',
               style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: color_list.fourth,
+                  color: color_list.third,
                   fontSize: 20
               ),
           ),
         ),
+        end_page_widget(context)
       ],
+    );
+  }
+
+  Widget end_page_widget(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Container(
+        height: 100,
+        color: color_list.secondary,
+        child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+                const Text(
+                  'Don’t have an account yet?',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: color_list.fourth,
+                      fontSize: 10
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: callbackSignUpMode,
+                  style: ElevatedButton.styleFrom(
+                      primary: color_list.primary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      )
+                  ),
+                  child: const Text(
+                    'Sign up',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: color_list.third,
+                        fontSize: 10
+                    ),
+                  ),
+                ),
+            ]
+        ),
+      ),
     );
   }
 }
