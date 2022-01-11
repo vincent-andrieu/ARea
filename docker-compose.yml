@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+    client_web:
+        build: web
+        ports:
+            - 8081
+        volumes:
+            - client:/app/client
+        depends_on:
+            - client_mobile
+            - server
+
+    client_mobile:
+        build: mobile
+        ports:
+            - 8080
+        volumes:
+            - client:/app/client
+
+    server:
+        build: server
+
+volumes:
+    client: null
