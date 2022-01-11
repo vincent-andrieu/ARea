@@ -1,5 +1,5 @@
-import * as express from "express";
-import * as moment from "moment";
+import express from "express";
+import moment from "moment";
 
 const router = express.Router();
 

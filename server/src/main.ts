@@ -1,30 +1,19 @@
-import * as express from "express";
-import * as passport from "passport";
-import * as cookieSession from "cookie-session";
-import { serverConfig } from "./config/serverConfig";
+import "module-alias/register";
+import { UserSchema } from "@schemas/user.schema";
+import Database from "./init/database";
+import "init/express";
 
-import appRoutes from "./routes/appRoutes";
-import authRoutes from "./routes/authRoutes";
-import "./passport/githubPassport";
+// Database example
+Database.connect().then(async () => {
+    const userSchema = new UserSchema();
 
-const app = express();
+    const user = await userSchema.add({ username: "lol", password: "mdr" });
 
-app.use(
-    cookieSession({
-        name: "session",
-        keys:  [serverConfig.cookieKey], //TODO: generate true key
-        maxAge: 24 * 60 * 60 * 100
-    })
-);
+    if (user._id)
+        console.log(await userSchema.getById(user._id));
 
-app.use(passport.initialize());
-app.use(passport.session());
+    console.log(await userSchema.isLoginValid("lol", "mdr"));
+    console.log(await userSchema.isLoginValid("lol", "sheeeesh"));
 
-app.use("/", appRoutes);
-app.use("/auth", authRoutes);
-
-app.listen(serverConfig.port, () => {
-    console.log(`Area server is listening on ${serverConfig.port}`);
-}).on("error", (error) => {
-    console.log(error.toString());
+    await userSchema.delete(user);
 });

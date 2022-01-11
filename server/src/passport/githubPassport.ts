@@ -1,5 +1,5 @@
-import * as passport from "passport";
-import * as passportGithub2 from "passport-github2";
+import passport from "passport";
+import passportGithub2 from "passport-github2";
 import { githubConfig } from "../config/githubConfig";
 
 const GithubStrategy = passportGithub2.Strategy;
@@ -17,6 +17,6 @@ const successfullyAuthentificated = (accessToken: string, refreshToken: string, 
 };
 
 passport.use(new GithubStrategy(
-    githubConfig, 
+    githubConfig,
     successfullyAuthentificated
 ));
