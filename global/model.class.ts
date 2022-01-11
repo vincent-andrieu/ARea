@@ -3,10 +3,10 @@ import mongoose from "mongoose";
 export type ObjectId = mongoose.Schema.Types.ObjectId;
 export const ObjectId = mongoose.Schema.Types.ObjectId;
 
-export default abstract class Schema {
+export default abstract class Model {
     _id?: ObjectId;
 
-    constructor(schema: Schema) {
-        this._id = typeof schema._id === 'string' ? new ObjectId(schema._id) : schema._id;
+    constructor(model: Model) {
+        this._id = typeof model._id === 'string' ? new ObjectId(model._id) : model._id;
     }
 }

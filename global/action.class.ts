@@ -1,6 +1,6 @@
-import Schema from "./schema.class";
+import Model from "./model.class";
 
-export default class Action extends Schema {
+export default class Action extends Model {
     label: string;
     cron: boolean;
 

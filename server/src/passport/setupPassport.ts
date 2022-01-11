@@ -1,6 +1,6 @@
 import passport from "passport";
 
-import { ObjectId } from "@global/schema.class";
+import { ObjectId } from "@global/model.class";
 
 passport.serializeUser((user, done) => {
     //serialize: return user id as second params of done

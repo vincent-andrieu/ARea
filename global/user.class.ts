@@ -1,7 +1,7 @@
-import Schema from "./schema.class";
+import Model from "./model.class";
 import ARea from "./area.class";
 
-export default class User extends Schema {
+export default class User extends Model {
     username: string;
     password: string;
     areas?: Array<ARea> = [];

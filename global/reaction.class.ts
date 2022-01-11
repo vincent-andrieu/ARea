@@ -1,6 +1,6 @@
-import Schema from "./schema.class";
+import Model from "./model.class";
 
-export default class Reaction extends Schema {
+export default class Reaction extends Model {
     label: string;
 
     constructor(reaction: Reaction) {

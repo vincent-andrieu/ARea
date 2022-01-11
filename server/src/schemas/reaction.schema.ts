@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 import Reaction from "@global/reaction.class";
+import { ASchema } from "./abstract.schema";
 
 const reactionSchema = new mongoose.Schema({
     label: { type: String }
@@ -9,16 +10,8 @@ const reactionSchema = new mongoose.Schema({
     toJSON: { virtuals: true }
 });
 
-export class ReactionSchema {
-    private _model = mongoose.model("Reaction", reactionSchema);
-
-    public async edit(reaction: Reaction): Promise<void> {
-        await this._model.findByIdAndUpdate(reaction._id, reaction);
-    }
-
-    public async getById(id: string): Promise<Reaction> {
-        const result: Reaction = await this._model.findById(id);
-
-        return new Reaction(result);
+export class ReactionSchema extends ASchema<Reaction> {
+    constructor() {
+        super(Reaction, "Reaction", reactionSchema);
     }
 }
