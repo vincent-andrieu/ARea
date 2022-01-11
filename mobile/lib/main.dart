@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/page/auth_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,13 +10,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Welcome to Flutter',
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World AREAction'),
-        ),
-      ),
-    );
+    const tmp = auth_page();
+    return tmp.createState().build(context);
   }
 }
