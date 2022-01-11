@@ -74,6 +74,7 @@ class _auth_pageState extends State<auth_page> {
               ),
           ),
         ),
+        additionnal_connexion_widget(context),
         end_page_widget(context)
       ],
     );
@@ -117,6 +118,53 @@ class _auth_pageState extends State<auth_page> {
             ]
         ),
       ),
+    );
+  }
+
+  Widget additionnal_connexion_widget(BuildContext context) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          button_image_widget(context, 'Connection with', 'assets/discord.png', () {}),
+          button_image_widget(context, 'Connection with', 'assets/youtube.png', () {}),
+          button_image_widget(context, 'Connection with', 'assets/google.png', () {})
+        ]
+    );
+  }
+
+  Widget button_image_widget(BuildContext context, String desc, String asset, void Function()? callback) {
+    return ElevatedButton(
+      onPressed: callback,
+      style: ElevatedButton.styleFrom(
+          primary: color_list.primary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5.0),
+          )
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            desc,
+            style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: color_list.third,
+                fontSize: 10
+            ),
+          ),
+          Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage(asset),
+                    fit: BoxFit.fill
+                )
+            ),
+          )
+        ],
+      )
     );
   }
 }
