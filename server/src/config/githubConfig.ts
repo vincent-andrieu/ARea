@@ -1,6 +1,8 @@
-const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
-const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
-const CALLBACK_URL = process.env.CALLBACK_URL;
+import { env } from "process";
+
+const GITHUB_CLIENT_ID = env.GITHUB_CLIENT_ID;
+const GITHUB_CLIENT_SECRET = env.GITHUB_CLIENT_SECRET;
+const CALLBACK_URL = env.CALLBACK_URL;
 
 export const githubConfig = {
     clientID: GITHUB_CLIENT_ID,
