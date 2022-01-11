@@ -11,6 +11,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const tmp = auth_page();
-    return tmp.createState().build(context);
+
+    return MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: tmp.createState().build(context)
+        ),
+      ),
+    );
   }
 }
