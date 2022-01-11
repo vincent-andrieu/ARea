@@ -1,7 +1,7 @@
 import "module-alias/register";
 import { UserSchema } from "@schemas/user.schema";
 import Database from "./init/database";
-import "init/express";
+import "./init/express";
 
 // Database example
 Database.connect().then(async () => {

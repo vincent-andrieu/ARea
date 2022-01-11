@@ -5,7 +5,7 @@ import { serverConfig } from "@config/serverConfig";
 
 import appRoutes from "../routes/appRoutes";
 import authRoutes from "../routes/authRoutes";
-import "./passport/githubPassport";
+import "../passport/githubPassport";
 
 const app = express();
 
