@@ -21,7 +21,11 @@ class _auth_pageState extends State<auth_page> {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
+        const Padding(
+            padding: EdgeInsets.only(top: 40.0)
+        ),
         const Text(
           'Sign in',
           style: TextStyle(
@@ -31,20 +35,31 @@ class _auth_pageState extends State<auth_page> {
           ),
           textAlign: TextAlign.center,
         ),
-        TextField(
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0)
+        Container(
+          padding: const EdgeInsets.only(
+              left: 40.0,
+              right: 40.0
+          ),
+          child: TextField(
+            decoration: InputDecoration(
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0)
+                ),
+                hintText: 'Enter your Email address',
+                labelText: "Email",
+                labelStyle: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: color_list.fourth,
+                )
             ),
-            hintText: 'Enter your Email address',
-            labelText: "Email",
-            labelStyle: const TextStyle(
-                fontWeight: FontWeight.bold,
-                color: color_list.fourth,
-            )
           ),
         ),
-        TextField(
+        Container(
+          padding: const EdgeInsets.only(
+              left: 40.0,
+              right: 40.0
+          ),
+          child: TextField(
           decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0)
@@ -55,6 +70,7 @@ class _auth_pageState extends State<auth_page> {
                 fontWeight: FontWeight.bold,
                 color: color_list.fourth,
               )
+            ),
           ),
         ),
         ElevatedButton(
@@ -86,9 +102,10 @@ class _auth_pageState extends State<auth_page> {
       child: Container(
         height: 100,
         color: color_list.secondary,
+        padding: const EdgeInsets.all(40.0),
         child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
                 const Text(
                   'Don’t have an account yet?',
@@ -124,9 +141,16 @@ class _auth_pageState extends State<auth_page> {
   Widget additionnal_connexion_widget(BuildContext context) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           button_image_widget(context, 'Connection with', 'assets/discord.png', () {}),
+          const Padding(
+            padding: EdgeInsets.all(10.0),
+          ),
           button_image_widget(context, 'Connection with', 'assets/youtube.png', () {}),
+          const Padding(
+            padding: EdgeInsets.all(10.0),
+          ),
           button_image_widget(context, 'Connection with', 'assets/google.png', () {})
         ]
     );
@@ -138,32 +162,39 @@ class _auth_pageState extends State<auth_page> {
       style: ElevatedButton.styleFrom(
           primary: color_list.primary,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5.0),
+            borderRadius: BorderRadius.circular(20.0),
           )
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            desc,
-            style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                color: color_list.third,
-                fontSize: 10
+      child: Container(
+        padding: const EdgeInsets.all(5.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(
+              desc,
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: color_list.third,
+                  fontSize: 10
+              ),
             ),
-          ),
-          Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage(asset),
-                    fit: BoxFit.fill
-                )
+            const Padding(
+                padding: EdgeInsets.all(10.0),
             ),
-          )
-        ],
+            Container(
+              width: 80,
+              height: 50,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage(asset),
+                      fit: BoxFit.fill
+                  )
+              ),
+            )
+          ],
+        ),
       )
     );
   }
