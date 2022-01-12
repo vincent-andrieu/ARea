@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/page/auth_page.dart';
+import 'package:mobile/page/settings_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,12 +11,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const tmp = auth_page();
+    const auth = auth_page();
+    const settings = settings_page();
 
     return MaterialApp(
       home: Scaffold(
         body: Center(
-          child: tmp.createState().build(context)
+          // child: auth.createState().build(context)
+            child: settings.createState().build(context)
         ),
       ),
     );

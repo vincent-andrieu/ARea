@@ -5,4 +5,5 @@ class color_list {
   static const secondary = Color.fromARGB(255, 239, 239, 239);
   static const third = Color.fromARGB(255, 255, 255, 255);
   static const fourth = Color.fromARGB(255, 0, 0, 0);
+  static const fifth = Color.fromARGB(255, 219, 0, 0);
 }
