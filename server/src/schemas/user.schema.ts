@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
-import User from "@global/user.class";
-import { ObjectId } from "@global/model.class";
+import User from "@classes/user.class";
+import { ObjectId } from "@classes/model.class";
 import { ASchema } from "./abstract.schema";
 
 const userSchema = new mongoose.Schema({

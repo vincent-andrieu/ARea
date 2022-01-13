@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-import ARea from "@global/area.class";
+import ARea from "@classes/area.class";
 import { ASchema } from "./abstract.schema";
 
 const areaSchema = new mongoose.Schema({

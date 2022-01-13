@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-import Reaction from "@global/reaction.class";
+import Reaction from "@classes/reaction.class";
 import { ASchema } from "./abstract.schema";
 
 const reactionSchema = new mongoose.Schema({

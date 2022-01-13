@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-import Service from "@global/service.class";
+import Service from "@classes/service.class";
 import { ASchema } from "./abstract.schema";
 
 const serviceSchema = new mongoose.Schema({

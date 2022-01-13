@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-import Model, { ObjectId } from "@global/model.class";
+import Model, { ObjectId } from "@classes/model.class";
 
 export abstract class ASchema<T extends Model> {
     protected _model: mongoose.Model<unknown>;

@@ -4,8 +4,8 @@
     "description": "AREA server",
     "main": "main.js",
     "scripts": {
-        "start": "tsc -p . && node -r dotenv/config ./build/server/src/main.js",
-        "start:force": "node -r dotenv/config ./build/server/src/main.js",
+        "start": "tsc -p . && node -r dotenv/config ./build/main.js",
+        "start:force": "node -r dotenv/config ./build/main.js",
         "build": "rm -rf ./build/ && tsc -p .",
         "rebuild": "npm run clean && npm i && npm run build",
         "clean": "rm -rf node_modules/ ; rm -rf ./build/",
@@ -23,9 +23,9 @@
     },
     "homepage": "https://github.com/EpitechPromo2024/B-YEP-500-REN-5-1-yearendproject-aurelien.joncour#readme",
     "_moduleAliases": {
-        "@global": "build/global",
-        "@config": "build/server/src/config",
-        "@schemas": "build/server/src/schemas"
+        "@classes": "build/classes",
+        "@config": "build/config",
+        "@schemas": "build/schemas"
     },
     "dependencies": {
         "@notionhq/client": "^0.4.12",

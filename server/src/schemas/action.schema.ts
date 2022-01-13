@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-import Action from "@global/action.class";
+import Action from "@classes/action.class";
 import { ASchema } from "./abstract.schema";
 
 const actionSchema = new mongoose.Schema({
