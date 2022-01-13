@@ -21,5 +21,18 @@ services:
     server:
         build: server
 
+    db:
+        image: mongo:4.4
+        volumes:
+            - mongodb-data:/data/db
+        ports:
+            - "27017:27017"
+        environment:
+            MONGO_INITDB_DATABASE: ARea
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: root_password
+        restart: always
+
 volumes:
+    mongodb-data: null
     client: null
