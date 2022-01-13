@@ -30,4 +30,10 @@ export abstract class ASchema<T extends Model> {
     public async delete(model: T): Promise<void> {
         await this._model.deleteOne({ _id: model._id });
     }
+
+    public async findOne(model: T): Promise<T> {
+        const result: T = await this._model.findOne(model) as unknown as T;
+
+        return new this._ctor(result)
+    }
 }

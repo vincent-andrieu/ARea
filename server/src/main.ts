@@ -7,7 +7,7 @@ import "./init/express";
 Database.connect().then(async () => {
     const userSchema = new UserSchema();
 
-    const user = await userSchema.add({ username: "lol", password: "mdr" });
+    const user = await userSchema.add({ username: "reality", password: "chocolatine" });
 
     if (user._id)
         console.log(await userSchema.getById(user._id));

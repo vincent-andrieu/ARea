@@ -7,6 +7,7 @@ import { ASchema } from "./abstract.schema";
 const userSchema = new mongoose.Schema({
     username: { type: String },
     password: { type: String },
+    token: { type: String, unique: true },
     areas: [
         { type: mongoose.Schema.Types.ObjectId, ref: "ARea" }
     ]
