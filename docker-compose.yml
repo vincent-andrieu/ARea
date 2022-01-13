@@ -13,15 +13,21 @@ services:
 
     client_mobile:
         build: mobile
-        ports:
-            - "8080:8080"
         volumes:
             - client:/app/client
 
     server:
         build: server
+        ports:
+            - "8080:8080"
+        environment:
+            DB_HOST: database
+            DB_USERNAME: root
+            DB_PASSWORD: root_password
+        depends_on:
+            - database
 
-    db:
+    database:
         image: mongo:4.4
         volumes:
             - mongodb-data:/data/db

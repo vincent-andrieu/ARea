@@ -5,7 +5,10 @@ import { serverConfig } from "@config/serverConfig";
 export default {
 
     async connect(): Promise<void> {
-        const uris = `mongodb://${serverConfig.database.host}:${serverConfig.database.port}/${serverConfig.database.name}`;
+        let uris = `mongodb://${serverConfig.database.host}:${serverConfig.database.port}/${serverConfig.database.name}`;
+
+        if (serverConfig.database.username && serverConfig.database.password)
+            uris = `mongodb://${serverConfig.database.username}:${serverConfig.database.password}@${serverConfig.database.host}:${serverConfig.database.port}/${serverConfig.database.name}?authSource=admin`;
 
         await mongoose.connect(uris, {
             useNewUrlParser: true,
@@ -14,7 +17,7 @@ export default {
             useFindAndModify: false
         });
 
-        console.info("DataBase successfully connected : \n\t- Address : " +
+        console.info("DataBase successfully connected :\n\t- Address : " +
                 serverConfig.database.host +
                 "\n\t- Port : " + serverConfig.database.port +
                 "\n\t- Name : " + serverConfig.database.name
