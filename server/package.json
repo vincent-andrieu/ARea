@@ -28,6 +28,7 @@
         "@schemas": "build/server/src/schemas"
     },
     "dependencies": {
+        "@notionhq/client": "^0.4.12",
         "cookie-session": "^2.0.0",
         "dotenv": "^10.0.0",
         "express": "^4.17.2",
