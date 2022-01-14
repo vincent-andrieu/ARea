@@ -16,7 +16,7 @@ router.get("/github/redirect", passport.authenticate("github", {
 router.get("/twitch", passport.authenticate("twitch"));
 
 router.get("/twitch/redirect",
-    passport.authenticate("twitch", {failureRedirect: "/lgin"}),
+    passport.authenticate("twitch", {failureRedirect: "/login"}),
     function(req, res) {
         res.redirect("/");
     }
