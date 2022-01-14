@@ -37,6 +37,7 @@
         "mongoose": "^5.13.14",
         "passport": "^0.5.2",
         "passport-github2": "^0.1.12",
+        "passport-twitch-new": "^0.0.2",
         "swagger-jsdoc": "^6.1.0",
         "swagger-ui-express": "^4.3.0",
         "typescript": "^4.5.4"
