@@ -13,6 +13,15 @@ router.get("/github/redirect", passport.authenticate("github", {
     failureRedirect: "/login"
 }));
 
+router.get("/twitter", passport.authenticate("twitter"));
+
+router.get("/twitter/redirect", 
+    passport.authenticate("twitter", {failureRedirect: "/login"}),
+    function(req, res) {
+        res.redirect("/");
+    }
+);
+
 router.get("/twitch", passport.authenticate("twitch"));
 
 router.get("/twitch/redirect",
