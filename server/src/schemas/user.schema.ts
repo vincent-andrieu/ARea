@@ -26,4 +26,10 @@ export class UserSchema extends ASchema<User> {
 
         return !!result;
     }
+
+    public async findByUsername(username: string): Promise<User> {
+        const result: User = await this._model.findOne({ username }) as unknown as User;
+
+        return result;
+    }
 }

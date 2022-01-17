@@ -5,7 +5,7 @@ import Model, { ObjectId } from "@global/model.class";
 export abstract class ASchema<T extends Model> {
     protected _model: mongoose.Model<unknown>;
 
-    constructor(protected _ctor: { new (model: T): T }, collectionName: string, schema: mongoose.Schema) {
+    constructor(protected _ctor: { new(model: T): T }, collectionName: string, schema: mongoose.Schema) {
         this._model = mongoose.model<unknown>(collectionName, schema);
     }
 
@@ -29,11 +29,5 @@ export abstract class ASchema<T extends Model> {
 
     public async delete(model: T): Promise<void> {
         await this._model.deleteOne({ _id: model._id });
-    }
-
-    public async findOne(model: T): Promise<T> {
-        const result: T = await this._model.findOne(model) as unknown as T;
-
-        return new this._ctor(result)
     }
 }
