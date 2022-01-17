@@ -3,7 +3,8 @@ import ARea from "./area.class";
 
 export default class User extends Model {
     username: string;
-    password: string;
+    password?: string;
+    token?: string;
     areas?: Array<ARea> = [];
 
     constructor(user: User) {

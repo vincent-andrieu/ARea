@@ -5,7 +5,7 @@ import Model, { ObjectId } from "@classes/model.class";
 export abstract class ASchema<T extends Model> {
     protected _model: mongoose.Model<unknown>;
 
-    constructor(protected _ctor: { new (model: T): T }, collectionName: string, schema: mongoose.Schema) {
+    constructor(protected _ctor: { new(model: T): T }, collectionName: string, schema: mongoose.Schema) {
         this._model = mongoose.model<unknown>(collectionName, schema);
     }
 

@@ -4,6 +4,8 @@ import swaggerUi from "swagger-ui-express";
 import swaggerJsDoc from "swagger-jsdoc";
 import { swaggerConfig } from "@config/swaggerConfig";
 
+import authMiddleware from "../middlewares/checkJwt"
+
 const router = express.Router();
 
 router.get("/about.json", (req, res) => {
@@ -28,7 +30,7 @@ router.get("/about.json", (req, res) => {
  *          200: 
  *              description: Api is working correctly
  */
-router.get("/", (req, res) => {
+router.get("/", authMiddleware, (req, res) => {
     res.send("OK");
 });
 
