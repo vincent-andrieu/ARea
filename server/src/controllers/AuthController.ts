@@ -29,6 +29,7 @@ class AuthController {
                 );
                 // save user token
                 user.token = token;
+                await this._userSchema.edit(user);
 
                 res.status(200).json(user);
             }
@@ -65,6 +66,8 @@ class AuthController {
                 { expiresIn: "2h" }
             );
             user.token = token;
+            await this._userSchema.edit(user);
+
             return res.status(201).json(user);
         } catch (err) {
             console.log(err);
