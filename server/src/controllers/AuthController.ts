@@ -32,10 +32,11 @@ class AuthController {
                 await this._userSchema.edit(user);
 
                 res.status(200).json(user);
-            }
-            res.status(400).send("Invalid Credentials");
+            } else
+                res.status(400).json({ "message": "Invalid Credentials" });
         } catch (err) {
             console.log(err);
+            res.status(500).json({ "message": "an error occured" });
         }
     };
 
@@ -71,6 +72,7 @@ class AuthController {
             return res.status(201).json(user);
         } catch (err) {
             console.log(err);
+            res.status(500).json({ "message": "an error occured" });
         }
     };
 

@@ -2,16 +2,18 @@ import jwt from "jsonwebtoken";
 import { serverConfig } from "../config/serverConfig";
 
 const verifyToken = (req, res, next) => {
-    const token =
-        req.body.token || req.query.token || req.headers["x-access-token"] || req.headers["authorization"].substr(7);
 
-    if (!token)
-        return res.status(403).send("A token is required for authentication");
     try {
+        const token =
+            req.body.token || req.query.token || req.headers["x-access-token"] || req.headers["authorization"].substr(7);
+
+        if (!token)
+            return res.status(403).send("A token is required for authentication");
+
         const decoded = jwt.verify(token, serverConfig.jwtSecret);
         req.user = decoded;
     } catch (err) {
-        return res.status(401).send("Invalid Token");
+        return res.status(401).json({ "message": "Invalid Token" });
     }
     return next();
 };
