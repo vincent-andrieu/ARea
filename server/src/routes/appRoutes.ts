@@ -4,7 +4,7 @@ import swaggerUi from "swagger-ui-express";
 import swaggerJsDoc from "swagger-jsdoc";
 import { swaggerConfig } from "@config/swaggerConfig";
 
-import authMiddleware from "../middlewares/checkJwt"
+import authMiddleware from "../middlewares/checkJwt";
 
 const router = express.Router();
 
