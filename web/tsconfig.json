@@ -23,6 +23,9 @@
             "dom"
         ],
         "paths": {
+            "@environment": [
+                "environments/environment"
+            ],
             "@guards/*": [
                 "app/guards/*"
             ]
