@@ -39,4 +39,11 @@ router.get("/twitch/redirect",
     }
 );
 
+router.get("/notion", passport.authenticate("notion"));
+
+router.get("/notion/redirect", passport.authenticate("notion", {
+    successRedirect: "/",
+    failureRedirect: "/login"
+}));
+
 export default router;

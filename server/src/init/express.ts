@@ -8,6 +8,7 @@ import authRoutes from "../routes/authRoutes";
 import "../passport/githubPassport";
 import "../passport/twitterPassport";
 import "../passport/twitchPassport";
+import "../passport/notionPassport";
 
 const app = express();
 
