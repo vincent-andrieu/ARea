@@ -46,6 +46,7 @@
         "moment": "^2.29.1",
         "mongoose": "^5.13.14",
         "node-fetch": "^2.6.7",
+        "node-cron": "^3.0.0",
         "passport": "^0.5.2",
         "passport-dropbox-oauth2": "^1.1.0",
         "passport-github2": "^0.1.12",
