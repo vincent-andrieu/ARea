@@ -31,7 +31,7 @@ class _auth_pageState extends State<auth_page> {
           style: TextStyle(
               fontWeight: FontWeight.bold,
               color: color_list.fourth,
-              fontSize: 30
+              fontSize: 50
           ),
           textAlign: TextAlign.center,
         ),
