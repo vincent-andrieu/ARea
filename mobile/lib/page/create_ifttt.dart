@@ -29,7 +29,31 @@ class _create_iftttState extends State<create_ifttt> {
           ),
           textAlign: TextAlign.center,
         ),
-        ListCustom(const <String>['One', 'Two', 'Free', 'Four'], 'one')
+        Container(
+          padding: const EdgeInsets.only(
+              left: 100.0,
+              right: 100.0,
+          ),
+          child: Column(
+            children: <Widget>[
+              ListCustom("Service", const <String>['Twitch', 'Discord', 'Google', 'Twitter', 'None'], 'None'),
+              const Padding(padding: EdgeInsets.only(
+                top: 10.0,
+                bottom: 10.0
+              )),
+              ListCustom("Condition", const <String>['New message on channel ', 'None'], 'None'),
+              const Padding(padding: EdgeInsets.only(
+                top: 10.0,
+                bottom: 10.0
+              )),
+              ListCustom("Parameter", const <String>['\$MSG', '\$NAME', 'None'], 'None'),
+              const Padding(padding: EdgeInsets.only(
+                top: 10.0,
+                bottom: 10.0
+              )),
+            ],
+          ),
+        )
       ]
     );
   }
