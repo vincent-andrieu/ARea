@@ -1,0 +1,44 @@
+name: Check compilation
+
+on:
+  push:
+    branches:
+      - main
+      - github-actions
+
+jobs:
+  client-web:
+    runs-on: ubuntu-20.04
+    steps:
+      # Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Run
+      - name: Build
+        working-directory: web
+        run: docker build .
+
+  client-mobile:
+    runs-on: ubuntu-20.04
+    steps:
+      # Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Run
+      - name: Build
+        working-directory: mobile
+        run: docker build .
+
+  server:
+    runs-on: ubuntu-20.04
+    steps:
+      # Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Run
+      - name: Build
+        working-directory: server
+        run: docker build .
