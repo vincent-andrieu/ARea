@@ -1,22 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/enum/authentication_e.dart';
 import 'package:mobile/page/color_list.dart';
+import 'package:mobile/widget/input_custom.dart';
 
-void callbackSignIn() {
+void callbackSignInSwitch() {
   // TODO FILL THIS
 }
 
-void callbackSignUpMode() {
+void callbackSignUpSwitch() {
+  // TODO FILL THIS
+}
+
+void callbackSignInConnexion() {
+  // TODO FILL THIS
+}
+
+void callbackSignUpConnexion() {
   // TODO FILL THIS
 }
 
 class auth_page extends StatefulWidget {
-  const auth_page() : super();
+  authentication_e type = authentication_e.SIGN_IN;
+
+  auth_page(authentication_e typeSrc, {Key? key}) : super(key: key) {
+    type = typeSrc;
+  }
 
   @override
-  State<auth_page> createState() => _auth_pageState();
+  State<auth_page> createState() => _auth_pageState(type);
 }
 
 class _auth_pageState extends State<auth_page> {
+  authentication_e type = authentication_e.SIGN_IN;
+  String primaryDesc = "";
+  String secondaryDesc = "";
+  String endPageTips = "";
+  void Function() connexionCallBack = () {};
+  void Function() switchCallBack = () {};
+
+  _auth_pageState(authentication_e typeSrc) {
+    type = typeSrc;
+    primaryDesc = (type == authentication_e.SIGN_IN) ? "Sign in" : "Sign up";
+    secondaryDesc = (type == authentication_e.SIGN_IN) ? "Sign up" : "Sign In";
+    endPageTips = (type == authentication_e.SIGN_IN) ? "Don’t have an account yet?" : "You already have an account ?";
+    connexionCallBack = (type == authentication_e.SIGN_IN) ? callbackSignInConnexion : callbackSignUpConnexion;
+    switchCallBack = (type == authentication_e.SIGN_IN) ? callbackSignInSwitch : callbackSignUpSwitch;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -26,9 +56,9 @@ class _auth_pageState extends State<auth_page> {
         const Padding(
             padding: EdgeInsets.only(top: 40.0)
         ),
-        const Text(
-          'Sign in',
-          style: TextStyle(
+        Text(
+          primaryDesc,
+          style: const TextStyle(
               fontWeight: FontWeight.bold,
               color: color_list.fourth,
               fontSize: 50
@@ -40,54 +70,33 @@ class _auth_pageState extends State<auth_page> {
               left: 40.0,
               right: 40.0
           ),
-          child: TextField(
-            decoration: InputDecoration(
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0)
-                ),
-                hintText: 'Enter your Email address',
-                labelText: "Email",
-                labelStyle: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: color_list.fourth,
-                )
-            ),
-          ),
+          child: InputCustom('Email', 'Enter your Email address'),
         ),
         Container(
           padding: const EdgeInsets.only(
               left: 40.0,
               right: 40.0
           ),
-          child: TextField(
-          decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0)
-              ),
-              hintText: 'Enter your password',
-              labelText: "Password",
-              labelStyle: const TextStyle(
-                fontWeight: FontWeight.bold,
-                color: color_list.fourth,
-              )
-            ),
-          ),
+          child: InputCustom('Password', 'Enter your password'),
         ),
-        ElevatedButton(
-          onPressed: callbackSignIn,
-          style: ElevatedButton.styleFrom(
-            primary: color_list.primary,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            )
-          ),
-          child: const Text(
-              'Sign in',
-              style: TextStyle(
+        FractionallySizedBox(
+          widthFactor: 0.2,
+          child: ElevatedButton(
+            onPressed: connexionCallBack,
+            style: ElevatedButton.styleFrom(
+                primary: color_list.primary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                )
+            ),
+            child: Text(
+              primaryDesc,
+              style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: color_list.third,
                   fontSize: 20
               ),
+            ),
           ),
         ),
         additionnal_connexion_widget(context),
@@ -101,39 +110,50 @@ class _auth_pageState extends State<auth_page> {
       alignment: Alignment.bottomCenter,
       child: Container(
         height: 100,
+        width: double.infinity,
         color: color_list.secondary,
-        padding: const EdgeInsets.all(40.0),
-        child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-                const Text(
-                  'Don’t have an account yet?',
-                  style: TextStyle(
+        padding: const EdgeInsets.only(
+          top: 10.0,
+          bottom: 10.0,
+        ),
+        child: FractionallySizedBox(
+          widthFactor: 1,
+          heightFactor: 1,
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  endPageTips,
+                  style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: color_list.fourth,
-                      fontSize: 10
+                      fontSize: 20
                   ),
                 ),
-                ElevatedButton(
-                  onPressed: callbackSignUpMode,
-                  style: ElevatedButton.styleFrom(
-                      primary: color_list.primary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      )
-                  ),
-                  child: const Text(
-                    'Sign up',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: color_list.third,
-                        fontSize: 10
+                FractionallySizedBox(
+                  widthFactor: 0.2,
+                  child: ElevatedButton(
+                    onPressed: switchCallBack,
+                    style: ElevatedButton.styleFrom(
+                        primary: color_list.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                        )
+                    ),
+                    child: Text(
+                      secondaryDesc,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: color_list.third,
+                          fontSize: 20
+                      ),
                     ),
                   ),
                 ),
-            ]
-        ),
+              ]
+          ),
+        )
       ),
     );
   }
@@ -142,60 +162,7 @@ class _auth_pageState extends State<auth_page> {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          button_image_widget(context, 'Connection with', 'assets/discord.png', () {}),
-          const Padding(
-            padding: EdgeInsets.all(10.0),
-          ),
-          button_image_widget(context, 'Connection with', 'assets/youtube.png', () {}),
-          const Padding(
-            padding: EdgeInsets.all(10.0),
-          ),
-          button_image_widget(context, 'Connection with', 'assets/google.png', () {})
-        ]
-    );
-  }
-
-  Widget button_image_widget(BuildContext context, String desc, String asset, void Function()? callback) {
-    return ElevatedButton(
-      onPressed: callback,
-      style: ElevatedButton.styleFrom(
-          primary: color_list.primary,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          )
-      ),
-      child: Container(
-        padding: const EdgeInsets.all(5.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Text(
-              desc,
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: color_list.third,
-                  fontSize: 10
-              ),
-            ),
-            const Padding(
-                padding: EdgeInsets.all(10.0),
-            ),
-            Container(
-              width: 80,
-              height: 50,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage(asset),
-                      fit: BoxFit.fill
-                  )
-              ),
-            )
-          ],
-        ),
-      )
+        children: <Widget>[]
     );
   }
 }
