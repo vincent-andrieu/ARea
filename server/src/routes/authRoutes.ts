@@ -1,14 +1,14 @@
 import express from "express";
 import passport from "passport";
 import "../passport/setupPassport";
-import AuthController from "../controllers/AuthController"
-import authMiddleware from "../middlewares/checkJwt"
+import AuthController from "../controllers/AuthController";
+import authMiddleware from "../middlewares/checkJwt";
 
 const router = express.Router();
 
-router.post("/login", AuthController.login)
+router.post("/login", AuthController.login);
 
-router.post("/register", AuthController.register)
+router.post("/register", AuthController.register);
 
 // ----
 
@@ -23,7 +23,7 @@ router.get("/github/redirect", authMiddleware, passport.authenticate("github", {
 
 router.get("/twitter", passport.authenticate("twitter"));
 
-router.get("/twitter/redirect", 
+router.get("/twitter/redirect",
     passport.authenticate("twitter", {failureRedirect: "/login"}),
     function(req, res) {
         res.redirect("/");

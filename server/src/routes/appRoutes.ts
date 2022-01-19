@@ -4,7 +4,7 @@ import swaggerUi from "swagger-ui-express";
 import swaggerJsDoc from "swagger-jsdoc";
 import { swaggerConfig } from "@config/swaggerConfig";
 
-import authMiddleware from "../middlewares/checkJwt"
+import authMiddleware from "../middlewares/checkJwt";
 
 const router = express.Router();
 
@@ -22,18 +22,18 @@ router.get("/about.json", (req, res) => {
 
 /**
  * @swagger
- * 
+ *
  * /:
  *  get:
  *      summary: Api homepage.
  *      responses:
- *          200: 
+ *          200:
  *              description: Api is working correctly
  */
 router.get("/", authMiddleware, (req, res) => {
     res.send("OK");
 });
 
-router.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerJsDoc(swaggerConfig)))
+router.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerJsDoc(swaggerConfig)));
 
 export default router;
