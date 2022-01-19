@@ -24,9 +24,9 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         body: Center(
           // child: area.createState().build(context)
-          child: authSignUp.createState().build(context)
+          // child: authSignUp.createState().build(context)
           // child: authSignIn.createState().build(context)
-          // child: settings.createState().build(context)
+          child: settings.createState().build(context)
           // child: ifttt.createState().build(context)
         ),
       ),
