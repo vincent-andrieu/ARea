@@ -1,6 +1,6 @@
 import "module-alias/register";
 import Database from "./init/database";
-import "./init/express";
+import Express from "./init/express";
 
-// Database example
+Express.connect();
 Database.connect();
