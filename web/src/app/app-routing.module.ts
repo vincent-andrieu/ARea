@@ -13,18 +13,18 @@ import { AReaEditModalComponent } from './area/edit-modal/edit-modal.component';
 import { AReaSettingsComponent } from './area/settings/settings.component';
 
 const routes: Routes = [
-    { path: '', component: HomeComponent, canActivate: [ServerGuard] },
-    { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
-    { path: 'register', component: RegisterComponent, canActivate: [LoginGuard] },
+    { path: '', component: HomeComponent },
+    { path: 'login', component: LoginComponent, canActivate: [ServerGuard, LoginGuard] },
+    { path: 'register', component: RegisterComponent, canActivate: [ServerGuard, LoginGuard] },
     {
         path: 'areas',
-        canActivate: [AuthGuard],
+        canActivate: [ServerGuard, AuthGuard],
         component: AReaListComponent,
         children: [
             { path: ':areaId', component: AReaEditModalComponent }
         ]
     },
-    { path: 'settings', component: AReaSettingsComponent, canActivate: [AuthGuard] },
+    { path: 'settings', component: AReaSettingsComponent, canActivate: [ServerGuard, AuthGuard] },
     { path: '**', redirectTo: '/', pathMatch: 'full' }
 ];
 

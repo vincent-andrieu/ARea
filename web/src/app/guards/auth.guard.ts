@@ -21,14 +21,13 @@ export class AuthGuard implements CanActivate {
     ) {}
 
     canActivate(): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-        return new Promise<boolean | UrlTree>((resolve) => {
-            if (this._cookieService.hasKey(environment.cookiesKey.jwt))
+        if (this._cookieService.hasKey(environment.cookiesKey.jwt))
+            return new Promise<boolean | UrlTree>((resolve) => {
                 this._httpClient.get('/')
                     .pipe(catchError(() => of(resolve(this._router.parseUrl('/login')))))
                     .subscribe(() => resolve(true));
-
-            return this._router.parseUrl('/login');
-        });
+            });
+        return this._router.parseUrl('/login');
     }
 
 }

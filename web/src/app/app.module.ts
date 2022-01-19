@@ -9,6 +9,7 @@ import { MatFormFieldModule, MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/mat
 import { MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS } from "@angular/material/snack-bar";
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -39,7 +40,8 @@ import { APIInterceptor } from './api.interceptor';
         MatFormFieldModule,
         MatSnackBarModule,
         MatInputModule,
-        MatButtonModule
+        MatButtonModule,
+        MatProgressSpinnerModule
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: APIInterceptor, multi: true },
