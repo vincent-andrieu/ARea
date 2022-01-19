@@ -2,7 +2,7 @@
     <p class="title">AREA</p>
 
     <form [formGroup]="form" (ngSubmit)="submitForm()" class="server-form-group" fxLayout="column">
-        <mat-form-field fxFlex>
+        <mat-form-field>
             <mat-label>Server IP</mat-label>
             <input matInput formControlName="serverIp" placeholder="ex: http://localhost:8080" type="text" autofocus>
             <mat-error *ngIf="form.get('serverIp')?.hasError('required')">

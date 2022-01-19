@@ -28,10 +28,13 @@
             ],
             "@guards/*": [
                 "app/guards/*"
+            ],
+            "@services/*": [
+                "app/services/*"
+            ],
+            "@classes/*": [
+                "classes/*"
             ]
-            // "@services/*": [
-            //     "services/*"
-            // ],
         }
     },
     "angularCompilerOptions": {

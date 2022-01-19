@@ -1,1 +1,41 @@
-<p>login works!</p>
+<div fxFill fxLayout="column" fxLayoutAlign="space-around center">
+    <p class="title">Sign in</p>
+
+    <form [formGroup]="form" (ngSubmit)="submitForm()" class="login-form-group" fxLayout="column">
+        <!-- Email -->
+        <mat-form-field>
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" placeholder="ex: john.doe@example.eu" type="email" autofocus>
+            <mat-error *ngIf="form.get('email')?.hasError('required')">
+                This field is required
+            </mat-error>
+            <mat-error *ngIf="form.get('email')?.hasError('email') && !form.get('email')?.hasError('required')">
+                This field must be an email
+            </mat-error>
+        </mat-form-field>
+
+        <!-- Password -->
+        <mat-form-field>
+            <mat-label>Password</mat-label>
+            <input matInput formControlName="password" type="password">
+            <mat-error *ngIf="form.get('password')?.hasError('required')">
+                This field is required
+            </mat-error>
+        </mat-form-field>
+
+        <!-- Button & Spinner -->
+        <button *ngIf="!isLoading" mat-flat-button color="primary" type="submit"
+                [disabled]="form.invalid">Start</button>
+        <mat-progress-spinner *ngIf="isLoading" mode="indeterminate" [diameter]="36" color="primary"
+                              fxFlexAlign="center">
+        </mat-progress-spinner>
+    </form>
+
+    <div></div>
+</div>
+
+<div class="footer" fxLayout="column" fxLayoutAlign="space-evenly center">
+    <strong>Don't have an account yet?</strong>
+
+    <button mat-flat-button color="primary" class="register-button" routerLink="/register">Sign Up</button>
+</div>

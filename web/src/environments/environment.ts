@@ -5,7 +5,7 @@
 export const environment = {
     production: false,
     cookiesKey: {
-        serverIp: 'server',
+        serverHost: 'server',
         jwt: 'auth'
     }
 };
