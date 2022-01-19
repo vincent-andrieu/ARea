@@ -60,7 +60,6 @@ class _create_iftttState extends State<create_ifttt> {
                 Icons.arrow_downward_rounded,
                 color: color_list.primary,
                 size: 100.0,
-                semanticLabel: 'Text to announce in accessibility modes',
               ),
               // TODO
               const Padding(padding: EdgeInsets.only(
