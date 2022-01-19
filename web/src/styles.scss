@@ -10,3 +10,20 @@ body {
     margin: 0;
     font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+/**
+ * Custom class
+ */
+
+.loading-shade {
+    background: rgba(0, 0, 0, 0.15);
+}
+
+mat-form-field ::ng-deep .mat-form-field-wrapper {
+    padding-bottom: 0 !important;
+}
+
+.snackbar-error {
+    background-color: red;
+    color: white;
+}

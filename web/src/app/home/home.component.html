@@ -1,1 +1,20 @@
-<p>home works!</p>
+<div fxFill fxLayout="column" fxLayoutAlign="space-around center">
+    <p class="title">AREA</p>
+
+    <form [formGroup]="form" (ngSubmit)="submitForm()" class="server-form-group" fxLayout="column">
+        <mat-form-field>
+            <mat-label>Server IP</mat-label>
+            <input matInput formControlName="serverIp" placeholder="ex: http://localhost:8080" type="text">
+            <mat-error *ngIf="form.get('serverIp')?.hasError('required')">
+                This field is required
+            </mat-error>
+            <mat-error *ngIf="form.get('serverIp')?.hasError('url') && !form.get('serverIp')?.hasError('required')">
+                The server IP must start with <strong>http://</strong> or <strong>https://</strong>
+            </mat-error>
+        </mat-form-field>
+
+        <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid || form.pristine">Start</button>
+    </form>
+
+    <h1>Welcome</h1>
+</div>
