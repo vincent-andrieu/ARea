@@ -29,8 +29,8 @@ class MyApp extends StatelessWidget {
           // child: authSignUp.createState().build(context)
           // child: authSignIn.createState().build(context)
           // child: settings.createState().build(context)
-          // child: ifttt.createState().build(context)
-          child: iftttList.createState().build(context)
+          child: ifttt.createState().build(context)
+          // child: iftttList.createState().build(context)
         ),
       ),
     );
