@@ -43,7 +43,7 @@ $md-web-primary: (
         A700: #000000,
     ),
 );
-$web-primary: mat.define-palette(mat.$red-palette);
+$web-primary: mat.define-palette($md-web-primary);
 
 $md-web-accent: (
     50: #e0e0e0,
