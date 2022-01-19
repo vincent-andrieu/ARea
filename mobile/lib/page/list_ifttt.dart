@@ -2,6 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/page/color_list.dart';
 
+void callbackBack() {
+  // TODO
+}
+
 void callbackNew() {
   // TODO
 }
@@ -22,15 +26,7 @@ class _list_iftttState extends State<list_ifttt> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            const Text(
-              'Liste des Areas',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: color_list.fourth,
-                  fontSize: 50
-              ),
-              textAlign: TextAlign.center,
-            ),
+            buildTopPage(context),
             buildListDisplay(context),
             FractionallySizedBox(
               widthFactor: 0.4,
@@ -156,6 +152,42 @@ class _list_iftttState extends State<list_ifttt> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildTopPage(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Expanded(
+          child: Stack(
+            children: const [
+              Center(
+                child: Text(
+                  'Liste des Areas',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: color_list.fourth,
+                    fontSize: 50
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Positioned(
+                right: 8,
+                child: IconButton(
+                  icon: Icon(
+                    Icons.settings,
+                    size: 40.0
+                  ),
+                  tooltip: 'Retour arrière',
+                  onPressed: callbackBack,
+                ),
+              ),
+            ],
+          ),
+        )
+      ]
     );
   }
 }
