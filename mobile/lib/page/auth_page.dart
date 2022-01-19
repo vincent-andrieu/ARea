@@ -89,12 +89,18 @@ class _auth_pageState extends State<auth_page> {
                   borderRadius: BorderRadius.circular(10.0),
                 )
             ),
-            child: Text(
-              primaryDesc,
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: color_list.third,
-                  fontSize: 20
+            child: Container(
+              padding: const EdgeInsets.only(
+                top: 10.0,
+                bottom: 10.0,
+              ),
+              child: Text(
+                primaryDesc,
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: color_list.third,
+                    fontSize: 30
+                ),
               ),
             ),
           ),
@@ -159,10 +165,84 @@ class _auth_pageState extends State<auth_page> {
   }
 
   Widget additionnal_connexion_widget(BuildContext context) {
-    return Column(
+    return FractionallySizedBox(
+        widthFactor: 0.4,
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[]
+        children: <Widget>[
+          connexion_with_button(context, "Github", "assets/discord.png", () {
+            // TODO
+          }),
+          const Padding(padding: EdgeInsets.all(10.0)),
+          connexion_with_button(context, "Twitch", "assets/discord.png", () {
+            // TODO
+          }),
+          const Padding(padding: EdgeInsets.all(10.0)),
+          connexion_with_button(context, "Twitter", "assets/discord.png", () {
+            // TODO
+          }),
+          const Padding(padding: EdgeInsets.all(10.0)),
+          connexion_with_button(context, "Discord", "assets/discord.png", () {
+            // TODO
+          }),
+          const Padding(padding: EdgeInsets.all(10.0)),
+          connexion_with_button(context, "Linkedin", "assets/discord.png", () {
+            // TODO
+          }),
+          const Padding(padding: EdgeInsets.all(10.0)),
+          connexion_with_button(context, "Notion", "assets/discord.png", () {
+            // TODO
+          }),
+        ]
+      ),
+    );
+  }
+
+  Widget connexion_with_button(BuildContext context, String name, String asset, void Function() onTap) {
+    return InkWell(
+      child: Container(
+        padding: const EdgeInsets.only(
+          bottom: 10.0,
+          left: 20.0,
+          right: 20.0,
+          top: 10.0,
+        ),
+        decoration: BoxDecoration(
+          color: color_list.third,
+          border: Border.all(
+            color: color_list.fourth,
+            width: 2,
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              height: 50,
+              width: 50,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage(asset),
+                      fit: BoxFit.fill
+                  )
+              ),
+            ),
+            const Padding(padding: EdgeInsets.all(10.0)),
+            Text(
+              "se connecter avec " + name,
+              textAlign: TextAlign.left,
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: color_list.fourth,
+                  fontSize: 20
+              ),
+            ),
+          ],
+        ),
+      ),
+      onTap: onTap,
     );
   }
 }
