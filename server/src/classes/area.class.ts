@@ -9,7 +9,7 @@ export default class ARea extends Model {
     constructor(area: ARea) {
         super(area);
 
-        this.action = new Action(area.action);
-        this.reaction = new Reaction(area.reaction);
+        this.action = area.action;
+        this.reaction = area.reaction;
     }
 }

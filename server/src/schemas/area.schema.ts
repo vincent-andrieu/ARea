@@ -6,7 +6,7 @@ import { ObjectId } from "@classes/model.class";
 
 const areaSchema = new mongoose.Schema({
     action: { type: mongoose.Schema.Types.ObjectId, ref: "Action" },
-    reactions: { type: mongoose.Schema.Types.ObjectId, ref: "Reaction" }
+    reaction: { type: mongoose.Schema.Types.ObjectId, ref: "Reaction" }
 }, {
     toObject: { virtuals: true },
     toJSON: { virtuals: true }

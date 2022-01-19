@@ -2,23 +2,34 @@ import { Request, Response } from "express";
 import { AReaSchema } from "../schemas/area.schema";
 import ARea from "../classes/area.class";
 import { ObjectId } from "../classes/model.class";
+import Action from "@classes/action.class";
+import Reaction from "@classes/reaction.class";
+import { ActionSchema } from "@schemas/action.schema";
+import { ReactionSchema } from "@schemas/reaction.schema";
 
 export default class AreaController {
 
     private static _areaSchema = new AReaSchema();
+    private static _actionSchema = new ActionSchema();
+    private static _reactionSchema = new ReactionSchema();
 
-    static create = (req: Request, res: Response) => {
-        const data: ARea = req.body;
+    static create = async (req: Request, res: Response) => {
+        const action: Action = req.body.action;
+        const reaction: Reaction = req.body.reactions;
+        
+        //TODO: LIER AREA AVEC UTILISATEUR
+        //TODO: GESTION D'ERREUR DU BODY
 
-        console.log("data ", data);
+        try {
+            const actionInDb = await this._actionSchema.add(action);
+            const reactionInDb = await this._reactionSchema.add(reaction);
+            const area = await this._areaSchema.add({action: actionInDb, reaction: reactionInDb});
 
-        this._areaSchema.add(data)
-            .then((value: ARea) => {
-                res.status(201).json(value);
-            })
-            .catch((reason) => {
-                res.status(400);
-            });
+            res.status(201).json(area);
+        } catch (error: any) {
+            console.log("[AreaController] create : ", error.toString());
+            res.sendStatus(400);
+        }
     };
 
     static readOne = (req: Request, res: Response) => {

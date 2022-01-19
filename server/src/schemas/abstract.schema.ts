@@ -10,9 +10,13 @@ export abstract class ASchema<T extends Model> {
     }
 
     public async add(model: T): Promise<T> {
-        const result: T = await this._model.create(model) as unknown as T;
-
-        return new this._ctor(result);
+        try {
+            const result: T = await this._model.create(model) as unknown as T;
+            return new this._ctor(result);
+        } catch (error: any) {
+            console.log(error);
+            throw new Error(error.toString());
+        }        
     }
 
     public async edit(model: T): Promise<void> {
