@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:mobile/page/color_list.dart';
 import 'package:mobile/widget/global_connexion_list.dart';
 
+void callbackClose() {
+  // TODO FILL THIS
+}
+
 void callbackSave() {
   // TODO FILL THIS
 }
@@ -20,22 +24,13 @@ class settings_page extends StatefulWidget {
 class _settings_pageState extends State<settings_page> {
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Container(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          const Padding(
-              padding: EdgeInsets.only(top: 40.0)
-          ),
-          const Text(
-            'Settings',
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: color_list.fourth,
-                fontSize: 50
-            ),
-            textAlign: TextAlign.center,
-          ),
+          buildTopPage(context),
           const Text(
             'Connection aux services',
             style: TextStyle(
@@ -79,6 +74,43 @@ class _settings_pageState extends State<settings_page> {
           const Padding(
               padding: EdgeInsets.only(top: 20.0)
           ),
+        ]
+      ),
+    );
+  }
+
+  Widget buildTopPage(BuildContext context) {
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Expanded(
+            child: Stack(
+              children: const [
+                Positioned(
+                  left: 8,
+                  child: IconButton(
+                    icon: Icon(
+                        Icons.arrow_back,
+                        size: 40.0
+                    ),
+                    tooltip: 'Retour arrière',
+                    onPressed: callbackClose,
+                  ),
+                ),
+                Center(
+                  child: Text(
+                    'Settings',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: color_list.fourth,
+                        fontSize: 50
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          )
         ]
     );
   }

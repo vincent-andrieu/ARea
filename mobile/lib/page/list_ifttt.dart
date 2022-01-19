@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/page/color_list.dart';
 
-void callbackBack() {
+void callbackParams() {
   // TODO
 }
 
@@ -181,7 +181,7 @@ class _list_iftttState extends State<list_ifttt> {
                     size: 40.0
                   ),
                   tooltip: 'Retour arrière',
-                  onPressed: callbackBack,
+                  onPressed: callbackParams,
                 ),
               ),
             ],
