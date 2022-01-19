@@ -24,8 +24,8 @@ router.get("/github/redirect", authMiddleware, passport.authenticate("github", {
 router.get("/twitter", passport.authenticate("twitter"));
 
 router.get("/twitter/redirect",
-    passport.authenticate("twitter", {failureRedirect: "/login"}),
-    function(req, res) {
+    passport.authenticate("twitter", { failureRedirect: "/login" }),
+    (_, res) => {
         res.redirect("/");
     }
 );
@@ -33,10 +33,17 @@ router.get("/twitter/redirect",
 router.get("/twitch", passport.authenticate("twitch"));
 
 router.get("/twitch/redirect",
-    passport.authenticate("twitch", {failureRedirect: "/login"}),
-    function(req, res) {
+    passport.authenticate("twitch", { failureRedirect: "/login" }),
+    (_, res) => {
         res.redirect("/");
     }
 );
+
+router.get("/notion", passport.authenticate("notion"));
+
+router.get("/notion/redirect", passport.authenticate("notion", {
+    successRedirect: "/",
+    failureRedirect: "/login"
+}));
 
 export default router;
