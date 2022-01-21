@@ -1,18 +1,44 @@
 import passport from "passport";
 
+import AuthController from "../controllers/AuthController";
 import { Strategy as NotionStrategy } from "../module/passport-notion";
 import { notionConfig } from "../config/notionConfig";
+import { UserSchema } from "@schemas/user.schema";
+import OAuthProvider from "../model/oAuthProvider.enum";
 
-const successfullyAuthentificated = (_req, accessToken, _, oauthData, user, done) => {
+const successfullyAuthentificated = async(_req, accessToken, _, oauthData, userNotion, done) => {
+    const userSchema = new UserSchema();
 
-    //console.log(JSON.stringify(oauthData));
-    //console.log(JSON.stringify(user));
+    console.log(userNotion);
+    try {
+        const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.NOTION, userNotion.person.email);
 
-    const _user = {
-        notionID: user.id,
-        accessToken: accessToken
-    };
-    return done(null, _user);
+        if (oldUser) {
+            console.log("User already exist");
+            const token = AuthController.signToken({
+                oauthLoginProvider: OAuthProvider.GITHUB,
+                oauthLoginProviderId: userNotion.person.email
+            });
+            // save user token
+            oldUser.token = token;
+            await userSchema.edit(oldUser);
+            done(null, oldUser);
+        } else {
+            console.log("Create new user");
+
+            const user = await userSchema.add({
+                oauthLoginProvider: OAuthProvider.GITHUB,
+                oauthLoginProviderId: userNotion.person.email
+            });
+
+            const token = AuthController.signToken({ user_id: user._id, username: userNotion });
+            user.token = token;
+            await userSchema.edit(user);
+            done(null, user);
+        }
+    } catch (error) {
+        done(error, null);
+    }
 };
 
 passport.use(new NotionStrategy(

@@ -35,7 +35,7 @@ const successfullyAuthentificated = async (req, accessToken, refreshToken, profi
             const token = AuthController.signToken({ user_id: user._id, username: profile.username });
             user.token = token;
             await userSchema.edit(user);
-            done(null, token);
+            done(null, user);
         }
     } catch (error) {
         done(error, null);
