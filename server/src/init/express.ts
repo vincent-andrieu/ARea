@@ -9,6 +9,7 @@ import "../passport/githubPassport";
 import "../passport/twitterPassport";
 import "../passport/twitchPassport";
 import "../passport/notionPassport";
+import "../passport/linkedinPassport";
 
 const app = express();
 

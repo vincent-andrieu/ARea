@@ -45,4 +45,11 @@ router.get("/notion/redirect", passport.authenticate("notion", {
     failureRedirect: "/login"
 }));
 
+router.get("/linkedin", passport.authenticate("linkedin"));
+
+router.get("/linkedin/redirect", passport.authenticate("linkedin", {
+    successRedirect: "/",
+    failureRedirect: "/login"
+}));
+
 export default router;

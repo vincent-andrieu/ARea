@@ -31,7 +31,7 @@ const successfullyAuthentificated = async(_req, accessToken, _, oauthData, userN
                 oauthLoginProviderId: userNotion.person.email
             });
 
-            const token = AuthController.signToken({ user_id: user._id, username: userNotion });
+            const token = AuthController.signToken({ user_id: user._id, username: userNotion.person.email });
             user.token = token;
             await userSchema.edit(user);
             done(null, user);
