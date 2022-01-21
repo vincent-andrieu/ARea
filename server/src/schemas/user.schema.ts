@@ -2,11 +2,14 @@ import mongoose from "mongoose";
 
 import User from "@classes/user.class";
 import { ObjectId } from "@classes/model.class";
+import OAuthProvider from "../model/oAuthProvider.enum"; 
 import { ASchema } from "./abstract.schema";
 
 const userSchema = new mongoose.Schema({
     username: { type: String },
     password: { type: String },
+    oauthLoginProvider: { type: OAuthProvider},
+    oauthLoginProviderId: { type: String},
     token: { type: String, unique: true },
     areas: [
         { type: mongoose.Schema.Types.ObjectId, ref: "ARea" }
@@ -29,6 +32,15 @@ export class UserSchema extends ASchema<User> {
 
     public async findByUsername(username: string): Promise<User> {
         const result: User = await this._model.findOne({ username }) as unknown as User;
+
+        return result;
+    }
+
+    public async findByOAuthProviderId(providerType: OAuthProvider, providerId: string): Promise<User> {
+        const result: User = await this._model.findOne({
+            oauthLoginProvider: providerType,
+            oauthLoginProviderId: providerId
+        }) as unknown as User;
 
         return result;
     }
