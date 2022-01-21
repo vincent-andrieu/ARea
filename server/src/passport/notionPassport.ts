@@ -16,7 +16,7 @@ const successfullyAuthentificated = async(_req, accessToken, _, oauthData, userN
         if (oldUser) {
             console.log("User already exist");
             const token = AuthController.signToken({
-                oauthLoginProvider: OAuthProvider.GITHUB,
+                oauthLoginProvider: OAuthProvider.NOTION,
                 oauthLoginProviderId: userNotion.person.email
             });
             // save user token
@@ -27,7 +27,7 @@ const successfullyAuthentificated = async(_req, accessToken, _, oauthData, userN
             console.log("Create new user");
 
             const user = await userSchema.add({
-                oauthLoginProvider: OAuthProvider.GITHUB,
+                oauthLoginProvider: OAuthProvider.NOTION,
                 oauthLoginProviderId: userNotion.person.email
             });
 
