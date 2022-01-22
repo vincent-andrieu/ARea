@@ -4,20 +4,22 @@ import 'package:mobile/page/color_list.dart';
 import 'package:mobile/widget/global_connexion_list.dart';
 import 'package:mobile/widget/input_custom.dart';
 
-void callbackSignInSwitch() {
-  // TODO FILL THIS
+void callbackSignInSwitch(BuildContext context) {
+  Navigator.of(context).pushNamed('/SignUp');
 }
 
-void callbackSignUpSwitch() {
-  // TODO FILL THIS
+void callbackSignUpSwitch(BuildContext context) {
+  Navigator.of(context).pushNamed('/SignIn');
 }
 
-void callbackSignInConnexion() {
+void callbackSignInConnexion(BuildContext context) {
   // TODO FILL THIS
+  Navigator.of(context).pushNamed('/List');
 }
 
-void callbackSignUpConnexion() {
+void callbackSignUpConnexion(BuildContext context) {
   // TODO FILL THIS
+  Navigator.of(context).pushNamed('/List');
 }
 
 class auth_page extends StatefulWidget {
@@ -36,8 +38,8 @@ class _auth_pageState extends State<auth_page> {
   String primaryDesc = "";
   String secondaryDesc = "";
   String endPageTips = "";
-  void Function() connexionCallBack = () {};
-  void Function() switchCallBack = () {};
+  void Function(BuildContext context) connexionCallBack = (BuildContext context) {};
+  void Function(BuildContext context) switchCallBack = (BuildContext context) {};
 
   _auth_pageState(authentication_e typeSrc) {
     type = typeSrc;
@@ -85,7 +87,9 @@ class _auth_pageState extends State<auth_page> {
             FractionallySizedBox(
               widthFactor: 0.2,
               child: ElevatedButton(
-                onPressed: connexionCallBack,
+                onPressed: () {
+                  connexionCallBack(context);
+                },
                 style: ElevatedButton.styleFrom(
                     primary: color_list.primary,
                     shape: RoundedRectangleBorder(
@@ -145,7 +149,9 @@ class _auth_pageState extends State<auth_page> {
                 FractionallySizedBox(
                   widthFactor: 0.2,
                   child: ElevatedButton(
-                    onPressed: switchCallBack,
+                    onPressed: () {
+                      switchCallBack(context);
+                    },
                     style: ElevatedButton.styleFrom(
                         primary: color_list.primary,
                         shape: RoundedRectangleBorder(

@@ -1,13 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/page/color_list.dart';
 
-void callbackParams() {
-  // TODO
+void callbackParams(BuildContext context) {
+  Navigator.of(context).pushNamed('/Settings');
 }
 
-void callbackNew() {
-  // TODO
+void callbackNew(BuildContext context) {
+  Navigator.of(context).pushNamed('/Create');
 }
 
 class list_ifttt extends StatefulWidget {
@@ -31,7 +30,9 @@ class _list_iftttState extends State<list_ifttt> {
             FractionallySizedBox(
               widthFactor: 0.4,
               child: ElevatedButton(
-                  onPressed: callbackNew,
+                  onPressed: () {
+                    callbackNew(context);
+                  },
                   style: ElevatedButton.styleFrom(
                       primary: color_list.primary,
                       shape: RoundedRectangleBorder(
@@ -161,8 +162,8 @@ class _list_iftttState extends State<list_ifttt> {
       children: <Widget>[
         Expanded(
           child: Stack(
-            children: const [
-              Center(
+            children: [
+              const Center(
                 child: Text(
                   'Liste des Areas',
                   style: TextStyle(
@@ -176,12 +177,14 @@ class _list_iftttState extends State<list_ifttt> {
               Positioned(
                 right: 8,
                 child: IconButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.settings,
                     size: 40.0
                   ),
                   tooltip: 'Retour arrière',
-                  onPressed: callbackParams,
+                  onPressed: () {
+                    callbackParams(context);
+                  },
                 ),
               ),
             ],

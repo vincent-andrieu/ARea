@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/page/color_list.dart';
 import 'package:mobile/widget/global_connexion_list.dart';
+import 'create_ifttt.dart';
 
-void callbackClose() {
+void callbackLogout(BuildContext context) {
   // TODO FILL THIS
-}
-
-void callbackSave() {
-  // TODO FILL THIS
-}
-
-void callbackLogout() {
-  // TODO FILL THIS
+  Navigator.of(context).pushNamed('/SignIn');
 }
 
 class settings_page extends StatefulWidget {
@@ -51,7 +45,9 @@ class _settings_pageState extends State<settings_page> {
           FractionallySizedBox(
             widthFactor: 0.4,
             child: ElevatedButton(
-              onPressed: callbackLogout,
+              onPressed: () {
+                callbackLogout(context);
+              },
               style: ElevatedButton.styleFrom(
                 primary: color_list.fifth,
                 shape: RoundedRectangleBorder(
@@ -85,19 +81,21 @@ class _settings_pageState extends State<settings_page> {
         children: <Widget>[
           Expanded(
             child: Stack(
-              children: const [
+              children: [
                 Positioned(
                   left: 8,
                   child: IconButton(
-                    icon: Icon(
+                    icon: const Icon(
                         Icons.arrow_back,
                         size: 40.0
                     ),
                     tooltip: 'Retour arrière',
-                    onPressed: callbackClose,
+                    onPressed: () {
+                      callbackClose(context);
+                    },
                   ),
                 ),
-                Center(
+                const Center(
                   child: Text(
                     'Settings',
                     style: TextStyle(

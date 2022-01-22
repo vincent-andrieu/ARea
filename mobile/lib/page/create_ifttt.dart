@@ -1,14 +1,14 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/page/color_list.dart';
 import 'package:mobile/widget/list_custom.dart';
 
-void callbackClose() {
-  // TODO FILL THIS
+void callbackClose(BuildContext context) {
+  Navigator.of(context).pop();
 }
 
-void callbackSaveIfttt() {
+void callbackSaveIfttt(BuildContext context) {
   // TODO FILL THIS
+  Navigator.of(context).pushNamed('/List');
 }
 
 class create_ifttt extends StatefulWidget {
@@ -83,7 +83,9 @@ class _create_iftttState extends State<create_ifttt> {
                   ),
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: callbackSaveIfttt,
+                    onPressed: () {
+                      callbackSaveIfttt(context);
+                    },
                     style: ElevatedButton.styleFrom(
                         primary: color_list.primary,
                         shape: RoundedRectangleBorder(
@@ -114,8 +116,8 @@ class _create_iftttState extends State<create_ifttt> {
         children: <Widget>[
           Expanded(
             child: Stack(
-              children: const [
-                Center(
+              children: [
+                const Center(
                   child: Text(
                     'New IFTTT',
                     style: TextStyle(
@@ -129,12 +131,14 @@ class _create_iftttState extends State<create_ifttt> {
                 Positioned(
                   right: 8,
                   child: IconButton(
-                    icon: Icon(
+                    icon: const Icon(
                         Icons.close,
                         size: 40.0
                     ),
                     tooltip: 'Close page',
-                    onPressed: callbackClose,
+                    onPressed: () {
+                      callbackClose(context);
+                    },
                   ),
                 ),
               ],
