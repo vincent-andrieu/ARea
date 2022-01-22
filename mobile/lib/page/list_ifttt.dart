@@ -14,40 +14,44 @@ class list_ifttt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20.0),
-      child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            buildTopPage(context),
-            buildListDisplay(context),
-            FractionallySizedBox(
-              widthFactor: 0.4,
-              child: ElevatedButton(
-                  onPressed: () {
-                    callbackNew(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                      primary: color_list.primary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
+    return Scaffold(
+        body: Center(
+        child: Container(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                buildTopPage(context),
+                buildListDisplay(context),
+                FractionallySizedBox(
+                  widthFactor: 0.4,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        callbackNew(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                          primary: color_list.primary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          )
+                      ),
+                      child: Container(
+                        padding: const EdgeInsets.all(20.0),
+                        child: const Text(
+                          'New',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: color_list.third,
+                              fontSize: 20
+                          ),
+                        ),
                       )
                   ),
-                  child: Container(
-                    padding: const EdgeInsets.all(20.0),
-                    child: const Text(
-                      'New',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: color_list.third,
-                          fontSize: 20
-                      ),
-                    ),
-                  )
-              ),
-            ),
-          ]
+                ),
+              ]
+          ),
+        ),
       ),
     );
   }
