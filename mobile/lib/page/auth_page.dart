@@ -50,65 +50,69 @@ class _auth_pageState extends State<auth_page> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        const Padding(
-            padding: EdgeInsets.only(top: 40.0)
-        ),
-        Text(
-          primaryDesc,
-          style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              color: color_list.fourth,
-              fontSize: 50
-          ),
-          textAlign: TextAlign.center,
-        ),
-        Container(
-          padding: const EdgeInsets.only(
-              left: 40.0,
-              right: 40.0
-          ),
-          child: InputCustom('Email', 'Enter your Email address'),
-        ),
-        Container(
-          padding: const EdgeInsets.only(
-              left: 40.0,
-              right: 40.0
-          ),
-          child: InputCustom('Password', 'Enter your password'),
-        ),
-        FractionallySizedBox(
-          widthFactor: 0.2,
-          child: ElevatedButton(
-            onPressed: connexionCallBack,
-            style: ElevatedButton.styleFrom(
-                primary: color_list.primary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                )
+    return Scaffold(
+      body: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            const Padding(
+                padding: EdgeInsets.only(top: 40.0)
             ),
-            child: Container(
-              padding: const EdgeInsets.only(
-                top: 10.0,
-                bottom: 10.0,
+            Text(
+              primaryDesc,
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: color_list.fourth,
+                  fontSize: 50
               ),
-              child: Text(
-                primaryDesc,
-                style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: color_list.third,
-                    fontSize: 30
+              textAlign: TextAlign.center,
+            ),
+            Container(
+              padding: const EdgeInsets.only(
+                  left: 40.0,
+                  right: 40.0
+              ),
+              child: InputCustom('Email', 'Enter your Email address'),
+            ),
+            Container(
+              padding: const EdgeInsets.only(
+                  left: 40.0,
+                  right: 40.0
+              ),
+              child: InputCustom('Password', 'Enter your password'),
+            ),
+            FractionallySizedBox(
+              widthFactor: 0.2,
+              child: ElevatedButton(
+                onPressed: connexionCallBack,
+                style: ElevatedButton.styleFrom(
+                    primary: color_list.primary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    )
+                ),
+                child: Container(
+                  padding: const EdgeInsets.only(
+                    top: 10.0,
+                    bottom: 10.0,
+                  ),
+                  child: Text(
+                    primaryDesc,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: color_list.third,
+                        fontSize: 30
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
-        additionnal_connexion_widget(context),
-        end_page_widget(context)
-      ],
+            additionnal_connexion_widget(context),
+            end_page_widget(context)
+          ],
+        )
+      )
     );
   }
 

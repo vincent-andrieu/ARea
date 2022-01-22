@@ -7,32 +7,22 @@ import 'package:mobile/page/settings_page.dart';
 import 'package:mobile/page/start_area.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    var authSignIn = auth_page(authentication_e.SIGN_IN);
-    var authSignUp = auth_page(authentication_e.SIGN_UP);
-    const settings = settings_page();
-    const ifttt = create_ifttt();
-    const area = start_area();
-    const iftttList = list_ifttt();
-
     return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          // child: area.createState().build(context)
-          // child: authSignUp.createState().build(context)
-          // child: authSignIn.createState().build(context)
-          // child: settings.createState().build(context)
-          // child: ifttt.createState().build(context)
-          child: iftttList.createState().build(context)
-        ),
-      ),
+      debugShowCheckedModeBanner: false,
+      routes: <String, WidgetBuilder>{
+        '/': (BuildContext context) => const start_area(),
+        '/SignIn': (BuildContext context) => auth_page(authentication_e.SIGN_IN),
+        '/SignUp': (BuildContext context) => auth_page(authentication_e.SIGN_UP),
+        '/Settings': (BuildContext context) => const settings_page(),
+        '/Create': (BuildContext context) => const create_ifttt(),
+        '/List': (BuildContext context) => const list_ifttt(),
+      }
     );
   }
 }
