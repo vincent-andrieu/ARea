@@ -22,18 +22,7 @@ void callbackSignUpConnexion(BuildContext context) {
   Navigator.of(context).pushNamed('/List');
 }
 
-class auth_page extends StatefulWidget {
-  authentication_e type = authentication_e.SIGN_IN;
-
-  auth_page(authentication_e typeSrc, {Key? key}) : super(key: key) {
-    type = typeSrc;
-  }
-
-  @override
-  State<auth_page> createState() => _auth_pageState(type);
-}
-
-class _auth_pageState extends State<auth_page> {
+class auth_page extends StatelessWidget {
   authentication_e type = authentication_e.SIGN_IN;
   String primaryDesc = "";
   String secondaryDesc = "";
@@ -41,7 +30,7 @@ class _auth_pageState extends State<auth_page> {
   void Function(BuildContext context) connexionCallBack = (BuildContext context) {};
   void Function(BuildContext context) switchCallBack = (BuildContext context) {};
 
-  _auth_pageState(authentication_e typeSrc) {
+  auth_page(authentication_e typeSrc, {Key? key}) : super(key: key) {
     type = typeSrc;
     primaryDesc = (type == authentication_e.SIGN_IN) ? "Sign in" : "Sign up";
     secondaryDesc = (type == authentication_e.SIGN_IN) ? "Sign up" : "Sign In";

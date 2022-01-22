@@ -11,14 +11,9 @@ void callbackSaveIfttt(BuildContext context) {
   Navigator.of(context).pushNamed('/List');
 }
 
-class create_ifttt extends StatefulWidget {
-  const create_ifttt() : super();
+class create_ifttt extends StatelessWidget {
+  const create_ifttt({Key? key}) : super(key: key);
 
-  @override
-  State<create_ifttt> createState() => _create_iftttState();
-}
-
-class _create_iftttState extends State<create_ifttt> {
   @override
   Widget build(BuildContext context) {
     return Container(

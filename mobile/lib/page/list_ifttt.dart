@@ -9,14 +9,9 @@ void callbackNew(BuildContext context) {
   Navigator.of(context).pushNamed('/Create');
 }
 
-class list_ifttt extends StatefulWidget {
-  const list_ifttt() : super();
+class list_ifttt extends StatelessWidget {
+  const list_ifttt({Key? key}) : super(key: key);
 
-  @override
-  State<list_ifttt> createState() => _list_iftttState();
-}
-
-class _list_iftttState extends State<list_ifttt> {
   @override
   Widget build(BuildContext context) {
     return Container(
