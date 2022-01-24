@@ -67,15 +67,10 @@ export class AuthService {
         });
     }
 
-    public redirectToApp(url: string): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            url = `/auth${url.startsWith('/') ? url : '/' + url}`;
-            this._httpClient.get(url)
-                .pipe(catchError((err) => {
-                    this._snackbarService.openError(err);
-                    return of(reject(err));
-                }))
-                .subscribe(() => resolve());
-        });
+    public redirectToApp(url: string): void {
+        const host = this._cookieService.get(environment.cookiesKey.serverHost);
+
+        url = `${host}${host.endsWith('/') ? 'auth' : '/auth'}${url.startsWith('/') ? url : '/' + url}`;
+        window.location.href = url;
     }
 }

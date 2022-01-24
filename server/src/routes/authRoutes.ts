@@ -1,3 +1,4 @@
+import { env } from "process";
 import express from "express";
 import passport from "passport";
 import "../passport/setupPassport";
@@ -17,33 +18,33 @@ router.get("/github", authMiddleware, passport.authenticate("github", {
 }));
 
 router.get("/github/redirect", authMiddleware, passport.authenticate("github", {
-    successRedirect: "/",
-    failureRedirect: "/login"
+    successRedirect: `${env.CLIENT_HOST}/areas`,
+    failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));
 
 router.get("/twitter", passport.authenticate("twitter"));
 
 router.get("/twitter/redirect",
-    passport.authenticate("twitter", { failureRedirect: "/login" }),
+    passport.authenticate("twitter", { failureRedirect: `${env.CLIENT_HOST}/login/failure` }),
     (_, res) => {
-        res.redirect("/");
+        res.redirect(`${env.CLIENT_HOST}/areas`);
     }
 );
 
 router.get("/twitch", passport.authenticate("twitch"));
 
 router.get("/twitch/redirect",
-    passport.authenticate("twitch", { failureRedirect: "/login" }),
+    passport.authenticate("twitch", { failureRedirect: `${env.CLIENT_HOST}/login/failure` }),
     (_, res) => {
-        res.redirect("/");
+        res.redirect(`${env.CLIENT_HOST}/areas`);
     }
 );
 
 router.get("/notion", passport.authenticate("notion"));
 
 router.get("/notion/redirect", passport.authenticate("notion", {
-    successRedirect: "/",
-    failureRedirect: "/login"
+    successRedirect: `${env.CLIENT_HOST}/areas`,
+    failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));
 
 export default router;
