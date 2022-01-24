@@ -14,7 +14,7 @@ class AuthController {
             const { username, password } = req.body;
 
             if (!(username && password))
-                res.status(400).send("All input is required");
+                return res.status(400).send("All input is required");
 
             const user = await this._userSchema.findByUsername(username);
 
@@ -45,7 +45,7 @@ class AuthController {
             const { username, password } = req.body;
 
             if (!(username && password))
-                res.status(400).send("All input are required");
+                return res.status(400).send("All input are required");
             // check if user already exist
             // Validate if user exist in our database
             const oldUser = await this._userSchema.findByUsername(username);
