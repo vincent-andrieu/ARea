@@ -5,7 +5,9 @@ class areaService {
   late apiService api;
 
   areaService(String url) {
-    api = apiService(url);
+    if (url.isNotEmpty) {
+      api = apiService(url);
+    }
   }
 
   void initConnexion(String url) {

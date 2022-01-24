@@ -14,11 +14,11 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    areaService api;
+    areaService api = areaService("");
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: <String, WidgetBuilder>{
-        '/': (BuildContext context) => const start_area(),
+        '/': (BuildContext context) => start_area(api),
         '/SignIn': (BuildContext context) => auth_page(authentication_e.SIGN_IN),
         '/SignUp': (BuildContext context) => auth_page(authentication_e.SIGN_UP),
         '/Settings': (BuildContext context) => const settings_page(),
