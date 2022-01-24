@@ -6,26 +6,30 @@ import Action from "@classes/action.class";
 import Reaction from "@classes/reaction.class";
 import { ActionSchema } from "@schemas/action.schema";
 import { ReactionSchema } from "@schemas/reaction.schema";
+import { UserSchema } from "@schemas/user.schema";
 
 export default class AreaController {
 
     private static _areaSchema = new AReaSchema();
     private static _actionSchema = new ActionSchema();
     private static _reactionSchema = new ReactionSchema();
+    private static _userSchema = new UserSchema();
 
-    static create = async (req: Request, res: Response) => {
+    static create = async (req, res: Response) => {
         const action: Action = req.body.action;
-        const reaction: Reaction = req.body.reactions;
+        const reaction: Reaction = req.body.reaction;
+        const userId: string = req.user?.user_id;
         
-        //TODO: LIER AREA AVEC UTILISATEUR
         //TODO: GESTION D'ERREUR DU BODY
-
         try {
             const actionInDb = await this._actionSchema.add(action);
             const reactionInDb = await this._reactionSchema.add(reaction);
             const area = await this._areaSchema.add({action: actionInDb, reaction: reactionInDb});
+            const user = await this._userSchema.getById(userId);
 
-            res.status(201).json(area);
+            user.areas?.push(area);
+            this._userSchema.edit(user);
+            res.status(201).json({_id: area._id, action: actionInDb, reaction: reactionInDb});
         } catch (error: any) {
             console.log("[AreaController] create : ", error.toString());
             res.sendStatus(400);

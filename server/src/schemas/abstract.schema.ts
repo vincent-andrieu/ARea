@@ -23,7 +23,7 @@ export abstract class ASchema<T extends Model> {
         await this._model.findByIdAndUpdate(model._id, model);
     }
 
-    public async getById(id: ObjectId): Promise<T> {
+    public async getById(id: string): Promise<T> {
         if (!id)
             throw "undefined id";
         const result: T = await this._model.findById(id) as unknown as T;
