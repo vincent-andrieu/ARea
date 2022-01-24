@@ -31,7 +31,7 @@ export class APIInterceptor implements HttpInterceptor {
             apiRequest = apiRequest.clone({ url: `${this._cookieService.get(environment.cookiesKey.serverHost)}${apiRequest.url.startsWith("/") ? "" : "/"}${apiRequest.url}` });
 
             if (!request.headers.has('Authorization') && this._cookieService.hasKey(environment.cookiesKey.jwt))
-                apiRequest.clone({ headers: apiRequest.headers.append('Authorization', 'Bearer ' + this._cookieService.get(environment.cookiesKey.jwt)) });
+                apiRequest = apiRequest.clone({ headers: apiRequest.headers.append('Authorization', 'Bearer ' + this._cookieService.get(environment.cookiesKey.jwt)) });
         }
 
         return next.handle(apiRequest);
