@@ -8,16 +8,20 @@ class areaService {
     api = apiService(url);
   }
 
-  bool tryConnection(String user, String pass) {
+  void initConnexion(String url) {
+    api = apiService(url);
+  }
+
+  bool tryConnexion(String user, String pass) {
     try {
       api.makeRequestGet<loginResponse>("/auth/login", {
         "username": user,
         "password": pass
       });
+      // TODO remember user
       return true;
     } catch (e) {
       return false;
     }
-    return false;
   }
 }

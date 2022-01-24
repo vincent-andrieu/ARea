@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/api/areaService.dart';
 import 'package:mobile/enum/authentication_e.dart';
 import 'package:mobile/page/auth_page.dart';
 import 'package:mobile/page/create_ifttt.dart';
@@ -13,6 +14,7 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    areaService api;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: <String, WidgetBuilder>{
