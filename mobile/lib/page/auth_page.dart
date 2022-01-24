@@ -41,6 +41,8 @@ class auth_page extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    InputCustom user = InputCustom('Email', 'Enter your Email address');
+    InputCustom pass = InputCustom('Password', 'Enter your password');
     return Scaffold(
       body: Center(
         child: Column(
@@ -64,14 +66,14 @@ class auth_page extends StatelessWidget {
                   left: 40.0,
                   right: 40.0
               ),
-              child: InputCustom('Email', 'Enter your Email address'),
+              child: user,
             ),
             Container(
               padding: const EdgeInsets.only(
                   left: 40.0,
                   right: 40.0
               ),
-              child: InputCustom('Password', 'Enter your password'),
+              child: pass,
             ),
             FractionallySizedBox(
               widthFactor: 0.2,
