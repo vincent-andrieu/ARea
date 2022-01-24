@@ -17,7 +17,7 @@ export default class AuthController {
             if (!(username && password))
                 res.status(400).send("All input is required");
 
-            const user = await this._userSchema.findByUsername(username);
+            const user = await AuthController._userSchema.findByUsername(username);
 
             if (user?.password && (await bcrypt.compare(password, user.password))) {
                 // Create token
@@ -30,7 +30,7 @@ export default class AuthController {
                 );
                 // save user token
                 user.token = token;
-                await this._userSchema.edit(user);
+                await AuthController._userSchema.edit(user);
 
                 res.status(200).json(user);
             } else
@@ -50,14 +50,14 @@ export default class AuthController {
                 res.status(400).send("All input are required");
             // check if user already exist
             // Validate if user exist in our database
-            const oldUser = await this._userSchema.findByUsername(username);
+            const oldUser = await AuthController._userSchema.findByUsername(username);
 
             if (oldUser)
                 return res.status(409).send("User Already Exist. Please Login");
             const encryptedPassword = await bcrypt.hash(password, 10);
 
             // Create user in our database
-            const user = await this._userSchema.add({
+            const user = await AuthController._userSchema.add({
                 username: username.toLowerCase(),
                 password: encryptedPassword
             });
@@ -69,7 +69,7 @@ export default class AuthController {
                 { expiresIn: "2h" }
             );
             user.token = token;
-            await this._userSchema.edit(user);
+            await AuthController._userSchema.edit(user);
 
             return res.status(201).json(user);
         } catch (err) {
