@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/api/areaService.dart';
 import 'package:mobile/page/color_list.dart';
 import 'package:mobile/widget/list_custom.dart';
 
@@ -12,7 +13,11 @@ void callbackSaveIfttt(BuildContext context) {
 }
 
 class create_ifttt extends StatelessWidget {
-  const create_ifttt({Key? key}) : super(key: key);
+  late areaService api;
+
+  create_ifttt(areaService apiSrc, {Key? key}) : super(key: key) {
+    api = apiSrc;
+  }
 
   @override
   Widget build(BuildContext context) {

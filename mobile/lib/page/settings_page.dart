@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/api/areaService.dart';
 import 'package:mobile/page/color_list.dart';
 import 'package:mobile/widget/global_connexion_list.dart';
 import 'create_ifttt.dart';
@@ -9,7 +10,11 @@ void callbackLogout(BuildContext context) {
 }
 
 class settings_page extends StatelessWidget {
-  const settings_page({Key? key}) : super(key: key);
+  late areaService api;
+
+  settings_page(areaService apiSrc, {Key? key}) : super(key: key) {
+    api = apiSrc;
+  }
 
   @override
   Widget build(BuildContext context) {

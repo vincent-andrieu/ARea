@@ -26,4 +26,13 @@ class areaService {
       return false;
     }
   }
+
+  bool createUserAndConnexion(String user, String pass) {
+    try {
+      // TODO remember user
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

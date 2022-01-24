@@ -19,11 +19,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: <String, WidgetBuilder>{
         '/': (BuildContext context) => start_area(api),
-        '/SignIn': (BuildContext context) => auth_page(authentication_e.SIGN_IN),
-        '/SignUp': (BuildContext context) => auth_page(authentication_e.SIGN_UP),
-        '/Settings': (BuildContext context) => const settings_page(),
-        '/Create': (BuildContext context) => const create_ifttt(),
-        '/List': (BuildContext context) => const list_ifttt(),
+        '/SignIn': (BuildContext context) => auth_page(authentication_e.SIGN_IN, api),
+        '/SignUp': (BuildContext context) => auth_page(authentication_e.SIGN_UP, api),
+        '/Settings': (BuildContext context) => settings_page(api),
+        '/Create': (BuildContext context) => create_ifttt(api),
+        '/List': (BuildContext context) => list_ifttt(api),
       }
     );
   }

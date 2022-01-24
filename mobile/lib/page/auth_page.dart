@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/api/areaService.dart';
 import 'package:mobile/enum/authentication_e.dart';
 import 'package:mobile/page/color_list.dart';
 import 'package:mobile/widget/global_connexion_list.dart';
@@ -12,25 +13,29 @@ void callbackSignUpSwitch(BuildContext context) {
   Navigator.of(context).pushNamed('/SignIn');
 }
 
-void callbackSignInConnexion(BuildContext context) {
-  // TODO FILL THIS
-  Navigator.of(context).pushNamed('/List');
+void callbackSignInConnexion(BuildContext context, areaService api, String user, String pass) {
+  if (api.tryConnexion(user, pass)) {
+    Navigator.of(context).pushNamed('/List');
+  }
 }
 
-void callbackSignUpConnexion(BuildContext context) {
-  // TODO FILL THIS
-  Navigator.of(context).pushNamed('/List');
+void callbackSignUpConnexion(BuildContext context, areaService api, String user, String pass) {
+  if (api.createUserAndConnexion(user, pass)) {
+    Navigator.of(context).pushNamed('/List');
+  }
 }
 
 class auth_page extends StatelessWidget {
+  late areaService api;
   authentication_e type = authentication_e.SIGN_IN;
   String primaryDesc = "";
   String secondaryDesc = "";
   String endPageTips = "";
-  void Function(BuildContext context) connexionCallBack = (BuildContext context) {};
+  void Function(BuildContext context, areaService api, String user, String pass) connexionCallBack = (BuildContext context, areaService api, String user, String pass) {};
   void Function(BuildContext context) switchCallBack = (BuildContext context) {};
 
-  auth_page(authentication_e typeSrc, {Key? key}) : super(key: key) {
+  auth_page(authentication_e typeSrc, areaService apiSrc, {Key? key}) : super(key: key) {
+    api = apiSrc;
     type = typeSrc;
     primaryDesc = (type == authentication_e.SIGN_IN) ? "Sign in" : "Sign up";
     secondaryDesc = (type == authentication_e.SIGN_IN) ? "Sign up" : "Sign In";
@@ -79,7 +84,7 @@ class auth_page extends StatelessWidget {
               widthFactor: 0.2,
               child: ElevatedButton(
                 onPressed: () {
-                  connexionCallBack(context);
+                  connexionCallBack(context, api, user.controller.text, pass.controller.text);
                 },
                 style: ElevatedButton.styleFrom(
                     primary: color_list.primary,
