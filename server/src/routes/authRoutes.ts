@@ -6,8 +6,60 @@ import authMiddleware from "../middlewares/checkJwt";
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * 
+ * /auth/login:
+ *  post:
+ *      summary: Login a user.
+ *      consumes:
+ *        - application/json
+ *      parameters:
+ *        - in: body
+ *          name: body
+ *          description: The user to login
+ *          schema:
+ *            type: object
+ *            required: 
+ *              - username
+ *              - password
+ *            properties: 
+ *              username: 
+ *                  type: string
+ *              password:
+ *                  type: string
+ *      responses:
+ *         201: 
+ *          description: Created   
+ */
 router.post("/login", AuthController.login);
 
+/**
+ * @swagger
+ * 
+ * /auth/register:
+ *  post:
+ *      summary: Register a new user.
+ *      consumes:
+ *        - application/json
+ *      parameters:
+ *        - in: body
+ *          name: body
+ *          description: The user to register
+ *          schema:
+ *            type: object
+ *            required: 
+ *              - username
+ *              - password
+ *            properties: 
+ *              username: 
+ *                 type: string
+ *              password:
+ *                  type: string
+ *      responses:
+ *         201: 
+ *          description: Created   
+ */
 router.post("/register", AuthController.register);
 
 // ----
