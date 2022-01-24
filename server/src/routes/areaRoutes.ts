@@ -4,14 +4,14 @@ import AreaController from "../controllers/AreaController";
 
 const router = express.Router();
 
-router.post("/area", authMiddleware, AreaController.create);
+router.post("/", authMiddleware, AreaController.create);
 
-router.get("/area:id", authMiddleware, AreaController.readOne);
+router.get("/:id", authMiddleware, AreaController.readOne);
 
-router.get("/area:username", authMiddleware, AreaController.readList);
+router.get("/list", authMiddleware, AreaController.readList);
 
-router.put("/area:id", authMiddleware, AreaController.update);
+router.put("/:id", authMiddleware, AreaController.update);
 
-router.delete("/area:id", authMiddleware, AreaController.delete);
+router.delete("/:id", authMiddleware, AreaController.delete);
 
 export default router;

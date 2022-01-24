@@ -26,7 +26,7 @@ app.use(express.json());
 
 app.use("/", appRoutes);
 app.use("/auth", authRoutes);
-app.use("/", areaRoutes);
+app.use("/area", areaRoutes);
 
 app.listen(serverConfig.port, () => {
     console.log(`Area server is listening on ${serverConfig.port}`);
