@@ -33,7 +33,7 @@
             </mat-progress-spinner>
         </form>
 
-        <div fxLayout="column" fxLayoutAlign="space-around center" fxLayoutGap="10px">
+        <div fxLayout="column" fxLayoutAlign="space-around center" fxLayoutGap="15px">
             <button *ngFor="let app of appsLoginButton" mat-raised-button class="register-app-button"
                     (click)="redirectToAppAuth(app.redirect)" [disabled]="isLoading">
                 <img class="app-button-icon" [src]="app.iconSvgPath">
