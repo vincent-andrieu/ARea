@@ -35,4 +35,24 @@ class areaService {
       return false;
     }
   }
+
+  void createIfttt() {
+    // TODO
+  }
+
+  void deleteIfttt() {
+    // TODO
+  }
+
+  void updateIfttt() {
+    // TODO
+  }
+
+  void getListIfttt() {
+    // TODO
+  }
+
+  void callForOAuth2() {
+    // TODO
+  }
 }
