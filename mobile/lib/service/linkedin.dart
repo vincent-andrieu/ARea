@@ -15,8 +15,7 @@ class linkedin implements IService {
 
   @override
   String getName() {
-    // TODO: implement getName
-    throw UnimplementedError();
+    return "linkedin";
   }
 
   @override

@@ -15,8 +15,7 @@ class discord implements IService {
 
   @override
   String getName() {
-    // TODO: implement getName
-    throw UnimplementedError();
+    return "discord";
   }
 
   @override

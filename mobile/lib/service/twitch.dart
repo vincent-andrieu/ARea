@@ -15,8 +15,7 @@ class twitch implements IService {
 
   @override
   String getName() {
-    // TODO: implement getName
-    throw UnimplementedError();
+    return "twitch";
   }
 
   @override

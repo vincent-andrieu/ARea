@@ -15,8 +15,7 @@ class notion implements IService {
 
   @override
   String getName() {
-    // TODO: implement getName
-    throw UnimplementedError();
+    return "notion";
   }
 
   @override
