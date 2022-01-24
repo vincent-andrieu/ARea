@@ -17,7 +17,9 @@ export class SnackbarService {
         console.error(error);
         let message = "Server error";
 
-        if (typeof error?.error?.text === 'string')
+        if (typeof error?.error === 'string')
+            message = error.error;
+        else if (typeof error?.error?.text === 'string')
             message = error.error.text;
         else if (typeof error?.error?.message === 'string')
             message = error.error.message;

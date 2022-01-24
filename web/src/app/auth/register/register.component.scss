@@ -1,0 +1,22 @@
+.title {
+    font-size: xxx-large;
+    font-weight: bold;
+}
+
+.register-form-group {
+    width: 35%;
+    min-width: 200px;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: #efefef;
+    min-height: 90px;
+
+    .login-button {
+        width: 15%;
+        min-width: 100px;
+    }
+}

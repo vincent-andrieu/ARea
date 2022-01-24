@@ -27,7 +27,7 @@ export class LoginComponent {
 
         this.isLoading = true;
         this._authService.login(this.form.get('email')?.value, this.form.get('password')?.value)
-            .then(() => this._router.navigateByUrl('/areas'))
+            .then(() => this._router.navigateByUrl('/areas', { replaceUrl: true }))
             .finally(() => this.isLoading = false);
     }
 

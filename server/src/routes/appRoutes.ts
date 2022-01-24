@@ -31,7 +31,7 @@ router.get("/about.json", (req, res) => {
  *              description: Api is working correctly
  */
 router.get("/", authMiddleware, (req, res) => {
-    res.send("OK");
+    res.status(204).send();
 });
 
 router.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerJsDoc(swaggerConfig)));
