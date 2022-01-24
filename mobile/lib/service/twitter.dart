@@ -1,6 +1,6 @@
 import 'package:mobile/service/IService.dart';
 
-class twitter implements IService {
+class twitter extends IService {
   @override
   Map<String, String> getAction() {
     // TODO: implement getAction

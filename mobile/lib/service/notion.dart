@@ -1,6 +1,6 @@
 import 'package:mobile/service/IService.dart';
 
-class notion implements IService {
+class notion extends IService {
   @override
   Map<String, String> getAction() {
     // TODO: implement getAction

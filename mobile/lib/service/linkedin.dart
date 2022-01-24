@@ -1,6 +1,6 @@
 import 'package:mobile/service/IService.dart';
 
-class linkedin implements IService {
+class linkedin extends IService {
   @override
   Map<String, String> getAction() {
     // TODO: implement getAction

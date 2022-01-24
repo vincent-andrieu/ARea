@@ -1,6 +1,6 @@
 import 'package:mobile/service/IService.dart';
 
-class github implements IService {
+class github extends IService {
   @override
   Map<String, String> getAction() {
     // TODO: implement getAction

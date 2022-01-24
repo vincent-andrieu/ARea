@@ -1,6 +1,6 @@
 import 'package:mobile/service/IService.dart';
 
-class twitch implements IService {
+class twitch extends IService {
   @override
   Map<String, String> getAction() {
     // TODO: implement getAction
