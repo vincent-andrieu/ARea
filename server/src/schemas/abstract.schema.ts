@@ -26,9 +26,12 @@ export abstract class ASchema<T extends Model> {
     public async getById(id: string): Promise<T> {
         if (!id)
             throw "undefined id";
-        const result: T = await this._model.findById(id) as unknown as T;
-
-        return new this._ctor(result);
+        try {
+            const result: T = await this._model.findById(id) as unknown as T;
+            return new this._ctor(result);
+        } catch (error: any) {
+            throw new Error(`Failed to get element with id: ${id}`);
+        }
     }
 
     public async delete(model: T): Promise<void> {

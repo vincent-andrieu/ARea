@@ -37,16 +37,22 @@ export default class AreaController {
     };
 
     static readOne = (req: Request, res: Response) => {
-        const id = new ObjectId(String(req.params.id));
+        const id = req.params.id;
 
         this._areaSchema.getById(id)
-            .then((object: ARea) => {
-                res.status(200).json(object);
+            .then(async (object: any) => {
+                console.log(object);
+                try {
+                    const action = await this._actionSchema.getById(object.action);
+                    const reaction = await this._reactionSchema.getById(object.reaction);
+                    res.status(200).json({_id: object._id, action, reaction});
+                } catch (error: any) {
+                    res.status(500).send(`readOne: ${error.toString()}`);
+                }                
             }, () => {
                 res.status(404);
-            })
-            .catch(() => {
-                res.status(500);
+            }).catch((error) => {
+                res.send(error.toString()).status(500);
             });
     };
 
