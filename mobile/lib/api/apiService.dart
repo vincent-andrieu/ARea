@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart';
 
 class apiService {
@@ -8,8 +9,15 @@ class apiService {
     srvUrl = url;
   }
 
-  Future<type> makeRequestGet<type>(String route) async {
-    Response result = await get(Uri.parse(srvUrl + route));
+  Future<type> makeRequestGet<type>(String route, Map<String, String> params) async {
+    params.addAll({
+      HttpHeaders.contentTypeHeader: 'application/json'
+    });
+    Response result = await get(Uri.http(
+        srvUrl,
+        route,
+        params
+    ));
 
     if (result.statusCode == 200) {
       return jsonDecode(result.body);
@@ -18,8 +26,14 @@ class apiService {
     }
   }
 
-  Future<type> makeRequestPost<type>(String route) async {
-    Response result = await get(Uri.parse(srvUrl + route));
+  Future<type> makeRequestPost<type, query>(String route, query params) async {
+    Response result = await post(
+      Uri.parse(srvUrl + route),
+      body: json.encode(params),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json'
+      }
+    );
 
     if (result.statusCode == 200) {
       return jsonDecode(result.body);
@@ -28,8 +42,14 @@ class apiService {
     }
   }
 
-  Future<type> makeRequestPut<type>(String route) async {
-    Response result = await put(Uri.parse(srvUrl + route));
+  Future<type> makeRequestPut<type, query>(String route, query params) async {
+    Response result = await put(
+      Uri.parse(srvUrl + route),
+      body: json.encode(params),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json'
+      }
+    );
 
     if (result.statusCode == 200) {
       return jsonDecode(result.body);
@@ -38,8 +58,14 @@ class apiService {
     }
   }
 
-  Future<type> makeRequestDelete<type>(String route) async {
-    Response result = await delete(Uri.parse(srvUrl + route));
+  Future<type> makeRequestDelete<type, query>(String route, query params) async {
+    Response result = await delete(
+      Uri.parse(srvUrl + route),
+      body: json.encode(params),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json'
+      }
+    );
 
     if (result.statusCode == 200) {
       return jsonDecode(result.body);
