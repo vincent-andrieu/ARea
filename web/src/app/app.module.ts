@@ -10,6 +10,7 @@ import { MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS } from "@angular/mater
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -41,7 +42,8 @@ import { APIInterceptor } from './api.interceptor';
         MatSnackBarModule,
         MatInputModule,
         MatButtonModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        MatIconModule
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: APIInterceptor, multi: true },

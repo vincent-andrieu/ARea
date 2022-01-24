@@ -1,35 +1,46 @@
-<div fxFill fxLayout="column" fxLayoutAlign="space-around center">
+<div fxLayout="column" fxLayoutAlign="space-around center" fxFill>
     <p class="title">Sign in</p>
 
-    <form [formGroup]="form" (ngSubmit)="submitForm()" class="login-form-group" fxLayout="column">
-        <!-- Email -->
-        <mat-form-field>
-            <mat-label>Email</mat-label>
-            <input matInput formControlName="email" placeholder="ex: john.doe@example.eu" type="email" autofocus>
-            <mat-error *ngIf="form.get('email')?.hasError('required')">
-                This field is required
-            </mat-error>
-            <mat-error *ngIf="form.get('email')?.hasError('email') && !form.get('email')?.hasError('required')">
-                This field must be an email
-            </mat-error>
-        </mat-form-field>
+    <div class="login-content" fxLayout="column" fxLayout.gt-xs="row" fxLayoutAlign="space-evenly center"
+         fxLayoutGap="40px">
+        <form [formGroup]="form" (ngSubmit)="submitForm()" class="login-form-group" fxLayout="column">
+            <!-- Email -->
+            <mat-form-field>
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email" placeholder="ex: john.doe@example.eu" type="email">
+                <mat-error *ngIf="form.get('email')?.hasError('required')">
+                    This field is required
+                </mat-error>
+                <mat-error *ngIf="form.get('email')?.hasError('email') && !form.get('email')?.hasError('required')">
+                    This field must be an email
+                </mat-error>
+            </mat-form-field>
 
-        <!-- Password -->
-        <mat-form-field>
-            <mat-label>Password</mat-label>
-            <input matInput formControlName="password" type="password">
-            <mat-error *ngIf="form.get('password')?.hasError('required')">
-                This field is required
-            </mat-error>
-        </mat-form-field>
+            <!-- Password -->
+            <mat-form-field>
+                <mat-label>Password</mat-label>
+                <input matInput formControlName="password" type="password">
+                <mat-error *ngIf="form.get('password')?.hasError('required')">
+                    This field is required
+                </mat-error>
+            </mat-form-field>
 
-        <!-- Button & Spinner -->
-        <button *ngIf="!isLoading" mat-flat-button color="primary" type="submit"
-                [disabled]="form.invalid">Sign In</button>
-        <mat-progress-spinner *ngIf="isLoading" mode="indeterminate" [diameter]="36" color="primary"
-                              fxFlexAlign="center">
-        </mat-progress-spinner>
-    </form>
+            <!-- Button & Spinner -->
+            <button *ngIf="!isLoading" mat-flat-button color="primary" type="submit"
+                    [disabled]="form.invalid">Sign In</button>
+            <mat-progress-spinner *ngIf="isLoading" mode="indeterminate" [diameter]="36" color="primary"
+                                  fxFlexAlign="center">
+            </mat-progress-spinner>
+        </form>
+
+        <div fxLayout="column" fxLayoutAlign="space-around center" fxLayoutGap="10px">
+            <button *ngFor="let app of appsLoginButton" mat-raised-button class="login-app-button"
+                    (click)="redirectToAppAuth(app.redirect)" [disabled]="isLoading">
+                <img class="app-button-icon" [src]="app.iconSvgPath">
+                <span>Login with {{ app.name }}</span>
+            </button>
+        </div>
+    </div>
 
     <div></div>
 </div>

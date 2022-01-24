@@ -21,6 +21,10 @@ export class RegisterComponent {
         private _authService: AuthService
     ) {}
 
+    public get appsLoginButton(): ReadonlyArray<{ iconSvgPath: string, name: string, redirect: string }> {
+        return this._authService.appsLoginButton;
+    }
+
     public submitForm(): void {
         if (this.form.invalid || this.form.pristine)
             return;
@@ -28,6 +32,12 @@ export class RegisterComponent {
         this.isLoading = true;
         this._authService.register(this.form.get('email')?.value, this.form.get('password')?.value)
             .then(() => this._router.navigateByUrl('/areas', { replaceUrl: true }))
+            .finally(() => this.isLoading = false);
+    }
+
+    public redirectToAppAuth(redirectRoute: string): void {
+        this.isLoading = true;
+        this._authService.redirectToApp(redirectRoute)
             .finally(() => this.isLoading = false);
     }
 }

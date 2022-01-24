@@ -12,6 +12,15 @@ import { SnackbarService } from "./snackbar.service";
 })
 export class AuthService {
 
+    public readonly appsLoginButton: ReadonlyArray<{ iconSvgPath: string, name: string, redirect: string }> = [
+        { iconSvgPath: 'assets/icons/github.svg', name: 'GitHub', redirect: '/github' },
+        { iconSvgPath: 'assets/icons/twitch.svg', name: 'Twitch', redirect: '/twitch' },
+        { iconSvgPath: 'assets/icons/twitter.svg', name: 'Twitter', redirect: '/twitter' },
+        { iconSvgPath: 'assets/icons/discord.svg', name: 'Discord', redirect: '/discord' },
+        { iconSvgPath: 'assets/icons/linkedin.svg', name: 'Linkedin', redirect: '/linkedin' },
+        { iconSvgPath: 'assets/icons/notion.svg', name: 'Notion', redirect: '/notion' }
+    ];
+
     constructor(
       private _httpClient: HttpClient,
         private _cookieService: CookieService,
@@ -55,6 +64,18 @@ export class AuthService {
                     this._cookieService.put(environment.cookiesKey.jwt, user.token);
                     resolve(user);
                 });
+        });
+    }
+
+    public redirectToApp(url: string): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            url = `/auth${url.startsWith('/') ? url : '/' + url}`;
+            this._httpClient.get(url)
+                .pipe(catchError((err) => {
+                    this._snackbarService.openError(err);
+                    return of(reject(err));
+                }))
+                .subscribe(() => resolve());
         });
     }
 }

@@ -3,9 +3,23 @@
     font-weight: bold;
 }
 
+.login-content {
+    width: 100%;
+    max-width: 950px;
+}
+
 .login-form-group {
     width: 35%;
     min-width: 200px;
+}
+
+.login-app-button {
+    width: 100%;
+
+    .app-button-icon {
+        width: 25px;
+        padding-right: 10px;
+    }
 }
 
 .footer {
