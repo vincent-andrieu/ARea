@@ -46,9 +46,9 @@ class list_ifttt extends StatelessWidget {
                     child: const Text(
                       'New',
                       style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: color_list.third,
-                          fontSize: 20
+                        fontWeight: FontWeight.bold,
+                        color: color_list.third,
+                        fontSize: 20
                       ),
                     ),
                   )
