@@ -75,8 +75,8 @@ class ListCustomState extends State<ListCustom> {
               onChanged: (String? newValue) {
                 setState(() {
                   dropdownValue = newValue!;
-                  onUpdate();
                 });
+                onUpdate();
               },
               items: list.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(

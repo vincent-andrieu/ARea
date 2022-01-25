@@ -8,7 +8,9 @@ import 'package:mobile/service/linkedin.dart';
 import 'package:mobile/service/notion.dart';
 import 'package:mobile/service/twitch.dart';
 import 'package:mobile/service/twitter.dart';
-import 'package:mobile/widget/list_custom.dart';
+import 'package:mobile/widget/updatedList.dart';
+import 'dart:developer' as developer;
+
 
 List<String> getBuildList(List<IService> serviceList, String Function(IService it) callback) {
   List<String> val = [];
@@ -23,6 +25,7 @@ List<String> getBuildList(List<IService> serviceList, String Function(IService i
 List<String> buildSinceName(List<IService> serviceList, String name, List<String> Function(IService it) callback) {
   List<String> tmp = [];
 
+  developer.log(name);
   for (var it in serviceList) {
     if (it.getName() == name) {
       tmp = callback(it);
@@ -59,25 +62,13 @@ class create_ifttt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ListCustom parameter = ListCustom("Parameter", const <String>['\$MSG', '\$NAME', 'None'], 'None', () {
-      // TODO
-    });
-    ListCustom service = ListCustom("Service", getBuildList(serviceList, (IService it) => it.getName()), 'None', () {
-      // TODO
-    });
-    ListCustom condition = ListCustom("Condition", buildSinceName(serviceList, service.defaultValue, (it) => it.getAction()), 'None', () {
-      // TODO
-    });
+    updatedList parameter = updatedList("Parameter", const <String>['\$MSG', '\$NAME', 'None'], 'None');
+    updatedList service = updatedList("Service", getBuildList(serviceList, (IService it) => it.getName()), 'None');
+    updatedList condition = updatedList("Condition", buildSinceName(serviceList, service.list.defaultValue, (it) => it.getAction()), 'None');
 
-    ListCustom toService = ListCustom("Service", getBuildList(serviceList, (IService it) => it.getName()), 'None', () {
-      // TODO
-    });
-    ListCustom toAction = ListCustom("Action", const <String>['New message', 'New status', 'None'], 'None', () {
-      // TODO
-    });
-    ListCustom toParameter = ListCustom("Parameter", const <String>['Hello world', 'None'], 'None', () {
-      // TODO
-    });
+    updatedList toService = updatedList("Service", getBuildList(serviceList, (IService it) => it.getName()), 'None');
+    updatedList toAction = updatedList("Action", const <String>['New message', 'New status', 'None'], 'None');
+    updatedList toParameter = updatedList("Parameter", const <String>['Hello world', 'None'], 'None');
 
     return Scaffold(
         body: Center(
@@ -95,17 +86,17 @@ class create_ifttt extends StatelessWidget {
                 ),
                 child: Column(
                   children: <Widget>[
-                    service,
+                    service.list,
                     const Padding(padding: EdgeInsets.only(
                         top: 10.0,
                         bottom: 10.0
                     )),
-                    condition,
+                    condition.list,
                     const Padding(padding: EdgeInsets.only(
                         top: 10.0,
                         bottom: 10.0
                     )),
-                    parameter,
+                    parameter.list,
                     const Padding(padding: EdgeInsets.only(
                         top: 20.0,
                         bottom: 20.0
@@ -121,17 +112,17 @@ class create_ifttt extends StatelessWidget {
                         top: 20.0,
                         bottom: 20.0
                     )),
-                    toService,
+                    toService.list,
                     const Padding(padding: EdgeInsets.only(
                         top: 10.0,
                         bottom: 10.0
                     )),
-                    toAction,
+                    toAction.list,
                     const Padding(padding: EdgeInsets.only(
                         top: 10.0,
                         bottom: 10.0
                     )),
-                    toParameter,
+                    toParameter.list,
                     const Padding(padding: EdgeInsets.only(
                         top: 10.0,
                         bottom: 10.0
