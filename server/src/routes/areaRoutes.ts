@@ -37,7 +37,7 @@ const router = express.Router();
  */
 router.post("/", authMiddleware, AreaController.create);
 
-router.get("/list", authMiddleware, (req, res, next) => { console.log("Foobar Route"); next(); }, AreaController.readList);
+router.get("/list", authMiddleware, AreaController.readList);
 
 /**
  * @swagger
