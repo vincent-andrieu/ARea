@@ -37,22 +37,22 @@ export default class AreaController {
         }
     };
 
-    static readOne = (req: Request, res: Response) => {
+    static readOne = async (req, res: Response) => {
         const id = req.params.id;
 
-        this._areaSchema.getById(id)
-            .then(async (object: any) => {
-                console.log(object);
-                try {
-                    const action = await this._actionSchema.getById(object.action);
-                    const reaction = await this._reactionSchema.getById(object.reaction);
-                    res.status(200).json({_id: object._id, action, reaction});
-                } catch (error: any) {
-                    res.status(500).send(`readOne: ${error.toString()}`);
-                }                
-            }).catch((error) => {
-                res.send(error.toString()).status(500);
+        try {
+            const user = await this._userSchema.getById(req.user?.user_id, {
+                path: "areas",
+                populate: "action reaction" as unknown as PopulateOptions
             });
+            const area = (user.areas as any[]).find((element: ARea) => element._id == id);
+            if (area)
+                return res.json(area);
+            else
+                return res.sendStatus(404);
+        } catch (error: any) {
+            console.log(error.toString());
+        }
     };
 
     static readList = async (req, res: Response) => {
