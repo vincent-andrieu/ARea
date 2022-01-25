@@ -19,6 +19,7 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { APIInterceptor } from './api.interceptor';
+import { AReaModule } from "./area/area.module";
 
 @NgModule({
     declarations: [
@@ -43,7 +44,9 @@ import { APIInterceptor } from './api.interceptor';
         MatInputModule,
         MatButtonModule,
         MatProgressSpinnerModule,
-        MatIconModule
+        MatIconModule,
+
+        AReaModule
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: APIInterceptor, multi: true },

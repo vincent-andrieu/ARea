@@ -1,1 +1,16 @@
-<p>list works!</p>
+<button mat-icon-button class="settings-button" routerLink="/settings">
+    <mat-icon>settings</mat-icon>
+</button>
+
+<div class="page-background" fxLayout="column" fxLayoutAlign="space-around center" fxFill>
+    <p class="title">AReas's list</p>
+
+    <div fxLayout="row wrap">
+        <app-area-widget *ngFor="let area of areas" [area]="area"></app-area-widget>
+        <h2 *ngIf="areas.length === 0 && !isLoading">No area</h2>
+        <mat-progress-spinner *ngIf="isLoading" mode="indeterminate" color="primary">
+        </mat-progress-spinner>
+    </div>
+
+    <button mat-flat-button color="primary" class="new-button">New</button>
+</div>

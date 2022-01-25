@@ -1,5 +1,6 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from '@angular/core';
+import { Router } from "@angular/router";
 import { catchError, of } from "rxjs";
 import { CookieService } from "ngx-cookie";
 
@@ -12,7 +13,7 @@ import { SnackbarService } from "./snackbar.service";
 })
 export class AuthService {
 
-    public readonly appsLoginButton: ReadonlyArray<{ iconSvgPath: string, name: string, redirect: string }> = [
+    public readonly apps: ReadonlyArray<{ iconSvgPath: string, name: string, redirect: string }> = [
         { iconSvgPath: 'assets/icons/github.svg', name: 'GitHub', redirect: '/github' },
         { iconSvgPath: 'assets/icons/twitch.svg', name: 'Twitch', redirect: '/twitch' },
         { iconSvgPath: 'assets/icons/twitter.svg', name: 'Twitter', redirect: '/twitter' },
@@ -22,9 +23,10 @@ export class AuthService {
     ];
 
     constructor(
-      private _httpClient: HttpClient,
+        private _router: Router,
+        private _httpClient: HttpClient,
         private _cookieService: CookieService,
-      private _snackbarService: SnackbarService
+        private _snackbarService: SnackbarService
     ) {}
 
     public login(email: string, password: string): Promise<User> {
@@ -72,5 +74,10 @@ export class AuthService {
 
         url = `${host}${host.endsWith('/') ? 'auth' : '/auth'}${url.startsWith('/') ? url : '/' + url}`;
         window.location.href = url;
+    }
+
+    public logout(): void {
+        this._cookieService.remove(environment.cookiesKey.jwt);
+        this._router.navigateByUrl("/login");
     }
 }

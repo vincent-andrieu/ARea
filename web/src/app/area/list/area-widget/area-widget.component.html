@@ -1,0 +1,12 @@
+<mat-card *ngIf="area" matRipple class="area-card" fxLayout="row" fxLayoutAlign="space-around center"
+          fxLayoutGap="30px">
+    <div fxLayout="column">
+        <h2>{{ area.action.label }}</h2>
+        <!-- <mat-card-subtitle>Start</mat-card-subtitle> -->
+    </div>
+    <img class="action-to-reaction-arrow" src="assets/icons/arrow_right.svg">
+    <div fxLayout="column" class="last-card-element">
+        <h2>{{ area.reaction.label }}</h2>
+        <!-- <mat-card-subtitle>Start</mat-card-subtitle> -->
+    </div>
+</mat-card>

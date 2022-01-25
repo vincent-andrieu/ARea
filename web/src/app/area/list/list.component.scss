@@ -1,0 +1,24 @@
+.title {
+    font-size: xxx-large;
+    font-weight: bold;
+}
+
+.page-background {
+    background-color: #f6f6f6;
+}
+
+.new-button {
+    width: 15%;
+    min-width: 100px;
+}
+
+.settings-button {
+    position: absolute;
+    top: 17px;
+    right: 20px;
+
+    mat-icon {
+        font-size: 35px;
+        padding-right: 10px;
+    }
+}

@@ -1,0 +1,40 @@
+.title {
+    font-size: xxx-large;
+    font-weight: bold;
+}
+
+.connection-title {
+    font-weight: 500;
+    margin-bottom: 40px;
+}
+
+.connection-list {
+    width: 70%;
+
+    .login-service-button {
+        width: 30%;
+        min-width: 190px;
+        margin: 10px;
+
+        .service-button-icon {
+            width: 25px;
+            padding-right: 10px;
+        }
+    }
+}
+
+.logout-button {
+    width: 15%;
+    min-width: 100px;
+}
+
+.back-button {
+    position: absolute;
+    top: 17px;
+    left: 20px;
+
+    mat-icon {
+        font-size: 35px;
+        padding-right: 9px;
+    }
+}
