@@ -1,5 +1,5 @@
 import { Client, Message, TextChannel } from "discord.js";
-import { discordConfig } from "../config/discordConfig";
+import { discordBotConfig } from "../config/discordConfig";
 
 const CHANNEL_ID = "535524248262017039"; // DEBUG
 
@@ -8,7 +8,7 @@ export default class DiscordBot {
     static client: Client = new Client;
 
     static async connect(): Promise<void> {
-        await DiscordBot.client.login(discordConfig.discord_bot_token);
+        await DiscordBot.client.login(discordBotConfig.discord_bot_token);
 
         DiscordBot.client.on("ready", () => {
             console.log(`Discord bot Logged in as ${DiscordBot.client.user?.tag}!`);

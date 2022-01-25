@@ -1,14 +1,9 @@
-import { NextFunction, Request, Response } from "express";
-import User from "@classes/user.class";
+import { NextFunction, Response } from "express";
 import jwt from "jsonwebtoken";
 
 import { serverConfig } from "@config/serverConfig";
 
-export interface AReaRequest extends Request {
-    user: User;
-}
-
-export default (req: AReaRequest, res: Response, next: NextFunction) => {
+export default (req: any, res: Response, next: NextFunction) => {
     try {
         const token = req.body.token || req.query.token || req.headers["x-access-token"] || req.headers["authorization"]?.substring(7) || req.user.token;
 
