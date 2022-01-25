@@ -28,9 +28,12 @@
         "@schemas": "build/schemas"
     },
     "dependencies": {
+        "@discordjs/rest": "^0.3.0",
         "@notionhq/client": "^0.4.12",
         "bcryptjs": "^2.4.3",
         "cookie-session": "^2.0.0",
+        "discord-api-types": "^0.26.1",
+        "discord.js": "^12.5.3",
         "dotenv": "^10.0.0",
         "express": "^4.17.2",
         "jsonwebtoken": "^8.5.1",
