@@ -33,7 +33,7 @@ export default class AreaController {
             res.status(201).json({_id: area._id, action: actionInDb, reaction: reactionInDb});
         } catch (error: any) {
             console.log("[AreaController] create :", error.toString());
-            res.sendStatus(400);
+            res.status(400).send(error.toString());
         }
     };
 
@@ -49,9 +49,10 @@ export default class AreaController {
             if (area)
                 return res.json(area);
             else
-                return res.sendStatus(404);
+                return res.status(404).send(`Failed to find area with id: ${id}`);
         } catch (error: any) {
             console.log(error.toString());
+            return res.status(404).send(error.toString());
         }
     };
 
@@ -62,8 +63,8 @@ export default class AreaController {
                 populate: "action reaction" as unknown as PopulateOptions
             });
             res.status(200).json(user.areas);
-        } catch (error) {
-            console.log(error);
+        } catch (error: any) {
+            res.status(404).send(error.toString());
         }
     };
 
