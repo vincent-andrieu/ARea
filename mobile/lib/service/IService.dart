@@ -13,6 +13,10 @@ class IService {
     return "";
   }
 
+  List<String> getParams() {
+    return [];
+  }
+
   List<String> getAction() {
     return [];
   }

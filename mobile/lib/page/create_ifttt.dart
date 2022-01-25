@@ -62,13 +62,13 @@ class create_ifttt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    updatedList parameter = updatedList("Parameter", const <String>['\$MSG', '\$NAME', 'None'], 'None');
     updatedList service = updatedList("Service", getBuildList(serviceList, (IService it) => it.getName()), 'None');
-    updatedList condition = updatedList("Condition", buildSinceName(serviceList, service.list.defaultValue, (it) => it.getAction()), 'None');
+    updatedList condition = updatedList("Condition", buildSinceName(serviceList, service.list.dropdownValue, (it) => it.getAction()), 'None');
+    updatedList parameter = updatedList("Parameter", buildSinceName(serviceList, service.list.dropdownValue, (it) => it.getParams()), 'None');
 
     updatedList toService = updatedList("Service", getBuildList(serviceList, (IService it) => it.getName()), 'None');
-    updatedList toAction = updatedList("Action", const <String>['New message', 'New status', 'None'], 'None');
-    updatedList toParameter = updatedList("Parameter", const <String>['Hello world', 'None'], 'None');
+    updatedList toAction = updatedList("Action", buildSinceName(serviceList, service.list.dropdownValue, (it) => it.getReaction()), 'None');
+    updatedList toParameter = updatedList("Parameter", buildSinceName(serviceList, service.list.dropdownValue, (it) => it.getParams()), 'None');
 
     return Scaffold(
         body: Center(

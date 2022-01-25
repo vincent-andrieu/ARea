@@ -1,36 +1,19 @@
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/page/color_list.dart';
+import 'dart:developer' as developer;
 
-class ListCustom extends StatefulWidget {
+class ListCustom extends StatelessWidget {
   List<String> list = <String>[];
   String defaultValue = "";
+  String dropdownValue = "";
   String desc = "";
   void Function() onUpdate = () {};
 
   ListCustom(String descSrc, List<String> listSrc, String defaultValueSrc, void Function() onUpdateSrc, {Key? key}) : super(key: key) {
     list = listSrc;
     defaultValue = defaultValueSrc;
+    dropdownValue = defaultValueSrc;
     desc = descSrc;
-    onUpdate = onUpdateSrc;
-  }
-
-  @override
-  State<ListCustom> createState() => ListCustomState(desc, list, defaultValue, onUpdate);
-}
-
-class ListCustomState extends State<ListCustom> {
-  String desc = "";
-  String dropdownValue = "";
-  List<String> list = <String>[];
-  void Function() onUpdate = () {};
-
-  ListCustomState(String descSrc, List<String> listSrc, String defaultValue, void Function() onUpdateSrc) {
-    desc = descSrc;
-    list = listSrc;
-    dropdownValue = defaultValue;
     onUpdate = onUpdateSrc;
   }
 
@@ -73,9 +56,8 @@ class ListCustomState extends State<ListCustom> {
                 color: color_list.fourth,
               ),
               onChanged: (String? newValue) {
-                setState(() {
-                  dropdownValue = newValue!;
-                });
+                developer.log(newValue!);
+                dropdownValue = newValue;
                 onUpdate();
               },
               items: list.map<DropdownMenuItem<String>>((String value) {
