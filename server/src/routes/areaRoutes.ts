@@ -37,6 +37,8 @@ const router = express.Router();
  */
 router.post("/", authMiddleware, AreaController.create);
 
+router.get("/list", authMiddleware, (req, res, next) => { console.log("Foobar Route"); next(); }, AreaController.readList);
+
 /**
  * @swagger
  * 
@@ -52,8 +54,6 @@ router.post("/", authMiddleware, AreaController.create);
  *              description: Numeric ID of the area to get
  */
 router.get("/:id", authMiddleware, AreaController.readOne);
-
-router.get("/list", authMiddleware, AreaController.readList);
 
 router.put("/:id", authMiddleware, AreaController.update);
 

@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import User from "@classes/user.class";
 import { ObjectId } from "@classes/model.class";
 import { ASchema } from "./abstract.schema";
+import ARea from "@classes/area.class";
 
 const userSchema = new mongoose.Schema({
     username: { type: String },
@@ -29,6 +30,12 @@ export class UserSchema extends ASchema<User> {
 
     public async findByUsername(username: string): Promise<User> {
         const result: User = await this._model.findOne({ username }) as unknown as User;
+
+        return result;
+    }
+
+    public async addARea(userId: ObjectId | string, area: ARea | ObjectId): Promise<User> {
+        const result: User = await this._model.findByIdAndUpdate(userId, { $push: { areas: area } }) as unknown as User;
 
         return result;
     }

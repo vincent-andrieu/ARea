@@ -1,11 +1,11 @@
-import Model from "./model.class";
+import Model, { ObjectId } from "./model.class";
 import ARea from "./area.class";
 
 export default class User extends Model {
     username: string;
     password?: string;
     token?: string;
-    areas?: Array<ARea> = [];
+    areas?: Array<ARea> | Array<ObjectId> = [];
 
     constructor(user: User) {
         super(user);
@@ -14,6 +14,9 @@ export default class User extends Model {
         this.password = user.password || "";
 
         if (user.areas && Array.isArray(user.areas))
-            this.areas = user.areas.map((area) => new ARea(area));
+            if ((user.areas[0] as ARea)._id)
+                this.areas = user.areas.map((area) => new ARea(area));
+            else
+                this.areas = user.areas;
     }
 }

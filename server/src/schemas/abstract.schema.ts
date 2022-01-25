@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import mongoose, { PopulateOptions } from "mongoose";
 
-import Model, { ObjectId } from "@classes/model.class";
+import Model from "@classes/model.class";
 
 export abstract class ASchema<T extends Model> {
     protected _model: mongoose.Model<unknown>;
@@ -23,13 +23,17 @@ export abstract class ASchema<T extends Model> {
         await this._model.findByIdAndUpdate(model._id, model);
     }
 
-    public async getById(id: string): Promise<T> {
-        if (!id)
+    public async getById(id: string, populate?: string | string[] | PopulateOptions | PopulateOptions[]): Promise<T> {
+        if (!id || id.length === 0)
             throw "undefined id";
         try {
-            const result: T = await this._model.findById(id) as unknown as T;
+            let query = this._model.findById(id);
+
+            if (populate)
+                query = query.populate(populate);
+            const result: T = await query as unknown as T;
             return new this._ctor(result);
-        } catch (error: any) {
+        } catch (err) {
             throw new Error(`Failed to get element with id: ${id}`);
         }
     }
