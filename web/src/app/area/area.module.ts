@@ -12,6 +12,7 @@ import { AReaListComponent } from './list/list.component';
 import { AReaEditModalComponent } from './edit-modal/edit-modal.component';
 import { AReaSettingsComponent } from './settings/settings.component';
 import { AreaWidgetComponent } from './list/area-widget/area-widget.component';
+import { RouterModule } from "@angular/router";
 
 @NgModule({
     declarations: [
@@ -23,6 +24,7 @@ import { AreaWidgetComponent } from './list/area-widget/area-widget.component';
     imports: [
         CommonModule,
         FlexLayoutModule,
+        RouterModule,
 
         MatRippleModule,
         MatButtonModule,

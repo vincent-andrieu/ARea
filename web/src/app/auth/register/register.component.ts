@@ -22,7 +22,7 @@ export class RegisterComponent {
     ) {}
 
     public get appsLoginButton(): ReadonlyArray<{ iconSvgPath: string, name: string, redirect: string }> {
-        return this._authService.appsLoginButton;
+        return this._authService.apps;
     }
 
     public submitForm(): void {
