@@ -55,20 +55,19 @@ class create_ifttt extends StatelessWidget {
     linkedin(),
     notion()
   ];
+  late IService service;
 
-  create_ifttt(areaService apiSrc, {Key? key}) : super(key: key) {
-    api = apiSrc;
-  }
+  create_ifttt(this.api, this.service, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     updatedList service = updatedList("Service", getBuildList(serviceList, (IService it) => it.getName()), 'None');
-    updatedList condition = updatedList("Condition", buildSinceName(serviceList, service.list.dropdownValue, (it) => it.getAction()), 'None');
-    updatedList parameter = updatedList("Parameter", buildSinceName(serviceList, service.list.dropdownValue, (it) => it.getParams()), 'None');
+    updatedList condition = updatedList("Condition", this.service.getAction(), 'None');
+    updatedList parameter = updatedList("Parameter", this.service.getParams(), 'None');
 
     updatedList toService = updatedList("Service", getBuildList(serviceList, (IService it) => it.getName()), 'None');
-    updatedList toAction = updatedList("Action", buildSinceName(serviceList, service.list.dropdownValue, (it) => it.getReaction()), 'None');
-    updatedList toParameter = updatedList("Parameter", buildSinceName(serviceList, service.list.dropdownValue, (it) => it.getParams()), 'None');
+    updatedList toAction = updatedList("Action", this.service.getReaction(), 'None');
+    updatedList toParameter = updatedList("Parameter", this.service.getParams(), 'None');
 
     return Scaffold(
         body: Center(
