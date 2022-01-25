@@ -2,6 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:mobile/api/areaService.dart';
 import 'package:mobile/enum/authentication_e.dart';
 import 'package:mobile/page/color_list.dart';
+import 'package:mobile/service/IService.dart';
+import 'package:mobile/service/discord.dart';
+import 'package:mobile/service/github.dart';
+import 'package:mobile/service/linkedin.dart';
+import 'package:mobile/service/notion.dart';
+import 'package:mobile/service/twitch.dart';
+import 'package:mobile/service/twitter.dart';
 import 'package:mobile/widget/global_connexion_list.dart';
 import 'package:mobile/widget/input_custom.dart';
 
@@ -33,6 +40,14 @@ class auth_page extends StatelessWidget {
   String endPageTips = "";
   void Function(BuildContext context, areaService api, String user, String pass) connexionCallBack = (BuildContext context, areaService api, String user, String pass) {};
   void Function(BuildContext context) switchCallBack = (BuildContext context) {};
+  List<IService> serviceList = [
+    github(),
+    twitch(),
+    twitter(),
+    discord(),
+    linkedin(),
+    notion()
+  ];
 
   auth_page(authentication_e typeSrc, areaService apiSrc, {Key? key}) : super(key: key) {
     api = apiSrc;
@@ -172,13 +187,6 @@ class auth_page extends StatelessWidget {
   }
 
   Widget additionnal_connexion_widget(BuildContext context) {
-    return GlobalConnexionList(const [
-      false,
-      false,
-      false,
-      false,
-      false,
-      false
-    ]);
+    return GlobalConnexionList(serviceList);
   }
 }

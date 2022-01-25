@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/api/areaService.dart';
 import 'package:mobile/page/color_list.dart';
+import 'package:mobile/service/IService.dart';
+import 'package:mobile/service/discord.dart';
+import 'package:mobile/service/github.dart';
+import 'package:mobile/service/linkedin.dart';
+import 'package:mobile/service/notion.dart';
+import 'package:mobile/service/twitch.dart';
+import 'package:mobile/service/twitter.dart';
 import 'package:mobile/widget/global_connexion_list.dart';
 import 'create_ifttt.dart';
 
@@ -11,6 +18,14 @@ void callbackLogout(BuildContext context) {
 
 class settings_page extends StatelessWidget {
   late areaService api;
+  List<IService> serviceList = [
+    github(),
+    twitch(),
+    twitter(),
+    discord(),
+    linkedin(),
+    notion()
+  ];
 
   settings_page(areaService apiSrc, {Key? key}) : super(key: key) {
     api = apiSrc;
@@ -36,14 +51,7 @@ class settings_page extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              GlobalConnexionList(const [
-                true,
-                true,
-                true,
-                true,
-                true,
-                true,
-              ]),
+              GlobalConnexionList(serviceList),
               FractionallySizedBox(
                 widthFactor: 0.4,
                 child: ElevatedButton(

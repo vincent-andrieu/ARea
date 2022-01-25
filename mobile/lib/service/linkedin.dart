@@ -9,8 +9,7 @@ class linkedin extends IService {
 
   @override
   String getIcon() {
-    // TODO: implement getIcon
-    throw UnimplementedError();
+    return "assets/linkedin.png";
   }
 
   @override
@@ -32,6 +31,6 @@ class linkedin extends IService {
   @override
   bool getConnexionState() {
     // TODO: implement getConnexionState
-    throw UnimplementedError();
+    return false;
   }
 }

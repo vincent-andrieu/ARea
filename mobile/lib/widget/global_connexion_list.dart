@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/page/color_list.dart';
+import 'package:mobile/service/IService.dart';
 
 class GlobalConnexionList extends StatefulWidget {
-  List<bool> list = [];
-  GlobalConnexionList(List<bool> src, {Key? key}) : super(key: key) {
+  List<IService> list = [];
+  GlobalConnexionList(List<IService> src, {Key? key}) : super(key: key) {
     list = src;
     if (list.length != 6) {
       throw Exception("Invalid input size: " + list.length.toString());
@@ -17,8 +18,8 @@ class GlobalConnexionList extends StatefulWidget {
 }
 
 class GlobalConnexionListState extends State<GlobalConnexionList> {
-  List<bool> list = [];
-  GlobalConnexionListState(List<bool> src) {
+  List<IService> list = [];
+  GlobalConnexionListState(List<IService> src) {
     list = src;
   }
 
@@ -30,48 +31,48 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            connexion_with_button(context, (list[0]) ? "connecté avec " : "se connecter avec ", "Github", "assets/discord.png", () {
-              if (list[0]) {
+            connexion_with_button(context, (list[0].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[0].getName(), list[0].getIcon(), () {
+              if (list[0].getConnexionState()) {
                 // TODO
               } else {
 
               }
             }),
             const Padding(padding: EdgeInsets.all(10.0)),
-            connexion_with_button(context, (list[1]) ? "connecté avec " : "se connecter avec ", "Twitch", "assets/discord.png", () {
-              if (list[1]) {
+            connexion_with_button(context, (list[1].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[1].getName(), list[1].getIcon(), () {
+              if (list[1].getConnexionState()) {
                 // TODO
               } else {
 
               }
             }),
             const Padding(padding: EdgeInsets.all(10.0)),
-            connexion_with_button(context, (list[2]) ? "connecté avec " : "se connecter avec ", "Twitter", "assets/discord.png", () {
-              if (list[2]) {
+            connexion_with_button(context, (list[2].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[2].getName(), list[2].getIcon(), () {
+              if (list[2].getConnexionState()) {
                 // TODO
               } else {
 
               }
             }),
             const Padding(padding: EdgeInsets.all(10.0)),
-            connexion_with_button(context, (list[3]) ? "connecté avec " : "se connecter avec ", "Discord", "assets/discord.png", () {
-              if (list[3]) {
+            connexion_with_button(context, (list[3].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[3].getName(), list[3].getIcon(), () {
+              if (list[3].getConnexionState()) {
                 // TODO
               } else {
 
               }
             }),
             const Padding(padding: EdgeInsets.all(10.0)),
-            connexion_with_button(context, (list[4]) ? "connecté avec " : "se connecter avec ", "Linkedin", "assets/discord.png", () {
-              if (list[4]) {
+            connexion_with_button(context, (list[4].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[4].getName(), list[4].getIcon(), () {
+              if (list[4].getConnexionState()) {
                 // TODO
               } else {
 
               }
             }),
             const Padding(padding: EdgeInsets.all(10.0)),
-            connexion_with_button(context, (list[5]) ? "connecté avec " : "se connecter avec ", "Notion", "assets/discord.png", () {
-              if (list[5]) {
+            connexion_with_button(context, (list[5].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[5].getName(), list[5].getIcon(), () {
+              if (list[5].getConnexionState()) {
                 // TODO
               } else {
 

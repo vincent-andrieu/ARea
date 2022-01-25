@@ -59,9 +59,12 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - assets/google.png
+    - assets/github.png
+    - assets/notion.png
+    - assets/twitch.png
+    - assets/twitter.png
     - assets/discord.png
-    - assets/youtube.png
+    - assets/linkedin.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

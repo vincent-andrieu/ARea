@@ -9,8 +9,7 @@ class github extends IService {
 
   @override
   String getIcon() {
-    // TODO: implement getIcon
-    throw UnimplementedError();
+    return "assets/github.png";
   }
 
   @override
@@ -32,6 +31,6 @@ class github extends IService {
   @override
   bool getConnexionState() {
     // TODO: implement getConnexionState
-    throw UnimplementedError();
+    return false;
   }
 }
