@@ -20,8 +20,4 @@ export class AReaSchema extends ASchema<ARea> {
     public async getListByUsername(username: string) {
         return await this._model.find({ username });
     }
-
-    public async removeById(id: ObjectId) {
-        return await this._model.findById(id).remove().exec();
-    }
 }

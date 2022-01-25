@@ -12,12 +12,12 @@ export default class Service extends Model {
 
         this.label = service.label || "";
 
-        if (Array.isArray(service.actions))
+        if (Array.isArray(service.actions) && service.actions.length > 0)
             if ((service.actions[0] as Action)._id)
                 this.actions = service.actions.map((action) => new Action(action));
             else
                 this.actions = service.actions;
-        if (Array.isArray(service.reactions))
+        if (Array.isArray(service.reactions) && service.reactions.length > 0)
             if ((service.reactions[0] as Reaction)._id)
                 this.reactions = service.reactions.map((reaction) => new Reaction(reaction));
             else

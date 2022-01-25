@@ -13,7 +13,7 @@ export default class User extends Model {
         this.username = user.username || "";
         this.password = user.password || "";
 
-        if (user.areas && Array.isArray(user.areas))
+        if (user.areas && Array.isArray(user.areas) && user.areas.length > 0)
             if ((user.areas[0] as ARea)._id)
                 this.areas = user.areas.map((area) => new ARea(area));
             else

@@ -1,6 +1,6 @@
 import mongoose, { PopulateOptions } from "mongoose";
 
-import Model from "@classes/model.class";
+import Model, { ObjectId } from "@classes/model.class";
 
 export abstract class ASchema<T extends Model> {
     protected _model: mongoose.Model<unknown>;
@@ -40,5 +40,9 @@ export abstract class ASchema<T extends Model> {
 
     public async delete(model: T): Promise<void> {
         await this._model.deleteOne({ _id: model._id });
+    }
+
+    public async deleteById(id: string | ObjectId) {
+        return await this._model.deleteOne({ _id: id });
     }
 }
