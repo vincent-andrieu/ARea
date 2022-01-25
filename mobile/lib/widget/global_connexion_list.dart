@@ -33,49 +33,67 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
           children: <Widget>[
             connexion_with_button(context, (list[0].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[0].getName(), list[0].getIcon(), () {
               if (list[0].getConnexionState()) {
-                // TODO
+                // TODO PROBABLY NOTHING
               } else {
-
+                Future<String> token = list[0].getToken();
+                token.whenComplete(() {
+                  // TODO SEND TOKEN TO SERVER
+                });
               }
             }),
             const Padding(padding: EdgeInsets.all(10.0)),
             connexion_with_button(context, (list[1].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[1].getName(), list[1].getIcon(), () {
               if (list[1].getConnexionState()) {
-                // TODO
+                // TODO PROBABLY NOTHING
               } else {
-
+                Future<String> token = list[1].getToken();
+                token.whenComplete(() {
+                  // TODO SEND TOKEN TO SERVER
+                });
               }
             }),
             const Padding(padding: EdgeInsets.all(10.0)),
             connexion_with_button(context, (list[2].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[2].getName(), list[2].getIcon(), () {
               if (list[2].getConnexionState()) {
-                // TODO
+                // TODO PROBABLY NOTHING
               } else {
-
+                Future<String> token = list[2].getToken();
+                token.whenComplete(() {
+                  // TODO SEND TOKEN TO SERVER
+                });
               }
             }),
             const Padding(padding: EdgeInsets.all(10.0)),
             connexion_with_button(context, (list[3].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[3].getName(), list[3].getIcon(), () {
               if (list[3].getConnexionState()) {
-                // TODO
+                // TODO PROBABLY NOTHING
               } else {
-
+                Future<String> token = list[3].getToken();
+                token.whenComplete(() {
+                  // TODO SEND TOKEN TO SERVER
+                });
               }
             }),
             const Padding(padding: EdgeInsets.all(10.0)),
             connexion_with_button(context, (list[4].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[4].getName(), list[4].getIcon(), () {
               if (list[4].getConnexionState()) {
-                // TODO
+                // TODO PROBABLY NOTHING
               } else {
-
+                Future<String> token = list[4].getToken();
+                token.whenComplete(() {
+                  // TODO SEND TOKEN TO SERVER
+                });
               }
             }),
             const Padding(padding: EdgeInsets.all(10.0)),
             connexion_with_button(context, (list[5].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[5].getName(), list[5].getIcon(), () {
               if (list[5].getConnexionState()) {
-                // TODO
+                // TODO PROBABLY NOTHING
               } else {
-
+                Future<String> token = list[5].getToken();
+                token.whenComplete(() {
+                  // TODO SEND TOKEN TO SERVER
+                });
               }
             }),
           ]
