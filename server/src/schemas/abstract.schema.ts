@@ -19,8 +19,13 @@ export abstract class ASchema<T extends Model> {
         }        
     }
 
-    public async edit(model: T): Promise<void> {
-        await this._model.findByIdAndUpdate(model._id, model);
+    public async edit(model: T): Promise<T> {
+        try {
+            const result: T = await this._model.findByIdAndUpdate(model._id, model) as unknown as T;
+            return new this._ctor(result);
+        } catch (error: any) {
+            throw new Error(error.toString());
+        }
     }
 
     public async getById(id: string, populate?: string | string[] | PopulateOptions | PopulateOptions[]): Promise<T> {

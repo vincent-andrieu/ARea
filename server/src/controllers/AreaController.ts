@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { AReaSchema } from "../schemas/area.schema";
 import ARea from "../classes/area.class";
-import { ObjectId } from "@classes/model.class";
+import { getStrObjectId, ObjectId } from "@classes/model.class";
 import Action from "@classes/action.class";
 import Reaction from "@classes/reaction.class";
 import { ActionSchema } from "@schemas/action.schema";
@@ -68,20 +68,27 @@ export default class AreaController {
         }
     };
 
-    static update = (req: Request, res: Response) => {
-        const id = new ObjectId(String(req.params.id));
-        const data: ARea = req.body;
+    static update = async (req, res: Response) => {    
+        const userId: string = req.user?.user_id;    
+        const areaId = req.params.id;
+        try {
+            const action: Action = new Action(req.body.action);
+            const reaction: Reaction = new Reaction(req.body.reaction);
 
-        this._areaSchema.edit({ _id: id, ...data })
-            .then(() => {
-                res.status(200);
-            }, () => {
-                res.status(404);
-            })
-            .catch(() => {
-                res.status(500);
-            });
-        res.status(200).json(data);
+            const user = await this._userSchema.getById(userId, "areas");
+            const area = (user.areas as Array<ARea>).find((element: ARea) => getStrObjectId(element) === getStrObjectId(areaId));
+            if (!area)
+                return res.status(404).send(`Failed to find area with id: ${areaId}`);
+            if (getStrObjectId(area?.action) !== getStrObjectId(action))
+                return res.status(404).send("Wrong action id");
+            if (getStrObjectId(area?.reaction) !== getStrObjectId(reaction))
+                return res.status(404).send("Wrong reaction id");
+            const actionUpdate = await this._actionSchema.edit(action);
+            const reactionUpdate = await this._reactionSchema.edit(reaction);
+            res.json({_id: areaId, action: actionUpdate, reaction: reactionUpdate});
+        } catch (error: any) {
+            res.status(500).send(error.toString());
+        }
     };
 
     static delete = async (req, res: Response) => {

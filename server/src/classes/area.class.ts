@@ -9,7 +9,7 @@ export default class ARea extends Model {
     constructor(area: ARea) {
         super(area);
 
-        this.action = (area.action as Action)._id ? new Action(area.action as Action) : area.action;
-        this.reaction = (area.reaction as Reaction)._id ? new Reaction(area.reaction as Reaction) : area.reaction;
+        this.action = (area.action as Action)?._id ? new Action(area.action as Action) : area.action;
+        this.reaction = (area.reaction as Reaction)?._id ? new Reaction(area.reaction as Reaction) : area.reaction;
     }
 }
