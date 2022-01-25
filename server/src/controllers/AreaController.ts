@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { AReaSchema } from "../schemas/area.schema";
 import ARea from "../classes/area.class";
-import { ObjectId } from "../classes/model.class";
+import { ObjectId } from "@classes/model.class";
 import Action from "@classes/action.class";
 import Reaction from "@classes/reaction.class";
 import { ActionSchema } from "@schemas/action.schema";
@@ -84,17 +84,31 @@ export default class AreaController {
         res.status(200).json(data);
     };
 
-    static delete = (req: Request, res: Response) => {
-        const id = new ObjectId(String(req.params.id));
+    static delete = async (req, res: Response) => {
+        const areaId = req.params.id;
+        const userId = req.user?.user_id;
 
-        this._areaSchema.removeById(id)
-            .then(() => {
-                res.status(200);
-            }, () => {
-                res.status(404);
-            })
-            .catch(() => {
-                res.status(500);
+        try {
+            const user = await this._userSchema.getById(userId, {
+                path: "areas",
+                populate: "action reaction" as unknown as PopulateOptions
             });
+            const area = (user.areas as any[]).find((element: ARea) => element._id == areaId);
+
+            if (!area)
+                return res.status(404).send(`Failed to find area with id: ${areaId}`);
+            
+            const action: ObjectId = area.action as ObjectId;
+            const reaction: ObjectId = area.reaction as ObjectId;
+            
+            await this._actionSchema.deleteById(action);
+            await this._reactionSchema.deleteById(reaction);
+            await this._areaSchema.deleteById(areaId);
+            await this._userSchema.removeARea(userId, areaId);
+
+            return res.status(200).send(`Successfully deleted area ${areaId}`);
+        } catch (error: any) {
+            return res.status(500).send(error.toString());
+        }
     };
 }

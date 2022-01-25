@@ -39,4 +39,10 @@ export class UserSchema extends ASchema<User> {
 
         return result;
     }
+
+    public async removeARea(userId: ObjectId | string, area: ARea | ObjectId): Promise<User> {
+        const result: User = await this._model.findByIdAndUpdate(userId, { $pull: { areas: area }}) as unknown as User;
+
+        return result;
+    }
 }
