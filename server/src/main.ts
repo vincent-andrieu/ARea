@@ -1,9 +1,9 @@
 import "module-alias/register";
+
 import Database from "./init/database";
-import "./init/express";
+import Express from "./init/express";
 import DiscordBot from "./module/discord-bot";
 
 DiscordBot.connect();
-
-// Database example
+Express.connect();
 Database.connect();

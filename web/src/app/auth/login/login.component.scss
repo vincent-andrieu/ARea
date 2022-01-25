@@ -1,0 +1,36 @@
+.title {
+    font-size: xxx-large;
+    font-weight: bold;
+}
+
+.login-content {
+    width: 100%;
+    max-width: 950px;
+}
+
+.login-form-group {
+    width: 35%;
+    min-width: 200px;
+}
+
+.login-app-button {
+    width: 100%;
+
+    .app-button-icon {
+        width: 25px;
+        padding-right: 10px;
+    }
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: #efefef;
+    min-height: 90px;
+
+    .register-button {
+        width: 15%;
+        min-width: 100px;
+    }
+}

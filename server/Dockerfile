@@ -4,7 +4,6 @@ WORKDIR /app
 COPY ./package.json /app/
 COPY ./package-lock.json /app/
 COPY ./tsconfig.json /app/
-COPY ./.env /app/
 COPY ./src/ /app/src/
 
 RUN npm i

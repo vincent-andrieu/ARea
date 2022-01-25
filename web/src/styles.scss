@@ -1,1 +1,29 @@
+@import "./theme.scss";
+
 /* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+    height: 100%;
+}
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/**
+ * Custom class
+ */
+
+.loading-shade {
+    background: rgba(0, 0, 0, 0.15);
+}
+
+mat-form-field ::ng-deep .mat-form-field-wrapper {
+    padding-bottom: 0 !important;
+}
+
+.snackbar-error {
+    background-color: red;
+    color: white;
+}

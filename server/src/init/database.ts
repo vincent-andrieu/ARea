@@ -10,7 +10,7 @@ export default {
         if (serverConfig.database.username && serverConfig.database.password)
             uris = `mongodb://${serverConfig.database.username}:${serverConfig.database.password}@${serverConfig.database.host}:${serverConfig.database.port}/${serverConfig.database.name}?authSource=admin`;
 
-        console.log("Connect to database...");
+        console.log("Connecting to database...");
         await mongoose.connect(uris, {
             useNewUrlParser: true,
             useCreateIndex: true,

@@ -22,18 +22,18 @@ router.get("/about.json", (req, res) => {
 
 /**
  * @swagger
- * 
+ *
  * /:
  *  get:
  *      summary: Api homepage.
  *      responses:
- *          200: 
+ *          200:
  *              description: Api is working correctly
  */
 router.get("/", authMiddleware, (req, res) => {
-    res.send("OK");
+    res.status(204).send();
 });
 
-router.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerJsDoc(swaggerConfig)))
+router.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerJsDoc(swaggerConfig)));
 
 export default router;

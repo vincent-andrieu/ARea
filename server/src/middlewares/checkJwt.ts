@@ -1,12 +1,16 @@
+import { NextFunction, Request, Response } from "express";
+import User from "@classes/user.class";
 import jwt from "jsonwebtoken";
-import { serverConfig } from "../config/serverConfig";
 
-const verifyToken = (req, res, next) => {
+import { serverConfig } from "@config/serverConfig";
 
+export interface AReaRequest extends Request {
+    user: User;
+}
+
+export default (req: AReaRequest, res: Response, next: NextFunction) => {
     try {
-        const token =
-            req.body.token || req.query.token || req.headers["x-access-token"] || 
-            (req.headers["authorization"] ? req.headers["authorization"].substr(7) : undefined) || req.user.token;
+        const token = req.body.token || req.query.token || req.headers["x-access-token"] || req.headers["authorization"]?.substring(7) || req.user.token;
 
         if (!token)
             return res.status(403).send("A token is required for authentication");
@@ -18,7 +22,3 @@ const verifyToken = (req, res, next) => {
     }
     return next();
 };
-
-module.exports = verifyToken;
-
-export default verifyToken;
