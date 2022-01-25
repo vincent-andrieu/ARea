@@ -5,7 +5,8 @@ const verifyToken = (req, res, next) => {
 
     try {
         const token =
-            req.body.token || req.query.token || req.headers["x-access-token"] || req.headers["authorization"].substr(7);
+            req.body.token || req.query.token || req.headers["x-access-token"] || 
+            (req.headers["authorization"] ? req.headers["authorization"].substr(7) : undefined) || req.user.token;
 
         if (!token)
             return res.status(403).send("A token is required for authentication");

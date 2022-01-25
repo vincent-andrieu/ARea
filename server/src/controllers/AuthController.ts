@@ -9,6 +9,17 @@ class AuthController {
 
     private static _userSchema = new UserSchema();
 
+    public static signToken(data: any): string {
+        const token = jwt.sign(
+            { data },
+            serverConfig.jwtSecret,
+            {
+                expiresIn: "2h"
+            }
+        );
+        return token;
+    }
+
     static login = async (req: Request, res: Response) => {
         try {
             const { username, password } = req.body;
@@ -20,13 +31,7 @@ class AuthController {
 
             if (user && (await bcrypt.compare(password, user.password))) {
                 // Create token
-                const token = jwt.sign(
-                    { user_id: user._id, username },
-                    serverConfig.jwtSecret,
-                    {
-                        expiresIn: "2h"
-                    }
-                );
+                const token = this.signToken({ user_id: user._id, username });
                 // save user token
                 user.token = token;
                 await this._userSchema.edit(user);
@@ -61,11 +66,7 @@ class AuthController {
             });
 
             // Create token
-            const token = jwt.sign(
-                { user_id: user._id, username },
-                serverConfig.jwtSecret,
-                { expiresIn: "2h" }
-            );
+            const token = this.signToken({ user_id: user._id, username });
             user.token = token;
             await this._userSchema.edit(user);
 
