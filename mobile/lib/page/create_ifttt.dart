@@ -1,7 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/api/areaService.dart';
 import 'package:mobile/page/color_list.dart';
+import 'package:mobile/service/IService.dart';
+import 'package:mobile/service/discord.dart';
+import 'package:mobile/service/github.dart';
+import 'package:mobile/service/linkedin.dart';
+import 'package:mobile/service/notion.dart';
+import 'package:mobile/service/twitch.dart';
+import 'package:mobile/service/twitter.dart';
 import 'package:mobile/widget/list_custom.dart';
+
+List<String> getBuildList(List<IService> serviceList, String Function(IService it) callback) {
+  List<String> val = [];
+
+  for (var it in serviceList) {
+    val.add(callback(it));
+  }
+  val.add('None');
+  return val;
+}
+
+List<String> buildSinceName(List<IService> serviceList, String name, List<String> Function(IService it) callback) {
+  List<String> tmp = [];
+
+  for (var it in serviceList) {
+    if (it.getName() == name) {
+      tmp = callback(it);
+      break;
+    }
+  }
+  tmp.add('None');
+  return tmp;
+}
 
 void callbackClose(BuildContext context) {
   Navigator.of(context).pop();
@@ -14,6 +44,14 @@ void callbackSaveIfttt(BuildContext context) {
 
 class create_ifttt extends StatelessWidget {
   late areaService api;
+  List<IService> serviceList = [
+    github(),
+    twitch(),
+    twitter(),
+    discord(),
+    linkedin(),
+    notion()
+  ];
 
   create_ifttt(areaService apiSrc, {Key? key}) : super(key: key) {
     api = apiSrc;
@@ -21,6 +59,26 @@ class create_ifttt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ListCustom parameter = ListCustom("Parameter", const <String>['\$MSG', '\$NAME', 'None'], 'None', () {
+      // TODO
+    });
+    ListCustom service = ListCustom("Service", getBuildList(serviceList, (IService it) => it.getName()), 'None', () {
+      // TODO
+    });
+    ListCustom condition = ListCustom("Condition", buildSinceName(serviceList, service.defaultValue, (it) => it.getAction()), 'None', () {
+      // TODO
+    });
+
+    ListCustom toService = ListCustom("Service", getBuildList(serviceList, (IService it) => it.getName()), 'None', () {
+      // TODO
+    });
+    ListCustom toAction = ListCustom("Action", const <String>['New message', 'New status', 'None'], 'None', () {
+      // TODO
+    });
+    ListCustom toParameter = ListCustom("Parameter", const <String>['Hello world', 'None'], 'None', () {
+      // TODO
+    });
+
     return Scaffold(
         body: Center(
         child: Container(
@@ -37,17 +95,17 @@ class create_ifttt extends StatelessWidget {
                 ),
                 child: Column(
                   children: <Widget>[
-                    ListCustom("Service", const <String>['Twitch', 'Discord', 'Google', 'Twitter', 'None'], 'None'),
+                    service,
                     const Padding(padding: EdgeInsets.only(
                         top: 10.0,
                         bottom: 10.0
                     )),
-                    ListCustom("Condition", const <String>['New message on channel ', 'None'], 'None'),
+                    condition,
                     const Padding(padding: EdgeInsets.only(
                         top: 10.0,
                         bottom: 10.0
                     )),
-                    ListCustom("Parameter", const <String>['\$MSG', '\$NAME', 'None'], 'None'),
+                    parameter,
                     const Padding(padding: EdgeInsets.only(
                         top: 20.0,
                         bottom: 20.0
@@ -63,17 +121,17 @@ class create_ifttt extends StatelessWidget {
                         top: 20.0,
                         bottom: 20.0
                     )),
-                    ListCustom("Service", const <String>['Twitch', 'Discord', 'Google', 'Twitter', 'None'], 'None'),
+                    toService,
                     const Padding(padding: EdgeInsets.only(
                         top: 10.0,
                         bottom: 10.0
                     )),
-                    ListCustom("Action", const <String>['New message', 'New status', 'None'], 'None'),
+                    toAction,
                     const Padding(padding: EdgeInsets.only(
                         top: 10.0,
                         bottom: 10.0
                     )),
-                    ListCustom("Parameter", const <String>['Hello world', 'None'], 'None'),
+                    toParameter,
                     const Padding(padding: EdgeInsets.only(
                         top: 10.0,
                         bottom: 10.0

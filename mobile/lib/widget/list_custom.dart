@@ -8,26 +8,30 @@ class ListCustom extends StatefulWidget {
   List<String> list = <String>[];
   String defaultValue = "";
   String desc = "";
+  void Function() onUpdate = () {};
 
-  ListCustom(String descSrc, List<String> listSrc, String defaultValueSrc, {Key? key}) : super(key: key) {
+  ListCustom(String descSrc, List<String> listSrc, String defaultValueSrc, void Function() onUpdateSrc, {Key? key}) : super(key: key) {
     list = listSrc;
     defaultValue = defaultValueSrc;
     desc = descSrc;
+    onUpdate = onUpdateSrc;
   }
 
   @override
-  State<ListCustom> createState() => ListCustomState(desc, list, defaultValue);
+  State<ListCustom> createState() => ListCustomState(desc, list, defaultValue, onUpdate);
 }
 
 class ListCustomState extends State<ListCustom> {
   String desc = "";
   String dropdownValue = "";
   List<String> list = <String>[];
+  void Function() onUpdate = () {};
 
-  ListCustomState(String descSrc, List<String> listSrc, String defaultValue) {
+  ListCustomState(String descSrc, List<String> listSrc, String defaultValue, void Function() onUpdateSrc) {
     desc = descSrc;
     list = listSrc;
     dropdownValue = defaultValue;
+    onUpdate = onUpdateSrc;
   }
 
   @override
@@ -71,6 +75,7 @@ class ListCustomState extends State<ListCustom> {
               onChanged: (String? newValue) {
                 setState(() {
                   dropdownValue = newValue!;
+                  onUpdate();
                 });
               },
               items: list.map<DropdownMenuItem<String>>((String value) {

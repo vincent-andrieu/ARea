@@ -13,12 +13,12 @@ class IService {
     return "";
   }
 
-  Map<String, String> getAction() {
-    return {};
+  List<String> getAction() {
+    return [];
   }
 
-  Map<String, String> getReaction() {
-    return {};
+  List<String> getReaction() {
+    return [];
   }
 
   bool getConnexionState() {
