@@ -74,17 +74,17 @@ class apiService {
     }
   }
 
-  /*Future<List<type>> makeRequestGetList<type>(String route) async {
+  Future<List<type>> makeRequestGetList<type, query>(String route) async {
     Response result = await get(Uri.parse(srvUrl + route));
 
     if (result.statusCode == 200) {
-      type body = jsonDecode(result.body);
+      dynamic body = jsonDecode(result.body);
 
-      List<type> fetchList = body?.map((dynamic item) => type.fromJson(item)).toList();
+      List<type> fetchList = body?.map((dynamic item) => jsonDecode(item)).toList();
 
       return fetchList;
     } else {
       throw "Unable to make our request to $srvUrl$route exit with status ${result.statusCode}";
     }
-  }*/
+  }
 }

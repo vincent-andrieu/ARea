@@ -6,6 +6,7 @@ import 'dart:developer' as developer;
 import 'model/iftttRequest.dart';
 import 'model/iftttResponse.dart';
 import 'model/registerResponse.dart';
+import 'model/tokenRequest.dart';
 
 class areaService {
   late apiService api;
@@ -75,21 +76,11 @@ class areaService {
 
   Future<List<iftttResponse>> getListIfttt() async {
     try {
-      // TODO
-      return [];
+      Future<List<iftttResponse>> list = api.makeRequestGetList<iftttResponse, tokenRequest>("/list");
+      return list;
     } catch (e) {
       developer.log('getListIfttt: Server failed invalid response');
       return [];
-    }
-  }
-
-  Future<String> callForOAuth2(String service) async {
-    try {
-      // TODO
-      return "";
-    } catch (e) {
-      developer.log('updateIfttt: Server failed invalid response');
-      return "";
     }
   }
 }
