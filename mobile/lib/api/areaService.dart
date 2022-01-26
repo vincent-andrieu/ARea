@@ -3,6 +3,8 @@ import 'package:mobile/api/model/loginRequest.dart';
 import 'package:mobile/api/model/loginResponse.dart';
 import 'dart:developer' as developer;
 
+import 'model/iftttRequest.dart';
+import 'model/iftttResponse.dart';
 import 'model/registerResponse.dart';
 
 class areaService {
@@ -41,27 +43,53 @@ class areaService {
     }
   }
 
-  Future<bool> createIfttt() async {
-    // TODO
-    return false;
+  Future<bool> createIfttt(String action, String reaction) async {
+    try {
+      iftttResponse _ = await api.makeRequestPost<iftttResponse, iftttRequest>("/auth/register", iftttRequest(action, true, reaction));
+      return true;
+    } catch (e) {
+      developer.log('createIfttt: Server failed invalid response');
+      return false;
+    }
   }
 
   Future<bool> deleteIfttt() async {
-    // TODO
-    return false;
+    try {
+      // TODO
+      return true;
+    } catch (e) {
+      developer.log('deleteIfttt: Server failed invalid response');
+      return false;
+    }
   }
 
   Future<bool> updateIfttt() async {
-    // TODO
-    return false;
+    try {
+      // TODO
+      return true;
+    } catch (e) {
+      developer.log('updateIfttt: Server failed invalid response');
+      return false;
+    }
   }
 
-  void getListIfttt() {
-    // TODO
+  Future<List<iftttResponse>> getListIfttt() async {
+    try {
+      // TODO
+      return [];
+    } catch (e) {
+      developer.log('getListIfttt: Server failed invalid response');
+      return [];
+    }
   }
 
   Future<String> callForOAuth2(String service) async {
-    // TODO
-    return "";
+    try {
+      // TODO
+      return "";
+    } catch (e) {
+      developer.log('updateIfttt: Server failed invalid response');
+      return "";
+    }
   }
 }
