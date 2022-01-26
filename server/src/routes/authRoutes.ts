@@ -102,8 +102,15 @@ router.get("/notion/redirect", passport.authenticate("notion", {
 router.get("/linkedin", passport.authenticate("linkedin"));
 
 router.get("/linkedin/redirect", passport.authenticate("linkedin", {
-    successRedirect: "/",
-    failureRedirect: "/login"
+    successRedirect: `${env.CLIENT_HOST}/areas`,
+    failureRedirect: `${env.CLIENT_HOST}/login/failure`
+}));
+
+router.get("/discord", passport.authenticate("discord"));
+
+router.get("/discord/redirect", passport.authenticate("discord", {
+    successRedirect: `${env.CLIENT_HOST}/areas`,
+    failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));
 
 export default router;

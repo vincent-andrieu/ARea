@@ -12,6 +12,7 @@ import "../passport/twitterPassport";
 import "../passport/twitchPassport";
 import "../passport/notionPassport";
 import "../passport/linkedinPassport";
+import "../passport/discordPassport";
 
 export default {
 
