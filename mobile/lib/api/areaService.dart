@@ -1,9 +1,13 @@
 import 'package:mobile/api/apiService.dart';
+import 'package:mobile/api/model/loginRequest.dart';
 import 'package:mobile/api/model/loginResponse.dart';
 import 'dart:developer' as developer;
 
+import 'model/registerResponse.dart';
+
 class areaService {
   late apiService api;
+  String token = "";
 
   areaService(String url) {
     if (url.isNotEmpty) {
@@ -17,44 +21,47 @@ class areaService {
 
   Future<bool> tryConnexion(String user, String pass) async {
     try {
-      await api.makeRequestGet<loginResponse>("/auth/login", {
-        "username": user,
-        "password": pass
-      });
-      // TODO remember user
+      loginResponse response = await api.makeRequestPost<loginResponse, loginRequest>("/auth/login", loginRequest(user, pass));
+      token = response.token;
       return true;
     } catch (e) {
-      developer.log('Server failed invalid response');
+      developer.log('tryConnexion: Server failed invalid response');
       return false;
     }
   }
 
-  bool createUserAndConnexion(String user, String pass) {
+  Future<bool> createUserAndConnexion(String user, String pass) async {
     try {
-      // TODO remember user
+      registerResponse response = await api.makeRequestPost<registerResponse, loginRequest>("/auth/register", loginRequest(user, pass));
+      token = response.token;
       return true;
     } catch (e) {
+      developer.log('createUserAndConnexion: Server failed invalid response');
       return false;
     }
   }
 
-  void createIfttt() {
+  Future<bool> createIfttt() async {
     // TODO
+    return false;
   }
 
-  void deleteIfttt() {
+  Future<bool> deleteIfttt() async {
     // TODO
+    return false;
   }
 
-  void updateIfttt() {
+  Future<bool> updateIfttt() async {
     // TODO
+    return false;
   }
 
   void getListIfttt() {
     // TODO
   }
 
-  void callForOAuth2() {
+  Future<String> callForOAuth2(String service) async {
     // TODO
+    return "";
   }
 }

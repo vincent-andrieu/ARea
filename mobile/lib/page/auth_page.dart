@@ -30,9 +30,12 @@ void callbackSignInConnexion(BuildContext context, areaService api, String user,
 }
 
 void callbackSignUpConnexion(BuildContext context, areaService api, String user, String pass) {
-  if (api.createUserAndConnexion(user, pass)) {
-    Navigator.of(context).pushNamed('/List');
-  }
+  Future<bool> tmp = api.createUserAndConnexion(user, pass);
+
+  tmp.then((value) => {
+    if (value)
+      Navigator.of(context).pushNamed('/List')
+  });
 }
 
 class auth_page extends StatelessWidget {
