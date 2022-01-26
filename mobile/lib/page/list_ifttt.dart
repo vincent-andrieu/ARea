@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/api/areaService.dart';
 import 'package:mobile/page/color_list.dart';
 
 void callbackParams(BuildContext context) {
@@ -10,7 +11,11 @@ void callbackNew(BuildContext context) {
 }
 
 class list_ifttt extends StatelessWidget {
-  const list_ifttt({Key? key}) : super(key: key);
+  late areaService api;
+
+  list_ifttt(areaService apiSrc, {Key? key}) : super(key: key) {
+    api = apiSrc;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,37 +24,37 @@ class list_ifttt extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(20.0),
           child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                buildTopPage(context),
-                buildListDisplay(context),
-                FractionallySizedBox(
-                  widthFactor: 0.4,
-                  child: ElevatedButton(
-                      onPressed: () {
-                        callbackNew(context);
-                      },
-                      style: ElevatedButton.styleFrom(
-                          primary: color_list.primary,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          )
-                      ),
-                      child: Container(
-                        padding: const EdgeInsets.all(20.0),
-                        child: const Text(
-                          'New',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: color_list.third,
-                              fontSize: 20
-                          ),
-                        ),
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              buildTopPage(context),
+              buildListDisplay(context),
+              FractionallySizedBox(
+                widthFactor: 0.4,
+                child: ElevatedButton(
+                  onPressed: () {
+                    callbackNew(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                      primary: color_list.primary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
                       )
                   ),
+                  child: Container(
+                    padding: const EdgeInsets.all(20.0),
+                    child: const Text(
+                      'New',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: color_list.third,
+                        fontSize: 20
+                      ),
+                    ),
+                  )
                 ),
-              ]
+              ),
+            ]
           ),
         ),
       ),
@@ -95,25 +100,25 @@ class list_ifttt extends StatelessWidget {
 
   Widget buildCard(String title, String params, String asset, BuildContext context) {
     return Container(
-        padding: const EdgeInsets.only(
-            bottom: 20.0
-        ),
-        child: Container(
-          color: color_list.secondary,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              buildSubCard(title, params, asset, context),
-              const Icon(
-                Icons.arrow_forward_outlined,
-                color: color_list.primary,
-                size: 50.0,
-              ),
-              buildSubCard(title, params, asset, context)
-            ],
-          )
+      padding: const EdgeInsets.only(
+          bottom: 20.0
+      ),
+      child: Container(
+        color: color_list.secondary,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            buildSubCard(title, params, asset, context),
+            const Icon(
+              Icons.arrow_forward_outlined,
+              color: color_list.primary,
+              size: 50.0,
+            ),
+            buildSubCard(title, params, asset, context)
+          ],
         )
-      );
+      )
+    );
   }
 
   Widget buildSubCard(String title, String params, String asset, BuildContext context) {
@@ -126,27 +131,27 @@ class list_ifttt extends StatelessWidget {
             Text(
               title,
               style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: color_list.fourth,
-                  fontSize: 40
+                fontWeight: FontWeight.bold,
+                color: color_list.fourth,
+                fontSize: 40
               ),
             ),
             Text(
               params,
               style: const TextStyle(
-                  fontWeight: FontWeight.normal,
-                  color: color_list.fourth,
-                  fontSize: 20
+                fontWeight: FontWeight.normal,
+                color: color_list.fourth,
+                fontSize: 20
               ),
             ),
             Container(
               height: 50,
               width: 50,
               decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage(asset),
-                      fit: BoxFit.fill
-                  )
+                image: DecorationImage(
+                  image: AssetImage(asset),
+                  fit: BoxFit.fill
+                )
               ),
             ),
           ],

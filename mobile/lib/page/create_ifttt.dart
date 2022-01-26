@@ -1,6 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/api/areaService.dart';
 import 'package:mobile/page/color_list.dart';
-import 'package:mobile/widget/list_custom.dart';
+import 'package:mobile/service/IService.dart';
+import 'package:mobile/service/discord.dart';
+import 'package:mobile/service/github.dart';
+import 'package:mobile/service/linkedin.dart';
+import 'package:mobile/service/notion.dart';
+import 'package:mobile/service/twitch.dart';
+import 'package:mobile/service/twitter.dart';
+import 'package:mobile/widget/updatedList.dart';
+
+void buildRedirection(String action, String reaction, BuildContext context) {
+  String route = '/Create\${$action|$reaction}';
+  Navigator.of(context).pushNamed(route);
+}
+
+List<String> getBuildList(List<IService> serviceList, String Function(IService it) callback) {
+  List<String> val = [];
+
+  for (var it in serviceList) {
+    val.add(callback(it));
+  }
+  val.add('None');
+  return val;
+}
 
 void callbackClose(BuildContext context) {
   Navigator.of(context).pop();
@@ -12,10 +35,34 @@ void callbackSaveIfttt(BuildContext context) {
 }
 
 class create_ifttt extends StatelessWidget {
-  const create_ifttt({Key? key}) : super(key: key);
+  late areaService api;
+  List<IService> serviceList = [
+    github(),
+    twitch(),
+    twitter(),
+    discord(),
+    linkedin(),
+    notion()
+  ];
+  late IService serviceAction;
+  late IService serviceReaction;
+
+  create_ifttt(this.api, this.serviceAction, this.serviceReaction, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    updatedList service = updatedList("Service", getBuildList(serviceList, (IService it) => it.getName()), serviceAction.getName(), (String selected) {
+      buildRedirection(selected, serviceReaction.getName(), context);
+    });
+    updatedList condition = updatedList("Condition", serviceAction.getAction(), 'None', null);
+    updatedList parameter = updatedList("Parameter", serviceAction.getParams(), 'None', null);
+
+    updatedList toService = updatedList("Service", getBuildList(serviceList, (IService it) => it.getName()), serviceReaction.getName(), (String selected) {
+      buildRedirection(serviceAction.getName(), selected, context);
+    });
+    updatedList toAction = updatedList("Action", serviceReaction.getReaction(), 'None', null);
+    updatedList toParameter = updatedList("Parameter", serviceReaction.getParams(), 'None', null);
+
     return Scaffold(
         body: Center(
         child: Container(
@@ -32,17 +79,17 @@ class create_ifttt extends StatelessWidget {
                 ),
                 child: Column(
                   children: <Widget>[
-                    ListCustom("Service", const <String>['Twitch', 'Discord', 'Google', 'Twitter', 'None'], 'None'),
+                    service.list,
                     const Padding(padding: EdgeInsets.only(
                         top: 10.0,
                         bottom: 10.0
                     )),
-                    ListCustom("Condition", const <String>['New message on channel ', 'None'], 'None'),
+                    condition.list,
                     const Padding(padding: EdgeInsets.only(
                         top: 10.0,
                         bottom: 10.0
                     )),
-                    ListCustom("Parameter", const <String>['\$MSG', '\$NAME', 'None'], 'None'),
+                    parameter.list,
                     const Padding(padding: EdgeInsets.only(
                         top: 20.0,
                         bottom: 20.0
@@ -58,17 +105,17 @@ class create_ifttt extends StatelessWidget {
                         top: 20.0,
                         bottom: 20.0
                     )),
-                    ListCustom("Service", const <String>['Twitch', 'Discord', 'Google', 'Twitter', 'None'], 'None'),
+                    toService.list,
                     const Padding(padding: EdgeInsets.only(
                         top: 10.0,
                         bottom: 10.0
                     )),
-                    ListCustom("Action", const <String>['New message', 'New status', 'None'], 'None'),
+                    toAction.list,
                     const Padding(padding: EdgeInsets.only(
                         top: 10.0,
                         bottom: 10.0
                     )),
-                    ListCustom("Parameter", const <String>['Hello world', 'None'], 'None'),
+                    toParameter.list,
                     const Padding(padding: EdgeInsets.only(
                         top: 10.0,
                         bottom: 10.0
