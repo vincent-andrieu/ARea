@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
 
-import Reaction from "@classes/reaction.class";
+import Reaction, { ReactionType } from "@classes/reaction.class";
 import { ASchema } from "./abstract.schema";
 
 const reactionSchema = new mongoose.Schema({
-    label: { type: String }
+    label: { type: String },
+    type: { type: String, enum: ReactionType }
 }, {
     toObject: { virtuals: true },
     toJSON: { virtuals: true }

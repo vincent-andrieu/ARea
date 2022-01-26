@@ -1,34 +1,105 @@
+import { ActionType } from "@classes/action.class";
+import ARea from "@classes/area.class";
+import { AReaSchema } from "@schemas/area.schema";
 import { Client, Message, TextChannel } from "discord.js";
 import { discordBotConfig } from "../config/discordConfig";
 
 const CHANNEL_ID = "535524248262017039"; // DEBUG
 
+interface ChannelListenerItem {
+    channelId: string,
+    areaId: string
+}
+
 export default class DiscordBot {
 
     static client: Client = new Client;
+    static channelListenerList: ChannelListenerItem[] = [];
+    static areaSchema: AReaSchema = new AReaSchema;
 
     static async connect(): Promise<void> {
         await DiscordBot.client.login(discordBotConfig.discord_bot_token);
 
-        DiscordBot.client.on("ready", () => {
-            console.log(`Discord bot Logged in as ${DiscordBot.client.user?.tag}!`);
+        DiscordBot.client.on("ready", async () => {
+            console.log(`DiscordBot: Discord bot Logged in as ${DiscordBot.client.user?.tag}!`);
         });
         DiscordBot.client.on("error", console.error);
         DiscordBot.client.on("warn", console.warn);
+
+        await this.refreshListenerList(); // load list
+        this.catchMessages();
+    }
+
+    static async refreshListenerList() {
+        const list: ARea[] = await this.areaSchema.fetchByAction(ActionType.DISCORD_MSG);
+
+        // TODO: channel id in action parameter
+        list.forEach((value: ARea) => {
+            if (value._id)
+                DiscordBot.channelListenerList.push({ channelId: CHANNEL_ID, areaId: value._id.toString() });
+        });
     }
 
     static async sendMessage(channelId: string, message: string): Promise<void> {
-        const channel: TextChannel =
-            await DiscordBot.client.channels.fetch(channelId) as TextChannel;
+        const channel = await DiscordBot.client.channels.fetch(channelId) as TextChannel;
 
-        channel.send(message);
+        channel?.send(message);
     }
 
-    static async catchMessages() {
-        DiscordBot.client.on("message", (message: Message) => {
-            if (message.channel.id == CHANNEL_ID) {
-                // TODO TRIGGER ACTION ? (or webhook?)
+    private static async catchMessages() {
+
+        DiscordBot.client.on("message", async (message: Message) => {
+            try {
+                const result = DiscordBot.channelListenerList.find((item) => {
+                    return item.channelId === message.channel.id;
+                });
+                if (result != undefined) {
+                    // fetch action
+                    const area: ARea = await this.areaSchema.getById(result.areaId);
+
+                    // TODO: TRIGGER ACTION : area.reaction
+                    this.sendMessage(message.channel.id, "Infinite loop"); // DEBUG
+                }
+            } catch (err) {
+                console.error(`DiscordBot catchMessages: ${err}`);
+                // TODO: remove the channel listener from the list ?
             }
         });
     }
+
+    // static async createWebhook() {
+    //     this.channel?.createWebhook("AREA webhook")
+    //         .then((webhook: Webhook) => {
+    //             console.log(`DiscordBot: Webhook created ${webhook}`);
+    //         })
+    //         .catch(console.error);
+    // }
+
+    // static async fetchWebhook(): Promise<boolean> {
+    //     try {
+    //         if (this.channel === null) {
+    //             console.error("DiscordBot fetchWebhook: channel not found.");
+    //             return false;
+    //         }
+    //         const webhooks = await this.channel.fetchWebhooks();
+    //         this.webhook = webhooks.find(wh => wh.token !== null);
+
+    //         if (!this.webhook) {
+    //             console.log("DiscordBot fetchWebhook: No webhook was found that I can use!");
+    //             return false;
+    //         }
+    //         return true;
+    //     } catch (err) {
+    //         console.error(`DiscordBot fetchWebhook: ${err}`);
+    //         return false;
+    //     }
+    // }
+
+    // static async sendMessageViaWebhook() {
+    //     await this.webhook?.send("Webhook test", {
+    //         username: "some-username",
+    //         avatarURL: "https://i.imgur.com/AfFp7pu.png"
+    //     });
+    //     console.log("message sent");
+    // }
 }
