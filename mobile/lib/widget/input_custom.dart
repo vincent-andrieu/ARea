@@ -5,6 +5,7 @@ import 'package:mobile/page/color_list.dart';
 class InputCustom extends StatefulWidget {
   String desc = "";
   String hint = "";
+  final controller = TextEditingController();
 
   InputCustom(String descSrc, String hintSrc, {Key? key}) : super(key: key) {
     desc = descSrc;
@@ -12,16 +13,18 @@ class InputCustom extends StatefulWidget {
   }
 
   @override
-  State<InputCustom> createState() => InputCustomState(desc, hint);
+  State<InputCustom> createState() => InputCustomState(desc, hint, controller);
 }
 
 class InputCustomState extends State<InputCustom> {
   String desc = "";
   String hint = "";
+  late final controller;
 
-  InputCustomState(String descSrc, String hintSrc) {
+  InputCustomState(String descSrc, String hintSrc, TextEditingController controllerSrc) {
     desc = descSrc;
     hint = hintSrc;
+    controller = controllerSrc;
   }
 
   @override
@@ -33,6 +36,7 @@ class InputCustomState extends State<InputCustom> {
       ),
       width: double.infinity,
       child: TextField(
+        controller: controller,
         decoration: InputDecoration(
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0)
