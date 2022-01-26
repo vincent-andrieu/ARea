@@ -11,8 +11,8 @@ import 'package:mobile/service/twitter.dart';
 import 'package:mobile/widget/global_connexion_list.dart';
 import 'create_ifttt.dart';
 
-void callbackLogout(BuildContext context) {
-  // TODO FILL THIS
+void callbackLogout(BuildContext context, areaService api) {
+  api.token = "";
   Navigator.of(context).pushNamed('/SignIn');
 }
 
@@ -56,7 +56,7 @@ class settings_page extends StatelessWidget {
                 widthFactor: 0.4,
                 child: ElevatedButton(
                   onPressed: () {
-                    callbackLogout(context);
+                    callbackLogout(context, api);
                   },
                   style: ElevatedButton.styleFrom(
                     primary: color_list.fifth,

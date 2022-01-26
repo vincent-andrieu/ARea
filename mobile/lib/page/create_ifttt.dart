@@ -29,9 +29,12 @@ void callbackClose(BuildContext context) {
   Navigator.of(context).pop();
 }
 
-void callbackSaveIfttt(BuildContext context) {
-  // TODO FILL THIS
-  Navigator.of(context).pushNamed('/List');
+void callbackSaveIfttt(BuildContext context, areaService api, String actionLabel, String reactionLabel) {
+  api.createIfttt(actionLabel, reactionLabel).then((value) => {
+    if (value) {
+      Navigator.of(context).pushNamed('/List')
+    }
+  });
 }
 
 class create_ifttt extends StatelessWidget {
@@ -94,13 +97,11 @@ class create_ifttt extends StatelessWidget {
                         top: 20.0,
                         bottom: 20.0
                     )),
-                    // TODO ADD SEPARATION
                     const Icon(
                       Icons.arrow_downward_rounded,
                       color: color_list.primary,
                       size: 100.0,
                     ),
-                    // TODO
                     const Padding(padding: EdgeInsets.only(
                         top: 20.0,
                         bottom: 20.0
@@ -128,7 +129,7 @@ class create_ifttt extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          callbackSaveIfttt(context);
+                          callbackSaveIfttt(context, api, condition.list.dropdownValue, toAction.list.dropdownValue);
                         },
                         style: ElevatedButton.styleFrom(
                             primary: color_list.primary,
