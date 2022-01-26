@@ -21,9 +21,12 @@ void callbackSignUpSwitch(BuildContext context) {
 }
 
 void callbackSignInConnexion(BuildContext context, areaService api, String user, String pass) {
-  if (api.tryConnexion(user, pass)) {
-    Navigator.of(context).pushNamed('/List');
-  }
+  Future<bool> tmp = api.tryConnexion(user, pass);
+
+  tmp.then((value) => {
+    if (value)
+      Navigator.of(context).pushNamed('/List')
+  });
 }
 
 void callbackSignUpConnexion(BuildContext context, areaService api, String user, String pass) {

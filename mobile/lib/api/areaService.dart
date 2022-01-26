@@ -1,5 +1,6 @@
 import 'package:mobile/api/apiService.dart';
 import 'package:mobile/api/model/loginResponse.dart';
+import 'dart:developer' as developer;
 
 class areaService {
   late apiService api;
@@ -14,15 +15,16 @@ class areaService {
     api = apiService(url);
   }
 
-  bool tryConnexion(String user, String pass) {
+  Future<bool> tryConnexion(String user, String pass) async {
     try {
-      api.makeRequestGet<loginResponse>("/auth/login", {
+      await api.makeRequestGet<loginResponse>("/auth/login", {
         "username": user,
         "password": pass
       });
       // TODO remember user
       return true;
     } catch (e) {
+      developer.log('Server failed invalid response');
       return false;
     }
   }
