@@ -30,4 +30,9 @@ class undefined extends IService {
   bool getConnexionState() {
     return false;
   }
+
+  @override
+  List<String> getParams() {
+    return ['None'];
+  }
 }

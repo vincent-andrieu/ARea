@@ -7,14 +7,13 @@ class ListCustom extends StatelessWidget {
   String defaultValue = "";
   String dropdownValue = "";
   String desc = "";
-  void Function() onUpdate = () {};
+  late void Function(String selected) onUpdate;
 
-  ListCustom(String descSrc, List<String> listSrc, String defaultValueSrc, void Function() onUpdateSrc, {Key? key}) : super(key: key) {
+  ListCustom(String descSrc, List<String> listSrc, String defaultValueSrc, this.onUpdate, {Key? key}) : super(key: key) {
     list = listSrc;
     defaultValue = defaultValueSrc;
     dropdownValue = defaultValueSrc;
     desc = descSrc;
-    onUpdate = onUpdateSrc;
   }
 
   @override
@@ -58,7 +57,7 @@ class ListCustom extends StatelessWidget {
               onChanged: (String? newValue) {
                 developer.log(newValue!);
                 dropdownValue = newValue;
-                onUpdate();
+                onUpdate(newValue);
               },
               items: list.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(

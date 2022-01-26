@@ -9,8 +9,11 @@ import 'package:mobile/service/notion.dart';
 import 'package:mobile/service/twitch.dart';
 import 'package:mobile/service/twitter.dart';
 import 'package:mobile/widget/updatedList.dart';
-import 'dart:developer' as developer;
 
+void buildRedirection(String action, String reaction, BuildContext context) {
+  String route = '/Create\${$action|$reaction}';
+  Navigator.of(context).pushNamed(route);
+}
 
 List<String> getBuildList(List<IService> serviceList, String Function(IService it) callback) {
   List<String> val = [];
@@ -20,20 +23,6 @@ List<String> getBuildList(List<IService> serviceList, String Function(IService i
   }
   val.add('None');
   return val;
-}
-
-List<String> buildSinceName(List<IService> serviceList, String name, List<String> Function(IService it) callback) {
-  List<String> tmp = [];
-
-  developer.log(name);
-  for (var it in serviceList) {
-    if (it.getName() == name) {
-      tmp = callback(it);
-      break;
-    }
-  }
-  tmp.add('None');
-  return tmp;
 }
 
 void callbackClose(BuildContext context) {
@@ -55,19 +44,24 @@ class create_ifttt extends StatelessWidget {
     linkedin(),
     notion()
   ];
-  late IService service;
+  late IService serviceAction;
+  late IService serviceReaction;
 
-  create_ifttt(this.api, this.service, {Key? key}) : super(key: key);
+  create_ifttt(this.api, this.serviceAction, this.serviceReaction, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    updatedList service = updatedList("Service", getBuildList(serviceList, (IService it) => it.getName()), 'None');
-    updatedList condition = updatedList("Condition", this.service.getAction(), 'None');
-    updatedList parameter = updatedList("Parameter", this.service.getParams(), 'None');
+    updatedList service = updatedList("Service", getBuildList(serviceList, (IService it) => it.getName()), 'None', (String selected) {
+      buildRedirection(selected, serviceReaction.getName(), context);
+    });
+    updatedList condition = updatedList("Condition", serviceAction.getAction(), 'None', null);
+    updatedList parameter = updatedList("Parameter", serviceAction.getParams(), 'None', null);
 
-    updatedList toService = updatedList("Service", getBuildList(serviceList, (IService it) => it.getName()), 'None');
-    updatedList toAction = updatedList("Action", this.service.getReaction(), 'None');
-    updatedList toParameter = updatedList("Parameter", this.service.getParams(), 'None');
+    updatedList toService = updatedList("Service", getBuildList(serviceList, (IService it) => it.getName()), 'None', (String selected) {
+      buildRedirection(serviceAction.getName(), selected, context);
+    });
+    updatedList toAction = updatedList("Action", serviceReaction.getReaction(), 'None', null);
+    updatedList toParameter = updatedList("Parameter", serviceReaction.getParams(), 'None', null);
 
     return Scaffold(
         body: Center(
