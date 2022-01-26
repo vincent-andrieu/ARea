@@ -3,8 +3,10 @@ import 'package:mobile/service/IService.dart';
 class twitter extends IService {
   @override
   List<String> getAction() {
-    // TODO: implement getAction
-    throw UnimplementedError();
+    return [
+      'On new tweet',
+      'None'
+    ];
   }
 
   @override
@@ -19,8 +21,11 @@ class twitter extends IService {
 
   @override
   List<String> getReaction() {
-    // TODO: implement getReaction
-    throw UnimplementedError();
+    return [
+      'Make a tweet',
+      'Update profile image',
+      'None'
+    ];
   }
 
   @override

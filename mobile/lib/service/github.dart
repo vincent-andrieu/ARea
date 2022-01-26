@@ -3,8 +3,11 @@ import 'package:mobile/service/IService.dart';
 class github extends IService {
   @override
   List<String> getAction() {
-    // TODO: implement getAction
-    throw UnimplementedError();
+    return [
+      'New Issue',
+      'New Pull Request',
+      'None'
+    ];
   }
 
   @override
@@ -19,8 +22,10 @@ class github extends IService {
 
   @override
   List<String> getReaction() {
-    // TODO: implement getReaction
-    throw UnimplementedError();
+    return [
+      'Create new Issue',
+      'None'
+    ];
   }
 
   @override

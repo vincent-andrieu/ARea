@@ -3,8 +3,10 @@ import 'package:mobile/service/IService.dart';
 class twitch extends IService {
   @override
   List<String> getAction() {
-    // TODO: implement getAction
-    throw UnimplementedError();
+    return [
+      'New stream started',
+      'None'
+    ];
   }
 
   @override
@@ -19,8 +21,7 @@ class twitch extends IService {
 
   @override
   List<String> getReaction() {
-    // TODO: implement getReaction
-    throw UnimplementedError();
+    return ['None'];
   }
 
   @override

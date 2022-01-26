@@ -3,8 +3,7 @@ import 'package:mobile/service/IService.dart';
 class linkedin extends IService {
   @override
   List<String> getAction() {
-    // TODO: implement getAction
-    throw UnimplementedError();
+    return ['None'];
   }
 
   @override
@@ -19,8 +18,10 @@ class linkedin extends IService {
 
   @override
   List<String> getReaction() {
-    // TODO: implement getReaction
-    throw UnimplementedError();
+    return [
+      'Publish post',
+      'None'
+    ];
   }
 
   @override

@@ -3,8 +3,10 @@ import 'package:mobile/service/IService.dart';
 class discord extends IService {
   @override
   List<String> getAction() {
-    // TODO: implement getAction
-    throw UnimplementedError();
+    return [
+      'New message on group',
+      'None'
+    ];
   }
 
   @override
@@ -19,8 +21,10 @@ class discord extends IService {
 
   @override
   List<String> getReaction() {
-    // TODO: implement getReaction
-    throw UnimplementedError();
+    return [
+      'Send message',
+      'None'
+    ];
   }
 
   @override

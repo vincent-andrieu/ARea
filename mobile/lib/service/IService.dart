@@ -14,7 +14,7 @@ class IService {
   }
 
   List<String> getParams() {
-    return [];
+    return ['None'];
   }
 
   List<String> getAction() {
