@@ -51,13 +51,13 @@ class create_ifttt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    updatedList service = updatedList("Service", getBuildList(serviceList, (IService it) => it.getName()), 'None', (String selected) {
+    updatedList service = updatedList("Service", getBuildList(serviceList, (IService it) => it.getName()), serviceAction.getName(), (String selected) {
       buildRedirection(selected, serviceReaction.getName(), context);
     });
     updatedList condition = updatedList("Condition", serviceAction.getAction(), 'None', null);
     updatedList parameter = updatedList("Parameter", serviceAction.getParams(), 'None', null);
 
-    updatedList toService = updatedList("Service", getBuildList(serviceList, (IService it) => it.getName()), 'None', (String selected) {
+    updatedList toService = updatedList("Service", getBuildList(serviceList, (IService it) => it.getName()), serviceReaction.getName(), (String selected) {
       buildRedirection(serviceAction.getName(), selected, context);
     });
     updatedList toAction = updatedList("Action", serviceReaction.getReaction(), 'None', null);
