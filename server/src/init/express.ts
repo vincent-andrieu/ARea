@@ -13,6 +13,7 @@ import "../passport/twitchPassport";
 import "../passport/notionPassport";
 import "../passport/linkedinPassport";
 import "../passport/discordPassport";
+import "../passport/unsplashPassport";
 
 export default {
 
@@ -23,7 +24,7 @@ export default {
             app.use(
                 cookieSession({
                     name: "session",
-                    keys:  [serverConfig.cookieKey], //TODO: generate true key
+                    keys: [serverConfig.cookieKey], //TODO: generate true key
                     maxAge: 24 * 60 * 60 * 100
                 })
             );

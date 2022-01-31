@@ -5,7 +5,8 @@ enum OAuthProvider {
     GITHUB,
     NOTION,
     LINKEDIN,
-    DISCORD
+    DISCORD,
+    UNSPLASH
 }
 
 export default OAuthProvider;
