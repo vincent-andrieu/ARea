@@ -4,52 +4,49 @@ import TwitterApi from 'twitter-api-v2';
 
 // doc :
 // https://www.npmjs.com/package/twitter-v2
+// https://github.com/plhery/node-twitter-api-v2#readme
 
 // https://api.twitter.com/2/users/:id/tweets
 
-export async function getUserTweet(/* tweeterToken, userID: string */) {
+export async function GetUserLastTweet(username: string): Promise<void> {
 
-    if (!env.TWITTER_API_KEY || !env.TWITTER_API_SECRET_KEY)
-        return;
-
-    // var client = new Twitter({
-    // consumer_key: env.TWITTER_API_KEY,
-    // consumer_secret: env.TWITTER_API_SECRET_KEY,
-    // bearer_token: env.TWITTER_BEARER_TOKEN
-    // });
     if (!env.TWITTER_BEARER_TOKEN)
         return;
     var client = new TwitterApi(env.TWITTER_BEARER_TOKEN);
-    const user = await client.v2.userByUsername('edobvt');
+    const user = await client.v2.userByUsername(username);
     console.log(user);
 
-
     const userTimeline = await client.v2.userTimeline(user.data.id, {
-        expansions: ['attachments.media_keys', 'attachments.poll_ids', 'referenced_tweets.id'],
-        'media.fields': ['url'],
+        expansions: ["attachments.media_keys", "attachments.poll_ids", "referenced_tweets.id"],
+        "media.fields": ["url"],
     });
-    // userTimeline.includes contains a TwitterV2IncludesHelper instance
     for await (const tweet of userTimeline) {
         const medias = userTimeline.includes.medias(tweet);
         const poll = userTimeline.includes.poll(tweet);
-        // userTimeline.includes.
         if (tweet.referenced_tweets && tweet.referenced_tweets["type"] != "tweeted")
             continue;
-        console.log("new tweet : ");
+        console.log("tweet : ");
         console.log(tweet);
 
         if (medias.length) {
-            console.log('This tweet contains medias! URLs:', medias.map(m => m.url));
+            console.log("This tweet contains medias! URLs:", medias.map(m => m.url));
         }
         if (poll) {
-            console.log('This tweet contains a poll! Options:', poll.options.map(opt => opt.label));
+            console.log("This tweet contains a poll! Options:", poll.options.map(opt => opt.label));
         }
-        return;
+        break;
     }
-    // console.log(userTimeline);
+}
 
+export async function TweetATweet(text: string): Promise<void> {
+    if (!env.TWITTER_API_KEY || !env.TWITTER_API_SECRET_KEY)
+        return;
+    var client = new TwitterApi({
+        appKey: env.TWITTER_API_KEY,
+        appSecret: env.TWITTER_API_SECRET_KEY,
+        accessToken: '771404346470916096-KDC17cuFXZODUDBnC9Ftzql1HMDszG1', // TODO replace with DB call
+        accessSecret: 'kstShpSJMLuEU47ZDgtyhXYBqwGFcSnlI33tovWJlIYu0', // TODO replace with DB call
+    });
 
-
-}//);
-
-//}
+    client.v2.tweet(text);
+}
