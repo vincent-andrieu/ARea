@@ -16,17 +16,17 @@ export default class AreaController {
     private static _reactionSchema = new ReactionSchema();
     private static _userSchema = new UserSchema();
 
-    static create = async (req, res: Response) => {
+    static async create(req, res: Response) {
         const action: Action = req.body.action;
         const reaction: Reaction = req.body.reaction;
         const userId: string = req.user?.user_id;
-        
+
         //TODO: GESTION D'ERREUR DU BODY
         try {
             const actionInDb = await this._actionSchema.add(action);
             const reactionInDb = await this._reactionSchema.add(reaction);
             const area = await this._areaSchema.add({action: actionInDb, reaction: reactionInDb});
-            
+
             if (!area._id)
                 throw "Undefined area id";
             this._userSchema.addARea(userId, area._id);
@@ -35,9 +35,9 @@ export default class AreaController {
             console.log("[AreaController] create :", error.toString());
             res.status(400).send(error.toString());
         }
-    };
+    }
 
-    static readOne = async (req, res: Response) => {
+    static async readOne(req, res: Response) {
         const id = req.params.id;
 
         try {
@@ -54,22 +54,22 @@ export default class AreaController {
             console.log(error.toString());
             return res.status(404).send(error.toString());
         }
-    };
+    }
 
-    static readList = async (req, res: Response) => {
+    static async readList(req, res: Response) {
         try {
-            const user = await this._userSchema.getById(req.user?.user_id, { 
+            const user = await this._userSchema.getById(req.user.data.user_id, {
                 path: "areas",
                 populate: "action reaction" as unknown as PopulateOptions
-            });
+            }, "areas");
             res.status(200).json(user.areas);
         } catch (error: any) {
             res.status(404).send(error.toString());
         }
-    };
+    }
 
-    static update = async (req, res: Response) => {    
-        const userId: string = req.user?.user_id;    
+    static async update(req, res: Response) {
+        const userId: string = req.user?.user_id;
         const areaId = req.params.id;
         try {
             const action: Action = new Action(req.body.action);
@@ -89,9 +89,9 @@ export default class AreaController {
         } catch (error: any) {
             res.status(500).send(error.toString());
         }
-    };
+    }
 
-    static delete = async (req, res: Response) => {
+    static async delete(req, res: Response) {
         const areaId = req.params.id;
         const userId = req.user?.user_id;
 
@@ -104,10 +104,10 @@ export default class AreaController {
 
             if (!area)
                 return res.status(404).send(`Failed to find area with id: ${areaId}`);
-            
+
             const action: ObjectId = area.action as ObjectId;
             const reaction: ObjectId = area.reaction as ObjectId;
-            
+
             await this._actionSchema.deleteById(action);
             await this._reactionSchema.deleteById(reaction);
             await this._areaSchema.deleteById(areaId);
@@ -117,5 +117,5 @@ export default class AreaController {
         } catch (error: any) {
             return res.status(500).send(error.toString());
         }
-    };
+    }
 }
