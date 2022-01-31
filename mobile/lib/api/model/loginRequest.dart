@@ -6,4 +6,15 @@ class loginRequest {
     username = user;
     password = pass;
   }
+
+  loginRequest.fromJson(Map<String, dynamic> json)
+      : username = json['username'],
+        password = json['password'];
+
+  Map<String, dynamic> toJson() {
+    return {
+      'username': username,
+      'password': password
+    };
+  }
 }

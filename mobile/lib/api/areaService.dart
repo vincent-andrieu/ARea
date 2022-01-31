@@ -19,7 +19,12 @@ class areaService {
   }
 
   void initConnexion(String url) {
-    api = apiService(url);
+    try {
+      developer.log('initConnexion: IT\'S CALL MON KAKE');
+      api = apiService(url);
+    } catch (e) {
+      developer.log('initConnexion: Invalid input');
+    }
   }
 
   Future<bool> tryConnexion(String user, String pass) async {
@@ -28,7 +33,7 @@ class areaService {
       token = response.token;
       return true;
     } catch (e) {
-      developer.log('tryConnexion: Server failed invalid response');
+      developer.log('tryConnexion: Server failed invalid response -> ' + e.toString());
       return false;
     }
   }
@@ -39,7 +44,7 @@ class areaService {
       token = response.token;
       return true;
     } catch (e) {
-      developer.log('createUserAndConnexion: Server failed invalid response');
+      developer.log('createUserAndConnexion: Server failed invalid response -> ' + e.toString());
       return false;
     }
   }
@@ -49,7 +54,7 @@ class areaService {
       iftttResponse _ = await api.makeRequestPost<iftttResponse, iftttRequest>("/auth/register", iftttRequest(action, true, reaction));
       return true;
     } catch (e) {
-      developer.log('createIfttt: Server failed invalid response');
+      developer.log('createIfttt: Server failed invalid response -> ' + e.toString());
       return false;
     }
   }
@@ -59,7 +64,7 @@ class areaService {
       // TODO
       return true;
     } catch (e) {
-      developer.log('deleteIfttt: Server failed invalid response');
+      developer.log('deleteIfttt: Server failed invalid response -> ' + e.toString());
       return false;
     }
   }
@@ -69,7 +74,7 @@ class areaService {
       // TODO
       return true;
     } catch (e) {
-      developer.log('updateIfttt: Server failed invalid response');
+      developer.log('updateIfttt: Server failed invalid response -> ' + e.toString());
       return false;
     }
   }
@@ -79,7 +84,7 @@ class areaService {
       Future<List<iftttResponse>> list = api.makeRequestGetList<iftttResponse, tokenRequest>("/list");
       return list;
     } catch (e) {
-      developer.log('getListIfttt: Server failed invalid response');
+      developer.log('getListIfttt: Server failed invalid response -> ' + e.toString());
       return [];
     }
   }
