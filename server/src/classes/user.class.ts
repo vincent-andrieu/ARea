@@ -6,7 +6,7 @@ export default class User extends Model {
     username?: string;
     password?: string;
     oauthLoginProvider?: OAuthProvider;
-    oauthLoginProviderId?: string;//
+    oauthLoginProviderId?: string;
     token?: string;
     areas?: Array<ARea> | Array<ObjectId> = [];
 
