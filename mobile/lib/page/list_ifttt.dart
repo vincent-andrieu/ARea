@@ -61,29 +61,20 @@ class list_ifttt extends StatelessWidget {
     );
   }
 
+  List<Widget> extractWidgetList(BuildContext context) {
+    List<Widget> list = [];
+
+    if (api.token == null) {
+      return [];
+    }
+    for (var element in api.token!.areas) {
+      list.add(buildCard(element, "test", "assets/discord.png", context));
+    }
+    return list;
+  }
+
   Widget buildListDisplay(BuildContext context) {
-    List<Widget> toDisplay = <Widget>[
-      buildCard("test", "test", "assets/discord.png", context),
-      buildCard("test", "test", "assets/discord.png", context),
-      buildCard("test", "test", "assets/discord.png", context),
-      buildCard("test", "test", "assets/discord.png", context),
-      buildCard("test", "test", "assets/discord.png", context),
-      buildCard("test", "test", "assets/discord.png", context),
-      buildCard("test", "test", "assets/discord.png", context),
-      buildCard("test", "test", "assets/discord.png", context),
-      buildCard("test", "test", "assets/discord.png", context),
-      buildCard("test", "test", "assets/discord.png", context),
-      buildCard("test", "test", "assets/discord.png", context),
-      buildCard("test", "test", "assets/discord.png", context),
-      buildCard("test", "test", "assets/discord.png", context),
-      buildCard("test", "test", "assets/discord.png", context),
-      buildCard("test", "test", "assets/discord.png", context),
-      buildCard("test", "test", "assets/discord.png", context),
-      buildCard("test", "test", "assets/discord.png", context),
-      buildCard("test", "test", "assets/discord.png", context),
-      buildCard("test", "test", "assets/discord.png", context),
-      buildCard("test", "test", "assets/discord.png", context),
-    ];
+    List<Widget> toDisplay = extractWidgetList(context);
     return Flexible(
         child: FractionallySizedBox(
           heightFactor: 0.9,
