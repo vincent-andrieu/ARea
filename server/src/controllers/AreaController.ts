@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { AReaSchema } from "../schemas/area.schema";
 import ARea from "../classes/area.class";
-import { getStrObjectId, ObjectId } from "@classes/model.class";
+import { getObjectId, getStrObjectId, ObjectId } from "@classes/model.class";
 import Action from "@classes/action.class";
 import Reaction from "@classes/reaction.class";
 import { ActionSchema } from "@schemas/action.schema";
@@ -41,7 +41,7 @@ export default class AreaController {
         const id = req.params.id;
 
         try {
-            const user = await AreaController._userSchema.getById(req.user?.user_id, {
+            const user = await AreaController._userSchema.get(req.user?.user_id, {
                 path: "areas",
                 populate: "action reaction" as unknown as PopulateOptions
             });
@@ -58,7 +58,7 @@ export default class AreaController {
 
     static async readList(req, res: Response) {
         try {
-            const user = await AreaController._userSchema.getById(req.user.data.user_id, {
+            const user = await AreaController._userSchema.get(req.user.data.user_id, {
                 path: "areas",
                 populate: "action reaction" as unknown as PopulateOptions
             }, "areas");
@@ -75,7 +75,7 @@ export default class AreaController {
             const action: Action = new Action(req.body.action);
             const reaction: Reaction = new Reaction(req.body.reaction);
 
-            const user = await AreaController._userSchema.getById(userId, "areas");
+            const user = await AreaController._userSchema.get(userId, "areas");
             const area = (user.areas as Array<ARea>).find((element: ARea) => getStrObjectId(element) === getStrObjectId(areaId));
             if (!area)
                 return res.status(404).send(`Failed to find area with id: ${areaId}`);
@@ -92,26 +92,28 @@ export default class AreaController {
     }
 
     static async delete(req, res: Response) {
-        const areaId = req.params.id;
-        const userId = req.user?.user_id;
+        const areaId: string = req.params.id;
+        const userId: string = req.user?.user_id;
 
         try {
-            const user = await AreaController._userSchema.getById(userId, {
+            const user = await AreaController._userSchema.get(userId, {
                 path: "areas",
                 populate: "action reaction" as unknown as PopulateOptions
             });
-            const area = (user.areas as any[]).find((element: ARea) => element._id == areaId);
+            const area = (user.areas as Array<ARea>)?.find((element) => getStrObjectId(element) === areaId);
 
             if (!area)
                 return res.status(404).send(`Failed to find area with id: ${areaId}`);
 
-            const action: ObjectId = area.action as ObjectId;
-            const reaction: ObjectId = area.reaction as ObjectId;
+            const action: ObjectId = getObjectId(area.action);
+            const reaction: ObjectId = getObjectId(area.reaction);
 
-            await AreaController._actionSchema.deleteById(action);
-            await AreaController._reactionSchema.deleteById(reaction);
-            await AreaController._areaSchema.deleteById(areaId);
-            await AreaController._userSchema.removeARea(userId, areaId);
+            await Promise.all([
+                AreaController._actionSchema.delete(action),
+                AreaController._reactionSchema.delete(reaction),
+                AreaController._areaSchema.delete(areaId),
+                AreaController._userSchema.removeARea(userId, areaId)
+            ]);
 
             return res.status(200).send(`Successfully deleted area ${areaId}`);
         } catch (error: any) {
