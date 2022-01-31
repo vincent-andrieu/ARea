@@ -1,6 +1,5 @@
 import 'package:mobile/api/apiService.dart';
 import 'package:mobile/api/model/loginRequest.dart';
-import 'package:mobile/api/model/loginResponse.dart';
 import 'dart:developer' as developer;
 import 'model/iftttRequest.dart';
 import 'model/iftttResponse.dart';
