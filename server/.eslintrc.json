@@ -17,7 +17,8 @@
         "semi": ["error", "always"],
         "curly": ["error", "multi"],
         "comma-dangle": ["error", "never"],
-        "eol-last": ["error", "never"]
+        "eol-last": ["error", "never"],
+        "no-trailing-spaces": "error"
         // "@typescript-eslint/explicit-module-boundary-types": "off"
     }
 }
