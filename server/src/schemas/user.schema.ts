@@ -1,17 +1,17 @@
 import mongoose from "mongoose";
 
 import User from "@classes/user.class";
-import { ObjectId } from "@classes/model.class";
-import OAuthProvider from "../model/oAuthProvider.enum"; 
+import { getStrObjectId, ObjectId } from "@classes/model.class";
+import OAuthProvider from "../model/oAuthProvider.enum";
 import { ASchema } from "./abstract.schema";
 import ARea from "@classes/area.class";
 
 const userSchema = new mongoose.Schema({
     username: { type: String },
     password: { type: String },
-    oauthLoginProvider: { type: OAuthProvider},
-    oauthLoginProviderId: { type: String},
-    token: { type: String, unique: true },
+    oauthLoginProvider: { type: OAuthProvider },
+    oauthLoginProviderId: { type: String },
+    token: { type: String },
     areas: [
         { type: mongoose.Schema.Types.ObjectId, ref: "ARea" }
     ]
@@ -43,12 +43,14 @@ export class UserSchema extends ASchema<User> {
         return result;
     }
 
-    public async removeARea(userId: ObjectId | string, area: ARea | ObjectId): Promise<User> {
-        const result: User = await this._model.findByIdAndUpdate(userId, { $pull: { areas: area }}) as unknown as User;
+    public async removeARea(userId: ObjectId | string, area: ARea | ObjectId | string): Promise<User> {
+        const result = await this._model.findByIdAndUpdate(userId, { $pull: { areas: getStrObjectId(area) } });
 
-        return result;
+        if (!result)
+            throw "Fail to remove area from user";
+        return result.toObject<User>();
     }
-    
+
     public async findByOAuthProviderId(providerType: OAuthProvider, providerId: string): Promise<User> {
         const result: User = await this._model.findOne({
             oauthLoginProvider: providerType,

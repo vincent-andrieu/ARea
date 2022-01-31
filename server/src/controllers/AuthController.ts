@@ -32,7 +32,7 @@ export default class AuthController {
 
             if (user?.password && (await bcrypt.compare(password, user.password))) {
                 // Create token
-                const token = this.signToken({ user_id: user._id, username });
+                const token = AuthController.signToken({ user_id: user._id, username });
                 // save user token
                 user.token = token;
                 await AuthController._userSchema.edit(user);
@@ -64,11 +64,12 @@ export default class AuthController {
             // Create user in our database
             const user = await AuthController._userSchema.add({
                 username: username.toLowerCase(),
-                password: encryptedPassword
+                password: encryptedPassword,
+                token: ""
             });
 
             // Create token
-            const token = this.signToken({ user_id: user._id, username });
+            const token: string = AuthController.signToken({ user_id: user._id, username });
             user.token = token;
             await AuthController._userSchema.edit(user);
 
