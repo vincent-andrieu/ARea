@@ -12,7 +12,7 @@ import 'package:mobile/widget/global_connexion_list.dart';
 import 'create_ifttt.dart';
 
 void callbackLogout(BuildContext context, areaService api) {
-  api.token = "";
+  api.token = null;
   Navigator.of(context).pushNamed('/SignIn');
 }
 

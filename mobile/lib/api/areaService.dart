@@ -8,7 +8,7 @@ import 'model/tokenRequest.dart';
 
 class areaService {
   late apiService api;
-  String token = "";
+  registerResponse? token;
 
   areaService(String url) {
     if (url.isNotEmpty) {
@@ -30,7 +30,7 @@ class areaService {
       developer.log('tryConnexion: Start');
       dynamic response = await api.makeRequestPost<loginRequest>("/auth/login", loginRequest(user, pass), 200);
       developer.log('tryConnexion: request OK');
-      token = registerResponse.fromJson(response).token;
+      token = registerResponse.fromJson(response);
       developer.log('tryConnexion: parse OK');
       return true;
     } catch (e) {
@@ -42,7 +42,7 @@ class areaService {
   Future<bool> createUserAndConnexion(String user, String pass) async {
     try {
       dynamic response = await api.makeRequestPost<loginRequest>("/auth/register", loginRequest(user, pass), 201);
-      token = registerResponse.fromJson(response).token;
+      token = registerResponse.fromJson(response);
       return true;
     } catch (e) {
       developer.log('createUserAndConnexion: Server failed invalid response -> ' + e.toString());
@@ -80,14 +80,15 @@ class areaService {
     }
   }
 
-  Future<List<iftttResponse>> getListIfttt() async {
+  Future<bool> getListIfttt() async {
     try {
-      dynamic list = api.makeRequestGetList<tokenRequest>("/list", 200);
+      dynamic list = api.makeRequestGetList<tokenRequest>("/area/list", 200);
       // TODO exctract data Future<List<iftttResponse>>
-      return list;
+      token?.areas = list;
+      return true;
     } catch (e) {
       developer.log('getListIfttt: Server failed invalid response -> ' + e.toString());
-      return [];
+      return false;
     }
   }
 }
