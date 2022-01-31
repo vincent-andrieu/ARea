@@ -7,12 +7,12 @@ class loginResponse {
   String token = "";
   String id = "";
 
-  loginResponse.fromJson(Map<String, dynamic> json)
+  loginResponse.fromJson(dynamic json)
       : areas = json['areas'],
         _id = json['_id'],
         username = json['username'],
         password = json['password'],
-        __v = int.parse(json['__v']),
+        __v = json['__v'],
         token = json['token'],
         id = json['id'];
 

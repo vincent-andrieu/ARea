@@ -7,7 +7,7 @@ class loginRequest {
     password = pass;
   }
 
-  loginRequest.fromJson(Map<String, dynamic> json)
+  loginRequest.fromJson(dynamic json)
       : username = json['username'],
         password = json['password'];
 

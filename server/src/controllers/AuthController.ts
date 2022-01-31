@@ -48,6 +48,7 @@ export default class AuthController {
 
     public static async register(req: Request, res: Response) {
         try {
+            console.log(req.body)
             const username: string = req.body.username;
             const password: string = req.body.password;
 

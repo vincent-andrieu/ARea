@@ -10,7 +10,7 @@ class apiService {
     srvUrl = url;
   }
 
-  Future<type> makeRequestGet<type>(String route, Map<String, String> params) async {
+  Future<dynamic> makeRequestGet<type>(String route, Map<String, String> params, int exitExpect) async {
     params.addAll({
       HttpHeaders.contentTypeHeader: 'application/json'
     });
@@ -20,15 +20,15 @@ class apiService {
         params
     ));
 
-    if (result.statusCode == 200) {
+    if (result.statusCode == exitExpect) {
       return jsonDecode(result.body);
     } else {
-      throw "Unable to make our request to $srvUrl$route exit with status ${result.statusCode}";
+      throw "Unable to make our request to $srvUrl$route exit with status ${result.statusCode} error: ${result.body}";
     }
   }
 
-  Future<type> makeRequestPost<type, query>(String route, query params) async {
-    developer.log(srvUrl + route);
+  Future<dynamic> makeRequestPost<query>(String route, query params, int exitExpect) async {
+    developer.log("$srvUrl$route ${json.encode(params)}");
     Response result = await post(
       Uri.parse(srvUrl + route),
       body: json.encode(params),
@@ -37,14 +37,15 @@ class apiService {
       }
     );
 
-    if (result.statusCode == 200) {
+    if (result.statusCode == exitExpect) {
+      developer.log(result.body);
       return jsonDecode(result.body);
     } else {
-      throw "Unable to make our request to $srvUrl$route exit with status ${result.statusCode}";
+      throw "Unable to make our request to $srvUrl$route exit with status ${result.statusCode} error: ${result.body}";
     }
   }
 
-  Future<type> makeRequestPut<type, query>(String route, query params) async {
+  Future<dynamic> makeRequestPut<query>(String route, query params, int exitExpect) async {
     Response result = await put(
       Uri.parse(srvUrl + route),
       body: json.encode(params),
@@ -53,14 +54,14 @@ class apiService {
       }
     );
 
-    if (result.statusCode == 200) {
+    if (result.statusCode == exitExpect) {
       return jsonDecode(result.body);
     } else {
-      throw "Unable to make our request to $srvUrl$route exit with status ${result.statusCode}";
+      throw "Unable to make our request to $srvUrl$route exit with status ${result.statusCode} error: ${result.body}";
     }
   }
 
-  Future<type> makeRequestDelete<type, query>(String route, query params) async {
+  Future<dynamic> makeRequestDelete<query>(String route, query params, int exitExpect) async {
     Response result = await delete(
       Uri.parse(srvUrl + route),
       body: json.encode(params),
@@ -69,24 +70,24 @@ class apiService {
       }
     );
 
-    if (result.statusCode == 200) {
+    if (result.statusCode == exitExpect) {
       return jsonDecode(result.body);
     } else {
-      throw "Unable to make our request to $srvUrl$route exit with status ${result.statusCode}";
+      throw "Unable to make our request to $srvUrl$route exit with status ${result.statusCode} error: ${result.body}";
     }
   }
 
-  Future<List<type>> makeRequestGetList<type, query>(String route) async {
+  Future<List<dynamic>> makeRequestGetList<query>(String route, int exitExpect) async {
     Response result = await get(Uri.parse(srvUrl + route));
 
-    if (result.statusCode == 200) {
+    if (result.statusCode == exitExpect) {
       dynamic body = jsonDecode(result.body);
 
-      List<type> fetchList = body?.map((dynamic item) => jsonDecode(item)).toList();
+      List<dynamic> fetchList = body?.map((dynamic item) => jsonDecode(item)).toList();
 
       return fetchList;
     } else {
-      throw "Unable to make our request to $srvUrl$route exit with status ${result.statusCode}";
+      throw "Unable to make our request to $srvUrl$route exit with status ${result.statusCode} error: ${result.body}";
     }
   }
 }
