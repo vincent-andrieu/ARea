@@ -53,8 +53,10 @@ class areaService {
 
   Future<bool> createIfttt(String action, String reaction) async {
     try {
-      dynamic _ = await api.makeRequestPost<iftttRequest>("/auth/register", iftttRequest(action, true, reaction), 200);
-      return true;
+      dynamic _ = await api.makeRequestPost<iftttRequest>("/area/", iftttRequest(action, true, reaction), 201);
+
+      // TODO CAN BE UPDATE IN LOCAL FOR SYSTEM OPTIMISATION
+      return getListIfttt();
     } catch (e) {
       developer.log('createIfttt: Server failed invalid response -> ' + e.toString());
       return false;
