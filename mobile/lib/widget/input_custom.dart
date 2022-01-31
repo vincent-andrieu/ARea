@@ -5,11 +5,12 @@ import 'package:mobile/page/color_list.dart';
 class InputCustom extends StatefulWidget {
   String desc = "";
   String hint = "";
-  final controller = TextEditingController();
+  late TextEditingController controller;
 
-  InputCustom(String descSrc, String hintSrc, {Key? key}) : super(key: key) {
+  InputCustom(String descSrc, String hintSrc, String defaultText, {Key? key}) : super(key: key) {
     desc = descSrc;
     hint = hintSrc;
+    controller = TextEditingController(text: defaultText);
   }
 
   @override

@@ -28,6 +28,7 @@ class apiService {
   }
 
   Future<type> makeRequestPost<type, query>(String route, query params) async {
+    developer.log(srvUrl + route);
     Response result = await post(
       Uri.parse(srvUrl + route),
       body: json.encode(params),

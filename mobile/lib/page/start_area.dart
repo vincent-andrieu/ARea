@@ -10,7 +10,7 @@ class start_area extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    InputCustom input = InputCustom('IP address', 'Enter server IP address');
+    InputCustom input = InputCustom('IP address', 'Enter server IP address', 'http://10.0.2.2:8080');
     return Scaffold(
         body: Center(
           child: Column(
