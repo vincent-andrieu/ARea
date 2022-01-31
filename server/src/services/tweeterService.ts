@@ -44,9 +44,22 @@ export async function TweetATweet(text: string): Promise<void> {
     var client = new TwitterApi({
         appKey: env.TWITTER_API_KEY,
         appSecret: env.TWITTER_API_SECRET_KEY,
-        accessToken: '771404346470916096-KDC17cuFXZODUDBnC9Ftzql1HMDszG1', // TODO replace with DB call
-        accessSecret: 'kstShpSJMLuEU47ZDgtyhXYBqwGFcSnlI33tovWJlIYu0', // TODO replace with DB call
+        accessToken: '', // TODO replace with DB call
+        accessSecret: '', // TODO replace with DB call
     });
 
     client.v2.tweet(text);
+}
+
+export async function UpdateProfileBanner(imagePath: string): Promise<void> {
+    if (!env.TWITTER_API_KEY || !env.TWITTER_API_SECRET_KEY)
+        return;
+    var client = new TwitterApi({
+        appKey: env.TWITTER_API_KEY,
+        appSecret: env.TWITTER_API_SECRET_KEY,
+        accessToken: '', // TODO replace with DB call
+        accessSecret: '', // TODO replace with DB call
+    });
+
+    client.v1.updateAccountProfileBanner(imagePath);
 }
