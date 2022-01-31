@@ -63,3 +63,16 @@ export async function UpdateProfileBanner(imagePath: string): Promise<void> {
 
     client.v1.updateAccountProfileBanner(imagePath);
 }
+
+export async function UpdateProfileImage(imagePath: string): Promise<void> {
+    if (!env.TWITTER_API_KEY || !env.TWITTER_API_SECRET_KEY)
+        return;
+    var client = new TwitterApi({
+        appKey: env.TWITTER_API_KEY,
+        appSecret: env.TWITTER_API_SECRET_KEY,
+        accessToken: '', // TODO replace with DB call
+        accessSecret: '', // TODO replace with DB call
+    });
+
+    client.v1.updateAccountProfileImage(imagePath);
+}
