@@ -16,7 +16,7 @@ export abstract class ASchema<T extends Model> {
         } catch (error: any) {
             console.log(error);
             throw new Error(error.toString());
-        }        
+        }
     }
 
     public async edit(model: T): Promise<T> {
@@ -28,7 +28,7 @@ export abstract class ASchema<T extends Model> {
         }
     }
 
-    public async getById(id: string, populate?: string | string[] | PopulateOptions | PopulateOptions[]): Promise<T> {
+    public async getById(id: string, populate?: string | string[] | PopulateOptions | PopulateOptions[], select?: string): Promise<T> {
         if (!id || id.length === 0)
             throw "undefined id";
         try {
@@ -36,6 +36,8 @@ export abstract class ASchema<T extends Model> {
 
             if (populate)
                 query = query.populate(populate);
+            if (select)
+                query.select(select);
             const result: T = await query as unknown as T;
             return new this._ctor(result);
         } catch (err) {
