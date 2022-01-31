@@ -1,6 +1,8 @@
+import 'package:mobile/api/model/area.dart';
+
 class registerResponse {
   String _id = "";
-  List<String> areas = []; // TODO REPLACE STRING BY AREA TYPE
+  List<Area> areas = []; // TODO REPLACE STRING BY AREA TYPE
   String username = "";
   String password = "";
   int oauthLoginProvider = 0;

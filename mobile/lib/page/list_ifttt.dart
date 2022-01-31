@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/api/areaService.dart';
+import 'package:mobile/api/model/area.dart' as area;
 import 'package:mobile/page/color_list.dart';
 
 void callbackParams(BuildContext context) {
@@ -68,7 +69,7 @@ class list_ifttt extends StatelessWidget {
       return [];
     }
     for (var element in api.token!.areas) {
-      list.add(buildCard(element, "test", "assets/discord.png", context));
+      list.add(buildCard(element.action, element.reaction, context));
     }
     return list;
   }
@@ -89,7 +90,7 @@ class list_ifttt extends StatelessWidget {
     );
   }
 
-  Widget buildCard(String title, String params, String asset, BuildContext context) {
+  Widget buildCard(area.Action action, area.Reaction reaction, BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(
           bottom: 20.0
@@ -99,13 +100,13 @@ class list_ifttt extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            buildSubCard(title, params, asset, context),
+            buildSubCard(action.label, "Not dev", "assets/${action.label}.png", context),
             const Icon(
               Icons.arrow_forward_outlined,
               color: color_list.primary,
               size: 50.0,
             ),
-            buildSubCard(title, params, asset, context)
+            buildSubCard(reaction.label, "Not dev", "assets/${reaction.label}.png", context)
           ],
         )
       )
