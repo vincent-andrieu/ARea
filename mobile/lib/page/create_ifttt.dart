@@ -9,6 +9,7 @@ import 'package:mobile/service/notion.dart';
 import 'package:mobile/service/twitch.dart';
 import 'package:mobile/service/twitter.dart';
 import 'package:mobile/widget/updatedList.dart';
+import 'package:mobile/api/model/area.dart';
 
 void buildRedirection(String action, String reaction, BuildContext context) {
   String route = '/Create\${$action|$reaction}';
@@ -30,7 +31,7 @@ void callbackClose(BuildContext context) {
 }
 
 void callbackSaveIfttt(BuildContext context, areaService api, String actionLabel, String reactionLabel) {
-  api.createIfttt(actionLabel, reactionLabel).then((value) => {
+  api.createIfttt(Area(actionLabel, reactionLabel)).then((value) => {
     if (value) {
       Navigator.of(context).pushNamed('/List')
     }
