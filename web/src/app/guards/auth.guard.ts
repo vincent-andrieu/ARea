@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { HttpClient } from "@angular/common/http";
 import { catchError, Observable, of } from 'rxjs';
 import { CookieService } from "ngx-cookie";
@@ -20,7 +20,12 @@ export class AuthGuard implements CanActivate {
         private _cookieService: CookieService
     ) {}
 
-    canActivate(): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    canActivate(route: ActivatedRouteSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+        const urlToken: string = route.queryParams['token'];
+
+        if (urlToken && urlToken.length > 0)
+            this._cookieService.put(environment.cookiesKey.jwt, urlToken);
+
         if (this._cookieService.hasKey(environment.cookiesKey.jwt))
             return new Promise<boolean | UrlTree>((resolve) => {
                 this._httpClient.get('/')

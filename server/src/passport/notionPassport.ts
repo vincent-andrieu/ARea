@@ -5,8 +5,9 @@ import { Strategy as NotionStrategy } from "../module/passport-notion";
 import { notionConfig } from "../config/notionConfig";
 import { UserSchema } from "@schemas/user.schema";
 import OAuthProvider from "../model/oAuthProvider.enum";
+import { getStrObjectId } from "@classes/model.class";
 
-const successfullyAuthentificated = async(_req, accessToken, _, oauthData, userNotion, done) => {
+const successfullyAuthentificated = async(_req, accessToken: string, _, oauthData, userNotion, done) => {
     const userSchema = new UserSchema();
 
     console.log(userNotion);
@@ -16,22 +17,28 @@ const successfullyAuthentificated = async(_req, accessToken, _, oauthData, userN
         if (oldUser) {
             console.log("User already exist");
             const token = AuthController.signToken({
-                oauthLoginProvider: OAuthProvider.NOTION,
-                oauthLoginProviderId: userNotion.person.email
+                user_id: getStrObjectId(oldUser),
+                username: userNotion.person.email
             });
-            // save user token
+
+            oldUser.oauthLoginProvider = OAuthProvider.NOTION;
+            oldUser.oauthLoginProviderId = userNotion.person.email;
             oldUser.token = token;
-            await userSchema.edit(oldUser);
-            done(null, oldUser);
+
+            done(null, await userSchema.edit(oldUser));
         } else {
             console.log("Create new user");
 
             const user = await userSchema.add({
+                username: userNotion.person.email,
                 oauthLoginProvider: OAuthProvider.NOTION,
                 oauthLoginProviderId: userNotion.person.email
             });
 
-            const token = AuthController.signToken({ user_id: user._id, username: userNotion.person.email });
+            const token = AuthController.signToken({
+                user_id: getStrObjectId(user),
+                username: userNotion.person.email
+            });
             user.token = token;
             await userSchema.edit(user);
             done(null, user);

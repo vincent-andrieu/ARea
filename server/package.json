@@ -32,9 +32,9 @@
         "@notionhq/client": "^0.4.12",
         "bcryptjs": "^2.4.3",
         "cookie-session": "^2.0.0",
+        "cors": "^2.8.5",
         "discord-api-types": "^0.26.1",
         "discord.js": "^12.5.3",
-        "cors": "^2.8.5",
         "dotenv": "^10.0.0",
         "express": "^4.17.2",
         "jsonwebtoken": "^8.5.1",
@@ -58,6 +58,7 @@
         "@types/jsonwebtoken": "^8.5.8",
         "@types/mongoose": "^5.11.97",
         "@types/passport": "^1.0.7",
+        "@types/passport-twitter": "^1.0.37",
         "@typescript-eslint/eslint-plugin": "^5.9.0",
         "@typescript-eslint/parser": "^5.9.0",
         "eslint": "^8.6.0"
