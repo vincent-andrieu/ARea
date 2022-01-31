@@ -1,14 +1,16 @@
 import passport from "passport";
+import passportTwitter, { Profile } from "passport-twitter";
 
-import AuthController from "../controllers/AuthController";
-import passportTwitter from "passport-twitter";
-import { twitterConfig } from "../config/twitterConfig";
+import { getStrObjectId } from "@classes/model.class";
+import User from "@classes/user.class";
 import { UserSchema } from "@schemas/user.schema";
+import AuthController from "../controllers/AuthController";
+import { twitterConfig } from "../config/twitterConfig";
 import OAuthProvider from "../model/oAuthProvider.enum";
 
 const TwitterStrategy = passportTwitter.Strategy;
 
-const successfullyAuthentificated = async (accessToken, refreshToken, profile, done) => {
+const successfullyAuthentificated = async (accessToken, refreshToken, profile: Profile, done: (error: unknown, user?: User) => void) => {
     const userSchema = new UserSchema();
 
     console.log(profile);
@@ -18,28 +20,33 @@ const successfullyAuthentificated = async (accessToken, refreshToken, profile, d
         if (oldUser) {
             console.log("User already exist");
             const token = AuthController.signToken({
-                oauthLoginProvider: OAuthProvider.TWITTER,
-                OAuthLoginProviderId: profile.username
+                user_id: getStrObjectId(oldUser),
+                username: profile.username
             });
-            // save user token
+
+            oldUser.oauthLoginProvider = OAuthProvider.TWITTER;
+            oldUser.oauthLoginProviderId = profile.username;
             oldUser.token = token;
-            await userSchema.edit(oldUser);
-            done(null, oldUser);
+
+            done(null, await userSchema.edit(oldUser));
         } else {
             console.log("Create new user");
 
             const user = await userSchema.add({
+                username: profile.username,
                 oauthLoginProvider: OAuthProvider.TWITTER,
                 oauthLoginProviderId: profile.username
             });
 
-            const token = AuthController.signToken({user_id: user._id, username: profile.username});
+            const token = AuthController.signToken({
+                user_id: getStrObjectId(user),
+                username: profile.username
+            });
             user.token = token;
-            await userSchema.edit(user);
-            done(null, user);
+            done(null, await userSchema.edit(user));
         }
     } catch (error) {
-        done(error, null);
+        done(error, undefined);
     }
 };
 

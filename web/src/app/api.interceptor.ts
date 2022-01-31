@@ -3,10 +3,8 @@ import {
     HttpRequest,
     HttpHandler,
     HttpEvent,
-    HttpInterceptor,
-    HttpErrorResponse
-} from '@angular/common/http';
-import { catchError, Observable, of } from 'rxjs';
+    HttpInterceptor} from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { CookieService } from "ngx-cookie";
 
 import { environment } from "@environment";

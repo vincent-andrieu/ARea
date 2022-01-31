@@ -56,9 +56,9 @@ export default class AreaController {
         }
     }
 
-    static async readList(req, res: Response) {
+    static async readList(req: Request, res: Response) {
         try {
-            const user = await AreaController._userSchema.get(req.user.data.user_id, {
+            const user = await AreaController._userSchema.get(req.user?.data.user_id || "", {
                 path: "areas",
                 populate: "action reaction" as unknown as PopulateOptions
             }, "areas");

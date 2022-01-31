@@ -5,6 +5,7 @@ import passportTwitch from "passport-twitch-new";
 import { twitchConfig } from "../config/twitchConfig";
 import { UserSchema } from "@schemas/user.schema";
 import OAuthProvider from "../model/oAuthProvider.enum";
+import { getStrObjectId } from "@classes/model.class";
 
 const TwitchStrategy = passportTwitch.Strategy;
 
@@ -18,25 +19,30 @@ const successfullyAuthentificated = async (accessToken, refreshToken, profile, d
         if (oldUser) {
             console.log("User already exist");
             const token = AuthController.signToken({
-                oauthLoginProvider: OAuthProvider.TWITCH,
-                oauthLoginProviderId: profile.login
+                user_id: getStrObjectId(oldUser),
+                username: profile.login
             });
-            // save user token
+
+            oldUser.oauthLoginProvider = OAuthProvider.TWITCH;
+            oldUser.oauthLoginProviderId = profile.login;
             oldUser.token = token;
-            await userSchema.edit(oldUser);
-            done(null, oldUser);
+
+            done(null, await userSchema.edit(oldUser));
         } else {
             console.log("Create new user");
 
             const user = await userSchema.add({
+                username: profile.login,
                 oauthLoginProvider: OAuthProvider.TWITCH,
                 oauthLoginProviderId: profile.login
             });
 
-            const token = AuthController.signToken({user_id: user._id, username: profile.login});
+            const token = AuthController.signToken({
+                user_id: getStrObjectId(user),
+                username: profile.login
+            });
             user.token = token;
-            await userSchema.edit(user);
-            done(null, user);
+            done(null, await userSchema.edit(user));
         }
     } catch (error) {
         done(error, null);

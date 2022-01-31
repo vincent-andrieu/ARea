@@ -5,14 +5,13 @@ import passportLinkedin from "passport-linkedin-oauth2";
 import { linkedinConfig } from "../config/linkedinConfig";
 import { UserSchema } from "@schemas/user.schema";
 import OAuthProvider from "../model/oAuthProvider.enum";
+import { getStrObjectId } from "@classes/model.class";
 
 const LinkedinStrategy = passportLinkedin.Strategy;
 
-const successfullyAuthentificated = async (accessToken, refreshToken, profile, done: CallableFunction) => {
+const successfullyAuthentificated = async (accessToken: string, refreshToken: string, profile, done: CallableFunction) => {
     const userSchema = new UserSchema();
 
-    console.log(accessToken);
-    console.log(refreshToken);
     console.log(profile);
     try {
         const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.LINKEDIN, profile.id);
@@ -20,10 +19,12 @@ const successfullyAuthentificated = async (accessToken, refreshToken, profile, d
         if (oldUser) {
             console.log("User already exist");
             const token = AuthController.signToken({
-                oauthLoginProvider: OAuthProvider.LINKEDIN,
-                oauthLoginProviderId: profile.displayName
+                user_id: getStrObjectId(oldUser),
+                username: profile.displayName
             });
-            // saver user token;
+
+            oldUser.oauthLoginProvider = OAuthProvider.LINKEDIN;
+            oldUser.oauthLoginProviderId = profile.id;
             oldUser.token = token;
             await userSchema.edit(oldUser);
             done(null, oldUser);
@@ -31,11 +32,15 @@ const successfullyAuthentificated = async (accessToken, refreshToken, profile, d
             console.log("Create new user");
 
             const user = await userSchema.add({
+                username: profile.displayName,
                 oauthLoginProvider: OAuthProvider.LINKEDIN,
                 oauthLoginProviderId: profile.id
             });
 
-            const token = AuthController.signToken({ user_id: user._id, username: profile.displayName});
+            const token = AuthController.signToken({
+                user_id: getStrObjectId(user),
+                username: profile.displayName
+            });
             user.token = token;
             await userSchema.edit(user);
             done(null, user);
@@ -46,7 +51,7 @@ const successfullyAuthentificated = async (accessToken, refreshToken, profile, d
 };
 
 passport.use(new LinkedinStrategy(
-    {...linkedinConfig, 
+    {...linkedinConfig,
         scope: ["r_emailaddress", "r_liteprofile"],
         state: true
     }, successfullyAuthentificated

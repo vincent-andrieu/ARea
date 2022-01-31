@@ -22,14 +22,6 @@ export default {
             app.use(
                 cookieSession({
                     name: "session",
-                    keys:  [serverConfig.cookieKey], //TODO: generate true key
-                    maxAge: 24 * 60 * 60 * 100
-                })
-            );
-
-            app.use(
-                cookieSession({
-                    name: "session",
                     keys: [serverConfig.cookieKey], //TODO: generate true key
                     maxAge: 24 * 60 * 60 * 100
                 })
@@ -39,7 +31,7 @@ export default {
             app.use(express.json());
 
             app.use(cors());
-            app.use(function (_, response, next) {
+            app.use((_, response, next) => {
                 response.setHeader("Access-Control-Allow-Origin", "*");
                 next();
             });

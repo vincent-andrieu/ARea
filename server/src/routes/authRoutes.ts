@@ -1,15 +1,14 @@
 import { env } from "process";
-import express from "express";
+import express, { Request, Response } from "express";
 import passport from "passport";
 import "../passport/setupPassport";
 import AuthController from "../controllers/AuthController";
-import authMiddleware from "../middlewares/checkJwt";
 
 const router = express.Router();
 
 /**
  * @swagger
- * 
+ *
  * /auth/login:
  *  post:
  *      summary: Login a user.
@@ -21,23 +20,23 @@ const router = express.Router();
  *          description: The user to login
  *          schema:
  *            type: object
- *            required: 
+ *            required:
  *              - username
  *              - password
- *            properties: 
- *              username: 
+ *            properties:
+ *              username:
  *                  type: string
  *              password:
  *                  type: string
  *      responses:
- *         201: 
- *          description: Created   
+ *         201:
+ *          description: Created
  */
 router.post("/login", AuthController.login);
 
 /**
  * @swagger
- * 
+ *
  * /auth/register:
  *  post:
  *      summary: Register a new user.
@@ -49,17 +48,17 @@ router.post("/login", AuthController.login);
  *          description: The user to register
  *          schema:
  *            type: object
- *            required: 
+ *            required:
  *              - username
  *              - password
- *            properties: 
- *              username: 
+ *            properties:
+ *              username:
  *                 type: string
  *              password:
  *                  type: string
  *      responses:
- *         201: 
- *          description: Created   
+ *         201:
+ *          description: Created
  */
 router.post("/register", AuthController.register);
 
@@ -69,33 +68,29 @@ router.get("/github", passport.authenticate("github", {
     scope: ["user:email"]
 }));
 
-router.get("/github/redirect", authMiddleware, passport.authenticate("github", {
-    successRedirect: `${env.CLIENT_HOST}/areas`,
+router.get("/github/redirect", passport.authenticate("github", {
+    successRedirect: "/auth/redirect",
     failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));
 
 router.get("/twitter", passport.authenticate("twitter"));
 
-router.get("/twitter/redirect",
-    passport.authenticate("twitter", { failureRedirect: `${env.CLIENT_HOST}/login/failure` }),
-    (_, res) => {
-        res.redirect(`${env.CLIENT_HOST}/areas`);
-    }
-);
+router.get("/twitter/redirect", passport.authenticate("twitter", {
+    successRedirect: "/auth/redirect",
+    failureRedirect: `${env.CLIENT_HOST}/login/failure`
+}));
 
 router.get("/twitch", passport.authenticate("twitch"));
 
-router.get("/twitch/redirect",
-    passport.authenticate("twitch", { failureRedirect: `${env.CLIENT_HOST}/login/failure` }),
-    (_, res) => {
-        res.redirect(`${env.CLIENT_HOST}/areas`);
-    }
-);
+router.get("/twitch/redirect", passport.authenticate("twitch", {
+    successRedirect: "/auth/redirect",
+    failureRedirect: `${env.CLIENT_HOST}/login/failure`
+}));
 
 router.get("/notion", passport.authenticate("notion"));
 
 router.get("/notion/redirect", passport.authenticate("notion", {
-    successRedirect: `${env.CLIENT_HOST}/areas`,
+    successRedirect: "/auth/redirect",
     failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));
 
@@ -105,5 +100,9 @@ router.get("/linkedin/redirect", passport.authenticate("linkedin", {
     successRedirect: "/",
     failureRedirect: "/login"
 }));
+
+router.get("/redirect", (request: Request, response: Response) => {
+    response.redirect(`${env.CLIENT_HOST}/areas?token=${request.user?.data.token}`);
+});
 
 export default router;
