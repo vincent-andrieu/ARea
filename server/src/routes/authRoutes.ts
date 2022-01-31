@@ -9,7 +9,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * 
+ *
  * /auth/login:
  *  post:
  *      summary: Login a user.
@@ -21,23 +21,23 @@ const router = express.Router();
  *          description: The user to login
  *          schema:
  *            type: object
- *            required: 
+ *            required:
  *              - username
  *              - password
- *            properties: 
- *              username: 
+ *            properties:
+ *              username:
  *                  type: string
  *              password:
  *                  type: string
  *      responses:
- *         201: 
- *          description: Created   
+ *         201:
+ *          description: Created
  */
 router.post("/login", AuthController.login);
 
 /**
  * @swagger
- * 
+ *
  * /auth/register:
  *  post:
  *      summary: Register a new user.
@@ -49,17 +49,17 @@ router.post("/login", AuthController.login);
  *          description: The user to register
  *          schema:
  *            type: object
- *            required: 
+ *            required:
  *              - username
  *              - password
- *            properties: 
- *              username: 
+ *            properties:
+ *              username:
  *                 type: string
  *              password:
  *                  type: string
  *      responses:
- *         201: 
- *          description: Created   
+ *         201:
+ *          description: Created
  */
 router.post("/register", AuthController.register);
 
@@ -109,6 +109,14 @@ router.get("/linkedin/redirect", passport.authenticate("linkedin", {
 router.get("/discord", passport.authenticate("discord"));
 
 router.get("/discord/redirect", passport.authenticate("discord", {
+    successRedirect: `${env.CLIENT_HOST}/areas`,
+    failureRedirect: `${env.CLIENT_HOST}/login/failure`
+}));
+
+
+router.get("/unsplash", passport.authenticate("unsplash"));
+
+router.get("/unsplash/redirect", passport.authenticate("unsplash", {
     successRedirect: `${env.CLIENT_HOST}/areas`,
     failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));
