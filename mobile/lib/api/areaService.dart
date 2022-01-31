@@ -1,6 +1,7 @@
 import 'package:mobile/api/apiService.dart';
 import 'package:mobile/api/model/loginRequest.dart';
 import 'dart:developer' as developer;
+import 'model/area.dart';
 import 'model/iftttRequest.dart';
 import 'model/iftttResponse.dart';
 import 'model/registerResponse.dart';
@@ -60,20 +61,24 @@ class areaService {
     }
   }
 
-  Future<bool> deleteIfttt() async {
+  Future<bool> deleteIfttt(String iftttId) async {
     try {
-      // TODO
-      return true;
+      dynamic _ = await api.makeRequestDelete("/area/$iftttId", {}, 200);
+
+      // TODO CAN BE UPDATE IN LOCAL FOR SYSTEM OPTIMISATION
+      return getListIfttt();
     } catch (e) {
       developer.log('deleteIfttt: Server failed invalid response -> ' + e.toString());
       return false;
     }
   }
 
-  Future<bool> updateIfttt() async {
+  Future<bool> updateIfttt(String iftttId, Area editedObj) async {
     try {
-      // TODO
-      return true;
+      dynamic _ = await api.makeRequestPut<Area>("/area/$iftttId", editedObj, 200);
+
+      // TODO CAN BE UPDATE IN LOCAL FOR SYSTEM OPTIMISATION
+      return getListIfttt();
     } catch (e) {
       developer.log('updateIfttt: Server failed invalid response -> ' + e.toString());
       return false;
