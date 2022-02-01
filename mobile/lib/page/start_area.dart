@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/api/areaService.dart';
 import 'package:mobile/page/color_list.dart';
 import 'package:mobile/widget/input_custom.dart';
 
 class start_area extends StatelessWidget {
-  const start_area({Key? key}) : super(key: key);
+  areaService api;
+
+  start_area(this.api, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    InputCustom input = InputCustom('IP address', 'Enter server IP address', 'http://10.0.2.2:8080');
     return Scaffold(
         body: Center(
           child: Column(
@@ -14,7 +18,7 @@ class start_area extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 const Padding(
-                    padding: EdgeInsets.only(top: 40.0)
+                    padding: EdgeInsets.only(top: 30.0)
                 ),
                 const Text(
                   'AREA',
@@ -27,7 +31,7 @@ class start_area extends StatelessWidget {
                 ),
                 Column(
                   children: <Widget>[
-                    InputCustom('IP address', 'Enter server IP address'),
+                    input,
                     Container(
                       padding: const EdgeInsets.only(
                           top: 10.0,
@@ -37,6 +41,7 @@ class start_area extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
+                          api.initConnexion(input.controller.text);
                           Navigator.of(context).pushNamed('/SignIn');
                         },
                         style: ElevatedButton.styleFrom(

@@ -1,19 +1,39 @@
-import { NextFunction, Response } from "express";
-import jwt from "jsonwebtoken";
+import { NextFunction, Response, Request } from "express";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 import { serverConfig } from "@config/serverConfig";
+import OAuthProvider from "model/oAuthProvider.enum";
 
-export default (req: any, res: Response, next: NextFunction) => {
+export default (req: Request, res: Response, next: NextFunction) => {
     try {
-        const token = req.body.token || req.query.token || req.headers["x-access-token"] || req.headers["authorization"]?.substring(7) || req.user.token;
+        const token: string = req.body.token || req.query.token || req.headers["x-access-token"] || req.headers["authorization"]?.substring(7);
 
-        if (!token)
+        if (!token || token.length === 0)
             return res.status(403).send("A token is required for authentication");
 
         const decoded = jwt.verify(token, serverConfig.jwtSecret);
-        req.user = decoded;
+
+        if (typeof decoded === "string" || !decoded.data)
+            return res.status(500).send("Fail to decode access token");
+        req.user = decoded as Express.User;
+        req.user.data.token = token;
     } catch (err) {
         return res.status(401).json({ "message": "Invalid Token" });
     }
     return next();
 };
+
+export interface JwtData {
+    user_id?: string;
+    username?: string;
+    token?: string;
+}
+
+declare global {
+    // eslint-disable-next-line @typescript-eslint/no-namespace
+    namespace Express {
+        interface User extends JwtPayload {
+            data: JwtData;
+        }
+    }
+}

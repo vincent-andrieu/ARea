@@ -6,7 +6,7 @@ export default class User extends Model {
     username?: string;
     password?: string;
     oauthLoginProvider?: OAuthProvider;
-    oauthLoginProviderId?: string;//
+    oauthLoginProviderId?: string;
     token?: string;
     areas?: Array<ARea> | Array<ObjectId> = [];
 
@@ -17,6 +17,7 @@ export default class User extends Model {
         this.password = user.password || "";
         this.oauthLoginProvider = user.oauthLoginProvider || OAuthProvider.LOCAL;
         this.oauthLoginProviderId = user.oauthLoginProviderId || "";
+        this.token = user.token;
 
         if (user.areas && Array.isArray(user.areas) && user.areas.length > 0)
             if ((user.areas[0] as ARea)._id)

@@ -1,9 +1,8 @@
 import { env } from "process";
-import express from "express";
+import express, { Request, Response } from "express";
 import passport from "passport";
 import "../passport/setupPassport";
 import AuthController from "../controllers/AuthController";
-import authMiddleware from "../middlewares/checkJwt";
 
 const router = express.Router();
 
@@ -69,33 +68,29 @@ router.get("/github", passport.authenticate("github", {
     scope: ["user:email"]
 }));
 
-router.get("/github/redirect", authMiddleware, passport.authenticate("github", {
-    successRedirect: `${env.CLIENT_HOST}/areas`,
+router.get("/github/redirect", passport.authenticate("github", {
+    successRedirect: "/auth/redirect",
     failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));
 
 router.get("/twitter", passport.authenticate("twitter"));
 
-router.get("/twitter/redirect",
-    passport.authenticate("twitter", { failureRedirect: `${env.CLIENT_HOST}/login/failure` }),
-    (_, res) => {
-        res.redirect(`${env.CLIENT_HOST}/areas`);
-    }
-);
+router.get("/twitter/redirect", passport.authenticate("twitter", {
+    successRedirect: "/auth/redirect",
+    failureRedirect: `${env.CLIENT_HOST}/login/failure`
+}));
 
 router.get("/twitch", passport.authenticate("twitch"));
 
-router.get("/twitch/redirect",
-    passport.authenticate("twitch", { failureRedirect: `${env.CLIENT_HOST}/login/failure` }),
-    (_, res) => {
-        res.redirect(`${env.CLIENT_HOST}/areas`);
-    }
-);
+router.get("/twitch/redirect", passport.authenticate("twitch", {
+    successRedirect: "/auth/redirect",
+    failureRedirect: `${env.CLIENT_HOST}/login/failure`
+}));
 
 router.get("/notion", passport.authenticate("notion"));
 
 router.get("/notion/redirect", passport.authenticate("notion", {
-    successRedirect: `${env.CLIENT_HOST}/areas`,
+    successRedirect: "/auth/redirect",
     failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));
 
@@ -120,5 +115,9 @@ router.get("/unsplash/redirect", passport.authenticate("unsplash", {
     successRedirect: `${env.CLIENT_HOST}/areas`,
     failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));
+
+router.get("/redirect", (request: Request, response: Response) => {
+    response.redirect(`${env.CLIENT_HOST}/areas?token=${request.user?.data.token}`);
+});
 
 export default router;

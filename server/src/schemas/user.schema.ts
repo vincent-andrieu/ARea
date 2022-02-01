@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 import User from "@classes/user.class";
-import { ObjectId } from "@classes/model.class";
+import { getStrObjectId, ObjectId } from "@classes/model.class";
 import OAuthProvider from "../model/oAuthProvider.enum";
 import { ASchema } from "./abstract.schema";
 import ARea from "@classes/area.class";
@@ -26,35 +26,43 @@ export class UserSchema extends ASchema<User> {
     }
 
     public async isLoginValid(username: string, password: string): Promise<boolean> {
-        const result: User = await this._model.findOne({ username, password }) as unknown as User;
+        const result = await this._model.findOne({ username, password });
 
         return !!result;
     }
 
     public async findByUsername(username: string): Promise<User> {
-        const result: User = await this._model.findOne({ username }) as unknown as User;
+        const result = await this._model.findOne({ username });
 
-        return result;
+        if (!result)
+            throw "Unknow user with username " + username;
+        return new User(result.toObject<User>());
     }
 
     public async addARea(userId: ObjectId | string, area: ARea | ObjectId): Promise<User> {
-        const result: User = await this._model.findByIdAndUpdate(userId, { $push: { areas: area } }) as unknown as User;
+        const result = await this._model.findByIdAndUpdate(userId, { $push: { areas: area } });
 
-        return result;
+        if (!result)
+            throw "Fail to add ARea";
+        return new User(result.toObject<User>());
     }
 
-    public async removeARea(userId: ObjectId | string, area: ARea | ObjectId): Promise<User> {
-        const result: User = await this._model.findByIdAndUpdate(userId, { $pull: { areas: area } }) as unknown as User;
+    public async removeARea(userId: ObjectId | string, area: ARea | ObjectId | string): Promise<User> {
+        const result = await this._model.findByIdAndUpdate(userId, { $pull: { areas: getStrObjectId(area) } });
 
-        return result;
+        if (!result)
+            throw "Fail to remove area from user";
+        return new User(result.toObject<User>());
     }
 
-    public async findByOAuthProviderId(providerType: OAuthProvider, providerId: string): Promise<User> {
-        const result: User = await this._model.findOne({
+    public async findByOAuthProviderId(providerType: OAuthProvider, providerId: string): Promise<User | undefined> {
+        const result = await this._model.findOne({
             oauthLoginProvider: providerType,
             oauthLoginProviderId: providerId
-        }) as unknown as User;
+        });
 
-        return result;
+        if (!result)
+            return undefined;
+        return new User(result.toObject<User>());
     }
 }
