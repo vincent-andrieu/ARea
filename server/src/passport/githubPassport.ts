@@ -1,15 +1,17 @@
 import AuthController from "../controllers/AuthController";
-import OAuthProvider from "../model/oAuthProvider.enum";
 import passport from "passport";
 import passportGithub2 from "passport-github2";
+
+import User from "@classes/user.class";
+import { getStrObjectId } from "@classes/model.class";
+import OAuthProvider from "../model/oAuthProvider.enum";
 import { githubConfig } from "../config/githubConfig";
 import { UserSchema } from "../schemas/user.schema";
-import { getStrObjectId } from "@classes/model.class";
 
 const GithubStrategy = passportGithub2.Strategy;
 //TODO: do the setting part
 
-const successfullyAuthentificated = async (req, accessToken, refreshToken, profile, done: CallableFunction) => {
+const successfullyAuthentificated = async (accessToken: string, refreshToken: string, profile: any, done: (err?: unknown, user?: User, info?: object) => void) => {
     const userSchema = new UserSchema();
 
     try {
@@ -43,7 +45,7 @@ const successfullyAuthentificated = async (req, accessToken, refreshToken, profi
             done(null, await userSchema.edit(user));
         }
     } catch (error) {
-        done(error, null);
+        done(error);
     }
 };
 
