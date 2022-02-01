@@ -1,10 +1,11 @@
 import passport from "passport";
 
-import { Profile, VerifyCallback, Scope, Strategy as DiscordStrategy, VerifyFunction} from "@oauth-everything/passport-discord";
+import { Profile, VerifyCallback, Scope, Strategy as DiscordStrategy, VerifyFunction } from "@oauth-everything/passport-discord";
 import { discordConfig } from "../config/discordConfig";
 import { UserSchema } from "@schemas/user.schema";
 import OAuthProvider from "../model/oAuthProvider.enum";
 import AuthController from "../controllers/AuthController";
+import { getStrObjectId } from "@classes/model.class";
 
 const successfullyAuthentificated = async (accessToken: string, refreshToken: string, profile: Profile, done: VerifyCallback) => {
     const userSchema = new UserSchema();
@@ -16,8 +17,8 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
         if (oldUser) {
             console.log("User already exist");
             const token = AuthController.signToken({
-                oauthLoginProvider: OAuthProvider.DISCORD,
-                oauthLoginProviderId: profile.displayName
+                user_id: getStrObjectId(oldUser),
+                username: profile.displayName
             });
             // save user token
             oldUser.token = token;
@@ -30,8 +31,10 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
                 oauthLoginProvider: OAuthProvider.DISCORD,
                 oauthLoginProviderId: profile.displayName
             });
-
-            const token = AuthController.signToken({user_id: user._id, username: profile.displayName})
+            const token = AuthController.signToken({
+                user_id: getStrObjectId(user),
+                username: profile.username
+            });
             user.token = token;
             await userSchema.edit(user);
             done(null, user);

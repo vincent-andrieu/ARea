@@ -7,6 +7,7 @@ import { UserSchema } from "../schemas/user.schema";
 import AuthController from "../controllers/AuthController";
 import OAuthProvider from "../model/oAuthProvider.enum";
 import { unsplashConfig } from "../config/unsplashConfig";
+import { getStrObjectId } from "@classes/model.class";
 
 const UnsplashStrategy = Unsplash.Strategy;
 
@@ -18,16 +19,19 @@ async function successfullyAuthentificated(accessToken, secretToken, profile, do
 
     try {
         const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.UNSPLASH, profile.username);
-        var actUser = oldUser;
-        var token: string;
 
         if (oldUser) {
             console.log("User already exist");
 
-            token = AuthController.signToken({
-                oauthLoginProvider: OAuthProvider.UNSPLASH,
-                OAuthLoginProviderId: profile.username
+            const token = AuthController.signToken({
+                user_id: getStrObjectId(oldUser),
+                username: profile.displayName
             });
+            oldUser.oauthLoginProvider = OAuthProvider.UNSPLASH;
+            oldUser.oauthLoginProviderId = profile.displayName;
+            oldUser.token = token;
+
+            done(null, await userSchema.edit(oldUser));
         } else {
             console.log("Create new user");
 
@@ -35,15 +39,15 @@ async function successfullyAuthentificated(accessToken, secretToken, profile, do
                 oauthLoginProvider: OAuthProvider.UNSPLASH,
                 oauthLoginProviderId: profile.username
             });
-            token = AuthController.signToken({ user_id: user._id, username: profile.username });
-            actUser = user;
+            const token = AuthController.signToken({
+                user_id: getStrObjectId(user),
+                username: profile.username
+            });
+            user.token = token;
+            done(null, await userSchema.edit(user));
         }
-        actUser.token = token;
-        await userSchema.edit(actUser);
-        done(null, actUser);
-
     } catch (error) {
-        done(error, null);
+        done(error, undefined);
     }
 }
 
