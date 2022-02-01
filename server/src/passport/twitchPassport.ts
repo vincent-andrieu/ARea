@@ -50,6 +50,6 @@ const successfullyAuthentificated = async (accessToken, refreshToken, profile, d
 };
 
 passport.use(new TwitchStrategy(
-    {...twitchConfig, scope: "user_read"},
+    { ...twitchConfig, scope: "user_read" },
     successfullyAuthentificated
 ));
