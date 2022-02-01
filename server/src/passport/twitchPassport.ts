@@ -33,7 +33,7 @@ const successfullyAuthentificated = async (accessToken, refreshToken, profile, d
                 oauthLoginProviderId: profile.login
             });
 
-            const token = AuthController.signToken({user_id: user._id, username: profile.login});
+            const token = AuthController.signToken({ user_id: user._id, username: profile.login });
             user.token = token;
             await userSchema.edit(user);
             done(null, user);
@@ -44,6 +44,6 @@ const successfullyAuthentificated = async (accessToken, refreshToken, profile, d
 };
 
 passport.use(new TwitchStrategy(
-    {...twitchConfig, scope: "user_read"},
+    { ...twitchConfig, scope: "user_read" },
     successfullyAuthentificated
 ));
