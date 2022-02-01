@@ -1,33 +1,34 @@
 import passport from "passport";
-import passportTwitter, { Profile } from "passport-twitter";
+// app.use(bodyParser.urlencoded({ extended: true }));
 
-import { getStrObjectId } from "@classes/model.class";
-import User from "@classes/user.class";
-import { UserSchema } from "@schemas/user.schema";
+import Unsplash from "unsplash-passport"
+import { UserSchema } from "../schemas/user.schema";
+
 import AuthController from "../controllers/AuthController";
-import { twitterConfig } from "../config/twitterConfig";
 import OAuthProvider from "../model/oAuthProvider.enum";
+import { unsplashConfig } from "../config/unsplashConfig";
+import { getStrObjectId } from "@classes/model.class";
 
-const TwitterStrategy = passportTwitter.Strategy;
+const UnsplashStrategy = Unsplash.Strategy;
 
-const successfullyAuthentificated = async (accessToken, refreshToken, profile: Profile, done: (error: unknown, user?: User) => void) => {
+
+// export async function unsplashPassport(profile): Promise<void> {
+async function successfullyAuthentificated(accessToken, secretToken, profile, done) {
+
     const userSchema = new UserSchema();
-    // console.log("accessToken : ", accessToken); TODO: remove after use of the variable
-    // console.log("secretToken : ", secretToken); TODO: remove after use of the variable
 
-    console.log(profile);
     try {
-        const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.TWITTER, profile.username);
+        const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.UNSPLASH, profile.username);
 
         if (oldUser) {
             console.log("User already exist");
+
             const token = AuthController.signToken({
                 user_id: getStrObjectId(oldUser),
-                username: profile.username
+                username: profile.displayName
             });
-
-            oldUser.oauthLoginProvider = OAuthProvider.TWITTER;
-            oldUser.oauthLoginProviderId = profile.username;
+            oldUser.oauthLoginProvider = OAuthProvider.UNSPLASH;
+            oldUser.oauthLoginProviderId = profile.displayName;
             oldUser.token = token;
 
             done(null, await userSchema.edit(oldUser));
@@ -36,10 +37,9 @@ const successfullyAuthentificated = async (accessToken, refreshToken, profile: P
 
             const user = await userSchema.add({
                 username: profile.username,
-                oauthLoginProvider: OAuthProvider.TWITTER,
+                oauthLoginProvider: OAuthProvider.UNSPLASH,
                 oauthLoginProviderId: profile.username
             });
-
             const token = AuthController.signToken({
                 user_id: getStrObjectId(user),
                 username: profile.username
@@ -50,9 +50,9 @@ const successfullyAuthentificated = async (accessToken, refreshToken, profile: P
     } catch (error) {
         done(error, undefined);
     }
-};
+}
 
-passport.use(new TwitterStrategy(
-    twitterConfig,
+passport.use(new UnsplashStrategy(
+    unsplashConfig,
     successfullyAuthentificated
 ));

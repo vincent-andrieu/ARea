@@ -4,7 +4,10 @@ enum OAuthProvider {
     TWITCH,
     GITHUB,
     NOTION,
-    LINKEDIN
+    LINKEDIN,
+    DISCORD,
+    UNSPLASH,
+    DROPBOX
 }
 
 export default OAuthProvider;

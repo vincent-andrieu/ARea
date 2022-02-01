@@ -97,8 +97,30 @@ router.get("/notion/redirect", passport.authenticate("notion", {
 router.get("/linkedin", passport.authenticate("linkedin"));
 
 router.get("/linkedin/redirect", passport.authenticate("linkedin", {
-    successRedirect: "/",
-    failureRedirect: "/login"
+    successRedirect: "/auth/redirect",
+    failureRedirect: `${env.CLIENT_HOST}/login/failure`
+}));
+
+router.get("/dropbox", passport.authenticate("dropbox-oauth2"));
+
+router.get("/dropbox/redirect", passport.authenticate("dropbox-oauth2", {
+    successRedirect: "/auth/redirect",
+    failureRedirect: `${env.CLIENT_HOST}/login/failure`
+}));
+
+router.get("/discord", passport.authenticate("discord"));
+
+router.get("/discord/redirect", passport.authenticate("discord", {
+    successRedirect: "/auth/redirect",
+    failureRedirect: `${env.CLIENT_HOST}/login/failure`
+}));
+
+
+router.get("/unsplash", passport.authenticate("unsplash"));
+
+router.get("/unsplash/redirect", passport.authenticate("unsplash", {
+    successRedirect: "/auth/redirect",
+    failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));
 
 router.get("/redirect", (request: Request, response: Response) => {
