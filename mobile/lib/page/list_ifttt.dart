@@ -65,12 +65,12 @@ class list_ifttt extends StatelessWidget {
   List<Widget> extractWidgetList(BuildContext context) {
     List<Widget> list = [];
 
-    list.add(buildCard(area.Action("testAction", false), area.Reaction("testReaction"), context));
+    list.add(buildCard("", area.Action("github", false), area.Reaction("discord"), context));
     if (api.token == null) {
       return [];
     }
     for (var element in api.token!.areas) {
-      list.add(buildCard(element.action, element.reaction, context));
+      list.add(buildCard(element.id, element.action, element.reaction, context));
     }
     return list;
   }
@@ -91,14 +91,14 @@ class list_ifttt extends StatelessWidget {
     );
   }
 
-  Widget buildCard(area.Action action, area.Reaction reaction, BuildContext context) {
+  Widget buildCard(String id, area.Action action, area.Reaction reaction, BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(
           bottom: 20.0
       ),
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(context, '/area', arguments: "1234567");
+          Navigator.pushNamed(context, '/area', arguments: id);
         },
         child: Container(
             color: color_list.secondary,

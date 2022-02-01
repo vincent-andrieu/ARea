@@ -10,7 +10,6 @@ import 'package:mobile/service/notion.dart';
 import 'package:mobile/service/twitch.dart';
 import 'package:mobile/service/twitter.dart';
 import 'package:mobile/page/color_list.dart';
-import 'dart:developer' as developer;
 import 'create_ifttt.dart';
 
 class edit_ifttt extends StatelessWidget {
@@ -26,10 +25,20 @@ class edit_ifttt extends StatelessWidget {
 
   edit_ifttt(this.api, {Key? key}) : super(key: key);
 
+  Area getArea(String id) {
+    for (var it in api.token!.areas) {
+      if (it.id == id) {
+        return it;
+      }
+    }
+    throw "Invalid areas id";
+  }
+
   @override
   Widget build(BuildContext context) {
     String args = ModalRoute.of(context)!.settings.arguments as String;
-    developer.log(args);
+    Area area = getArea(args);
+
     return Scaffold(
       body: Center(
         child: Container(
@@ -54,8 +63,8 @@ class edit_ifttt extends StatelessWidget {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                              // TODO EDIT
-                              api.deleteIfttt("");
+                              api.deleteIfttt(area.id);
+                              Navigator.of(context).pushNamed('/List');
                             },
                             style: ElevatedButton.styleFrom(
                                 primary: color_list.primary,
@@ -82,7 +91,8 @@ class edit_ifttt extends StatelessWidget {
                           child: ElevatedButton(
                             onPressed: () {
                               // TODO EDIT
-                              api.updateIfttt("", Area("", ""));
+                              api.updateIfttt(area.id, Area(area.id, area.action.label, area.reaction.label));
+                              Navigator.of(context).pushNamed('/List');
                             },
                             style: ElevatedButton.styleFrom(
                                 primary: color_list.primary,

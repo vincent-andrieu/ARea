@@ -32,20 +32,23 @@ class Reaction {
 }
 
 class Area {
+  String id = "";
   Action action = Action("", false);
   Reaction reaction = Reaction("");
 
-  Area(String actionLabel, String reactionLabel) {
+  Area(this.id, String actionLabel, String reactionLabel) {
     action = Action(actionLabel, false);
     reaction = Reaction(reactionLabel);
   }
 
   Area.fromJson(dynamic json)
-      : action = Action.fromJson(json['action']),
+      : id = json['_id'],
+        action = Action.fromJson(json['action']),
         reaction = Reaction.fromJson(json['reaction']);
 
   Map<String, dynamic> toJson() {
     return {
+      '_id': id,
       'action': action.toJson(),
       'reaction': reaction.toJson()
     };

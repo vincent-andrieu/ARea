@@ -31,7 +31,7 @@ void callbackClose(BuildContext context) {
 }
 
 void callbackSaveIfttt(BuildContext context, areaService api, String actionLabel, String reactionLabel) {
-  api.createIfttt(Area(actionLabel, reactionLabel)).then((value) => {
+  api.createIfttt(Area("", actionLabel, reactionLabel)).then((value) => {
     if (value) {
       Navigator.of(context).pushNamed('/List')
     }
