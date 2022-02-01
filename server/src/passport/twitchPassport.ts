@@ -9,7 +9,7 @@ import { getStrObjectId } from "@classes/model.class";
 
 const TwitchStrategy = passportTwitch.Strategy;
 
-const successfullyAuthentificated = async (accessToken, refreshToken, profile, done) => {
+const successfullyAuthentificated = async (accessToken: string, refreshToken: string, profile, done) => {
     const userSchema = new UserSchema();
 
     console.log(profile);

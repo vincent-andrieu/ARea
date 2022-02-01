@@ -1,11 +1,11 @@
 import passport from "passport";
 
+import { getStrObjectId } from "@classes/model.class";
+import { UserSchema } from "@schemas/user.schema";
 import AuthController from "../controllers/AuthController";
 import { Strategy as NotionStrategy } from "../module/passport-notion";
 import { notionConfig } from "../config/notionConfig";
-import { UserSchema } from "@schemas/user.schema";
 import OAuthProvider from "../model/oAuthProvider.enum";
-import { getStrObjectId } from "@classes/model.class";
 
 const successfullyAuthentificated = async(_req, accessToken: string, _, oauthData, userNotion, done) => {
     const userSchema = new UserSchema();
