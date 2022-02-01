@@ -3,6 +3,7 @@ import ARea from "@classes/area.class";
 import { AReaSchema } from "@schemas/area.schema";
 import { Client, Message, TextChannel } from "discord.js";
 import { discordBotConfig } from "../config/discordConfig";
+import { DiscordMessageConfig } from "../model/ActionConfig";
 
 const CHANNEL_ID = "535524248262017039"; // DEBUG
 
@@ -33,10 +34,17 @@ export default class DiscordBot {
     static async refreshListenerList() {
         const list: ARea[] = await this.areaSchema.fetchByAction(ActionType.DISCORD_MSG);
 
-        // TODO: channel id in action parameter
         list.forEach((value: ARea) => {
-            if (value._id)
-                DiscordBot.channelListenerList.push({ channelId: CHANNEL_ID, areaId: value._id.toString() });
+            try {
+                const inputs = value.trigger.inputs as DiscordMessageConfig;
+
+                if (value._id && inputs.channelId != undefined)
+                    DiscordBot.channelListenerList.push({ channelId: inputs.channelId, areaId: value._id.toString() });
+                else
+                    console.warn("DiscordBot refreshListenerList: in action, missing parameter channelId");
+            } catch (err) {
+                console.error(`DiscordBot refreshListenerList: ${err}`);
+            }
         });
     }
 
@@ -56,6 +64,7 @@ export default class DiscordBot {
                 if (result != undefined) {
                     // fetch action
                     const area: ARea = await this.areaSchema.getById(result.areaId);
+
 
                     // TODO: TRIGGER ACTION : area.reaction
                     this.sendMessage(message.channel.id, "Infinite loop"); // DEBUG

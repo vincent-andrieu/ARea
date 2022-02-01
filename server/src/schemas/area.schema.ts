@@ -4,11 +4,16 @@ import ARea from "@classes/area.class";
 import { ASchema } from "./abstract.schema";
 import Action, { ActionType } from "@classes/action.class";
 import { ActionSchema } from "./action.schema";
-import { lang } from "moment";
 
 const areaSchema = new mongoose.Schema({
-    action: { type: mongoose.Schema.Types.ObjectId, ref: "Action" },
-    reaction: { type: mongoose.Schema.Types.ObjectId, ref: "Reaction" }
+    trigger: {
+        action: { type: mongoose.Schema.Types.ObjectId, ref: "Action" },
+        inputs: mongoose.Schema.Types.Mixed
+    },
+    consequence: {
+        inputs: mongoose.Schema.Types.Mixed,
+        reaction: { type: mongoose.Schema.Types.ObjectId, ref: "Reaction" }
+    }
 }, {
     toObject: { virtuals: true },
     toJSON: { virtuals: true }
@@ -19,10 +24,6 @@ export class AReaSchema extends ASchema<ARea> {
 
     constructor() {
         super(ARea, "ARea", areaSchema);
-    }
-
-    public async getListByUsername(username: string) {
-        return await this._model.find({ username });
     }
 
     public async fetchByAction(type: ActionType) {

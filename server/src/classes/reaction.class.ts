@@ -1,4 +1,5 @@
 import Model from "./model.class";
+import { Parameter } from "../model/Parameters";
 
 export enum ReactionType {
     TWITTER_MSG = "TWITTER_MSG",
@@ -11,13 +12,13 @@ export enum ReactionType {
 }
 
 export default class Reaction extends Model {
-    label: string;
     type: ReactionType;
+    parameters: Parameter[];
 
     constructor(reaction: Reaction) {
         super(reaction);
 
         this.type = reaction.type;
-        this.label = reaction.label || "";
+        this.parameters = reaction.parameters;
     }
 }

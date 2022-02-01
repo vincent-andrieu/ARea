@@ -1,4 +1,5 @@
 import Model from "./model.class";
+import { Parameter } from "../model/Parameters";
 
 export enum ActionType {
     DATE = "DATE",
@@ -13,14 +14,14 @@ export enum ActionType {
 
 export default class Action extends Model {
     type: ActionType;
-    label: string;
     cron: boolean;
+    parameters: Parameter[];
 
     constructor(action: Action) {
         super(action);
 
         this.type = action.type;
-        this.label = action.label || "";
         this.cron = !!action.cron;
+        this.parameters = action.parameters;
     }
 }
