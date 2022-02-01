@@ -28,6 +28,7 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
             console.log("Create new user");
 
             const user = await userSchema.add({
+                username: profile.displayName || "",
                 oauthLoginProvider: OAuthProvider.DISCORD,
                 oauthLoginProviderId: profile.displayName
             });
