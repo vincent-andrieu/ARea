@@ -1,7 +1,7 @@
 import { env } from "process";
 
-import nodeFetch from 'node-fetch';
-import { createApi } from 'unsplash-js';
+import nodeFetch from "node-fetch";
+import { createApi } from "unsplash-js";
 
 
 export async function getLastPictureFromUser(username: string): Promise<void> {
@@ -10,11 +10,11 @@ export async function getLastPictureFromUser(username: string): Promise<void> {
         return;
     const unsplash = createApi({
         accessKey: env.UNSPLASH_API_KEY,
-        fetch: nodeFetch as any,
+        fetch: nodeFetch as any
     });
 
 
-    var pic = await unsplash.users.getPhotos({ username: username })
+    const pic = await unsplash.users.getPhotos({ username: username });
     console.log("pic : ", pic);
 }
 
@@ -25,10 +25,10 @@ export async function getRandomPicture(): Promise<void> {
         return;
     const unsplash = createApi({
         accessKey: env.UNSPLASH_API_KEY,
-        fetch: nodeFetch as any,
+        fetch: nodeFetch as any
     });
 
 
-    var pic = await unsplash.photos.getRandom({});
+    const pic = await unsplash.photos.getRandom({});
     console.log("pic : ", pic);
 }
