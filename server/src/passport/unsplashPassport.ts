@@ -36,6 +36,7 @@ async function successfullyAuthentificated(accessToken, secretToken, profile, do
             console.log("Create new user");
 
             const user = await userSchema.add({
+                username: profile.username,
                 oauthLoginProvider: OAuthProvider.UNSPLASH,
                 oauthLoginProviderId: profile.username
             });
