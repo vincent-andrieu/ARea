@@ -1,6 +1,6 @@
-import { env } from 'process';
-import { ApiClient } from '@twurple/api';
-import { ClientCredentialsAuthProvider } from '@twurple/auth';
+import { env } from "process";
+import { ApiClient } from "@twurple/api";
+import { ClientCredentialsAuthProvider } from "@twurple/auth";
 
 export async function isStreamLive(userName: string) {
 
@@ -13,8 +13,7 @@ export async function isStreamLive(userName: string) {
     const apiClient = new ApiClient({ authProvider });
     const user = await apiClient.users.getUserByName(userName);
 
-    if (!user) {
+    if (!user)
         return false;
-    }
     return await user.getStream() !== null;
 }
