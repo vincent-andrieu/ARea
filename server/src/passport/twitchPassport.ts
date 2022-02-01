@@ -37,10 +37,14 @@ const successfullyAuthentificated = async (accessToken, refreshToken, profile, d
                 oauthLoginProviderId: profile.login
             });
 
+<<<<<<< HEAD
             const token = AuthController.signToken({
                 user_id: getStrObjectId(user),
                 username: profile.login
             });
+=======
+            const token = AuthController.signToken({ user_id: user._id, username: profile.login });
+>>>>>>> feat(src/services/twitchService.ts): function to check if user is on live
             user.token = token;
             done(null, await userSchema.edit(user));
         }
@@ -50,6 +54,6 @@ const successfullyAuthentificated = async (accessToken, refreshToken, profile, d
 };
 
 passport.use(new TwitchStrategy(
-    {...twitchConfig, scope: "user_read"},
+    { ...twitchConfig, scope: "user_read" },
     successfullyAuthentificated
 ));

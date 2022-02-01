@@ -31,6 +31,8 @@
         "@discordjs/rest": "^0.3.0",
         "@notionhq/client": "^0.4.12",
         "@oauth-everything/passport-discord": "^1.0.2",
+        "@twurple/api": "^5.0.17",
+        "@twurple/auth": "^5.0.17",
         "bcryptjs": "^2.4.3",
         "cookie-session": "^2.0.0",
         "cors": "^2.8.5",
