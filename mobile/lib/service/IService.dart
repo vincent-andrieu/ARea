@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_web_auth/flutter_web_auth.dart';
 
 class IService {
@@ -30,9 +32,10 @@ class IService {
   }
 
   Future<String> getToken(String srv) async {
-    final result = await FlutterWebAuth.authenticate(url: srv + getUrl(), callbackUrlScheme: "http");
+    final result = await FlutterWebAuth.authenticate(url: srv + getUrl(), callbackUrlScheme: "$srv/areas");
     final token = Uri.parse(result).queryParameters['token'];
 
+    log(token!);
     return (token == null) ? "" : token;
   }
 }
