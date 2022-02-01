@@ -29,8 +29,8 @@ class IService {
     return false;
   }
 
-  Future<String> getToken() async {
-    final result = await FlutterWebAuth.authenticate(url: getUrl(), callbackUrlScheme: "http");
+  Future<String> getToken(String srv) async {
+    final result = await FlutterWebAuth.authenticate(url: srv + getUrl(), callbackUrlScheme: "http");
     final token = Uri.parse(result).queryParameters['token'];
 
     return (token == null) ? "" : token;

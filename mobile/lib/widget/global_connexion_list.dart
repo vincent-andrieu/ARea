@@ -1,27 +1,27 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/page/color_list.dart';
 import 'package:mobile/service/IService.dart';
 
 class GlobalConnexionList extends StatefulWidget {
-  List<IService> list = [];
-  GlobalConnexionList(List<IService> src, {Key? key}) : super(key: key) {
-    list = src;
+  List<IService> list;
+  String urlSrv;
+  GlobalConnexionList(this.urlSrv, this.list, {Key? key}) : super(key: key) {
     if (list.length != 6) {
       throw Exception("Invalid input size: " + list.length.toString());
     }
-    list = src;
   }
 
   @override
-  State<GlobalConnexionList> createState() => GlobalConnexionListState(list);
+  State<GlobalConnexionList> createState() => GlobalConnexionListState(urlSrv, list);
 }
 
 class GlobalConnexionListState extends State<GlobalConnexionList> {
   List<IService> list = [];
-  GlobalConnexionListState(List<IService> src) {
-    list = src;
-  }
+  String urlSrv;
+  GlobalConnexionListState(this.urlSrv, this.list);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
               if (list[0].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<String> token = list[0].getToken();
+                Future<String> token = list[0].getToken(urlSrv);
                 token.whenComplete(() {
                   // TODO SEND TOKEN TO SERVER
                 });
@@ -46,7 +46,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
               if (list[1].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<String> token = list[1].getToken();
+                Future<String> token = list[1].getToken(urlSrv);
                 token.whenComplete(() {
                   // TODO SEND TOKEN TO SERVER
                 });
@@ -57,7 +57,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
               if (list[2].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<String> token = list[2].getToken();
+                Future<String> token = list[2].getToken(urlSrv);
                 token.whenComplete(() {
                   // TODO SEND TOKEN TO SERVER
                 });
@@ -68,7 +68,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
               if (list[3].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<String> token = list[3].getToken();
+                Future<String> token = list[3].getToken(urlSrv);
                 token.whenComplete(() {
                   // TODO SEND TOKEN TO SERVER
                 });
@@ -79,7 +79,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
               if (list[4].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<String> token = list[4].getToken();
+                Future<String> token = list[4].getToken(urlSrv);
                 token.whenComplete(() {
                   // TODO SEND TOKEN TO SERVER
                 });
@@ -90,7 +90,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
               if (list[5].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<String> token = list[5].getToken();
+                Future<String> token = list[5].getToken(urlSrv);
                 token.whenComplete(() {
                   // TODO SEND TOKEN TO SERVER
                 });
@@ -144,7 +144,10 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
           ],
         ),
       ),
-      onTap: onTap,
+      onTap: () {
+        log('Connect with');
+        onTap();
+      },
     );
   }
 }
