@@ -41,7 +41,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
                 });
               }
             }),
-            const Padding(padding: EdgeInsets.all(10.0)),
+            const Padding(padding: EdgeInsets.all(5.0)),
             connexion_with_button(context, (list[1].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[1].getName(), list[1].getIcon(), () {
               if (list[1].getConnexionState()) {
                 // TODO PROBABLY NOTHING
@@ -52,7 +52,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
                 });
               }
             }),
-            const Padding(padding: EdgeInsets.all(10.0)),
+            const Padding(padding: EdgeInsets.all(5.0)),
             connexion_with_button(context, (list[2].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[2].getName(), list[2].getIcon(), () {
               if (list[2].getConnexionState()) {
                 // TODO PROBABLY NOTHING
@@ -63,7 +63,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
                 });
               }
             }),
-            const Padding(padding: EdgeInsets.all(10.0)),
+            const Padding(padding: EdgeInsets.all(5.0)),
             connexion_with_button(context, (list[3].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[3].getName(), list[3].getIcon(), () {
               if (list[3].getConnexionState()) {
                 // TODO PROBABLY NOTHING
@@ -74,7 +74,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
                 });
               }
             }),
-            const Padding(padding: EdgeInsets.all(10.0)),
+            const Padding(padding: EdgeInsets.all(5.0)),
             connexion_with_button(context, (list[4].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[4].getName(), list[4].getIcon(), () {
               if (list[4].getConnexionState()) {
                 // TODO PROBABLY NOTHING
@@ -85,7 +85,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
                 });
               }
             }),
-            const Padding(padding: EdgeInsets.all(10.0)),
+            const Padding(padding: EdgeInsets.all(5.0)),
             connexion_with_button(context, (list[5].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[5].getName(), list[5].getIcon(), () {
               if (list[5].getConnexionState()) {
                 // TODO PROBABLY NOTHING
