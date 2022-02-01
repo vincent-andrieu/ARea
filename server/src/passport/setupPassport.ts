@@ -1,19 +1,18 @@
 import passport from "passport";
+import jwt from "jsonwebtoken";
 
-import { ObjectId } from "@classes/model.class";
-import User from "@classes/user.class";
+import { serverConfig } from "@config/serverConfig";
 
-//NOTE: serialization and deserilazition are useless because user 
-//is deserialize thanks to the token stored in the session
-
-passport.serializeUser((user: User, done) => {
-    //serialize: return user token as second params of done
-    console.log("Call serialize user with arg: ", user);
+passport.serializeUser<string>((user: any, done) => { // user is a User class
     done(null, user.token);
 });
 
-passport.deserializeUser<ObjectId>((token, done) => {
-    //deserialize: get user from id and return the user as second params of done
-    console.log("Call deserialize user with arg: ", token);
-    done(null, {token});
+passport.deserializeUser<string>((token, done) => {
+    if (!token || token.length === 0)
+        done(null, false);
+
+    const user: Express.User = jwt.verify(token, serverConfig.jwtSecret) as Express.User;
+
+    user.data.token = token;
+    done(null, user);
 });

@@ -16,13 +16,15 @@ export default class AreaController {
     private static _reactionSchema = new ReactionSchema();
     private static _userSchema = new UserSchema();
 
-    static async create(req, res: Response) {
+    static async create(req: Request, res: Response) {
         const action: Action = req.body.action;
         const reaction: Reaction = req.body.reaction;
-        const userId: string = req.user?.user_id;
+        const userId = req.user?.data.user_id;
 
         //TODO: GESTION D'ERREUR DU BODY
         try {
+            if (!userId || userId.length === 0)
+                throw "Unknow user id";
             const actionInDb = await AreaController._actionSchema.add(action);
             const reactionInDb = await AreaController._reactionSchema.add(reaction);
             const area = await AreaController._areaSchema.add({action: actionInDb, reaction: reactionInDb});
@@ -37,15 +39,18 @@ export default class AreaController {
         }
     }
 
-    static async readOne(req, res: Response) {
+    static async readOne(req: Request, res: Response) {
         const id = req.params.id;
+        const userId = req.user?.data.user_id;
 
         try {
-            const user = await AreaController._userSchema.get(req.user?.user_id, {
+            if (!userId || userId.length === 0)
+                throw "Unknow user id";
+            const user = await AreaController._userSchema.get(userId, {
                 path: "areas",
                 populate: "action reaction" as unknown as PopulateOptions
             });
-            const area = (user.areas as any[]).find((element: ARea) => element._id == id);
+            const area = (user.areas as Array<ARea>).find((element: ARea) => getStrObjectId(element) == id);
             if (area)
                 return res.json(area);
             else
@@ -56,9 +61,13 @@ export default class AreaController {
         }
     }
 
-    static async readList(req, res: Response) {
+    static async readList(req: Request, res: Response) {
+        const userId = req.user?.data.user_id;
+
         try {
-            const user = await AreaController._userSchema.get(req.user.data.user_id, {
+            if (!userId || userId.length === 0)
+                throw "Unknow user id";
+            const user = await AreaController._userSchema.get(userId, {
                 path: "areas",
                 populate: "action reaction" as unknown as PopulateOptions
             }, "areas");
@@ -68,10 +77,13 @@ export default class AreaController {
         }
     }
 
-    static async update(req, res: Response) {
-        const userId: string = req.user?.user_id;
+    static async update(req: Request, res: Response) {
+        const userId = req.user?.data.user_id;
         const areaId = req.params.id;
+
         try {
+            if (!userId || userId.length === 0)
+                throw "Unknow user id";
             const action: Action = new Action(req.body.action);
             const reaction: Reaction = new Reaction(req.body.reaction);
 
@@ -91,11 +103,13 @@ export default class AreaController {
         }
     }
 
-    static async delete(req, res: Response) {
+    static async delete(req: Request, res: Response) {
         const areaId: string = req.params.id;
-        const userId: string = req.user?.user_id;
+        const userId = req.user?.data.user_id;
 
         try {
+            if (!userId || userId.length === 0)
+                throw "Unknow user id";
             const user = await AreaController._userSchema.get(userId, {
                 path: "areas",
                 populate: "action reaction" as unknown as PopulateOptions

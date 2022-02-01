@@ -25,7 +25,7 @@ export abstract class ASchema<T extends Model> {
 
             if (!result)
                 throw "Fail to edit model: " + model.toString();
-            return new this._ctor(result.toObject<T>());
+            return new this._ctor(model);
         } catch (error: any) {
             throw new Error(error.toString());
         }

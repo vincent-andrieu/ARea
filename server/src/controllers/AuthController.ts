@@ -3,13 +3,16 @@ import * as jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
 import { serverConfig } from "@config/serverConfig";
+import { getStrObjectId } from "@classes/model.class";
 import { UserSchema } from "@schemas/user.schema";
+import { JwtData } from "../middlewares/checkJwt";
+import OAuthProvider from "../model/oAuthProvider.enum";
 
 export default class AuthController {
 
     private static _userSchema = new UserSchema();
 
-    public static signToken(data: any): string {
+    public static signToken(data: JwtData): string {
         const token = jwt.sign(
             { data },
             serverConfig.jwtSecret,
@@ -32,12 +35,14 @@ export default class AuthController {
 
             if (user?.password && (await bcrypt.compare(password, user.password))) {
                 // Create token
-                const token = AuthController.signToken({ user_id: user._id, username });
+                const token = AuthController.signToken({
+                    user_id: getStrObjectId(user),
+                    username
+                });
                 // save user token
                 user.token = token;
-                await AuthController._userSchema.edit(user);
 
-                res.status(200).json(user);
+                res.status(200).json(await AuthController._userSchema.edit(user));
             } else
                 res.status(400).json({ "message": "Invalid Credentials" });
         } catch (err) {
@@ -48,7 +53,6 @@ export default class AuthController {
 
     public static async register(req: Request, res: Response) {
         try {
-            console.log(req.body)
             const username: string = req.body.username;
             const password: string = req.body.password;
 
@@ -66,15 +70,18 @@ export default class AuthController {
             const user = await AuthController._userSchema.add({
                 username: username.toLowerCase(),
                 password: encryptedPassword,
-                token: ""
+                token: "",
+                oauthLoginProvider: OAuthProvider.LOCAL
             });
 
             // Create token
-            const token: string = AuthController.signToken({ user_id: user._id, username });
+            const token: string = AuthController.signToken({
+                user_id: getStrObjectId(user),
+                username
+            });
             user.token = token;
-            await AuthController._userSchema.edit(user);
 
-            return res.status(201).json(user);
+            return res.status(201).json(await AuthController._userSchema.edit(user));
         } catch (err) {
             console.error(err);
             res.status(500).json({ "message": "an error occured" });
