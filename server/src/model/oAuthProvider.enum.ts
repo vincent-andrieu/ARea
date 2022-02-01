@@ -6,7 +6,8 @@ enum OAuthProvider {
     NOTION,
     LINKEDIN,
     DISCORD,
-    UNSPLASH
+    UNSPLASH,
+    DROPBOX
 }
 
 export default OAuthProvider;

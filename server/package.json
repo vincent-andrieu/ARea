@@ -44,6 +44,7 @@
         "mongoose": "^5.13.14",
         "node-fetch": "^2.6.7",
         "passport": "^0.5.2",
+        "passport-dropbox-oauth2": "^1.1.0",
         "passport-github2": "^0.1.12",
         "passport-linkedin-oauth2": "^2.0.0",
         "passport-twitch-new": "^0.0.2",
