@@ -65,6 +65,7 @@ class list_ifttt extends StatelessWidget {
   List<Widget> extractWidgetList(BuildContext context) {
     List<Widget> list = [];
 
+    list.add(buildCard(area.Action("testAction", false), area.Reaction("testReaction"), context));
     if (api.token == null) {
       return [];
     }
@@ -95,21 +96,26 @@ class list_ifttt extends StatelessWidget {
       padding: const EdgeInsets.only(
           bottom: 20.0
       ),
-      child: Container(
-        color: color_list.secondary,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            buildSubCard(action.label, "Not dev", "assets/${action.label}.png", context),
-            const Icon(
-              Icons.arrow_forward_outlined,
-              color: color_list.primary,
-              size: 50.0,
-            ),
-            buildSubCard(reaction.label, "Not dev", "assets/${reaction.label}.png", context)
-          ],
-        )
-      )
+      child: InkWell(
+        onTap: () {
+          Navigator.pushNamed(context, '/area', arguments: "1234567");
+        },
+        child: Container(
+            color: color_list.secondary,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                buildSubCard(action.label, "Not dev", "assets/${action.label}.png", context),
+                const Icon(
+                  Icons.arrow_forward_outlined,
+                  color: color_list.primary,
+                  size: 50.0,
+                ),
+                buildSubCard(reaction.label, "Not dev", "assets/${reaction.label}.png", context)
+              ],
+            )
+        ),
+      ),
     );
   }
 
