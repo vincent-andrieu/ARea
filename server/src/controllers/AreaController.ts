@@ -1,7 +1,7 @@
 import { Response } from "express";
 import { AReaSchema } from "../schemas/area.schema";
 import ARea from "../classes/area.class";
-import { getObjectId, getStrObjectId, ObjectId } from "@classes/model.class";
+import { getStrObjectId, ObjectId } from "@classes/model.class";
 import Action from "@classes/action.class";
 import Reaction from "@classes/reaction.class";
 import { ActionSchema } from "@schemas/action.schema";
@@ -50,16 +50,16 @@ export default class AreaController {
             console.log("[AreaController] create :", error.toString());
             res.status(400).send(error.toString());
         }
-    }
+    };
 
-    static async readOne(req: Request, res: Response) {
-        const id = req.params.id;
+    static async readOne(req, res: Response) {
+        const id = req.param.id;
         const userId = req.user?.data.user_id;
 
         try {
             if (!userId || userId.length === 0)
                 throw "Unknow user id";
-            const user = await this._userSchema.getById(req.user.data.user_id, {
+            const user = await this._userSchema.get(req.user.data.user_id, {
                 path: "areas",
                 populate: "action reaction" as unknown as PopulateOptions
             });
@@ -74,13 +74,13 @@ export default class AreaController {
         }
     }
 
-    static async readList(req: Request, res: Response) {
+    static async readList(req, res: Response) {
         const userId = req.user?.data.user_id;
 
         try {
             if (!userId || userId.length === 0)
                 throw "Unknow user id";
-            const user = await this._userSchema.getById(req.user.data.user_id, {
+            const user = await this._userSchema.get(req.user.data.user_id, {
                 path: "areas",
                 populate: "action reaction" as unknown as PopulateOptions
             }, "areas");
@@ -114,7 +114,7 @@ export default class AreaController {
         } catch (error: any) {
             res.status(500).send(error.toString());
         }
-    }
+    };
 
     static delete = async (req, res: Response) => {
         const areaId = req.params.id;
@@ -132,8 +132,8 @@ export default class AreaController {
             if (!area)
                 return res.status(404).send(`Failed to find area with id: ${areaId}`);
 
-            const action: ObjectId = area.action as ObjectId;
-            const reaction: ObjectId = area.reaction as ObjectId;
+            const action: ObjectId = area.trigger.action as ObjectId;
+            const reaction: ObjectId = area.consequence.reaction as ObjectId;
 
             await this._actionSchema.deleteById(action);
             await this._reactionSchema.deleteById(reaction);

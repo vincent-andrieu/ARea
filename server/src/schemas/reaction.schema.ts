@@ -6,7 +6,10 @@ import { ASchema } from "./abstract.schema";
 const reactionSchema = new mongoose.Schema({
     label: { type: String },
     type: { type: String, enum: ReactionType },
-    parameters: { type: mongoose.Schema.Types.Mixed }
+    parameters: [{
+        name: { type: String },
+        type: { type: String }
+    }]
 }, {
     toObject: { virtuals: true },
     toJSON: { virtuals: true }

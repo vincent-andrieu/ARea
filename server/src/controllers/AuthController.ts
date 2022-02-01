@@ -7,6 +7,7 @@ import { getStrObjectId } from "@classes/model.class";
 import { UserSchema } from "@schemas/user.schema";
 import { JwtData } from "../middlewares/checkJwt";
 import OAuthProvider from "../model/oAuthProvider.enum";
+import User from "@classes/user.class";
 
 export default class AuthController {
 
@@ -27,11 +28,16 @@ export default class AuthController {
         try {
             const username: string = req.body.username;
             const password: string = req.body.password;
+            let user;
 
             if (!(username && password))
                 return res.status(400).send("All input is required");
 
-            const user = await AuthController._userSchema.findByUsername(username);
+            try {
+                user = await AuthController._userSchema.findByUsername(username);
+            } catch (err) {
+                res.status(400).json({ "message": "Invalid Credentials" });
+            }
 
             if (user?.password && (await bcrypt.compare(password, user.password))) {
                 // Create token
@@ -60,7 +66,12 @@ export default class AuthController {
                 return res.status(400).send("All input are required");
             // check if user already exist
             // Validate if user exist in our database
-            const oldUser = await AuthController._userSchema.findByUsername(username);
+            let oldUser: User | null = null;
+            try {
+                oldUser = await AuthController._userSchema.findByUsername(username);
+            } catch (err) {
+                oldUser = null;
+            }
 
             if (oldUser)
                 return res.status(409).send("User Already Exist. Please Login");
@@ -84,7 +95,7 @@ export default class AuthController {
             return res.status(201).json(await AuthController._userSchema.edit(user));
         } catch (err) {
             console.error(err);
-            res.status(500).json({ "message": "an error occured" });
+            return res.status(500).json({ "message": "an error occured" });
         }
     }
 

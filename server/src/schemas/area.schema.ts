@@ -8,10 +8,10 @@ import { ActionSchema } from "./action.schema";
 const areaSchema = new mongoose.Schema({
     trigger: {
         action: { type: mongoose.Schema.Types.ObjectId, ref: "Action" },
-        inputs: mongoose.Schema.Types.Mixed
+        inputs: { type: mongoose.Schema.Types.Mixed }
     },
     consequence: {
-        inputs: mongoose.Schema.Types.Mixed,
+        inputs: { type: mongoose.Schema.Types.Mixed },
         reaction: { type: mongoose.Schema.Types.ObjectId, ref: "Reaction" }
     }
 }, {

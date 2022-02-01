@@ -63,7 +63,7 @@ export default class DiscordBot {
                 });
                 if (result != undefined) {
                     // fetch action
-                    const area: ARea = await this.areaSchema.getById(result.areaId);
+                    const area: ARea = await this.areaSchema.get(result.areaId);
 
 
                     // TODO: TRIGGER ACTION : area.reaction
