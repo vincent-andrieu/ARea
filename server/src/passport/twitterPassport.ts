@@ -8,8 +8,10 @@ import OAuthProvider from "../model/oAuthProvider.enum";
 
 const TwitterStrategy = passportTwitter.Strategy;
 
-const successfullyAuthentificated = async (accessToken, refreshToken, profile, done) => {
+const successfullyAuthentificated = async (accessToken, secretToken, profile, done) => {
     const userSchema = new UserSchema();
+    // console.log("accessToken : ", accessToken); TODO: remove after use of the variable
+    // console.log("secretToken : ", secretToken); TODO: remove after use of the variable
 
     console.log(profile);
     try {
@@ -24,6 +26,7 @@ const successfullyAuthentificated = async (accessToken, refreshToken, profile, d
             // save user token
             oldUser.token = token;
             await userSchema.edit(oldUser);
+            console.log(oldUser);
             done(null, oldUser);
         } else {
             console.log("Create new user");
@@ -33,7 +36,7 @@ const successfullyAuthentificated = async (accessToken, refreshToken, profile, d
                 oauthLoginProviderId: profile.username
             });
 
-            const token = AuthController.signToken({user_id: user._id, username: profile.username});
+            const token = AuthController.signToken({ user_id: user._id, username: profile.username });
             user.token = token;
             await userSchema.edit(user);
             done(null, user);
