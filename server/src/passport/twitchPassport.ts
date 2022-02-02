@@ -26,6 +26,10 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
             oldUser.oauthLoginProvider = OAuthProvider.TWITCH;
             oldUser.oauthLoginProviderId = profile.login;
             oldUser.token = token;
+            if (oldUser.oauth.twitch) {
+                oldUser.oauth.twitch.accessToken = accessToken;
+                oldUser.oauth.twitch.refreshToken = refreshToken;
+            }
 
             done(null, await userSchema.edit(oldUser));
         } else {
@@ -34,7 +38,13 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
             const user = await userSchema.add({
                 username: profile.login,
                 oauthLoginProvider: OAuthProvider.TWITCH,
-                oauthLoginProviderId: profile.login
+                oauthLoginProviderId: profile.login,
+                oauth: {
+                    twitch: {
+                        accessToken: accessToken,
+                        refreshToken: refreshToken
+                    }
+                }
             });
 
             const token = AuthController.signToken({

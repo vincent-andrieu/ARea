@@ -24,6 +24,8 @@ const successfullyAuthentificated = async(_req, accessToken: string, _, oauthDat
             oldUser.oauthLoginProvider = OAuthProvider.NOTION;
             oldUser.oauthLoginProviderId = userNotion.person.email;
             oldUser.token = token;
+            if (oldUser.oauth.notion)
+                oldUser.oauth.notion.accessToken = accessToken;
 
             done(null, await userSchema.edit(oldUser));
         } else {
@@ -32,7 +34,12 @@ const successfullyAuthentificated = async(_req, accessToken: string, _, oauthDat
             const user = await userSchema.add({
                 username: userNotion.person.email,
                 oauthLoginProvider: OAuthProvider.NOTION,
-                oauthLoginProviderId: userNotion.person.email
+                oauthLoginProviderId: userNotion.person.email,
+                oauth: {
+                    notion: {
+                        accessToken: accessToken
+                    }
+                }
             });
 
             const token = AuthController.signToken({

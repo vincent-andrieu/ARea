@@ -26,6 +26,10 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
             oldUser.oauthLoginProvider = OAuthProvider.LINKEDIN;
             oldUser.oauthLoginProviderId = profile.id;
             oldUser.token = token;
+            if (oldUser.oauth.linkedin) {
+                oldUser.oauth.linkedin.accessToken = accessToken;
+                oldUser.oauth.linkedin.refreshToken = refreshToken;
+            }
             await userSchema.edit(oldUser);
             done(null, oldUser);
         } else {
@@ -34,7 +38,13 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
             const user = await userSchema.add({
                 username: profile.displayName,
                 oauthLoginProvider: OAuthProvider.LINKEDIN,
-                oauthLoginProviderId: profile.id
+                oauthLoginProviderId: profile.id,
+                oauth: {
+                    linkedin: {
+                        accessToken: accessToken,
+                        refreshToken: refreshToken
+                    }
+                }
             });
 
             const token = AuthController.signToken({
