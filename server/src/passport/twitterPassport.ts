@@ -10,7 +10,7 @@ import OAuthProvider from "../model/oAuthProvider.enum";
 
 const TwitterStrategy = passportTwitter.Strategy;
 
-const successfullyAuthentificated = async (accessToken, refreshToken, profile: Profile, done: (error: unknown, user?: User) => void) => {
+const successfullyAuthentificated = async (accessToken: string, tokenSecret: string, profile: Profile, done: (error: unknown, user?: User) => void) => {
     const userSchema = new UserSchema();
     // console.log("accessToken : ", accessToken); TODO: remove after use of the variable
     // console.log("secretToken : ", secretToken); TODO: remove after use of the variable
@@ -29,7 +29,10 @@ const successfullyAuthentificated = async (accessToken, refreshToken, profile: P
             oldUser.oauthLoginProvider = OAuthProvider.TWITTER;
             oldUser.oauthLoginProviderId = profile.username;
             oldUser.token = token;
-
+            if (oldUser.oauth.twitter) {
+                oldUser.oauth.twitter.accessToken = accessToken;
+                oldUser.oauth.twitter.secretToken = tokenSecret;
+            }
             done(null, await userSchema.edit(oldUser));
         } else {
             console.log("Create new user");
@@ -37,7 +40,13 @@ const successfullyAuthentificated = async (accessToken, refreshToken, profile: P
             const user = await userSchema.add({
                 username: profile.username,
                 oauthLoginProvider: OAuthProvider.TWITTER,
-                oauthLoginProviderId: profile.username
+                oauthLoginProviderId: profile.username,
+                oauth: {
+                    twitter: {
+                        accessToken: accessToken,
+                        secretToken: tokenSecret
+                    }
+                }
             });
 
             const token = AuthController.signToken({

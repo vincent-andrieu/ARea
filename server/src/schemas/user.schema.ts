@@ -14,7 +14,40 @@ const userSchema = new mongoose.Schema({
     token: { type: String },
     areas: [
         { type: mongoose.Schema.Types.ObjectId, ref: "ARea" }
-    ]
+    ],
+    oauth: {
+        twitter: {
+            accessToken: { type: String },
+            secretToken: { type: String }
+        },
+        github: {
+            accessToken: { type: String },
+            refreshToken: { type: String }
+        },
+        discord: {
+            accessToken: { type: String },
+            refreshToken: { type: String }
+        },
+        dropbox: {
+            accessToken: { type: String },
+            refreshToken: { type: String }
+        },
+        notion: {
+            accessToken: { type: String }
+        },
+        twitch: {
+            accessToken: { type: String },
+            refreshToken: { type: String }
+        },
+        linkedin: {
+            accessToken: { type: String },
+            refreshToken: { type: String }
+        },
+        unsplash: {
+            accessToken: { type: String },
+            refreshToken: { type: String }
+        }
+    }
 }, {
     toObject: { virtuals: true },
     toJSON: { virtuals: true }
