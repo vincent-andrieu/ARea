@@ -29,7 +29,7 @@ const successfullyAuthentificated = async (accessToken: string, tokenSecret: str
             oldUser.oauthLoginProvider = OAuthProvider.TWITTER;
             oldUser.oauthLoginProviderId = profile.username;
             oldUser.token = token;
-            if (oldUser.oauth.twitter) {
+            if (oldUser.oauth?.twitter) {
                 oldUser.oauth.twitter.accessToken = accessToken;
                 oldUser.oauth.twitter.secretToken = tokenSecret;
             }

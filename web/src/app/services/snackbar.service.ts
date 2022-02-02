@@ -13,7 +13,7 @@ export class SnackbarService {
         return this._matSnackBar.open(message);
     }
 
-    public openError(error?: HttpErrorResponse): MatSnackBarRef<TextOnlySnackBar> {
+    public openError(error?: HttpErrorResponse): void {
         console.error(error);
         let message = "Server error";
 
@@ -23,7 +23,7 @@ export class SnackbarService {
             message = error.error.text;
         else if (typeof error?.error?.message === 'string')
             message = error.error.message;
-        return this._matSnackBar.open(message, undefined, { panelClass: 'snackbar-error' });
+        this._matSnackBar.open(message, undefined, { panelClass: 'snackbar-error' });
     }
 
     public openCustomError(message: string): MatSnackBarRef<TextOnlySnackBar> {

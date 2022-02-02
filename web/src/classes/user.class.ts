@@ -9,7 +9,7 @@ export default class User extends Model {
     oauthLoginProviderId?: string;
     token?: string;
     areas?: Array<ARea> | Array<ObjectId> = [];
-    oauth: {
+    oauth?: {
         twitter: boolean,
         github: boolean,
         discord: boolean
@@ -37,14 +37,14 @@ export default class User extends Model {
                 this.areas = user.areas;
 
         this.oauth = {
-            twitter: !!user.oauth.twitter,
-            github: !!user.oauth.github,
-            discord: !!user.oauth.discord,
-            dropbox: !!user.oauth.dropbox,
-            notion: !!user.oauth.notion,
-            twitch: !!user.oauth.twitch,
-            linkedin: !!user.oauth.linkedin,
-            unsplash: !!user.oauth.unsplash
+            twitter: !!user.oauth?.twitter,
+            github: !!user.oauth?.github,
+            discord: !!user.oauth?.discord,
+            dropbox: !!user.oauth?.dropbox,
+            notion: !!user.oauth?.notion,
+            twitch: !!user.oauth?.twitch,
+            linkedin: !!user.oauth?.linkedin,
+            unsplash: !!user.oauth?.unsplash
         };
     }
 }

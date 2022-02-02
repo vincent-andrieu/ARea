@@ -3,7 +3,7 @@
 </button>
 
 <div class="page-background" fxLayout="column" fxLayoutAlign="space-around center" fxFill>
-    <p class="title">AReas's list</p>
+    <p class="title">AReas list</p>
 
     <div fxLayout="row wrap">
         <app-area-widget *ngFor="let area of areas" [area]="area" (click)="openEditModal(area)"></app-area-widget>

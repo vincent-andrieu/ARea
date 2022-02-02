@@ -26,7 +26,7 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
             oldUser.oauthLoginProvider = OAuthProvider.TWITCH;
             oldUser.oauthLoginProviderId = profile.login;
             oldUser.token = token;
-            if (oldUser.oauth.twitch) {
+            if (oldUser.oauth?.twitch) {
                 oldUser.oauth.twitch.accessToken = accessToken;
                 oldUser.oauth.twitch.refreshToken = refreshToken;
             }

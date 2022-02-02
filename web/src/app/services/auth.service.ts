@@ -1,26 +1,34 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from '@angular/core';
 import { Router } from "@angular/router";
-import { catchError, of } from "rxjs";
+import { catchError, firstValueFrom, of } from "rxjs";
 import { CookieService } from "ngx-cookie";
 
 import User from "@classes/user.class";
 import { environment } from "@environment";
 import { SnackbarService } from "./snackbar.service";
 
+export interface ServiceData {
+    iconSvgPath: string;
+    label: string;
+    name: string;
+    redirect: string;
+}
+
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
 
-    public readonly apps: ReadonlyArray<{ iconSvgPath: string, name: string, redirect: string }> = [
-        { iconSvgPath: 'assets/icons/github.svg', name: 'GitHub', redirect: '/github' },
-        { iconSvgPath: 'assets/icons/twitch.svg', name: 'Twitch', redirect: '/twitch' },
-        { iconSvgPath: 'assets/icons/twitter.svg', name: 'Twitter', redirect: '/twitter' },
-        { iconSvgPath: 'assets/icons/discord.svg', name: 'Discord', redirect: '/discord' },
-        { iconSvgPath: 'assets/icons/linkedin.svg', name: 'Linkedin', redirect: '/linkedin' },
-        { iconSvgPath: 'assets/icons/notion.svg', name: 'Notion', redirect: '/notion' }
+    public readonly apps: ReadonlyArray<ServiceData> = [
+        { iconSvgPath: 'assets/icons/github.svg', label: 'GitHub', name: 'github', redirect: '/github' },
+        { iconSvgPath: 'assets/icons/twitch.svg', label: 'Twitch', name: 'twitch', redirect: '/twitch' },
+        { iconSvgPath: 'assets/icons/twitter.svg', label: 'Twitter', name: 'twitter', redirect: '/twitter' },
+        { iconSvgPath: 'assets/icons/discord.svg', label: 'Discord', name: 'discord', redirect: '/discord' },
+        { iconSvgPath: 'assets/icons/linkedin.svg', label: 'Linkedin', name: 'linkedin', redirect: '/linkedin' },
+        { iconSvgPath: 'assets/icons/notion.svg', label: 'Notion', name: 'notion', redirect: '/notion' }
     ];
+    private _user?: User;
 
     constructor(
         private _router: Router,
@@ -28,6 +36,12 @@ export class AuthService {
         private _cookieService: CookieService,
         private _snackbarService: SnackbarService
     ) {}
+
+    public get user(): User {
+        if (!this._user)
+            throw "Undefined user";
+        return this._user;
+    }
 
     public login(email: string, password: string): Promise<User> {
         return new Promise<User>((resolve, reject) => {
@@ -44,6 +58,7 @@ export class AuthService {
                     if (!user)
                         return reject();
                     this._cookieService.put(environment.cookiesKey.jwt, user.token);
+                    this._user = user;
                     resolve(user);
                 });
         });
@@ -69,11 +84,16 @@ export class AuthService {
         });
     }
 
-    public redirectToApp(url: string): void {
+    public loginToService(url: string): void {
         const host = this._cookieService.get(environment.cookiesKey.serverHost);
 
         url = `${host}${host.endsWith('/') ? 'auth' : '/auth'}${url.startsWith('/') ? url : '/' + url}`;
         window.location.href = url;
+    }
+
+    public async disconnectFromService(name: string): Promise<void> {
+        return await firstValueFrom(this._httpClient.post<void>(`/auth/disconnect/${name}`, {}))
+            .catch((err) => this._snackbarService.openError(err));
     }
 
     public logout(): void {

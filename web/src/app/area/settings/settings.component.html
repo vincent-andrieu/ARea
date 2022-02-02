@@ -10,9 +10,10 @@
 
         <div class="connection-list" fxLayout="row wrap" fxLayoutAlign="center">
             <button *ngFor="let service of services" mat-raised-button class="login-service-button"
-                    (click)="redirectToServiceAuth(service.redirect)" fxLayoutAlign="center">
+                    (click)="redirectToServiceAuth(service)" fxLayoutAlign="center">
                 <img class="service-button-icon" [src]="service.iconSvgPath">
-                <span>Connect to {{ service.name }}</span>
+                <span *ngIf="!service.isConnected">Connect to {{ service.label }}</span>
+                <span *ngIf="service.isConnected">Disconenct from {{ service.label }}</span>
             </button>
         </div>
     </div>

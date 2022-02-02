@@ -26,7 +26,7 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
             oldUser.oauthLoginProvider = OAuthProvider.LINKEDIN;
             oldUser.oauthLoginProviderId = profile.id;
             oldUser.token = token;
-            if (oldUser.oauth.linkedin) {
+            if (oldUser.oauth?.linkedin) {
                 oldUser.oauth.linkedin.accessToken = accessToken;
                 oldUser.oauth.linkedin.refreshToken = refreshToken;
             }

@@ -28,7 +28,7 @@ export default class AuthController {
         try {
             const username: string = req.body.username;
             const password: string = req.body.password;
-            let user;
+            let user: User;
 
             if (!(username && password))
                 return res.status(400).send("All input is required");
