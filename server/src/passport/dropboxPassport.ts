@@ -1,34 +1,33 @@
-import passport from "passport";
-
-import AuthController from "../controllers/AuthController";
-import passportTwitch from "passport-twitch-new";
-import { twitchConfig } from "../config/twitchConfig";
-import { UserSchema } from "@schemas/user.schema";
-import OAuthProvider from "../model/oAuthProvider.enum";
 import { getStrObjectId } from "@classes/model.class";
+import { UserSchema } from "@schemas/user.schema";
+import AuthController from "../controllers/AuthController";
+import OAuthProvider from "../model/oAuthProvider.enum";
+import passport from "passport";
+import passportDropbox from "passport-dropbox-oauth2";
+import { dropboxConfig } from "../config/dropboxConfig";
 
-const TwitchStrategy = passportTwitch.Strategy;
+const DropboxStrategy = passportDropbox.Strategy;
 
 const successfullyAuthentificated = async (accessToken: string, refreshToken: string, profile, done) => {
     const userSchema = new UserSchema();
 
     console.log(profile);
     try {
-        const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.TWITCH, profile.login);
+        const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.DROPBOX, profile.id);
 
         if (oldUser) {
             console.log("User already exist");
             const token = AuthController.signToken({
                 user_id: getStrObjectId(oldUser),
-                username: profile.login
+                username: profile.id
             });
 
-            oldUser.oauthLoginProvider = OAuthProvider.TWITCH;
-            oldUser.oauthLoginProviderId = profile.login;
+            oldUser.oauthLoginProvider = OAuthProvider.DROPBOX;
+            oldUser.oauthLoginProviderId = profile.id;
             oldUser.token = token;
-            if (oldUser.oauth.twitch) {
-                oldUser.oauth.twitch.accessToken = accessToken;
-                oldUser.oauth.twitch.refreshToken = refreshToken;
+            if (oldUser.oauth.dropbox) {
+                oldUser.oauth.dropbox.accessToken = accessToken;
+                oldUser.oauth.dropbox.refreshToken = refreshToken;
             }
 
             done(null, await userSchema.edit(oldUser));
@@ -36,11 +35,11 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
             console.log("Create new user");
 
             const user = await userSchema.add({
-                username: profile.login,
-                oauthLoginProvider: OAuthProvider.TWITCH,
-                oauthLoginProviderId: profile.login,
+                username: profile.id,
+                oauthLoginProvider: OAuthProvider.DROPBOX,
+                oauthLoginProviderId: profile.id,
                 oauth: {
-                    twitch: {
+                    dropbox: {
                         accessToken: accessToken,
                         refreshToken: refreshToken
                     }
@@ -54,12 +53,13 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
             user.token = token;
             done(null, await userSchema.edit(user));
         }
+
     } catch (error) {
         done(error, null);
     }
 };
 
-passport.use(new TwitchStrategy(
-    { ...twitchConfig, scope: "user_read" },
+passport.use(new DropboxStrategy(
+    {apiVersion: "2", ...dropboxConfig},
     successfullyAuthentificated
 ));

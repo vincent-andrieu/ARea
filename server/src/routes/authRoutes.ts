@@ -97,14 +97,21 @@ router.get("/notion/redirect", passport.authenticate("notion", {
 router.get("/linkedin", passport.authenticate("linkedin"));
 
 router.get("/linkedin/redirect", passport.authenticate("linkedin", {
-    successRedirect: `${env.CLIENT_HOST}/areas`,
+    successRedirect: "/auth/redirect",
+    failureRedirect: `${env.CLIENT_HOST}/login/failure`
+}));
+
+router.get("/dropbox", passport.authenticate("dropbox-oauth2"));
+
+router.get("/dropbox/redirect", passport.authenticate("dropbox-oauth2", {
+    successRedirect: "/auth/redirect",
     failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));
 
 router.get("/discord", passport.authenticate("discord"));
 
 router.get("/discord/redirect", passport.authenticate("discord", {
-    successRedirect: `${env.CLIENT_HOST}/areas`,
+    successRedirect: "/auth/redirect",
     failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));
 
@@ -112,7 +119,7 @@ router.get("/discord/redirect", passport.authenticate("discord", {
 router.get("/unsplash", passport.authenticate("unsplash"));
 
 router.get("/unsplash/redirect", passport.authenticate("unsplash", {
-    successRedirect: `${env.CLIENT_HOST}/areas`,
+    successRedirect: "/auth/redirect",
     failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));
 

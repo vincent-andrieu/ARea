@@ -1,11 +1,11 @@
 import passport from "passport";
 
+import { getStrObjectId } from "@classes/model.class";
+import { UserSchema } from "@schemas/user.schema";
 import AuthController from "../controllers/AuthController";
 import { Strategy as NotionStrategy } from "../module/passport-notion";
 import { notionConfig } from "../config/notionConfig";
-import { UserSchema } from "@schemas/user.schema";
 import OAuthProvider from "../model/oAuthProvider.enum";
-import { getStrObjectId } from "@classes/model.class";
 
 const successfullyAuthentificated = async(_req, accessToken: string, _, oauthData, userNotion, done) => {
     const userSchema = new UserSchema();
@@ -24,6 +24,8 @@ const successfullyAuthentificated = async(_req, accessToken: string, _, oauthDat
             oldUser.oauthLoginProvider = OAuthProvider.NOTION;
             oldUser.oauthLoginProviderId = userNotion.person.email;
             oldUser.token = token;
+            if (oldUser.oauth.notion)
+                oldUser.oauth.notion.accessToken = accessToken;
 
             done(null, await userSchema.edit(oldUser));
         } else {
@@ -32,7 +34,12 @@ const successfullyAuthentificated = async(_req, accessToken: string, _, oauthDat
             const user = await userSchema.add({
                 username: userNotion.person.email,
                 oauthLoginProvider: OAuthProvider.NOTION,
-                oauthLoginProviderId: userNotion.person.email
+                oauthLoginProviderId: userNotion.person.email,
+                oauth: {
+                    notion: {
+                        accessToken: accessToken
+                    }
+                }
             });
 
             const token = AuthController.signToken({

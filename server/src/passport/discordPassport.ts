@@ -22,14 +22,25 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
             });
             // save user token
             oldUser.token = token;
+            if (oldUser.oauth.discord) {
+                oldUser.oauth.discord.accessToken = accessToken;
+                oldUser.oauth.discord.refreshToken = refreshToken;
+            }
             await userSchema.edit(oldUser);
             done(null, oldUser);
         } else {
             console.log("Create new user");
 
             const user = await userSchema.add({
+                username: profile.displayName || "",
                 oauthLoginProvider: OAuthProvider.DISCORD,
-                oauthLoginProviderId: profile.displayName
+                oauthLoginProviderId: profile.displayName,
+                oauth: {
+                    discord: {
+                        accessToken: accessToken,
+                        refreshToken: refreshToken
+                    }
+                }
             });
             const token = AuthController.signToken({
                 user_id: getStrObjectId(user),
