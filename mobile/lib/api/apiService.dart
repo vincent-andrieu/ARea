@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:http/http.dart';
 import 'dart:developer' as developer;
@@ -10,15 +11,23 @@ class apiService {
     srvUrl = url;
   }
 
-  Future<dynamic> makeRequestGet<type>(String route, Map<String, String> params, int exitExpect) async {
-    params.addAll({
-      HttpHeaders.contentTypeHeader: 'application/json'
-    });
-    Response result = await get(Uri.http(
-        srvUrl,
-        route,
-        params
-    ));
+  Future<bool> ping() async {
+    try {
+      dynamic _ = await makeRequestGet("/about.json", 200);
+      return true;
+    } catch(e) {
+      log('ping: ${e.toString()}');
+      return false;
+    }
+  }
+
+  Future<dynamic> makeRequestGet<type>(String route, int exitExpect) async {
+    Response result = await get(
+        Uri.parse(srvUrl + route),
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json'
+        }
+    );
 
     if (result.statusCode == exitExpect) {
       return jsonDecode(result.body);

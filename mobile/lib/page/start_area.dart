@@ -42,7 +42,13 @@ class start_area extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () {
                           api.initConnexion(input.controller.text);
-                          Navigator.of(context).pushNamed('/SignIn');
+                          api.api.ping().then((value) => {
+                            if (value) {
+                              Navigator.of(context).pushNamed('/SignIn')
+                            } else {
+                              // TODO FAILED PING SERVER
+                            }
+                          });
                         },
                         style: ElevatedButton.styleFrom(
                             primary: color_list.primary,
