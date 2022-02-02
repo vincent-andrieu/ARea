@@ -1,8 +1,9 @@
-import { HttpClient, HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from '@angular/core';
-import { environment } from "@environment";
 import { CookieService } from "ngx-cookie";
 import { catchError, Observable, of, Subject } from "rxjs";
+
+import { environment } from "@environment";
 
 @Injectable({
     providedIn: 'root'
@@ -41,5 +42,9 @@ export class ServerService {
 
     public getHost(): string {
         return this._cookieService.get(environment.cookiesKey.serverHost);
+    }
+
+    public downloadMobileApp(): void {
+        window.location.href = environment.mobile.filepath;
     }
 }
