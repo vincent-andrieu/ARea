@@ -36,7 +36,7 @@ export default class AuthController {
             try {
                 user = await AuthController._userSchema.findByUsername(username);
             } catch (err) {
-                res.status(400).json({ "message": "Invalid Credentials" });
+                return res.status(400).json({ "message": "Invalid Credentials" });
             }
 
             if (user?.password && (await bcrypt.compare(password, user.password))) {
@@ -48,12 +48,12 @@ export default class AuthController {
                 // save user token
                 user.token = token;
 
-                res.status(200).json(await AuthController._userSchema.edit(user));
+                return res.status(200).json(await AuthController._userSchema.edit(user));
             } else
-                res.status(400).json({ "message": "Invalid Credentials" });
+                return res.status(400).json({ "message": "Invalid Credentials" });
         } catch (err) {
             console.error(err);
-            res.status(500).json({ "message": "an error occured" });
+            return res.status(500).json({ "message": "an error occured" });
         }
     }
 
@@ -73,7 +73,7 @@ export default class AuthController {
                 oldUser = null;
             }
 
-            if (oldUser)
+            if (oldUser != null)
                 return res.status(409).send("User Already Exist. Please Login");
             const encryptedPassword = await bcrypt.hash(password, 10);
 
