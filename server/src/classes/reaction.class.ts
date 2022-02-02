@@ -9,6 +9,7 @@ export enum ReactionType {
     GITHUB_ISSUE = "GITHUB_ISSUE",
     NOTION_MSG = "NOTION_MSG",
     ONEDRIVE_UPLOAD = "ONEDRIVE_UPLOAD",
+    UNSPLASH = "UNSPLASH"
 }
 
 export default class Reaction extends Model {

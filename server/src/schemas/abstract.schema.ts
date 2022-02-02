@@ -2,6 +2,8 @@ import mongoose, { PopulateOptions } from "mongoose";
 
 import Model, { getStrObjectId, ObjectId } from "@classes/model.class";
 
+type PopulateParam = string | string[] | PopulateOptions | PopulateOptions[];
+
 export abstract class ASchema<T extends Model> {
     protected _model: mongoose.Model<unknown>;
 
@@ -31,7 +33,7 @@ export abstract class ASchema<T extends Model> {
         }
     }
 
-    public async get(model: string | ObjectId | Model, populate?: string | string[] | PopulateOptions | PopulateOptions[], select?: string): Promise<T> {
+    public async get(model: string | ObjectId | Model, populate?: PopulateParam, select?: string): Promise<T> {
         const id: string = getStrObjectId(model);
 
         if (!id || id.length === 0)
@@ -53,8 +55,12 @@ export abstract class ASchema<T extends Model> {
         }
     }
 
-    public async find(model: any): Promise<T[]> {
-        return await this._model.find(model).exec() as unknown as T[];
+    public async find(model: any, populate?: PopulateParam): Promise<T[]> {
+        let query = this._model.find(model);
+
+        if (populate)
+            query = query.populate(populate);
+        return await query.exec() as unknown as T[];
     }
 
     public async delete(model: T): Promise<void> {
