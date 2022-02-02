@@ -40,7 +40,11 @@ export async function CreateIssue(
     body: string | undefined,
     assignee: string | null | undefined): Promise<boolean> {
 
+<<<<<<< HEAD
     const octokit = launchOctokit("<personnal access token here>");
+=======
+    const octokit = launchOctokit(`<personnal access token here>`);
+>>>>>>> feat(src/services/githubService.ts) NOT TESTED: function to create an issue
 
     await octokit.rest.issues.create({
         repo: repo,
@@ -48,8 +52,17 @@ export async function CreateIssue(
         title: title,
         body: body,
         assignee: assignee
+<<<<<<< HEAD
     });
     console.log();
 
     return false;
 }
+=======
+    })
+    console.log();
+
+    return false;
+}
+
+>>>>>>> feat(src/services/githubService.ts) NOT TESTED: function to create an issue
