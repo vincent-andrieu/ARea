@@ -12,25 +12,28 @@ interface ChannelListenerItem {
     areaId: string
 }
 
-export default class DiscordBot {
+export default class DiscordService {
 
     static client: Client = new Client;
     static channelListenerList: ChannelListenerItem[] = [];
     static areaSchema: AReaSchema = new AReaSchema;
 
     static async connect(): Promise<void> {
-        await DiscordBot.client.login(discordBotConfig.discord_bot_token);
+        await DiscordService.client.login(discordBotConfig.discord_bot_token);
 
-        DiscordBot.client.on("ready", async () => {
-            console.log(`DiscordBot: Discord bot Logged in as ${DiscordBot.client.user?.tag}!`);
+        DiscordService.client.on("ready", async () => {
+            console.log(`DiscordService: Discord bot Logged in as ${DiscordService.client.user?.tag}!`);
         });
-        DiscordBot.client.on("error", console.error);
-        DiscordBot.client.on("warn", console.warn);
+        DiscordService.client.on("error", console.error);
+        DiscordService.client.on("warn", console.warn);
 
         await this.refreshListenerList(); // load list
         this.catchMessages();
     }
 
+    /**
+     * Call this method when actions are added/modified in the database.
+     */
     static async refreshListenerList() {
         const list: ARea[] = await this.areaSchema.fetchByAction(ActionType.DISCORD_MSG);
 
@@ -39,39 +42,44 @@ export default class DiscordBot {
                 const inputs = value.trigger.inputs as DiscordMessageConfig;
 
                 if (value._id && inputs.channelId != undefined)
-                    DiscordBot.channelListenerList.push({ channelId: inputs.channelId, areaId: value._id.toString() });
+                    DiscordService.channelListenerList.push({ channelId: inputs.channelId, areaId: value._id.toString() });
                 else
-                    console.warn("DiscordBot refreshListenerList: in action, missing parameter channelId");
+                    console.warn("DiscordService refreshListenerList: in action, missing parameter channelId");
             } catch (err) {
-                console.error(`DiscordBot refreshListenerList: ${err}`);
+                console.error(`DiscordService refreshListenerList: ${err}`);
             }
         });
     }
 
+    /**
+     * Reaction : send a message to the target channel
+     * @param channelId string
+     * @param message string
+     */
     static async sendMessage(channelId: string, message: string): Promise<void> {
-        const channel = await DiscordBot.client.channels.fetch(channelId) as TextChannel;
+        const channel = await DiscordService.client.channels.fetch(channelId) as TextChannel;
 
         channel?.send(message);
     }
 
+    /**
+     * Action worker : detect new messages
+     */
     private static async catchMessages() {
 
-        DiscordBot.client.on("message", async (message: Message) => {
+        DiscordService.client.on("message", async (message: Message) => {
             try {
-                const result = DiscordBot.channelListenerList.find((item) => {
+                const result = DiscordService.channelListenerList.find((item) => {
                     return item.channelId === message.channel.id;
                 });
                 if (result != undefined) {
                     // fetch action
                     const area: ARea = await this.areaSchema.get(result.areaId);
 
-
-                    // TODO: TRIGGER ACTION : area.reaction
-                    this.sendMessage(message.channel.id, "Infinite loop"); // DEBUG
+                    // TODO: TRIGGER REACTION : area.reaction
                 }
             } catch (err) {
-                console.error(`DiscordBot catchMessages: ${err}`);
-                // TODO: remove the channel listener from the list ?
+                console.error(`DiscordService catchMessages: ${err}`);
             }
         });
     }
@@ -79,7 +87,7 @@ export default class DiscordBot {
     // static async createWebhook() {
     //     this.channel?.createWebhook("AREA webhook")
     //         .then((webhook: Webhook) => {
-    //             console.log(`DiscordBot: Webhook created ${webhook}`);
+    //             console.log(`DiscordService: Webhook created ${webhook}`);
     //         })
     //         .catch(console.error);
     // }
@@ -87,19 +95,19 @@ export default class DiscordBot {
     // static async fetchWebhook(): Promise<boolean> {
     //     try {
     //         if (this.channel === null) {
-    //             console.error("DiscordBot fetchWebhook: channel not found.");
+    //             console.error("DiscordService fetchWebhook: channel not found.");
     //             return false;
     //         }
     //         const webhooks = await this.channel.fetchWebhooks();
     //         this.webhook = webhooks.find(wh => wh.token !== null);
 
     //         if (!this.webhook) {
-    //             console.log("DiscordBot fetchWebhook: No webhook was found that I can use!");
+    //             console.log("DiscordService fetchWebhook: No webhook was found that I can use!");
     //             return false;
     //         }
     //         return true;
     //     } catch (err) {
-    //         console.error(`DiscordBot fetchWebhook: ${err}`);
+    //         console.error(`DiscordService fetchWebhook: ${err}`);
     //         return false;
     //     }
     // }

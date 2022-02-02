@@ -20,14 +20,16 @@ export default class AreaController {
 
     static create = async (req, res: Response) => {
         try {
-            const action: Action = req.body.trigger.action;
-            const actionInput: ActionConfig = req.body.trigger.inputs;
-            const reaction: Reaction = req.body.consequence.reaction;
-            const reactionInput: ReactionConfig = req.body.consequence.inputs;
+            const action: Action | undefined = req.body.trigger.action;
+            const actionInput: ActionConfig | undefined = req.body.trigger.inputs;
+            const reaction: Reaction | undefined = req.body.consequence.reaction;
+            const reactionInput: ReactionConfig | undefined = req.body.consequence.inputs;
             const userId: string = req.user.data.user_id;
 
             if (!userId || userId.length === 0)
                 throw "Unknow user id";
+            if (actionInput == undefined || reactionInput == undefined || action == undefined || reaction == undefined)
+                return res.status(400).send("Invalid body");
             //TODO: GESTION D'ERREUR DU BODY
             const actionInDb = await this._actionSchema.add(action);
             const reactionInDb = await this._reactionSchema.add(reaction);
