@@ -11,7 +11,7 @@ export interface TwitchStreamConfig {
 }
 
 export interface TwitterTweetConfig {
-    username: string; // target user 
+    username: string; // target user
 }
 
 export interface RSSConfig {
