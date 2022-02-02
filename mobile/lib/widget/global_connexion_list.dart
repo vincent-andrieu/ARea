@@ -35,9 +35,13 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
               if (list[0].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<String> token = list[0].getToken(urlSrv);
-                token.whenComplete(() {
-                  // TODO SEND TOKEN TO SERVER
+                Future<bool> success = list[0].getToken(urlSrv);
+                success.then((value) => {
+                  if (value) {
+                    Navigator.of(context).pushNamed('/List')
+                  } else {
+                    // TODO FAILED TO CONNECT WITH THIS SERVICE
+                  }
                 });
               }
             }),
@@ -46,9 +50,13 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
               if (list[1].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<String> token = list[1].getToken(urlSrv);
-                token.whenComplete(() {
-                  // TODO SEND TOKEN TO SERVER
+                Future<bool> success = list[1].getToken(urlSrv);
+                success.then((value) => {
+                  if (value) {
+                    Navigator.of(context).pushNamed('/List')
+                  } else {
+                    // TODO FAILED TO CONNECT WITH THIS SERVICE
+                  }
                 });
               }
             }),
@@ -57,9 +65,13 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
               if (list[2].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<String> token = list[2].getToken(urlSrv);
-                token.whenComplete(() {
-                  // TODO SEND TOKEN TO SERVER
+                Future<bool> success = list[2].getToken(urlSrv);
+                success.then((value) => {
+                  if (value) {
+                    Navigator.of(context).pushNamed('/List')
+                  } else {
+                    // TODO FAILED TO CONNECT WITH THIS SERVICE
+                  }
                 });
               }
             }),
@@ -68,9 +80,13 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
               if (list[3].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<String> token = list[3].getToken(urlSrv);
-                token.whenComplete(() {
-                  // TODO SEND TOKEN TO SERVER
+                Future<bool> success = list[3].getToken(urlSrv);
+                success.then((value) => {
+                  if (value) {
+                    Navigator.of(context).pushNamed('/List')
+                  } else {
+                    // TODO FAILED TO CONNECT WITH THIS SERVICE
+                  }
                 });
               }
             }),
@@ -79,9 +95,13 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
               if (list[4].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<String> token = list[4].getToken(urlSrv);
-                token.whenComplete(() {
-                  // TODO SEND TOKEN TO SERVER
+                Future<bool> success = list[4].getToken(urlSrv);
+                success.then((value) => {
+                  if (value) {
+                    Navigator.of(context).pushNamed('/List')
+                  } else {
+                    // TODO FAILED TO CONNECT WITH THIS SERVICE
+                  }
                 });
               }
             }),
@@ -90,9 +110,13 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
               if (list[5].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<String> token = list[5].getToken(urlSrv);
-                token.whenComplete(() {
-                  // TODO SEND TOKEN TO SERVER
+                Future<bool> success = list[5].getToken(urlSrv);
+                success.then((value) => {
+                  if (value) {
+                    Navigator.of(context).pushNamed('/List')
+                  } else {
+                    // TODO FAILED TO CONNECT WITH THIS SERVICE
+                  }
                 });
               }
             }),

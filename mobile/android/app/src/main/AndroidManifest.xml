@@ -33,8 +33,11 @@
                <category android:name="android.intent.category.DEFAULT" />
                <category android:name="android.intent.category.BROWSABLE" />
 
-               <data android:scheme="http" />
-               <data android:scheme="10.0.2.2:8080"/>
+               <data
+                   android:scheme="http"
+                   android:host="localhost:8080"
+                   android:path="/auth/twitch/redirect" />
+               <data android:scheme="localhost:8080" />
            </intent-filter>
        </activity>
         <!-- Don't delete the meta-data below.
