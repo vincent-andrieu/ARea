@@ -27,13 +27,10 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
             oldUser.oauthLoginProvider = OAuthProvider.GITHUB;
             oldUser.oauthLoginProviderId = profile.username;
             oldUser.token = token;
-<<<<<<< HEAD
-=======
             if (oldUser.oauth.github) {
                 oldUser.oauth.github.accessToken = accessToken;
                 oldUser.oauth.github.refreshToken = refreshToken;
             }
->>>>>>> 7c359be22327c428b866b21fe4d205905b3a0a58
 
             done(null, await userSchema.edit(oldUser));
         } else {
