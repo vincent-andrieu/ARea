@@ -41,10 +41,14 @@ export async function CreateIssue(
     assignee: string | null | undefined): Promise<boolean> {
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     const octokit = launchOctokit("<personnal access token here>");
 =======
     const octokit = launchOctokit(`<personnal access token here>`);
 >>>>>>> feat(src/services/githubService.ts) NOT TESTED: function to create an issue
+=======
+    const octokit = launchOctokit("<personnal access token here>");
+>>>>>>> 90b4e59b4cd33e0bc68685c7d33b6d9219d62239
 
     await octokit.rest.issues.create({
         repo: repo,
@@ -53,10 +57,14 @@ export async function CreateIssue(
         body: body,
         assignee: assignee
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 90b4e59b4cd33e0bc68685c7d33b6d9219d62239
     });
     console.log();
 
     return false;
+<<<<<<< HEAD
 }
 =======
     })
@@ -66,3 +74,6 @@ export async function CreateIssue(
 }
 
 >>>>>>> feat(src/services/githubService.ts) NOT TESTED: function to create an issue
+=======
+}
+>>>>>>> 90b4e59b4cd33e0bc68685c7d33b6d9219d62239
