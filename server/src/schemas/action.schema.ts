@@ -4,11 +4,11 @@ import Action, { ActionType } from "@classes/action.class";
 import { ASchema } from "./abstract.schema";
 
 const actionSchema = new mongoose.Schema({
-    cron: { type: Boolean },
-    type: { type: String, enum: ActionType },
+    cron: { type: Boolean, required: true },
+    type: { type: String, enum: ActionType, required: true },
     parameters: [{
-        name: { type: String },
-        type: { type: String }
+        name: { type: String, required: true },
+        type: { type: String, required: true }
     }]
 }, {
     toObject: { virtuals: true },

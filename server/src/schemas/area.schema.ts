@@ -7,12 +7,12 @@ import { ActionSchema } from "./action.schema";
 
 const areaSchema = new mongoose.Schema({
     trigger: {
-        action: { type: mongoose.Schema.Types.ObjectId, ref: "Action" },
-        inputs: { type: mongoose.Schema.Types.Mixed }
+        action: { type: mongoose.Schema.Types.ObjectId, ref: "Action", required: true },
+        inputs: { type: mongoose.Schema.Types.Mixed, required: true }
     },
     consequence: {
-        inputs: { type: mongoose.Schema.Types.Mixed },
-        reaction: { type: mongoose.Schema.Types.ObjectId, ref: "Reaction" }
+        inputs: { type: mongoose.Schema.Types.Mixed, required: true },
+        reaction: { type: mongoose.Schema.Types.ObjectId, ref: "Reaction", required: true }
     }
 }, {
     toObject: { virtuals: true },

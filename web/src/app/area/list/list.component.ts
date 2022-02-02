@@ -19,19 +19,6 @@ export class AReaListComponent {
         _areaService.getAll()
             .then((result) => this.areas = result)
             .finally(() => this.isLoading = false);
-
-        // DEBUG : To remove
-        this.areas = [
-            {
-                action: {
-                    label: "MyAction",
-                    cron: false
-                },
-                reaction: {
-                    label: "MyReaction"
-                }
-            }
-        ];
     }
 
     public openEditModal(area?: ARea): void {

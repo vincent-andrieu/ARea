@@ -2,7 +2,6 @@ import AuthController from "../controllers/AuthController";
 import passport from "passport";
 import passportGithub2 from "passport-github2";
 
-import User from "@classes/user.class";
 import { getStrObjectId } from "@classes/model.class";
 import OAuthProvider from "../model/oAuthProvider.enum";
 import { githubConfig } from "../config/githubConfig";
