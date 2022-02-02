@@ -38,6 +38,7 @@
                    android:host="localhost:8080"
                    android:path="/auth/twitch/redirect" />
                <data android:scheme="localhost:8080" />
+               <data android:scheme="localhost" />
            </intent-filter>
        </activity>
         <!-- Don't delete the meta-data below.
