@@ -5,8 +5,6 @@ import { Client, Message, TextChannel } from "discord.js";
 import { discordBotConfig } from "../config/discordConfig";
 import { DiscordMessageConfig } from "../model/ActionConfig";
 
-const CHANNEL_ID = "535524248262017039"; // DEBUG
-
 interface ChannelListenerItem {
     channelId: string,
     areaId: string
