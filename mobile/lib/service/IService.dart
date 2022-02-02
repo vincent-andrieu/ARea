@@ -37,10 +37,11 @@ class IService {
       log(srv + getUrl());
       log("http://localhost:8080/auth/twitch/redirect");
       // final result = await FlutterWebAuth.authenticate(url: srv + getUrl(), callbackUrlScheme: "http://localhost:8080/auth/twitch/redirect");
-      final result = await FlutterWebAuth.authenticate(url: srv + getUrl(), callbackUrlScheme: "localhost");
+      final result = await FlutterWebAuth.authenticate(url: srv + getUrl(), callbackUrlScheme: "area");
       log('getToken: Authenticate');
+      log(result.toString());
 
-      final token = Uri.parse(result).queryParameters['token'];
+      final token = Uri.parse(result).queryParameters['code'];
       log('getToken: END');
 
       log(token!);
