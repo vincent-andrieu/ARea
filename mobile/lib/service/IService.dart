@@ -32,10 +32,18 @@ class IService {
   }
 
   Future<String> getToken(String srv) async {
-    final result = await FlutterWebAuth.authenticate(url: srv + getUrl(), callbackUrlScheme: "$srv/areas");
-    final token = Uri.parse(result).queryParameters['token'];
+    try {
+      log('getToken: Start');
+      final result = await FlutterWebAuth.authenticate(url: srv + getUrl(), callbackUrlScheme: "http");
+      log('getToken: Authenticate');
 
-    log(token!);
-    return (token == null) ? "" : token;
+      final token = Uri.parse(result).queryParameters['token'];
+      log('getToken: END');
+
+      log(token!);
+      return (token == null) ? "" : token;
+    } catch(e) {
+      return e.toString();
+    }
   }
 }
