@@ -40,7 +40,7 @@ async function successfullyAuthentificated(accessToken: string, refreshToken: st
             console.log("Create new user");
 
             const user = await userSchema.add({
-                username: profile.username,
+                username: profile.login,
                 oauthLoginProvider: OAuthProvider.UNSPLASH,
                 oauthLoginProviderId: profile.username,
                 oauth: {
