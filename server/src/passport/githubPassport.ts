@@ -11,7 +11,7 @@ import { UserSchema } from "../schemas/user.schema";
 const GithubStrategy = passportGithub2.Strategy;
 //TODO: do the setting part
 
-const successfullyAuthentificated = async (accessToken: string, refreshToken: string, profile: any, done: (err?: unknown, user?: User, info?: object) => void) => {
+const successfullyAuthentificated = async (accessToken: string, refreshToken: string, profile, done: CallableFunction) => {
     const userSchema = new UserSchema();
 
     try {
@@ -27,6 +27,11 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
             oldUser.oauthLoginProvider = OAuthProvider.GITHUB;
             oldUser.oauthLoginProviderId = profile.username;
             oldUser.token = token;
+            if (oldUser.oauth.github) {
+                oldUser.oauth.github.accessToken = accessToken;
+                oldUser.oauth.github.refreshToken = refreshToken;
+            }
+
             done(null, await userSchema.edit(oldUser));
         } else {
             console.log("Create new user");
@@ -34,8 +39,15 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
             const user = await userSchema.add({
                 username: profile.login,
                 oauthLoginProvider: OAuthProvider.GITHUB,
-                oauthLoginProviderId: profile.username
+                oauthLoginProviderId: profile.username,
+                oauth: {
+                    github: {
+                        accessToken: accessToken,
+                        refreshToken: refreshToken
+                    }
+                }
             });
+            console.log(user);
 
             const token = AuthController.signToken({
                 user_id: getStrObjectId(user),

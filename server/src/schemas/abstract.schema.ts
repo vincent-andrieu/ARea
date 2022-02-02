@@ -53,7 +53,15 @@ export abstract class ASchema<T extends Model> {
         }
     }
 
-    public async delete(model: T | string | ObjectId): Promise<void> {
-        await this._model.deleteOne({ _id: getStrObjectId(model) });
+    public async find(model: any): Promise<T[]> {
+        return await this._model.find(model).exec() as unknown as T[];
+    }
+
+    public async delete(model: T): Promise<void> {
+        await this._model.deleteOne({ _id: model._id });
+    }
+
+    public async deleteById(id: string | ObjectId) {
+        return await this._model.deleteOne({ _id: id });
     }
 }

@@ -8,7 +8,7 @@ import { dropboxConfig } from "../config/dropboxConfig";
 
 const DropboxStrategy = passportDropbox.Strategy;
 
-const successfullyAuthentificated = async (accessToken, refreshToken, profile, done) => {
+const successfullyAuthentificated = async (accessToken: string, refreshToken: string, profile, done) => {
     const userSchema = new UserSchema();
 
     console.log(profile);
@@ -25,6 +25,10 @@ const successfullyAuthentificated = async (accessToken, refreshToken, profile, d
             oldUser.oauthLoginProvider = OAuthProvider.DROPBOX;
             oldUser.oauthLoginProviderId = profile.id;
             oldUser.token = token;
+            if (oldUser.oauth.dropbox) {
+                oldUser.oauth.dropbox.accessToken = accessToken;
+                oldUser.oauth.dropbox.refreshToken = refreshToken;
+            }
 
             done(null, await userSchema.edit(oldUser));
         } else {
@@ -33,7 +37,13 @@ const successfullyAuthentificated = async (accessToken, refreshToken, profile, d
             const user = await userSchema.add({
                 username: profile.id,
                 oauthLoginProvider: OAuthProvider.DROPBOX,
-                oauthLoginProviderId: profile.id
+                oauthLoginProviderId: profile.id,
+                oauth: {
+                    dropbox: {
+                        accessToken: accessToken,
+                        refreshToken: refreshToken
+                    }
+                }
             });
 
             const token = AuthController.signToken({
