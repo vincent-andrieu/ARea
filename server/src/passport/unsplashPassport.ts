@@ -1,7 +1,7 @@
 import passport from "passport";
 // app.use(bodyParser.urlencoded({ extended: true }));
 
-import Unsplash from "unsplash-passport"
+import Unsplash from "unsplash-passport";
 import { UserSchema } from "../schemas/user.schema";
 
 import AuthController from "../controllers/AuthController";
@@ -13,7 +13,7 @@ const UnsplashStrategy = Unsplash.Strategy;
 
 
 // export async function unsplashPassport(profile): Promise<void> {
-async function successfullyAuthentificated(accessToken, secretToken, profile, done) {
+async function successfullyAuthentificated(accessToken: string, refreshToken: string, profile, done) {
 
     const userSchema = new UserSchema();
 
@@ -30,6 +30,10 @@ async function successfullyAuthentificated(accessToken, secretToken, profile, do
             oldUser.oauthLoginProvider = OAuthProvider.UNSPLASH;
             oldUser.oauthLoginProviderId = profile.displayName;
             oldUser.token = token;
+            if (oldUser.oauth.unsplash) {
+                oldUser.oauth.unsplash.accessToken = accessToken;
+                oldUser.oauth.unsplash.refreshToken = refreshToken;
+            }
 
             done(null, await userSchema.edit(oldUser));
         } else {
@@ -38,7 +42,13 @@ async function successfullyAuthentificated(accessToken, secretToken, profile, do
             const user = await userSchema.add({
                 username: profile.login,
                 oauthLoginProvider: OAuthProvider.UNSPLASH,
-                oauthLoginProviderId: profile.username
+                oauthLoginProviderId: profile.username,
+                oauth: {
+                    unsplash: {
+                        accessToken: accessToken,
+                        refreshToken: refreshToken
+                    }
+                }
             });
             const token = AuthController.signToken({
                 user_id: getStrObjectId(user),

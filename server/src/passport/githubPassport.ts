@@ -1,15 +1,17 @@
 import AuthController from "../controllers/AuthController";
-import OAuthProvider from "../model/oAuthProvider.enum";
 import passport from "passport";
 import passportGithub2 from "passport-github2";
+
+import User from "@classes/user.class";
+import { getStrObjectId } from "@classes/model.class";
+import OAuthProvider from "../model/oAuthProvider.enum";
 import { githubConfig } from "../config/githubConfig";
 import { UserSchema } from "../schemas/user.schema";
-import { getStrObjectId } from "@classes/model.class";
 
 const GithubStrategy = passportGithub2.Strategy;
 //TODO: do the setting part
 
-const successfullyAuthentificated = async (req, accessToken, refreshToken, profile, done: CallableFunction) => {
+const successfullyAuthentificated = async (accessToken: string, refreshToken: string, profile, done: CallableFunction) => {
     const userSchema = new UserSchema();
 
     try {
@@ -25,6 +27,11 @@ const successfullyAuthentificated = async (req, accessToken, refreshToken, profi
             oldUser.oauthLoginProvider = OAuthProvider.GITHUB;
             oldUser.oauthLoginProviderId = profile.username;
             oldUser.token = token;
+            if (oldUser.oauth.github) {
+                oldUser.oauth.github.accessToken = accessToken;
+                oldUser.oauth.github.refreshToken = refreshToken;
+            }
+
             done(null, await userSchema.edit(oldUser));
         } else {
             console.log("Create new user");
@@ -32,8 +39,15 @@ const successfullyAuthentificated = async (req, accessToken, refreshToken, profi
             const user = await userSchema.add({
                 username: profile.login,
                 oauthLoginProvider: OAuthProvider.GITHUB,
-                oauthLoginProviderId: profile.username
+                oauthLoginProviderId: profile.username,
+                oauth: {
+                    github: {
+                        accessToken: accessToken,
+                        refreshToken: refreshToken
+                    }
+                }
             });
+            console.log(user);
 
             const token = AuthController.signToken({
                 user_id: getStrObjectId(user),
@@ -43,7 +57,7 @@ const successfullyAuthentificated = async (req, accessToken, refreshToken, profi
             done(null, await userSchema.edit(user));
         }
     } catch (error) {
-        done(error, null);
+        done(error);
     }
 };
 

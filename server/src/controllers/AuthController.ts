@@ -82,7 +82,8 @@ export default class AuthController {
                 username: username.toLowerCase(),
                 password: encryptedPassword,
                 token: "",
-                oauthLoginProvider: OAuthProvider.LOCAL
+                oauthLoginProvider: OAuthProvider.LOCAL,
+                oauth: {}
             });
 
             // Create token
