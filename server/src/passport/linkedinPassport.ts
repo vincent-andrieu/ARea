@@ -2,7 +2,7 @@ import passport from "passport";
 
 import AuthController from "../controllers/AuthController";
 import passportLinkedin from "passport-linkedin-oauth2";
-import { linkedinConfig } from "../config/linkedinConfig";
+import { linkedinConfig } from "@config/linkedinConfig";
 import { UserSchema } from "@schemas/user.schema";
 import OAuthProvider from "../model/oAuthProvider.enum";
 import { getStrObjectId } from "@classes/model.class";
@@ -61,7 +61,8 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
 };
 
 passport.use(new LinkedinStrategy(
-    {...linkedinConfig,
+    {
+        ...linkedinConfig,
         scope: ["r_emailaddress", "r_liteprofile"],
         state: true
     }, successfullyAuthentificated

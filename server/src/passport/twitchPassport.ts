@@ -2,7 +2,7 @@ import passport from "passport";
 
 import AuthController from "../controllers/AuthController";
 import passportTwitch from "passport-twitch-new";
-import { twitchConfig } from "../config/twitchConfig";
+import { twitchConfig } from "@config/twitchConfig";
 import { UserSchema } from "@schemas/user.schema";
 import OAuthProvider from "../model/oAuthProvider.enum";
 import { getStrObjectId } from "@classes/model.class";

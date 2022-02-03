@@ -2,7 +2,7 @@ import { ActionType } from "@classes/action.class";
 import ARea from "@classes/area.class";
 import { AReaSchema } from "@schemas/area.schema";
 import { Client, Message, TextChannel } from "discord.js";
-import { discordBotConfig } from "../config/discordConfig";
+import { discordBotConfig } from "@config/discordConfig";
 import { DiscordMessageConfig } from "../model/ActionConfig";
 
 interface ChannelListenerItem {

@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Express } from "express";
 import passport from "passport";
 import cookieSession from "cookie-session";
 import cors from "cors";
@@ -16,12 +16,12 @@ import "../passport/discordPassport";
 import "../passport/unsplashPassport";
 import "../passport/dropboxPassport";
 
+export const app = express();
+
 export default {
 
     connect(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            const app = express();
-
             app.use(
                 cookieSession({
                     name: "session",
