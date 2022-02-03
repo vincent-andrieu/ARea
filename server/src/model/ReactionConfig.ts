@@ -12,6 +12,7 @@ export interface TwitterChangePPConfig {
 
 export interface DiscordPostMsgConfig {
     message: string;
+    channelId: string;
 }
 
 export interface GithubCreateIssueConfig {

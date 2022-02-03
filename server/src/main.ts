@@ -7,3 +7,7 @@ import DiscordService from "./services/DiscordService";
 DiscordService.connect();
 Express.connect();
 Database.connect();
+import { CronService } from "./services/CronService";
+
+// Action cron job
+new CronService();

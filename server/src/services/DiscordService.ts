@@ -4,6 +4,7 @@ import { AReaSchema } from "@schemas/area.schema";
 import { Client, Message, TextChannel } from "discord.js";
 import { discordBotConfig } from "../config/discordConfig";
 import { DiscordMessageConfig } from "../model/ActionConfig";
+import { CronService } from "./CronService";
 
 interface ChannelListenerItem {
     channelId: string,
@@ -71,10 +72,11 @@ export default class DiscordService {
                     return item.channelId === message.channel.id;
                 });
                 if (result != undefined) {
-                    // fetch action
+                    // fetch action-reaction
                     const area: ARea = await this.areaSchema.get(result.areaId);
 
-                    // TODO: TRIGGER REACTION : area.reaction
+                    // TRIGGER REACTION
+                    CronService.triggerReaction(area);
                 }
             } catch (err) {
                 console.error(`DiscordService catchMessages: ${err}`);
