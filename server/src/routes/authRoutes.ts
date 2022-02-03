@@ -2,6 +2,7 @@ import { env } from "process";
 import express, { Request, Response } from "express";
 import passport from "passport";
 import "../passport/setupPassport";
+import authMiddleware from "../middlewares/checkJwt";
 import AuthController from "../controllers/AuthController";
 
 const router = express.Router();
@@ -62,7 +63,21 @@ router.post("/login", AuthController.login);
  */
 router.post("/register", AuthController.register);
 
-// ----
+/**
+ * @swagger
+ *
+ * /auth/disconnect/:service:
+ *  post:
+ *      summary: Disconnect a user to a service.
+ *      responses:
+ *          200:
+ *           description: Successfully disconnected
+ *          404:
+ *           description: Unknown service
+ *          500:
+ *           description: Internal Server Error
+ */
+router.post("/disconnect/:service", authMiddleware, AuthController.disconnectService);
 
 router.get("/github", passport.authenticate("github", {
     scope: ["user:email"]
