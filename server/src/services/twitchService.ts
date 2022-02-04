@@ -2,18 +2,24 @@ import { env } from "process";
 import { ApiClient } from "@twurple/api";
 import { ClientCredentialsAuthProvider } from "@twurple/auth";
 
-export async function isStreamLive(userName: string) {
+export class TwitchService {
+    private static getClient(): ApiClient {
+        const clientId = env.TWITCH_CLIENT_ID;
+        const clientSecret = env.TWITCH_CLIENT_SECRET;
+        if (!clientId || !clientSecret)
+            throw new Error("Invalid Twitch credentials");
 
-    const clientId = env.TWITCH_CLIENT_ID;
-    const clientSecret = env.TWITCH_CLIENT_SECRET;
-    if (!clientId || !clientSecret)
-        return;
+        const authProvider = new ClientCredentialsAuthProvider(clientId, clientSecret);
+        return new ApiClient({ authProvider });
+    }
 
-    const authProvider = new ClientCredentialsAuthProvider(clientId, clientSecret);
-    const apiClient = new ApiClient({ authProvider });
-    const user = await apiClient.users.getUserByName(userName);
+    public static async IsStreamLive(userName: string) {
+        const client = TwitchService.getClient();
+        const user = await client.users.getUserByName(userName);
 
-    if (!user)
-        return false;
-    return await user.getStream() !== null;
+        if (!user)
+            return false;
+        return await user.getStream() !== null;
+        // TODO: set stream infos to variable that is wether returned or passed as pointer param
+    }
 }

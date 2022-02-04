@@ -12,7 +12,7 @@ import { TwitchStreamConfig, UnsplashPostConfig } from "model/ActionConfig";
 import { DiscordPostMsgConfig } from "model/ReactionConfig";
 
 import DiscordService from "./DiscordService";
-import { isStreamLive } from "./twitchService";
+import { TwitchService } from "./twitchService";
 import RSSService from "./RSSService";
 // import { IsNewPost, DownloadNewPost } from "./unsplashService";
 import { DropboxService } from "./DropboxService";
@@ -66,7 +66,7 @@ export class CronService {
             case ActionType.TWITCH_STREAM:
                 const username = (area.trigger.inputs as TwitchStreamConfig).username;
 
-                if (await isStreamLive(username))
+                if (await TwitchService.IsStreamLive(username))
                     CronService.triggerReaction(area);
                 break;
             case ActionType.TWITTER_MSG:
