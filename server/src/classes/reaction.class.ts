@@ -3,8 +3,9 @@ import { Parameter } from "../model/Parameters";
 
 export enum ReactionType {
     TWITTER_MSG = "TWITTER_MSG",
-    LINKEDIN_MSG = "LINKEDIN_MSG",
     TWITTER_BANNER = "TWITTER_BANNER",
+    TWITTER_PP = "TWITTER_PP",
+    LINKEDIN_MSG = "LINKEDIN_MSG",
     DISCORD_MSG = "DISCORD_MSG",
     GITHUB_ISSUE = "GITHUB_ISSUE",
     NOTION_MSG = "NOTION_MSG",

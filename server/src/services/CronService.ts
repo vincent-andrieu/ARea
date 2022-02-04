@@ -17,6 +17,7 @@ import RSSService from "./RSSService";
 // import { IsNewPost, DownloadNewPost } from "./unsplashService";
 import { DropboxService } from "./DropboxService";
 import { unsplashService } from "./unsplashService";
+import { TwitterService } from "./twitterService";
 
 export class CronService {
 
@@ -120,16 +121,27 @@ export class CronService {
                 // TODO:
                 break;
             case ReactionType.TWITTER_BANNER:
-                const configUnsplash: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
 
                 switch (action.type) {
                     case ActionType.UNSPLASH_POST:
-                        console.log("action was unsplash post");
+                        const configUnsplash: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
+
+                        TwitterService.UpdateProfileBanner(configUnsplash.downloadPath/* , user */);
                         break;
                     default:
                         console.log("todo upload file from parameter given");
                 }
-                // TODO:
+                break;
+            case ReactionType.TWITTER_PP:
+                switch (action.type) {
+                    case ActionType.UNSPLASH_POST:
+                        const configUnsplash: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
+
+                        TwitterService.UpdateProfileImage(configUnsplash.downloadPath/* , user */);
+                        break;
+                    default:
+                        console.log("todo upload file from parameter given");
+                }
                 break;
             case ReactionType.DISCORD_MSG:
                 const input: DiscordPostMsgConfig = area.consequence.inputs as DiscordPostMsgConfig;

@@ -6,8 +6,8 @@ export interface LinkedinPostConfig {
     message: string;
 }
 
-export interface TwitterChangePPConfig {
-    url: string; // image url (jpg)
+export interface TwitterUpdatePictureConfig {
+    filepath: string;
 }
 
 export interface DiscordPostMsgConfig {
