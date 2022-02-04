@@ -7,7 +7,7 @@ export interface LinkedinPostConfig {
 }
 
 export interface TwitterUpdatePictureConfig {
-    filepath: string;
+    nothing: string;
 }
 
 export interface DiscordPostMsgConfig {
