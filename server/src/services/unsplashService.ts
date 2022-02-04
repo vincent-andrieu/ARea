@@ -51,7 +51,7 @@ export class unsplashService {
 
         if (!pics || !pics.response?.results[0].id)
             return false;
-        if (!IsNewPost(pics.response?.results[0].id))
+        if (!unsplashService.IsNewPost(pics.response?.results[0].id))
             return false;
         const pic = await unsplash.photos.get({ photoId: pics.response?.results[0].id });
         if (!pic.response?.links.download)

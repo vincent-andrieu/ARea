@@ -7,8 +7,6 @@ import { readFile } from "fs";
 const token = "sl.BBSyaeyLST13F7QqeGQQFgBtwWUUAVUPzLhaY46CsJVHSYAojEc8JETW_W3x9Ds1it9ejAI2J8JF41SZ-ocQQmDMwtQlD3DLKH2lH0Y6pd_6IitoPi17XiyV3EFwWljPuNqGpfg";
 
 export class DropboxService {
-
-
     static uploadFile(/* user: User, */filepath: string, dropboxFilepath: string) {
 
         if (!env.DROPBOX_API_KEY || !env.DROPBOX_API_SECRET_KEY /* || !user.oauth.dropbox */)

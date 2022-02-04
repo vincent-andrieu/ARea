@@ -120,6 +120,7 @@ export class CronService {
                 // TODO:
                 break;
             case ReactionType.TWITTER_BANNER:
+                const configUnsplash: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
 
                 switch (action.type) {
                     case ActionType.UNSPLASH_POST:
