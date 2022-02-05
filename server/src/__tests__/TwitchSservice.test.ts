@@ -46,7 +46,12 @@ describe("TwitchService", () => {
         const reaction: Reaction = { type: ReactionType.TWITTER_MSG, parameters: [] };
         let my_area: ARea = { trigger: { inputs: config, action: action, outputs: twitchStreamResult }, consequence: { inputs: twitterConfig, reaction: reaction } };
 
-        console.log(await TwitchService.IsStreamLive(my_area, "SolaryFortnite"));
+        if (await TwitchService.IsStreamLive(my_area, config.username) === false) {
+            console.log("Stream is not live, select an other streamer for test");
+            expect(true).toBe(false);
+            return;
+        }
+
         const result: TwitchStreamResult = my_area.trigger.outputs as TwitchStreamResult;
 
         console.log(result);
