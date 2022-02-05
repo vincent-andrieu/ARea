@@ -9,7 +9,7 @@ import Reaction, { ReactionType } from "../classes/reaction.class";
 import Action, { ActionType } from "@classes/action.class";
 
 import { TwitchStreamConfig, UnsplashPostConfig } from "model/ActionConfig";
-import { DiscordPostMsgConfig } from "model/ReactionConfig";
+import { DiscordPostMsgConfig, DropboxUploadConfig } from "model/ReactionConfig";
 
 import DiscordService from "./DiscordService";
 import { TwitchService } from "./twitchService";
@@ -18,6 +18,7 @@ import RSSService from "./RSSService";
 import { DropboxService } from "./DropboxService";
 import { unsplashService } from "./unsplashService";
 import { TwitterService } from "./twitterService";
+import { TwitchStreamResult } from "model/ActionResult";
 
 export class CronService {
 
@@ -66,7 +67,7 @@ export class CronService {
             case ActionType.TWITCH_STREAM:
                 const username = (area.trigger.inputs as TwitchStreamConfig).username;
 
-                if (await TwitchService.IsStreamLive(username))
+                if (await TwitchService.IsStreamLive(area, username))
                     CronService.triggerReaction(area);
                 break;
             case ActionType.TWITTER_MSG:
@@ -113,7 +114,10 @@ export class CronService {
                         console.log("action was unsplash post");
                         break;
                     case ActionType.TWITCH_STREAM:
-                        console.log("action was twitch stream");
+                        const stream: TwitchStreamResult = area.trigger.outputs as TwitchStreamResult;
+
+                        const text = "there is a stream by " + stream.Username + " its named " + stream.StreamTitle;
+                        // TwitterService.TweetATweet(text, /* user */);
                         break;
                     default:
                         console.log("todo upload file from parameter given");
@@ -126,7 +130,7 @@ export class CronService {
                     case ActionType.UNSPLASH_POST:
                         const configUnsplash: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
 
-                        TwitterService.UpdateProfileBanner(configUnsplash.downloadPath/* , user */);
+                        // TwitterService.UpdateProfileBanner(configUnsplash.downloadPath/* , user */);
                         break;
                     default:
                         console.log("todo upload file from parameter given");
@@ -137,7 +141,7 @@ export class CronService {
                     case ActionType.UNSPLASH_POST:
                         const configUnsplash: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
 
-                        TwitterService.UpdateProfileImage(configUnsplash.downloadPath/* , user */);
+                        // TwitterService.UpdateProfileImage(configUnsplash.downloadPath/* , user */);
                         break;
                     default:
                         console.log("todo upload file from parameter given");
@@ -159,7 +163,7 @@ export class CronService {
                     case ActionType.UNSPLASH_POST:
                         const configUnsplash: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
                         const configDropbox: DropboxUploadConfig = area.consequence.inputs as DropboxUploadConfig;
-                        const dropboxFilepath = (configDropbox.filename ? configDropbox.filepath : configUnsplash.downloadPath);
+                        const dropboxFilepath = (configDropbox.filepath ? configDropbox.filepath : configUnsplash.downloadPath);
 
                         DropboxService.uploadFile(configUnsplash.downloadPath, dropboxFilepath);
                         break;

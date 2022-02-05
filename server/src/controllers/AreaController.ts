@@ -9,6 +9,7 @@ import { ReactionSchema } from "@schemas/reaction.schema";
 import { UserSchema } from "@schemas/user.schema";
 import { PopulateOptions } from "mongoose";
 import { ActionConfig } from "model/ActionConfig";
+import { ActionResult } from "model/ActionResult";
 import { ReactionConfig } from "model/ReactionConfig";
 
 export default class AreaController {
@@ -22,13 +23,14 @@ export default class AreaController {
         try {
             const action: Action | undefined = req.body.trigger.action;
             const actionInput: ActionConfig | undefined = req.body.trigger.inputs;
+            const actionOutput: ActionResult | undefined = req.body.trigger.outputs;
             const reaction: Reaction | undefined = req.body.consequence.reaction;
             const reactionInput: ReactionConfig | undefined = req.body.consequence.inputs;
             const userId: string = req.user.data.user_id;
 
             if (!userId || userId.length === 0)
                 throw "Unknow user id";
-            if (actionInput == undefined || reactionInput == undefined || action == undefined || reaction == undefined)
+            if (actionInput == undefined || reactionInput == undefined || action == undefined || reaction == undefined || actionOutput == undefined)
                 return res.status(400).send("Invalid body");
             //TODO: GESTION D'ERREUR DU BODY
             const actionInDb = await this._actionSchema.add(action);
@@ -36,7 +38,8 @@ export default class AreaController {
             const area = await this._areaSchema.add({
                 trigger: {
                     action: actionInDb,
-                    inputs: actionInput
+                    inputs: actionInput,
+                    outputs: actionOutput
                 },
                 consequence: {
                     reaction: reactionInDb,

@@ -2,12 +2,14 @@ import Model, { ObjectId } from "./model.class";
 import Action from "./action.class";
 import Reaction from "./reaction.class";
 import { ActionConfig } from "../model/ActionConfig";
+import { ActionResult } from "../model/ActionResult";
 import { ReactionConfig } from "../model/ReactionConfig";
 
 export default class ARea extends Model {
     trigger: {
         inputs: ActionConfig;
         action: Action | ObjectId;
+        outputs: ActionResult;
     };
     consequence: {
         inputs: ReactionConfig;
@@ -18,7 +20,8 @@ export default class ARea extends Model {
 
         this.trigger = {
             inputs: area.trigger.inputs,
-            action: (area.trigger.action as Action)?._id ? new Action(area.trigger.action as Action) : area.trigger.action
+            action: (area.trigger.action as Action)?._id ? new Action(area.trigger.action as Action) : area.trigger.action,
+            outputs: area.trigger.outputs
         };
         this.consequence = {
             inputs: area.consequence.inputs,

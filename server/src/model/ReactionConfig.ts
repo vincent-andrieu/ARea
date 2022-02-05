@@ -28,9 +28,9 @@ export interface NotionAddMessageConfig {
 }
 
 export interface DropboxUploadConfig {
-    filename: string | null;
+    filepath: string | null;
 }
 
 export type ReactionConfig = TwitterPostTweetConfig | LinkedinPostConfig
-    | TwitterChangePPConfig | DiscordPostMsgConfig | GithubCreateIssueConfig
+    | TwitterUpdatePictureConfig | DiscordPostMsgConfig | GithubCreateIssueConfig
     | NotionAddMessageConfig | DropboxUploadConfig;
