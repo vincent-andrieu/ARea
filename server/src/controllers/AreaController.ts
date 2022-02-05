@@ -50,7 +50,17 @@ export default class AreaController {
             if (!area._id)
                 throw "Undefined area id";
             this._userSchema.addARea(userId, area._id);
-            res.status(201).json({ _id: area._id, action: actionInDb, reaction: reactionInDb });
+            res.status(201).json({
+                _id: area._id,
+                trigger: {
+                    action: actionInDb,
+                    inputs: actionInput
+                },
+                consequence: {
+                    reaction: reactionInDb,
+                    inputs: reactionInput
+                }
+            });
         } catch (error: any) {
             console.log("[AreaController] create :", error.toString());
             res.status(400).send(error.toString());
@@ -99,20 +109,20 @@ export default class AreaController {
         try {
             if (!userId || userId.length === 0)
                 throw "Unknow user id";
-            const action: Action = new Action(req.body.action);
-            const reaction: Reaction = new Reaction(req.body.reaction);
+            //const action: Action = new Action(req.body.action);
+            //const reaction: Reaction = new Reaction(req.body.reaction);
 
             const user = await AreaController._userSchema.get(userId, "areas");
             const area = (user.areas as Array<ARea>).find((element: ARea) => getStrObjectId(element) === getStrObjectId(areaId));
             if (!area)
                 return res.status(404).send(`Failed to find area with id: ${areaId}`);
-            if (getStrObjectId(area?.trigger.action) !== getStrObjectId(action))
-                return res.status(404).send("Wrong action id");
-            if (getStrObjectId(area?.consequence.reaction) !== getStrObjectId(reaction))
-                return res.status(404).send("Wrong reaction id");
-            const actionUpdate = await this._actionSchema.edit(action);
-            const reactionUpdate = await this._reactionSchema.edit(reaction);
-            res.json({ _id: areaId, action: actionUpdate, reaction: reactionUpdate });
+            // if (getStrObjectId(area?.trigger.action) !== getStrObjectId(action))
+            //     return res.status(404).send("Wrong action id");
+            // if (getStrObjectId(area?.consequence.reaction) !== getStrObjectId(reaction))
+            //     return res.status(404).send("Wrong reaction id");
+            // const actionUpdate = await this._actionSchema.edit(action);
+            // const reactionUpdate = await this._reactionSchema.edit(reaction);
+            res.json({ _id: areaId, ...area });
         } catch (error: any) {
             res.status(500).send(error.toString());
         }
