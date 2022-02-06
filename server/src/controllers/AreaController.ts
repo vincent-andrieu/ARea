@@ -54,8 +54,8 @@ export default class AreaController {
         }
     };
 
-    static async readOne(req, res: Response) {
-        const id = req.param.id;
+    static readOne = async (req, res: Response) => {
+        const id = req.params.id;
         const userId = req.user?.data.user_id;
 
         try {
@@ -74,7 +74,7 @@ export default class AreaController {
             console.log(error.toString());
             return res.status(404).send(error.toString());
         }
-    }
+    };
 
     static async readList(req, res: Response) {
         const userId = req.user?.data.user_id;
