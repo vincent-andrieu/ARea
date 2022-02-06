@@ -1,8 +1,7 @@
 import express from "express";
 import moment from "moment";
 import swaggerUi from "swagger-ui-express";
-import swaggerJsDoc from "swagger-jsdoc";
-import { swaggerConfig } from "@config/swaggerConfig";
+import docs from "../docs";
 
 import authMiddleware from "../middlewares/checkJwt";
 
@@ -34,6 +33,6 @@ router.get("/", authMiddleware, (req, res) => {
     res.status(204).send();
 });
 
-router.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerJsDoc(swaggerConfig)));
+router.use("/api-docs", swaggerUi.serve, swaggerUi.setup(docs));
 
 export default router;
