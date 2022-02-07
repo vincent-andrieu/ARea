@@ -77,5 +77,8 @@
         "../global/",
         ".env",
         "__tests__"
+    ],
+    "exclude": [
+        // "src/__tests__"
     ]
 }

@@ -37,7 +37,7 @@ beforeAll(async () => {
 
 describe("TwitterService", () => {
     it("Check if user has tweeted", async () => {
-        // TODO: try to make it work without database
+        // TODO: try to make it work with or without database
 
         const userSchema = new UserSchema();
 
@@ -49,7 +49,7 @@ describe("TwitterService", () => {
             return;
         }
 
-        const config: TwitterTweetConfig = { username: "aypierre" };
+        const config: TwitterTweetConfig = { username: "aypierre", lastTweetId: "" };
         const actionType: ActionType = ActionType.TWITTER_MSG;
         const action: Action = { type: actionType, cron: true, parameters: [] };
         const twitchStreamResult: TwitchStreamResult = {
@@ -64,7 +64,7 @@ describe("TwitterService", () => {
         const reaction: Reaction = { type: ReactionType.TWITTER_MSG, parameters: [] };
         let my_area: ARea = { trigger: { inputs: config, action: action, outputs: twitchStreamResult }, consequence: { inputs: twitterConfig, reaction: reaction } };
 
-        if (await TwitterService.GetUserLastTweet(config.username, user/* TODO: get user from db */) === false) {
+        if (await TwitterService.GetUserLastTweet(user/* TODO: get user from db */, my_area, config.username) === false) {
             console.log("User has no tweet, select an other user for test");
             expect(true).toBe(false);
             return;
