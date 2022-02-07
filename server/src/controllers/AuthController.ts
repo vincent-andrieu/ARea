@@ -92,7 +92,7 @@ export default class AuthController {
             });
             user.token = token;
 
-            return res.status(201).json(await AuthController._userSchema.edit(user));
+            return res.status(201).json((await AuthController._userSchema.edit(user)).toRaw());
         } catch (err) {
             console.error(err);
             return res.status(500).json({ "message": "an error occured" });
