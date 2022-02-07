@@ -18,15 +18,6 @@ import 'package:mobile/service/undefined.dart';
 
 Map<String, WidgetBuilder> buildRouteApp() {
   areaService api = areaService("");
-  Map<String, IService> builder = {
-    'discord': discord(false),
-    'twitter': twitter(false),
-    'twitch': twitch(false),
-    'github': github(false),
-    'notion': notion(false),
-    'linkedin': linkedin(false),
-    'None': undefined(false),
-  };
 
   Map<String, WidgetBuilder> route = {
     '/': (BuildContext context) => start_area(api),
@@ -38,13 +29,6 @@ Map<String, WidgetBuilder> buildRouteApp() {
     '/area': (BuildContext context) => edit_ifttt(api),
   };
 
-  for (var action in builder.values) {
-    for (var reaction in builder.values) {
-      if (action.getName() != reaction.getName()) {
-        route['/Create\${${action.getName()}|${reaction.getName()}}'] = (BuildContext context) => create_ifttt(api, action, reaction);
-      }
-    }
-  }
   return route;
 }
 
