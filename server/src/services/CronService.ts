@@ -93,7 +93,7 @@ export class CronService {
             case ActionType.UNSPLASH_POST:
                 const config: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
 
-                if (await unsplashService.DownloadIfNewPost(config.username, config.downloadPath))
+                if (await unsplashService.DownloadIfNewPost(area, config.username, config.downloadPath))
                     CronService.triggerReaction(area);
 
                 break;

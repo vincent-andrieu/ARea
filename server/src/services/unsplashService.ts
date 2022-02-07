@@ -4,6 +4,9 @@ import nodeFetch from "node-fetch";
 import { createApi } from "unsplash-js";
 import { readFile, createWriteStream } from "fs";
 import { HttpClient } from "typed-rest-client/HttpClient";
+import ARea from "@classes/area.class";
+import { UnsplashPostConfig } from "model/ActionConfig";
+import { Full } from "unsplash-js/dist/methods/photos/types";
 
 export class unsplashService {
 
@@ -14,11 +17,12 @@ export class unsplashService {
         return unsplashService.downloadedPath;
     }
 
-    private static IsNewPost(postId: string | undefined): boolean {
-
-        if (postId && postId != this.lastPostId)
-            return true;
-        return false;
+    private static IsNewPost(area: ARea, postId: string): boolean {
+        const last: UnsplashPostConfig = area.trigger.outputs as UnsplashPostConfig;
+        if (last.lastPostId == postId)
+            return false;
+        last.lastPostId = postId;
+        return true;
     }
 
     private static async DownloadUrl(url: string, filepath: string) {
@@ -46,7 +50,21 @@ export class unsplashService {
         }
     }
 
-    static async DownloadIfNewPost(username: string, downloadPath: string): Promise<boolean> {
+
+    private static setDownloadInfos(area: ARea, downloadUrl: string, post: Full) {
+        const result: UnsplashPostConfig = area.trigger.outputs as UnsplashPostConfig;
+
+        result.downloadPath = downloadUrl;
+        result.created_at = post.created_at;
+        result.name = post.user.first_name;
+        if (post.user.last_name)
+            result.lastname = post.user.last_name;
+        if (post.description)
+            result.description = post.description;
+        result.likes = post.likes;
+    }
+
+    static async DownloadIfNewPost(area: ARea, username: string, downloadPath: string): Promise<boolean> {
         try {
             if (!env.UNSPLASH_API_KEY || !nodeFetch)
                 return false;
@@ -58,16 +76,16 @@ export class unsplashService {
 
             if (!pics || !pics.response?.results[0].id)
                 return false;
-            if (!unsplashService.IsNewPost(pics.response?.results[0].id))
+            if (!unsplashService.IsNewPost(area, pics.response?.results[0].id))
                 return false;
             const pic = await unsplash.photos.get({ photoId: pics.response?.results[0].id });
             if (!pic.response?.links.download)
                 return false;
             const dlPic = await unsplash.photos.trackDownload({ downloadLocation: pic.response?.links.download });
-
             if (!dlPic.response?.url)
                 return false;
             await unsplashService.DownloadUrl(dlPic.response?.url, downloadPath);
+            this.setDownloadInfos(area, downloadPath, pic.response);
         } catch (error) {
             const some_error = error as Error;
 

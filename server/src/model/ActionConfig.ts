@@ -36,7 +36,13 @@ export interface GithubPullReqConfig {
 
 export interface UnsplashPostConfig {
     username: string;
+    name: string;
+    lastname: string;
     downloadPath: string;
+    lastPostId: string;
+    created_at: string;
+    description: string;
+    likes: number;
 }
 
 export type ActionConfig = DateTimeConfg | TimeConfig
