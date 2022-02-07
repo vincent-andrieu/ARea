@@ -77,6 +77,10 @@
     },
     "include": [
         "src/",
-        ".env"
+        ".env",
+        "__tests__"
+    ],
+    "exclude": [
+        // "src/__tests__"
     ]
 }

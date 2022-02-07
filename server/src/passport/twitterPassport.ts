@@ -5,7 +5,7 @@ import { getStrObjectId } from "@classes/model.class";
 import User from "@classes/user.class";
 import { UserSchema } from "@schemas/user.schema";
 import AuthController from "../controllers/AuthController";
-import { twitterConfig } from "../config/twitterConfig";
+import { twitterConfig } from "@config/twitterConfig";
 import OAuthProvider from "../model/oAuthProvider.enum";
 
 const TwitterStrategy = passportTwitter.Strategy;

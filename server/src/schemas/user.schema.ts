@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { PopulateOptions } from "mongoose";
 
 import User from "@classes/user.class";
 import { getStrObjectId, ObjectId } from "@classes/model.class";
@@ -98,4 +98,23 @@ export class UserSchema extends ASchema<User> {
             return undefined;
         return new User(result.toObject<User>());
     }
+
+    public async getAreaList(userId: ObjectId | string): Promise<User> {
+        const result = this.get(userId, {
+            path: "areas",
+            populate: [
+                {
+                    path: "trigger",
+                    populate: "action" as unknown as PopulateOptions
+                },
+                {
+                    path: "consequence",
+                    populate: "reaction" as unknown as PopulateOptions
+                }
+            ]
+        }, "areas");
+
+        return result;
+    }
+
 }

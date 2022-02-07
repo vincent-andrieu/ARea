@@ -17,43 +17,47 @@ import "../passport/discordPassport";
 import "../passport/unsplashPassport";
 import "../passport/dropboxPassport";
 
+export const app = express();
+
+export function preinitExpress() {
+    app.use(
+        cookieSession({
+            name: "session",
+            keys: [serverConfig.cookieKey], //TODO: generate true key
+            maxAge: 24 * 60 * 60 * 100
+        })
+    );
+    app.use(passport.initialize());
+    app.use(passport.session());
+    app.use(express.json());
+
+    app.use(cors());
+    app.use((_, response, next) => {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        next();
+    });
+
+    app.use((request, _, next) => {
+        console.log(
+            "\x1b[36m%s\x1b[0m",
+            request.headers.referer,
+            "=>", "\x1b[33m" + request.method + "\x1b[0m",
+            "\x1b[32m" + request.url + "\x1b[0m"
+        );
+        next();
+    });
+
+    app.use("/", appRoutes);
+    app.use("/auth", authRoutes);
+    app.use("/user", userRoutes);
+    app.use("/area", areaRoutes);
+}
+
 export default {
 
     connect(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            const app = express();
-
-            app.use(
-                cookieSession({
-                    name: "session",
-                    keys: [serverConfig.cookieKey], //TODO: generate true key
-                    maxAge: 24 * 60 * 60 * 100
-                })
-            );
-            app.use(passport.initialize());
-            app.use(passport.session());
-            app.use(express.json());
-
-            app.use(cors());
-            app.use((_, response, next) => {
-                response.setHeader("Access-Control-Allow-Origin", "*");
-                next();
-            });
-
-            app.use((request, _, next) => {
-                console.log(
-                    "\x1b[36m%s\x1b[0m",
-                    request.headers.referer,
-                    "=>", "\x1b[33m" + request.method + "\x1b[0m",
-                    "\x1b[32m" + request.url + "\x1b[0m"
-                );
-                next();
-            });
-
-            app.use("/", appRoutes);
-            app.use("/auth", authRoutes);
-            app.use("/user", userRoutes);
-            app.use("/area", areaRoutes);
+            preinitExpress();
 
             app.listen(serverConfig.port, () => {
                 console.info(`ARea server is listening on ${serverConfig.port}`);

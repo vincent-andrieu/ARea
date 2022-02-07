@@ -1,12 +1,12 @@
 import passport from "passport";
 import passportLinkedin from "passport-linkedin-oauth2";
 
+import { linkedinConfig } from "@config/linkedinConfig";
 import { getStrObjectId } from "@classes/model.class";
 import User from "@classes/user.class";
 import { UserSchema } from "@schemas/user.schema";
-import AuthController from "../controllers/AuthController";
-import { linkedinConfig } from "../config/linkedinConfig";
 import OAuthProvider from "../model/oAuthProvider.enum";
+import AuthController from "../controllers/AuthController";
 
 const LinkedinStrategy = passportLinkedin.Strategy;
 

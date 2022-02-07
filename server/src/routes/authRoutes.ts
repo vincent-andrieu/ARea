@@ -2,7 +2,9 @@ import { env } from "process";
 import express, { Request, Response } from "express";
 import passport from "passport";
 import "../passport/setupPassport";
+import authMiddleware from "../middlewares/checkJwt";
 import AuthController from "../controllers/AuthController";
+import { TwitchMobileStrategy } from "../passport/twitchPassport";
 
 const router = express.Router();
 
@@ -62,7 +64,21 @@ router.post("/login", AuthController.login);
  */
 router.post("/register", AuthController.register);
 
-// ----
+/**
+ * @swagger
+ *
+ * /auth/disconnect/:service:
+ *  post:
+ *      summary: Disconnect a user to a service.
+ *      responses:
+ *          200:
+ *           description: Successfully disconnected
+ *          404:
+ *           description: Unknown service
+ *          500:
+ *           description: Internal Server Error
+ */
+router.post("/disconnect/:service", authMiddleware, AuthController.disconnectService);
 
 router.get("/github", passport.authenticate("github", {
     scope: ["user:email"]
@@ -80,12 +96,16 @@ router.get("/twitter/redirect", passport.authenticate("twitter", {
     failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));
 
-router.get("/twitch", passport.authenticate("twitch"));
+router.get("/twitch", passport.authenticate("twitch-web"));
 
-router.get("/twitch/redirect", passport.authenticate("twitch", {
+router.get("/twitch/mobile", passport.authenticate("twitch-mobile"));
+
+router.get("/twitch/redirect", passport.authenticate("twitch-web", {
     successRedirect: "/auth/redirect",
     failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));
+
+router.post("/twitch/redirect/mobile", TwitchMobileStrategy);
 
 router.get("/notion", passport.authenticate("notion"));
 

@@ -1,11 +1,13 @@
+import { Request, Response } from "express";
 import passport from "passport";
 import passportTwitch from "passport-twitch-new";
 
-import { getStrObjectId } from "@classes/model.class";
+import { twitchConfig, twitchMobileConfig } from "@config/twitchConfig";
 import User from "@classes/user.class";
+import { getStrObjectId } from "@classes/model.class";
 import { UserSchema } from "@schemas/user.schema";
-import AuthController from "../controllers/AuthController";
-import { twitchConfig } from "../config/twitchConfig";
+import AuthController from "@controllers/AuthController";
+import { TwitchService } from "../services/twitchService";
 import OAuthProvider from "../model/oAuthProvider.enum";
 
 const TwitchStrategy = passportTwitch.Strategy;
@@ -31,8 +33,11 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
                 oldUser.oauth.twitch.accessToken = accessToken;
                 oldUser.oauth.twitch.refreshToken = refreshToken;
             }
-
-            done(null, await userSchema.edit(oldUser));
+            const user = await userSchema.edit(oldUser);
+            if (done)
+                done(null, user);
+            else
+                return user;
         } else {
             console.log("Create new user");
 
@@ -53,14 +58,50 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
                 username: profile.login
             });
             user.token = token;
-            done(null, await userSchema.edit(user));
+            const userEdited = await userSchema.edit(user);
+            if (done)
+                done(null, userEdited);
+            else
+                return user;
         }
-    } catch (error) {
-        done(error, null);
+    } catch (error: unknown) {
+        console.log("twitchStrategy callback error: ", (error as Error).toString());
+        if (done)
+            done(error, null);
     }
 };
 
-passport.use(new TwitchStrategy(
+export async function TwitchMobileStrategy(req: Request, res: Response) {
+    const code = req.body.code;
+
+    if (code == undefined)
+        return res.status(400).send("Missing 'code' attribut");
+    try {
+        const oauth = await TwitchService.getAccessToken(code);
+        const userProfile = await TwitchService.getUserProfile(oauth.access_token);
+        const user = await successfullyAuthentificated(oauth.access_token, oauth.refresh_token, userProfile, undefined);
+
+        if (!user)
+            throw "get empty user";
+        user.oauth = {};
+        res.json(user);
+    } catch (error) {
+        console.error("TwtichMobileStrategy: Error", (error as Error).toString());
+        res.status(500).send((error as Error).toString());
+    }
+}
+
+passport.use("twitch-web", new TwitchStrategy(
     { ...twitchConfig, scope: "user_read" },
     successfullyAuthentificated
+));
+
+passport.use("twitch-mobile", new TwitchStrategy(
+    {...twitchMobileConfig, scope: "user_read"},
+    (accessToken: string, refreshToken: string, profile, done) => {
+        console.log(accessToken);
+        console.log(refreshToken);
+        console.log(profile);
+        console.log(done);
+    }
 ));

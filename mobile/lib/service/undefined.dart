@@ -1,6 +1,8 @@
 import 'package:mobile/service/IService.dart';
 
 class undefined extends IService {
+  undefined(bool src) : super(src);
+
   @override
   List<String> getAction() {
     return ['None'];
@@ -24,11 +26,6 @@ class undefined extends IService {
   @override
   String getUrl() {
     return "";
-  }
-
-  @override
-  bool getConnexionState() {
-    return false;
   }
 
   @override

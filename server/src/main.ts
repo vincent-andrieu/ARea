@@ -2,8 +2,10 @@ import "module-alias/register";
 
 import Database from "./init/database";
 import Express from "./init/express";
-import DiscordService from "./services/DiscordService";
+import { CronService } from "./services/CronService";
 
-DiscordService.connect();
 Express.connect();
 Database.connect();
+
+// Action cron job
+new CronService();

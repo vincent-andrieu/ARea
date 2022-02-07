@@ -72,7 +72,6 @@ export default class AuthController {
             } catch (err) {
                 oldUser = null;
             }
-
             if (oldUser != null)
                 return res.status(409).send("User Already Exist. Please Login");
             const encryptedPassword = await bcrypt.hash(password, 10);
@@ -93,11 +92,33 @@ export default class AuthController {
             });
             user.token = token;
 
-            return res.status(201).json(await AuthController._userSchema.edit(user));
+            return res.status(201).json((await AuthController._userSchema.edit(user)).toRaw());
         } catch (err) {
             console.error(err);
             return res.status(500).json({ "message": "an error occured" });
         }
     }
 
+    public static async disconnectService(req: Request, res: Response) {
+        const serviceList = ["twitter", "github", "discord", "dropbox", "notion", "twitch", "linkedin", "unsplash"];
+        const { service } = req.params;
+        const userId = req.user?.data.user_id;
+
+        if (!userId)
+            return res.status(500).send();
+        if (serviceList.find(e => e == req.params.service))
+            try {
+                const user = await AuthController._userSchema.get(userId);
+
+                if (user.oauth)
+                    delete user.oauth[service];
+                AuthController._userSchema.edit(user);
+                res.status(200).send("Successfully disconnected");
+            } catch (error: unknown) {
+                console.log("disconnectService: ", (error as Error).toString());
+                res.status(500).send((error as Error).toString());
+            }
+        else
+            res.status(404).send();
+    }
 }

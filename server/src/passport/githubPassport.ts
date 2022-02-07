@@ -1,12 +1,12 @@
 import passport from "passport";
 import passportGithub2 from "passport-github2";
 
+import { githubConfig } from "@config/githubConfig";
 import { getStrObjectId } from "@classes/model.class";
 import User from "@classes/user.class";
 import { UserSchema } from "@schemas/user.schema";
 import AuthController from "../controllers/AuthController";
 import OAuthProvider from "../model/oAuthProvider.enum";
-import { githubConfig } from "../config/githubConfig";
 
 const GithubStrategy = passportGithub2.Strategy;
 //TODO: do the setting part

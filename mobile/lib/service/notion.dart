@@ -1,6 +1,8 @@
 import 'package:mobile/service/IService.dart';
 
 class notion extends IService {
+  notion(bool src) : super(src);
+
   @override
   List<String> getAction() {
     return ['None'];
@@ -27,11 +29,5 @@ class notion extends IService {
   @override
   String getUrl() {
     return "/auth/notion";
-  }
-
-  @override
-  bool getConnexionState() {
-    // TODO: implement getConnexionState
-    return false;
   }
 }

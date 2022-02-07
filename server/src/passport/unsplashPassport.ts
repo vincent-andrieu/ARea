@@ -2,12 +2,12 @@ import passport from "passport";
 import Unsplash from "unsplash-passport";
 
 
+import { unsplashConfig } from "@config/unsplashConfig";
 import User from "@classes/user.class";
 import { getStrObjectId } from "@classes/model.class";
 import { UserSchema } from "@schemas/user.schema";
-import AuthController from "../controllers/AuthController";
+import AuthController from "@controllers/AuthController";
 import OAuthProvider from "../model/oAuthProvider.enum";
-import { unsplashConfig } from "../config/unsplashConfig";
 
 const UnsplashStrategy = Unsplash.Strategy;
 

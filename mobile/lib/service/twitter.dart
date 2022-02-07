@@ -1,6 +1,8 @@
 import 'package:mobile/service/IService.dart';
 
 class twitter extends IService {
+  twitter(bool src) : super(src);
+
   @override
   List<String> getAction() {
     return [
@@ -31,11 +33,5 @@ class twitter extends IService {
   @override
   String getUrl() {
     return "/auth/twitter";
-  }
-
-  @override
-  bool getConnexionState() {
-    // TODO: implement getConnexionState
-    return false;
   }
 }
