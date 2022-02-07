@@ -4,12 +4,12 @@ import Service from "@classes/service.class";
 import { ASchema } from "./abstract.schema";
 
 const serviceSchema = new mongoose.Schema({
-    label: { type: String },
+    label: { type: String, required: true },
     actions: [
-        { type: mongoose.Schema.Types.ObjectId, ref: "Action" }
+        { type: mongoose.Schema.Types.ObjectId, ref: "Action", required: true }
     ],
     reactions: [
-        { type: mongoose.Schema.Types.ObjectId, ref: "Reaction" }
+        { type: mongoose.Schema.Types.ObjectId, ref: "Reaction", required: true }
     ]
 }, {
     toObject: { virtuals: true },

@@ -1,1 +1,11 @@
-<p>edit-modal works!</p>
+<h1 mat-dialog-title>{{ isEdit ? "Edit" : "Add" }} an IFTTT</h1>
+
+<form [formGroup]="form" (ngSubmit)="submit()">
+    <div mat-dialog-content>
+    </div>
+
+    <div mat-dialog-actions>
+        <button mat-button mat-dialog-close>Cancel</button>
+        <button mat-button>{{ isEdit ? "Save" : "Add" }}</button>
+    </div>
+</form>

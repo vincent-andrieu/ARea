@@ -2,8 +2,8 @@ import express from "express";
 import moment from "moment";
 import swaggerUi from "swagger-ui-express";
 import swaggerJsDoc from "swagger-jsdoc";
-import { swaggerConfig } from "@config/swaggerConfig";
 
+import { swaggerConfig } from "@config/swaggerConfig";
 import authMiddleware from "../middlewares/checkJwt";
 
 const router = express.Router();

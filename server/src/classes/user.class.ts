@@ -9,7 +9,7 @@ export default class User extends Model {
     oauthLoginProviderId?: string;
     token?: string;
     areas?: Array<ARea> | Array<ObjectId> = [];
-    oauth: {
+    oauth?: {
         twitter?: {
             accessToken: string
             secretToken: string
@@ -53,41 +53,41 @@ export default class User extends Model {
         this.oauthLoginProviderId = user.oauthLoginProviderId;
         this.token = user.token;
         this.oauth = {};
-        if (user.oauth.twitter)
+        if (user.oauth?.twitter)
             this.oauth.twitter = {
                 accessToken: user.oauth.twitter.accessToken,
                 secretToken: user.oauth.twitter.secretToken
             };
-        if (user.oauth.github)
+        if (user.oauth?.github)
             this.oauth.github = {
                 accessToken: user.oauth.github.accessToken,
                 refreshToken: user.oauth.github.refreshToken
             };
-        if (user.oauth.discord)
+        if (user.oauth?.discord)
             this.oauth.discord = {
                 accessToken: user.oauth.discord.accessToken,
                 refreshToken: user.oauth.discord.refreshToken
             };
-        if (user.oauth.dropbox)
+        if (user.oauth?.dropbox)
             this.oauth.dropbox = {
                 accessToken: user.oauth.dropbox.accessToken,
                 refreshToken: user.oauth.dropbox.refreshToken
             };
-        if (user.oauth.notion)
+        if (user.oauth?.notion)
             this.oauth.notion = {
                 accessToken: user.oauth.notion.accessToken
             };
-        if (user.oauth.twitch)
+        if (user.oauth?.twitch)
             this.oauth.twitch = {
                 accessToken: user.oauth.twitch.accessToken,
                 refreshToken: user.oauth.twitch.refreshToken
             };
-        if (user.oauth.linkedin)
+        if (user.oauth?.linkedin)
             this.oauth.linkedin = {
                 accessToken: user.oauth.linkedin.accessToken,
                 refreshToken: user.oauth.linkedin.refreshToken
             };
-        if (user.oauth.unsplash)
+        if (user.oauth?.unsplash)
             this.oauth.unsplash = {
                 accessToken: user.oauth.unsplash.accessToken,
                 refreshToken: user.oauth.unsplash.refreshToken

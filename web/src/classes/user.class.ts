@@ -1,6 +1,6 @@
 import Model, { ObjectId } from "./model.class";
 import ARea from "./area.class";
-import OAuthProvider from "./oAuthProvider.enum";
+import OAuthProvider from "./model/oAuthProvider.enum";
 
 export default class User extends Model {
     username: string;
@@ -9,6 +9,16 @@ export default class User extends Model {
     oauthLoginProviderId?: string;
     token?: string;
     areas?: Array<ARea> | Array<ObjectId> = [];
+    oauth?: {
+        twitter: boolean,
+        github: boolean,
+        discord: boolean
+        dropbox: boolean,
+        notion: boolean,
+        twitch: boolean,
+        linkedin: boolean,
+        unsplash: boolean
+    };
 
     constructor(user: User) {
         super(user);
@@ -25,5 +35,16 @@ export default class User extends Model {
                 this.areas = (user.areas as Array<ARea>).map((area) => new ARea(area));
             else
                 this.areas = user.areas;
+
+        this.oauth = {
+            twitter: !!user.oauth?.twitter,
+            github: !!user.oauth?.github,
+            discord: !!user.oauth?.discord,
+            dropbox: !!user.oauth?.dropbox,
+            notion: !!user.oauth?.notion,
+            twitch: !!user.oauth?.twitch,
+            linkedin: !!user.oauth?.linkedin,
+            unsplash: !!user.oauth?.unsplash
+        };
     }
 }

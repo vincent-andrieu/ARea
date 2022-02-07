@@ -3,14 +3,14 @@
 </button>
 
 <div class="page-background" fxLayout="column" fxLayoutAlign="space-around center" fxFill>
-    <p class="title">AReas's list</p>
+    <p class="title">AReas list</p>
 
     <div fxLayout="row wrap">
-        <app-area-widget *ngFor="let area of areas" [area]="area"></app-area-widget>
+        <app-area-widget *ngFor="let area of areas" [area]="area" (click)="openEditModal(area)"></app-area-widget>
         <h2 *ngIf="areas.length === 0 && !isLoading">No area</h2>
         <mat-progress-spinner *ngIf="isLoading" mode="indeterminate" color="primary">
         </mat-progress-spinner>
     </div>
 
-    <button mat-flat-button color="primary" class="new-button">New</button>
+    <button mat-flat-button color="primary" class="new-button" (click)="openEditModal()">New</button>
 </div>

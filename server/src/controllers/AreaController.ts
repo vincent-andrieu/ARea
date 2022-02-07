@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import { AReaSchema } from "../schemas/area.schema";
 import ARea from "../classes/area.class";
 import { getStrObjectId, ObjectId } from "@classes/model.class";
@@ -18,22 +18,22 @@ export default class AreaController {
     private static _reactionSchema = new ReactionSchema();
     private static _userSchema = new UserSchema();
 
-    static create = async (req, res: Response) => {
+    static async create(req: Request, res: Response) {
         try {
             const action: Action | undefined = req.body.trigger.action;
             const actionInput: ActionConfig | undefined = req.body.trigger.inputs;
             const reaction: Reaction | undefined = req.body.consequence.reaction;
             const reactionInput: ReactionConfig | undefined = req.body.consequence.inputs;
-            const userId: string = req.user.data.user_id;
+            const userId = req.user?.data.user_id;
 
             if (!userId || userId.length === 0)
                 throw "Unknow user id";
             if (actionInput == undefined || reactionInput == undefined || action == undefined || reaction == undefined)
                 return res.status(400).send("Invalid body");
             //TODO: GESTION D'ERREUR DU BODY
-            const actionInDb = await this._actionSchema.add(action);
-            const reactionInDb = await this._reactionSchema.add(reaction);
-            const area = await this._areaSchema.add({
+            const actionInDb = await AreaController._actionSchema.add(action);
+            const reactionInDb = await AreaController._reactionSchema.add(reaction);
+            const area = await AreaController._areaSchema.add({
                 trigger: {
                     action: actionInDb,
                     inputs: actionInput
@@ -46,22 +46,22 @@ export default class AreaController {
 
             if (!area._id)
                 throw "Undefined area id";
-            this._userSchema.addARea(userId, area._id);
+            AreaController._userSchema.addARea(userId, area._id);
             res.status(201).json({ _id: area._id, action: actionInDb, reaction: reactionInDb });
         } catch (error: any) {
             console.log("[AreaController] create :", error.toString());
             res.status(400).send(error.toString());
         }
-    };
+    }
 
-    static async readOne(req, res: Response) {
-        const id = req.param.id;
+    static async readOne(req: Request, res: Response) {
+        const id = req.params.id;
         const userId = req.user?.data.user_id;
 
         try {
-            if (!userId || userId.length === 0)
+            if (!userId || userId.length === 0 || !req.user?.data.user_id)
                 throw "Unknow user id";
-            const user = await this._userSchema.get(req.user.data.user_id, {
+            const user = await AreaController._userSchema.get(req.user?.data.user_id, {
                 path: "areas",
                 populate: "action reaction" as unknown as PopulateOptions
             });
@@ -76,13 +76,13 @@ export default class AreaController {
         }
     }
 
-    static async readList(req, res: Response) {
+    static async readList(req: Request, res: Response) {
         const userId = req.user?.data.user_id;
 
         try {
-            if (!userId || userId.length === 0)
+            if (!userId || userId.length === 0 || !req.user?.data.user_id)
                 throw "Unknow user id";
-            const user = await this._userSchema.get(req.user.data.user_id, {
+            const user = await AreaController._userSchema.get(req.user?.data.user_id, {
                 path: "areas",
                 populate: "action reaction" as unknown as PopulateOptions
             }, "areas");
@@ -92,8 +92,8 @@ export default class AreaController {
         }
     }
 
-    static update = async (req, res: Response) => {
-        const userId: string = req.user.data.user_id;
+    static async update(req: Request, res: Response) {
+        const userId = req.user?.data.user_id;
         const areaId = req.params.id;
 
         try {
@@ -110,17 +110,17 @@ export default class AreaController {
                 return res.status(404).send("Wrong action id");
             if (getStrObjectId(area?.consequence.reaction) !== getStrObjectId(reaction))
                 return res.status(404).send("Wrong reaction id");
-            const actionUpdate = await this._actionSchema.edit(action);
-            const reactionUpdate = await this._reactionSchema.edit(reaction);
+            const actionUpdate = await AreaController._actionSchema.edit(action);
+            const reactionUpdate = await AreaController._reactionSchema.edit(reaction);
             res.json({ _id: areaId, action: actionUpdate, reaction: reactionUpdate });
         } catch (error: any) {
             res.status(500).send(error.toString());
         }
-    };
+    }
 
-    static delete = async (req, res: Response) => {
+    static async delete(req: Request, res: Response) {
         const areaId = req.params.id;
-        const userId = req.user.data.user_id;
+        const userId = req.user?.data.user_id;
 
         try {
             if (!userId || userId.length === 0)
@@ -137,14 +137,14 @@ export default class AreaController {
             const action: ObjectId = area.trigger.action as ObjectId;
             const reaction: ObjectId = area.consequence.reaction as ObjectId;
 
-            await this._actionSchema.deleteById(action);
-            await this._reactionSchema.deleteById(reaction);
-            await this._areaSchema.deleteById(areaId);
-            await this._userSchema.removeARea(userId, areaId);
+            await AreaController._actionSchema.deleteById(action);
+            await AreaController._reactionSchema.deleteById(reaction);
+            await AreaController._areaSchema.deleteById(areaId);
+            await AreaController._userSchema.removeARea(userId, areaId);
 
             return res.status(200).send(`Successfully deleted area ${areaId}`);
         } catch (error: any) {
             return res.status(500).send(error.toString());
         }
-    };
+    }
 }

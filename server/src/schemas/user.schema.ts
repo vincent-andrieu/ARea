@@ -7,9 +7,9 @@ import { ASchema } from "./abstract.schema";
 import ARea from "@classes/area.class";
 
 const userSchema = new mongoose.Schema({
-    username: { type: String },
+    username: { type: String, required: true },
     password: { type: String },
-    oauthLoginProvider: { type: OAuthProvider },
+    oauthLoginProvider: { type: OAuthProvider, required: true },
     oauthLoginProviderId: { type: String },
     token: { type: String },
     areas: [

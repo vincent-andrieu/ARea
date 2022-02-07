@@ -22,7 +22,7 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
             });
             // save user token
             oldUser.token = token;
-            if (oldUser.oauth.discord) {
+            if (oldUser.oauth?.discord) {
                 oldUser.oauth.discord.accessToken = accessToken;
                 oldUser.oauth.discord.refreshToken = refreshToken;
             }

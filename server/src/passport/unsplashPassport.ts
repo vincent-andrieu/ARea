@@ -30,7 +30,7 @@ async function successfullyAuthentificated(accessToken: string, refreshToken: st
             oldUser.oauthLoginProvider = OAuthProvider.UNSPLASH;
             oldUser.oauthLoginProviderId = profile.displayName;
             oldUser.token = token;
-            if (oldUser.oauth.unsplash) {
+            if (oldUser.oauth?.unsplash) {
                 oldUser.oauth.unsplash.accessToken = accessToken;
                 oldUser.oauth.unsplash.refreshToken = refreshToken;
             }

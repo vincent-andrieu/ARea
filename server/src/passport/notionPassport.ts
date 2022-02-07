@@ -24,7 +24,7 @@ const successfullyAuthentificated = async(_req, accessToken: string, _, oauthDat
             oldUser.oauthLoginProvider = OAuthProvider.NOTION;
             oldUser.oauthLoginProviderId = userNotion.person.email;
             oldUser.token = token;
-            if (oldUser.oauth.notion)
+            if (oldUser.oauth?.notion)
                 oldUser.oauth.notion.accessToken = accessToken;
 
             done(null, await userSchema.edit(oldUser));

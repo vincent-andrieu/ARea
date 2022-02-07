@@ -36,6 +36,6 @@ export class RegisterComponent {
     }
 
     public redirectToAppAuth(redirectRoute: string): void {
-        this._authService.redirectToApp(redirectRoute);
+        this._authService.loginToService(redirectRoute);
     }
 }

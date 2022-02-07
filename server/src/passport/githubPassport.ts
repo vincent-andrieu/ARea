@@ -2,7 +2,6 @@ import AuthController from "../controllers/AuthController";
 import passport from "passport";
 import passportGithub2 from "passport-github2";
 
-import User from "@classes/user.class";
 import { getStrObjectId } from "@classes/model.class";
 import OAuthProvider from "../model/oAuthProvider.enum";
 import { githubConfig } from "../config/githubConfig";
@@ -27,7 +26,7 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
             oldUser.oauthLoginProvider = OAuthProvider.GITHUB;
             oldUser.oauthLoginProviderId = profile.username;
             oldUser.token = token;
-            if (oldUser.oauth.github) {
+            if (oldUser.oauth?.github) {
                 oldUser.oauth.github.accessToken = accessToken;
                 oldUser.oauth.github.refreshToken = refreshToken;
             }

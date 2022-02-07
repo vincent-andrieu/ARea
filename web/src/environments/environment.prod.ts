@@ -3,5 +3,8 @@ export const environment = {
     cookiesKey: {
         serverHost: 'server',
         jwt: 'auth'
+    },
+    mobile: {
+        filepath: '/assets/client/area_mobile.apk'
     }
 };
