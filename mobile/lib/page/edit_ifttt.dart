@@ -14,14 +14,6 @@ import 'create_ifttt.dart';
 
 class edit_ifttt extends StatelessWidget {
   late areaService api;
-  List<IService> serviceList = [
-    github(),
-    twitch(),
-    twitter(),
-    discord(),
-    linkedin(),
-    notion()
-  ];
 
   edit_ifttt(this.api, {Key? key}) : super(key: key);
 

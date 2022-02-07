@@ -41,12 +41,12 @@ void callbackSaveIfttt(BuildContext context, areaService api, String actionLabel
 class create_ifttt extends StatelessWidget {
   late areaService api;
   List<IService> serviceList = [
-    github(),
-    twitch(),
-    twitter(),
-    discord(),
-    linkedin(),
-    notion()
+    github(false),
+    twitch(false),
+    twitter(false),
+    discord(false),
+    linkedin(false),
+    notion(false)
   ];
   late IService serviceAction;
   late IService serviceReaction;

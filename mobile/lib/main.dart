@@ -19,12 +19,12 @@ import 'package:mobile/service/undefined.dart';
 Map<String, WidgetBuilder> buildRouteApp() {
   areaService api = areaService("");
   Map<String, IService> builder = {
-    'discord': discord(),
-    'twitter': twitter(),
-    'twitch': twitch(),
-    'github': github(),
-    'notion': notion(),
-    'linkedin': linkedin(),
+    'discord': discord(false),
+    'twitter': twitter(false),
+    'twitch': twitch(false),
+    'github': github(false),
+    'notion': notion(false),
+    'linkedin': linkedin(false),
     'None': undefined(),
   };
 

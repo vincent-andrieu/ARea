@@ -1,6 +1,9 @@
 import 'package:mobile/service/IService.dart';
 
 class linkedin extends IService {
+  bool connected;
+  linkedin(this.connected);
+
   @override
   List<String> getAction() {
     return ['None'];
@@ -31,7 +34,6 @@ class linkedin extends IService {
 
   @override
   bool getConnexionState() {
-    // TODO: implement getConnexionState
-    return false;
+    return connected;
   }
 }

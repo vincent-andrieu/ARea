@@ -1,6 +1,9 @@
 import 'package:mobile/service/IService.dart';
 
 class discord extends IService {
+  bool connected;
+  discord(this.connected);
+
   @override
   List<String> getAction() {
     return [
@@ -34,7 +37,6 @@ class discord extends IService {
 
   @override
   bool getConnexionState() {
-    // TODO: implement getConnexionState
-    return false;
+    return connected;
   }
 }

@@ -1,6 +1,9 @@
 import 'package:mobile/service/IService.dart';
 
 class twitch extends IService {
+  bool connected;
+  twitch(this.connected);
+
   @override
   List<String> getAction() {
     return [
@@ -31,7 +34,6 @@ class twitch extends IService {
 
   @override
   bool getConnexionState() {
-    // TODO: implement getConnexionState
-    return false;
+    return connected;
   }
 }

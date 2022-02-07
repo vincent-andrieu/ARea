@@ -1,6 +1,9 @@
 import 'package:mobile/service/IService.dart';
 
 class github extends IService {
+  bool connected;
+  github(this.connected);
+
   @override
   List<String> getAction() {
     return [
@@ -35,7 +38,6 @@ class github extends IService {
 
   @override
   bool getConnexionState() {
-    // TODO: implement getConnexionState
-    return false;
+    return connected;
   }
 }

@@ -19,12 +19,12 @@ void callbackLogout(BuildContext context, areaService api) {
 class settings_page extends StatelessWidget {
   late areaService api;
   List<IService> serviceList = [
-    github(),
-    twitch(),
-    twitter(),
-    discord(),
-    linkedin(),
-    notion()
+    github(false),      // TODO EDIT
+    twitch(false),      // TODO EDIT
+    twitter(false),     // TODO EDIT
+    discord(false),     // TODO EDIT
+    linkedin(false),    // TODO EDIT
+    notion(false)       // TODO EDIT
   ];
 
   settings_page(areaService apiSrc, {Key? key}) : super(key: key) {

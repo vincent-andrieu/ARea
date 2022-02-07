@@ -1,6 +1,9 @@
 import 'package:mobile/service/IService.dart';
 
 class notion extends IService {
+  bool connected;
+  notion(this.connected);
+
   @override
   List<String> getAction() {
     return ['None'];
@@ -31,7 +34,6 @@ class notion extends IService {
 
   @override
   bool getConnexionState() {
-    // TODO: implement getConnexionState
-    return false;
+    return connected;
   }
 }

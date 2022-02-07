@@ -47,12 +47,12 @@ class auth_page extends StatelessWidget {
   void Function(BuildContext context, areaService api, String user, String pass) connexionCallBack = (BuildContext context, areaService api, String user, String pass) {};
   void Function(BuildContext context) switchCallBack = (BuildContext context) {};
   List<IService> serviceList = [
-    github(),
-    twitch(),
-    twitter(),
-    discord(),
-    linkedin(),
-    notion()
+    github(false),      // TODO EDIT
+    twitch(false),      // TODO EDIT
+    twitter(false),     // TODO EDIT
+    discord(false),     // TODO EDIT
+    linkedin(false),    // TODO EDIT
+    notion(false)       // TODO EDIT
   ];
 
   auth_page(authentication_e typeSrc, areaService apiSrc, {Key? key}) : super(key: key) {

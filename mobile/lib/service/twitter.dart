@@ -1,6 +1,9 @@
 import 'package:mobile/service/IService.dart';
 
 class twitter extends IService {
+  bool connected;
+  twitter(this.connected);
+
   @override
   List<String> getAction() {
     return [
@@ -35,7 +38,6 @@ class twitter extends IService {
 
   @override
   bool getConnexionState() {
-    // TODO: implement getConnexionState
-    return false;
+    return connected;
   }
 }
