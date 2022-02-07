@@ -5,8 +5,8 @@ import { createApi } from "unsplash-js";
 import { readFile, createWriteStream } from "fs";
 import { HttpClient } from "typed-rest-client/HttpClient";
 import ARea from "@classes/area.class";
-import { UnsplashPostConfig } from "model/ActionConfig";
 import { Full } from "unsplash-js/dist/methods/photos/types";
+import { UnsplashPostResult } from "model/ActionResult";
 
 export class unsplashService {
 
@@ -18,7 +18,7 @@ export class unsplashService {
     }
 
     private static IsNewPost(area: ARea, postId: string): boolean {
-        const last: UnsplashPostConfig = area.trigger.outputs as UnsplashPostConfig;
+        const last: UnsplashPostResult = area.trigger.outputs as UnsplashPostResult;
         if (last.lastPostId == postId)
             return false;
         last.lastPostId = postId;
@@ -50,9 +50,8 @@ export class unsplashService {
         }
     }
 
-
     private static setDownloadInfos(area: ARea, downloadUrl: string, post: Full) {
-        const result: UnsplashPostConfig = area.trigger.outputs as UnsplashPostConfig;
+        const result: UnsplashPostResult = area.trigger.outputs as UnsplashPostResult;
 
         result.downloadPath = downloadUrl;
         result.created_at = post.created_at;

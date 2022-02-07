@@ -14,6 +14,15 @@ import { TwitterTweetConfig } from "model/ActionConfig";
 
 export class TwitterService {
 
+    private static IsNewPost(area: ARea, postId: string): boolean {
+        const last: TwitterTweetResult = area.trigger.outputs as TwitterTweetResult;
+
+        if (last.lastTweetId == postId)
+            return false;
+        last.lastTweetId = postId;
+        return true;
+    }
+
     private static getClient(user: User) {
 
         if (!env.TWITTER_API_KEY || !env.TWITTER_API_SECRET_KEY || !user.oauth?.twitter)
@@ -63,11 +72,11 @@ export class TwitterService {
 
             if (tweet.referenced_tweets && tweet.referenced_tweets["type"] != "tweeted")
                 return false;
-            const inputs = area.trigger.inputs as TwitterTweetConfig;
+            const inputs = area.trigger.inputs as TwitterTweetResult;
 
-            this.setTweetInfos(area, tweet);
-            if (inputs.lastTweetId == tweet.id)
+            if (!TwitterService.IsNewPost(area, tweet.id))
                 return false;
+            this.setTweetInfos(area, tweet);
             inputs.lastTweetId = tweet.id;
         } catch (error: unknown) {
             const some_error = error as Error;

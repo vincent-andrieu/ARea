@@ -12,7 +12,6 @@ export interface TwitchStreamConfig {
 
 export interface TwitterTweetConfig {
     username: string; // target user
-    lastTweetId: string; // target user
 }
 
 export interface RSSConfig {
@@ -36,13 +35,7 @@ export interface GithubPullReqConfig {
 
 export interface UnsplashPostConfig {
     username: string;
-    name: string;
-    lastname: string;
     downloadPath: string;
-    lastPostId: string;
-    created_at: string;
-    description: string;
-    likes: number;
 }
 
 export type ActionConfig = DateTimeConfg | TimeConfig
