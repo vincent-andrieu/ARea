@@ -6,8 +6,8 @@ export interface LinkedinPostConfig {
     message: string;
 }
 
-export interface TwitterChangePPConfig {
-    url: string; // image url (jpg)
+export interface TwitterUpdatePictureConfig {
+    nothing: string;
 }
 
 export interface DiscordPostMsgConfig {
@@ -27,11 +27,10 @@ export interface NotionAddMessageConfig {
     urlPage: string;
 }
 
-export interface OnedriveUploadTextConfig {
-    content: string;
-    filename: string;
+export interface DropboxUploadConfig {
+    filepath: string | null;
 }
 
 export type ReactionConfig = TwitterPostTweetConfig | LinkedinPostConfig
-    | TwitterChangePPConfig | DiscordPostMsgConfig | GithubCreateIssueConfig
-    | NotionAddMessageConfig | OnedriveUploadTextConfig;
+    | TwitterUpdatePictureConfig | DiscordPostMsgConfig | GithubCreateIssueConfig
+    | NotionAddMessageConfig | DropboxUploadConfig;

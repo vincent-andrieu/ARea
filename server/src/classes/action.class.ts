@@ -10,6 +10,7 @@ export enum ActionType {
     GITHUB_ISSUE = "GITHUB_ISSUE",
     GITHUB_PULL_REQ = "GITHUB_PULL_REQ",
     DISCORD_MSG = "DISCORD_MSG",
+    UNSPLASH_POST = "UNSPLASH_POST",
 }
 
 export default class Action extends Model {

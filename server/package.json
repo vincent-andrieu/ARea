@@ -11,7 +11,7 @@
         "clean": "rm -rf node_modules/ ; rm -rf ./build/",
         "auto": "npx nodemon -x npm run start -w src/ -e .ts",
         "lint": "eslint src/ --fix ; exit 0",
-        "test": "tsc -p . && jest --setupFiles dotenv/config",
+        "test": "tsc -p . && jest --setupFiles dotenv/config ",
         "test:watch": "tsc -p . && jest --watch --setupFiles dotenv/config"
     },
     "repository": {
@@ -38,6 +38,7 @@
         "@twurple/api": "^5.0.17",
         "@twurple/auth": "^5.0.17",
         "@types/jest": "^27.4.0",
+        "aws-lambda": "^1.0.7",
         "axios": "^0.25.0",
         "bcryptjs": "^2.4.3",
         "cookie-session": "^2.0.0",
@@ -55,7 +56,6 @@
         "node-cron": "^3.0.0",
         "node-fetch": "^2.6.7",
         "octokit": "^1.7.1",
-        "node-cron": "^3.0.0",
         "passport": "^0.5.2",
         "passport-dropbox-oauth2": "^1.1.0",
         "passport-github2": "^0.1.12",
@@ -65,6 +65,7 @@
         "swagger-jsdoc": "^6.1.0",
         "swagger-ui-express": "^4.3.0",
         "twitter-api-v2": "^1.10.0",
+        "typed-rest-client": "^1.8.6",
         "typescript": "^4.5.5",
         "unsplash-js": "^7.0.15",
         "unsplash-passport": "^1.0.3"

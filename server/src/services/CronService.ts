@@ -1,14 +1,24 @@
+/* eslint-disable indent */
 import cron from "node-cron";
-import Reaction, { ReactionType } from "../classes/reaction.class";
-import ARea from "../classes/area.class";
-import DiscordService from "./DiscordService";
-import { DiscordPostMsgConfig } from "model/ReactionConfig";
-import { PopulateOptions } from "mongoose";
+
 import { AReaSchema } from "@schemas/area.schema";
+import { PopulateOptions } from "mongoose";
+
+import ARea from "../classes/area.class";
+import Reaction, { ReactionType } from "../classes/reaction.class";
 import Action, { ActionType } from "@classes/action.class";
-import { isStreamLive } from "./twitchService";
-import { TwitchStreamConfig } from "model/ActionConfig";
+
+import { TwitchStreamConfig, UnsplashPostConfig } from "model/ActionConfig";
+import { DiscordPostMsgConfig, DropboxUploadConfig } from "model/ReactionConfig";
+
+import DiscordService from "./DiscordService";
+import { TwitchService } from "./twitchService";
 import RSSService from "./RSSService";
+// import { IsNewPost, DownloadNewPost } from "./unsplashService";
+import { DropboxService } from "./DropboxService";
+import { unsplashService } from "./unsplashService";
+import { TwitterService } from "./twitterService";
+import { TwitchStreamResult } from "model/ActionResult";
 
 export class CronService {
 
@@ -29,7 +39,7 @@ export class CronService {
         this._cron.stop();
     };
 
-    public execute = () => {
+    public execute = async () => {
         console.log("Running CRON");
 
         // Fetch action-reactions
@@ -44,7 +54,7 @@ export class CronService {
         });
     };
 
-    private executeAction(area: ARea) {
+    private async executeAction(area: ARea) {
         const action = area.trigger.action as Action;
 
         switch (action.type) {
@@ -56,9 +66,9 @@ export class CronService {
                 break;
             case ActionType.TWITCH_STREAM:
                 const username = (area.trigger.inputs as TwitchStreamConfig).username;
-                if (await isStreamLive(username)) {
+
+                if (await TwitchService.IsStreamLive(area, username))
                     CronService.triggerReaction(area);
-                }
                 break;
             case ActionType.TWITTER_MSG:
                 // TODO:
@@ -76,6 +86,13 @@ export class CronService {
             case ActionType.DISCORD_MSG:
                 // See DiscordService Bot
                 break;
+            case ActionType.UNSPLASH_POST:
+                const config: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
+
+                if (await unsplashService.DownloadIfNewPost(config.username, config.downloadPath))
+                    CronService.triggerReaction(area);
+
+                break;
             default:
                 throw "CronService::executeAction: action unsupported.";
         }
@@ -87,19 +104,52 @@ export class CronService {
      */
     public static triggerReaction(area: ARea) {
         const reaction: Reaction = area.consequence.reaction as Reaction;
+        const action: Action = area.trigger.action as Action;
 
         switch (reaction.type) {
-            case ReactionType.LINKEDIN_MSG:
-                // ?
-                break;
             case ReactionType.TWITTER_MSG:
+
+                switch (action.type) {
+                    case ActionType.UNSPLASH_POST:
+                        console.log("action was unsplash post");
+                        break;
+                    case ActionType.TWITCH_STREAM:
+                        const stream: TwitchStreamResult = area.trigger.outputs as TwitchStreamResult;
+
+                        const text = "there is a stream by " + stream.Username + " its named " + stream.StreamTitle;
+                        // TwitterService.TweetATweet(text, /* user */);
+                        break;
+                    default:
+                        console.log("todo upload file from parameter given");
+                }
                 // TODO:
                 break;
-            case ReactionType.TWITTER_MSG:
-                // TODO:
+            case ReactionType.TWITTER_BANNER:
+
+                switch (action.type) {
+                    case ActionType.UNSPLASH_POST:
+                        const configUnsplash: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
+
+                        // TwitterService.UpdateProfileBanner(configUnsplash.downloadPath/* , user */);
+                        break;
+                    default:
+                        console.log("todo upload file from parameter given");
+                }
+                break;
+            case ReactionType.TWITTER_PP:
+                switch (action.type) {
+                    case ActionType.UNSPLASH_POST:
+                        const configUnsplash: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
+
+                        // TwitterService.UpdateProfileImage(configUnsplash.downloadPath/* , user */);
+                        break;
+                    default:
+                        console.log("todo upload file from parameter given");
+                }
                 break;
             case ReactionType.DISCORD_MSG:
                 const input: DiscordPostMsgConfig = area.consequence.inputs as DiscordPostMsgConfig;
+
                 DiscordService.sendMessage(input.channelId, input.message);
                 break;
             case ReactionType.GITHUB_ISSUE:
@@ -108,13 +158,28 @@ export class CronService {
             case ReactionType.NOTION_MSG:
                 // TODO:
                 break;
-            case ReactionType.ONEDRIVE_UPLOAD:
-                // TODO:
+            case ReactionType.DROPBOX_UPLOAD:
+                switch (action.type) {
+                    case ActionType.UNSPLASH_POST:
+                        const configUnsplash: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
+                        const configDropbox: DropboxUploadConfig = area.consequence.inputs as DropboxUploadConfig;
+                        const dropboxFilepath = (configDropbox.filepath ? configDropbox.filepath : configUnsplash.downloadPath);
+
+                        DropboxService.uploadFile(configUnsplash.downloadPath, dropboxFilepath);
+                        break;
+                    default:
+                        console.log("todo upload file from parameter given");
+
+
+
+                }
+                // TODO: if this action the take this param as filepath, else if, else if
+                // and get method from this service to return filepath according to area
+
                 break;
-            case ReactionType.UNSPLASH:
-                // TODO:
-                break;
+
             default:
                 throw "CronService: triggerReaction reaction not supported";
         }
     }
+}
