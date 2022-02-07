@@ -76,13 +76,13 @@ export default class AreaController {
         }
     };
 
-    static async readList(req, res: Response) {
+    static readList = async (req, res: Response) => {
         const userId = req.user?.data.user_id;
 
         try {
             if (!userId || userId.length === 0)
                 throw "Unknow user id";
-            const user = await this._userSchema.get(req.user.data.user_id, {
+            const user = await this._userSchema.get(req.user?.data.user_id, {
                 path: "areas",
                 populate: "action reaction" as unknown as PopulateOptions
             }, "areas");
