@@ -1,11 +1,12 @@
 import passport from "passport";
-
-import AuthController from "../controllers/AuthController";
 import passportTwitch from "passport-twitch-new";
-import { twitchConfig } from "../config/twitchConfig";
-import { UserSchema } from "@schemas/user.schema";
-import OAuthProvider from "../model/oAuthProvider.enum";
+
 import { getStrObjectId } from "@classes/model.class";
+import User from "@classes/user.class";
+import { UserSchema } from "@schemas/user.schema";
+import AuthController from "../controllers/AuthController";
+import { twitchConfig } from "../config/twitchConfig";
+import OAuthProvider from "../model/oAuthProvider.enum";
 
 const TwitchStrategy = passportTwitch.Strategy;
 
@@ -35,7 +36,7 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
         } else {
             console.log("Create new user");
 
-            const user = await userSchema.add({
+            const user = await userSchema.add(new User({
                 username: profile.login,
                 oauthLoginProvider: OAuthProvider.TWITCH,
                 oauthLoginProviderId: profile.login,
@@ -45,7 +46,7 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
                         refreshToken: refreshToken
                     }
                 }
-            });
+            }));
 
             const token = AuthController.signToken({
                 user_id: getStrObjectId(user),

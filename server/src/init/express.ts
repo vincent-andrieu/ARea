@@ -6,6 +6,7 @@ import cors from "cors";
 import { serverConfig } from "@config/serverConfig";
 import appRoutes from "../routes/appRoutes";
 import authRoutes from "../routes/authRoutes";
+import userRoutes from "../routes/userRoutes";
 import areaRoutes from "../routes/areaRoutes";
 import "../passport/githubPassport";
 import "../passport/twitterPassport";
@@ -41,6 +42,7 @@ export default {
 
             app.use("/", appRoutes);
             app.use("/auth", authRoutes);
+            app.use("/user", userRoutes);
             app.use("/area", areaRoutes);
 
             app.listen(serverConfig.port, () => {

@@ -1,6 +1,7 @@
 import passport from "passport";
 
 import { getStrObjectId } from "@classes/model.class";
+import User from "@classes/user.class";
 import { UserSchema } from "@schemas/user.schema";
 import AuthController from "../controllers/AuthController";
 import { Strategy as NotionStrategy } from "../module/passport-notion";
@@ -31,7 +32,7 @@ const successfullyAuthentificated = async(_req, accessToken: string, _, oauthDat
         } else {
             console.log("Create new user");
 
-            const user = await userSchema.add({
+            const user = await userSchema.add(new User({
                 username: userNotion.person.email,
                 oauthLoginProvider: OAuthProvider.NOTION,
                 oauthLoginProviderId: userNotion.person.email,
@@ -40,7 +41,7 @@ const successfullyAuthentificated = async(_req, accessToken: string, _, oauthDat
                         accessToken: accessToken
                     }
                 }
-            });
+            }));
 
             const token = AuthController.signToken({
                 user_id: getStrObjectId(user),
