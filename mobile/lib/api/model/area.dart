@@ -2,6 +2,8 @@ class Action {
   String label = "";
   bool cron = true;
 
+  Action(this.label, this.cron);
+
   Action.fromJson(dynamic json)
       : label = json['label'],
         cron = json['cron'];
@@ -17,6 +19,8 @@ class Action {
 class Reaction {
   String label = "";
 
+  Reaction(this.label);
+
   Reaction.fromJson(dynamic json)
       : label = json['label'];
 
@@ -28,15 +32,23 @@ class Reaction {
 }
 
 class Area {
-  Action action;
-  Reaction reaction;
+  String id = "";
+  Action action = Action("", false);
+  Reaction reaction = Reaction("");
+
+  Area(this.id, String actionLabel, String reactionLabel) {
+    action = Action(actionLabel, false);
+    reaction = Reaction(reactionLabel);
+  }
 
   Area.fromJson(dynamic json)
-      : action = Action.fromJson(json['action']),
+      : id = json['_id'],
+        action = Action.fromJson(json['action']),
         reaction = Reaction.fromJson(json['reaction']);
 
   Map<String, dynamic> toJson() {
     return {
+      '_id': id,
       'action': action.toJson(),
       'reaction': reaction.toJson()
     };

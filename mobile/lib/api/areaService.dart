@@ -1,8 +1,7 @@
 import 'package:mobile/api/apiService.dart';
 import 'package:mobile/api/model/loginRequest.dart';
 import 'dart:developer' as developer;
-import 'model/iftttRequest.dart';
-import 'model/iftttResponse.dart';
+import 'model/area.dart';
 import 'model/registerResponse.dart';
 import 'model/tokenRequest.dart';
 
@@ -13,6 +12,15 @@ class areaService {
   areaService(String url) {
     if (url.isNotEmpty) {
       api = apiService(url);
+    }
+  }
+
+  Future<bool> updateServiceToken(String token, String url) async {
+    try {
+      Future<dynamic> _ = await api.makeRequestGet("", 200); // TODO EDIT THIS LINE WITH ROUTE
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 
@@ -50,30 +58,36 @@ class areaService {
     }
   }
 
-  Future<bool> createIfttt(String action, String reaction) async {
+  Future<bool> createIfttt(Area newArea) async {
     try {
-      dynamic _ = await api.makeRequestPost<iftttRequest>("/auth/register", iftttRequest(action, true, reaction), 200);
-      return true;
+      dynamic _ = await api.makeRequestPost<Area>("/area/", newArea, 201);
+
+      // TODO CAN BE UPDATE IN LOCAL FOR SYSTEM OPTIMISATION
+      return getListIfttt();
     } catch (e) {
       developer.log('createIfttt: Server failed invalid response -> ' + e.toString());
       return false;
     }
   }
 
-  Future<bool> deleteIfttt() async {
+  Future<bool> deleteIfttt(String iftttId) async {
     try {
-      // TODO
-      return true;
+      dynamic _ = await api.makeRequestDelete("/area/$iftttId", {}, 200);
+
+      // TODO CAN BE UPDATE IN LOCAL FOR SYSTEM OPTIMISATION
+      return getListIfttt();
     } catch (e) {
       developer.log('deleteIfttt: Server failed invalid response -> ' + e.toString());
       return false;
     }
   }
 
-  Future<bool> updateIfttt() async {
+  Future<bool> updateIfttt(String iftttId, Area editedObj) async {
     try {
-      // TODO
-      return true;
+      dynamic _ = await api.makeRequestPut<Area>("/area/$iftttId", editedObj, 200);
+
+      // TODO CAN BE UPDATE IN LOCAL FOR SYSTEM OPTIMISATION
+      return getListIfttt();
     } catch (e) {
       developer.log('updateIfttt: Server failed invalid response -> ' + e.toString());
       return false;

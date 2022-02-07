@@ -1,32 +1,35 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/api/areaService.dart';
 import 'package:mobile/page/color_list.dart';
 import 'package:mobile/service/IService.dart';
 
 class GlobalConnexionList extends StatefulWidget {
-  List<IService> list = [];
-  GlobalConnexionList(List<IService> src, {Key? key}) : super(key: key) {
-    list = src;
-    if (list.length != 6) {
+  List<IService> list;
+  String urlSrv;
+  areaService api;
+  GlobalConnexionList(this.urlSrv, this.list, this.api, {Key? key}) : super(key: key) {
+    if (list.length != 8) {
       throw Exception("Invalid input size: " + list.length.toString());
     }
-    list = src;
   }
 
   @override
-  State<GlobalConnexionList> createState() => GlobalConnexionListState(list);
+  State<GlobalConnexionList> createState() => GlobalConnexionListState(urlSrv, list, api);
 }
 
 class GlobalConnexionListState extends State<GlobalConnexionList> {
   List<IService> list = [];
-  GlobalConnexionListState(List<IService> src) {
-    list = src;
-  }
+  String urlSrv;
+  areaService api;
+  GlobalConnexionListState(this.urlSrv, this.list, this.api);
 
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-      widthFactor: 0.4,
+      widthFactor: 0.45,
       child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -35,64 +38,126 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
               if (list[0].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<String> token = list[0].getToken();
-                token.whenComplete(() {
-                  // TODO SEND TOKEN TO SERVER
+                Future<bool> success = list[0].getToken(urlSrv, api);
+                success.then((value) => {
+                  if (value) {
+                    list[0].nowConnected(),
+                    Navigator.of(context).pushNamed('/List')
+                  } else {
+                    // TODO FAILED TO CONNECT WITH THIS SERVICE
+                  }
                 });
               }
             }),
-            const Padding(padding: EdgeInsets.all(10.0)),
+            const Padding(padding: EdgeInsets.all(5.0)),
             connexion_with_button(context, (list[1].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[1].getName(), list[1].getIcon(), () {
               if (list[1].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<String> token = list[1].getToken();
-                token.whenComplete(() {
-                  // TODO SEND TOKEN TO SERVER
+                Future<bool> success = list[1].getToken(urlSrv, api);
+                success.then((value) => {
+                  if (value) {
+                    list[1].nowConnected(),
+                    Navigator.of(context).pushNamed('/List')
+                  } else {
+                    // TODO FAILED TO CONNECT WITH THIS SERVICE
+                  }
                 });
               }
             }),
-            const Padding(padding: EdgeInsets.all(10.0)),
+            const Padding(padding: EdgeInsets.all(5.0)),
             connexion_with_button(context, (list[2].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[2].getName(), list[2].getIcon(), () {
               if (list[2].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<String> token = list[2].getToken();
-                token.whenComplete(() {
-                  // TODO SEND TOKEN TO SERVER
+                Future<bool> success = list[2].getToken(urlSrv, api);
+                success.then((value) => {
+                  if (value) {
+                    list[2].nowConnected(),
+                    Navigator.of(context).pushNamed('/List')
+                  } else {
+                    // TODO FAILED TO CONNECT WITH THIS SERVICE
+                  }
                 });
               }
             }),
-            const Padding(padding: EdgeInsets.all(10.0)),
+            const Padding(padding: EdgeInsets.all(5.0)),
             connexion_with_button(context, (list[3].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[3].getName(), list[3].getIcon(), () {
               if (list[3].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<String> token = list[3].getToken();
-                token.whenComplete(() {
-                  // TODO SEND TOKEN TO SERVER
+                Future<bool> success = list[3].getToken(urlSrv, api);
+                success.then((value) => {
+                  if (value) {
+                    list[3].nowConnected(),
+                    Navigator.of(context).pushNamed('/List')
+                  } else {
+                    // TODO FAILED TO CONNECT WITH THIS SERVICE
+                  }
                 });
               }
             }),
-            const Padding(padding: EdgeInsets.all(10.0)),
+            const Padding(padding: EdgeInsets.all(5.0)),
             connexion_with_button(context, (list[4].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[4].getName(), list[4].getIcon(), () {
               if (list[4].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<String> token = list[4].getToken();
-                token.whenComplete(() {
-                  // TODO SEND TOKEN TO SERVER
+                Future<bool> success = list[4].getToken(urlSrv, api);
+                success.then((value) => {
+                  if (value) {
+                    list[4].nowConnected(),
+                    Navigator.of(context).pushNamed('/List')
+                  } else {
+                    // TODO FAILED TO CONNECT WITH THIS SERVICE
+                  }
                 });
               }
             }),
-            const Padding(padding: EdgeInsets.all(10.0)),
+            const Padding(padding: EdgeInsets.all(5.0)),
             connexion_with_button(context, (list[5].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[5].getName(), list[5].getIcon(), () {
               if (list[5].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<String> token = list[5].getToken();
-                token.whenComplete(() {
-                  // TODO SEND TOKEN TO SERVER
+                Future<bool> success = list[5].getToken(urlSrv, api);
+                success.then((value) => {
+                  if (value) {
+                    list[5].nowConnected(),
+                    Navigator.of(context).pushNamed('/List')
+                  } else {
+                    // TODO FAILED TO CONNECT WITH THIS SERVICE
+                  }
+                });
+              }
+            }),
+            const Padding(padding: EdgeInsets.all(5.0)),
+            connexion_with_button(context, (list[6].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[6].getName(), list[6].getIcon(), () {
+              if (list[6].getConnexionState()) {
+                // TODO PROBABLY NOTHING
+              } else {
+                Future<bool> success = list[6].getToken(urlSrv, api);
+                success.then((value) => {
+                  if (value) {
+                    list[6].nowConnected(),
+                    Navigator.of(context).pushNamed('/List')
+                  } else {
+                    // TODO FAILED TO CONNECT WITH THIS SERVICE
+                  }
+                });
+              }
+            }),
+            const Padding(padding: EdgeInsets.all(5.0)),
+            connexion_with_button(context, (list[7].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[7].getName(), list[7].getIcon(), () {
+              if (list[7].getConnexionState()) {
+                // TODO PROBABLY NOTHING
+              } else {
+                Future<bool> success = list[7].getToken(urlSrv, api);
+                success.then((value) => {
+                  if (value) {
+                    list[7].nowConnected(),
+                    Navigator.of(context).pushNamed('/List')
+                  } else {
+                    // TODO FAILED TO CONNECT WITH THIS SERVICE
+                  }
                 });
               }
             }),
@@ -144,7 +209,10 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
           ],
         ),
       ),
-      onTap: onTap,
+      onTap: () {
+        log('Connect with');
+        onTap();
+      },
     );
   }
 }

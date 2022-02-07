@@ -1,33 +1,30 @@
 import 'package:mobile/service/IService.dart';
 
-class linkedin extends IService {
-  linkedin(bool src) : super(src);
+class unsplash extends IService {
+  unsplash(bool src) : super(src);
 
   @override
   List<String> getAction() {
-    return ['None'];
+    return [];
   }
 
   @override
   String getIcon() {
-    return "assets/linkedin.png";
+    return "assets/unsplash.png";
   }
 
   @override
   String getName() {
-    return "linkedin";
+    return "unsplash";
   }
 
   @override
   List<String> getReaction() {
-    return [
-      'Publish post',
-      'None'
-    ];
+    return [];
   }
 
   @override
   String getUrl() {
-    return "/auth/linkedin";
+    return "/auth/unsplash";
   }
 }

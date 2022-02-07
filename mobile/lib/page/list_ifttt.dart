@@ -65,11 +65,12 @@ class list_ifttt extends StatelessWidget {
   List<Widget> extractWidgetList(BuildContext context) {
     List<Widget> list = [];
 
+    list.add(buildCard("", area.Action("github", false), area.Reaction("discord"), context));
     if (api.token == null) {
       return [];
     }
     for (var element in api.token!.areas) {
-      list.add(buildCard(element.action, element.reaction, context));
+      list.add(buildCard(element.id, element.action, element.reaction, context));
     }
     return list;
   }
@@ -90,26 +91,31 @@ class list_ifttt extends StatelessWidget {
     );
   }
 
-  Widget buildCard(area.Action action, area.Reaction reaction, BuildContext context) {
+  Widget buildCard(String id, area.Action action, area.Reaction reaction, BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(
           bottom: 20.0
       ),
-      child: Container(
-        color: color_list.secondary,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            buildSubCard(action.label, "Not dev", "assets/${action.label}.png", context),
-            const Icon(
-              Icons.arrow_forward_outlined,
-              color: color_list.primary,
-              size: 50.0,
-            ),
-            buildSubCard(reaction.label, "Not dev", "assets/${reaction.label}.png", context)
-          ],
-        )
-      )
+      child: InkWell(
+        onTap: () {
+          Navigator.pushNamed(context, '/area', arguments: id);
+        },
+        child: Container(
+            color: color_list.secondary,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                buildSubCard(action.label, "Not dev", "assets/${action.label}.png", context),
+                const Icon(
+                  Icons.arrow_forward_outlined,
+                  color: color_list.primary,
+                  size: 50.0,
+                ),
+                buildSubCard(reaction.label, "Not dev", "assets/${reaction.label}.png", context)
+              ],
+            )
+        ),
+      ),
     );
   }
 

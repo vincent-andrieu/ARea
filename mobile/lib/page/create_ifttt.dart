@@ -3,12 +3,15 @@ import 'package:mobile/api/areaService.dart';
 import 'package:mobile/page/color_list.dart';
 import 'package:mobile/service/IService.dart';
 import 'package:mobile/service/discord.dart';
+import 'package:mobile/service/dropbox.dart';
 import 'package:mobile/service/github.dart';
 import 'package:mobile/service/linkedin.dart';
 import 'package:mobile/service/notion.dart';
 import 'package:mobile/service/twitch.dart';
 import 'package:mobile/service/twitter.dart';
+import 'package:mobile/service/unsplash.dart';
 import 'package:mobile/widget/updatedList.dart';
+import 'package:mobile/api/model/area.dart';
 
 void buildRedirection(String action, String reaction, BuildContext context) {
   String route = '/Create\${$action|$reaction}';
@@ -30,7 +33,7 @@ void callbackClose(BuildContext context) {
 }
 
 void callbackSaveIfttt(BuildContext context, areaService api, String actionLabel, String reactionLabel) {
-  api.createIfttt(actionLabel, reactionLabel).then((value) => {
+  api.createIfttt(Area("", actionLabel, reactionLabel)).then((value) => {
     if (value) {
       Navigator.of(context).pushNamed('/List')
     }
@@ -40,12 +43,14 @@ void callbackSaveIfttt(BuildContext context, areaService api, String actionLabel
 class create_ifttt extends StatelessWidget {
   late areaService api;
   List<IService> serviceList = [
-    github(),
-    twitch(),
-    twitter(),
-    discord(),
-    linkedin(),
-    notion()
+    github(false),
+    twitch(false),
+    twitter(false),
+    discord(false),
+    linkedin(false),
+    notion(false),
+    unsplash(false),
+    dropbox(false),
   ];
   late IService serviceAction;
   late IService serviceReaction;

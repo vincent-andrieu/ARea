@@ -1,6 +1,8 @@
 import 'package:mobile/service/IService.dart';
 
 class discord extends IService {
+  discord(bool src) : super(src);
+
   @override
   List<String> getAction() {
     return [
@@ -30,11 +32,5 @@ class discord extends IService {
   @override
   String getUrl() {
     return "/auth/discord";
-  }
-
-  @override
-  bool getConnexionState() {
-    // TODO: implement getConnexionState
-    return false;
   }
 }

@@ -1,6 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter_web_auth/flutter_web_auth.dart';
+import 'package:mobile/api/areaService.dart';
 
 class IService {
+  bool connected;
+  IService(this.connected);
+
   String getName() {
     return "";
   }
@@ -26,13 +32,23 @@ class IService {
   }
 
   bool getConnexionState() {
-    return false;
+    return connected;
   }
 
-  Future<String> getToken() async {
-    final result = await FlutterWebAuth.authenticate(url: getUrl(), callbackUrlScheme: "http");
-    final token = Uri.parse(result).queryParameters['token'];
+  Future<bool> getToken(String srv, areaService api) async {
+    try {
+      final result = await FlutterWebAuth.authenticate(url: srv + getUrl(), callbackUrlScheme: "area");
 
-    return (token == null) ? "" : token;
+      final token = Uri.parse(result).queryParameters['code'];
+
+      return await api.updateServiceToken(token!, "{$getUrl()}/setService"); // TODO EDIT ROUTE
+    } catch(e) {
+      log(e.toString());
+      return false;
+    }
+  }
+
+  void nowConnected() {
+    connected = true;
   }
 }
