@@ -51,7 +51,7 @@ describe("TwitterService", () => {
 
         const config: TwitterTweetConfig = { username: "aypierre", lastTweetId: "" };
         const actionType: ActionType = ActionType.TWITTER_MSG;
-        const action: Action = { type: actionType, cron: true, parameters: [] };
+        const action: Action = { type: actionType, parameters: [] };
         const twitchStreamResult: TwitchStreamResult = {
             Username: "",
             StreamTitle: "",

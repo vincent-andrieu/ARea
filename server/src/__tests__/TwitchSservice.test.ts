@@ -33,7 +33,7 @@ describe("TwitchService", () => {
 
         const config: TwitchStreamConfig = { username: "aypierre" };
         const actionType: ActionType = ActionType.TWITCH_STREAM;
-        const action: Action = { type: actionType, cron: false, parameters: [] };
+        const action: Action = { type: actionType, parameters: [] };
         const twitchStreamResult: TwitchStreamResult = {
             Username: "",
             StreamTitle: "",
