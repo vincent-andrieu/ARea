@@ -24,11 +24,14 @@ export class AuthService {
         { iconSvgPath: 'assets/icons/github.svg', label: 'GitHub', name: 'github', redirect: '/github' },
         { iconSvgPath: 'assets/icons/twitch.svg', label: 'Twitch', name: 'twitch', redirect: '/twitch' },
         { iconSvgPath: 'assets/icons/twitter.svg', label: 'Twitter', name: 'twitter', redirect: '/twitter' },
+        { iconSvgPath: 'assets/icons/dropbox.svg', label: 'Dropbox', name: 'dropbox', redirect: '/dropbox' },
         { iconSvgPath: 'assets/icons/discord.svg', label: 'Discord', name: 'discord', redirect: '/discord' },
         { iconSvgPath: 'assets/icons/linkedin.svg', label: 'Linkedin', name: 'linkedin', redirect: '/linkedin' },
-        { iconSvgPath: 'assets/icons/notion.svg', label: 'Notion', name: 'notion', redirect: '/notion' }
+        { iconSvgPath: 'assets/icons/notion.svg', label: 'Notion', name: 'notion', redirect: '/notion' },
+        { iconSvgPath: 'assets/icons/unsplash.svg', label: 'Unsplash', name: 'unsplash', redirect: '/unsplash' }
     ];
-    private _user?: User;
+
+    public user?: User;
 
     constructor(
         private _router: Router,
@@ -36,12 +39,6 @@ export class AuthService {
         private _cookieService: CookieService,
         private _snackbarService: SnackbarService
     ) {}
-
-    public get user(): User {
-        if (!this._user)
-            throw "Undefined user";
-        return this._user;
-    }
 
     public login(email: string, password: string): Promise<User> {
         return new Promise<User>((resolve, reject) => {
