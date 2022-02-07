@@ -75,17 +75,17 @@ export const reactionConfig = {
             }
         }
     },
-    OnedriveUploadTextConfig: {
+    DropboxUploadConfig: {
         type: "object",
-        required: ["content", "filename"],
+        required: ["localFilepath", "remoteFilepath"],
         properties: {
-            content: {
+            localFilepath: {
                 type: "string",
-                description: "The content of the file created on dropbox"
+                description: "The filepath to the file to be sent on the dropbox"
             },
-            filename: {
+            remoteFilepath: {
                 type: "string",
-                description: "Name of the file on dropbox"
+                description: "The filepath that will correspond to the file on the dropbox"
             }
         }
     }

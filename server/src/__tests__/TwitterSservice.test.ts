@@ -49,7 +49,7 @@ describe("TwitterService", () => {
             return;
         }
 
-        const config: TwitterTweetConfig = { username: "aypierre", lastTweetId: "" };
+        const config: TwitterTweetConfig = { username: "aypierre" };
         const actionType: ActionType = ActionType.TWITTER_MSG;
         const action: Action = { type: actionType, parameters: [] };
         const twitchStreamResult: TwitchStreamResult = {

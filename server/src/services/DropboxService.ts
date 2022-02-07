@@ -4,7 +4,7 @@ import { readFile } from "fs";
 
 // import User from "../classes/user.class";
 
-const token = "sl.BBSyaeyLST13F7QqeGQQFgBtwWUUAVUPzLhaY46CsJVHSYAojEc8JETW_W3x9Ds1it9ejAI2J8JF41SZ-ocQQmDMwtQlD3DLKH2lH0Y6pd_6IitoPi17XiyV3EFwWljPuNqGpfg";
+const token = "";
 
 export class DropboxService {
     static uploadFile(/* user: User, */filepath: string, dropboxFilepath: string) {

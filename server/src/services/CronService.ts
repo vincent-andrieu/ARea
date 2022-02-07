@@ -167,7 +167,7 @@ export class CronService {
                     case ActionType.UNSPLASH_POST:
                         const configUnsplash: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
                         const configDropbox: DropboxUploadConfig = area.consequence.inputs as DropboxUploadConfig;
-                        const dropboxFilepath = (configDropbox.filepath ? configDropbox.filepath : configUnsplash.downloadPath);
+                        const dropboxFilepath = (configDropbox.localFilepath ? configDropbox.localFilepath : configUnsplash.downloadPath);
 
                         DropboxService.uploadFile(configUnsplash.downloadPath, dropboxFilepath);
                         break;

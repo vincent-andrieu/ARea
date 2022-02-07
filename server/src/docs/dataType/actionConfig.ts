@@ -93,5 +93,19 @@ export const actionConfig = {
                 description: "name of the repository"
             }
         }
+    },
+    UnsplashPostConfig: {
+        type: "object",
+        required: ["username", "downloadPath"],
+        properties: {
+            username: {
+                type: "string",
+                description: "username of the publisher"
+            },
+            downloadPath: {
+                type: "string",
+                description: "filepath where the image file has just been downloaded"
+            }
+        }
     }
 };
