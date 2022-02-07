@@ -48,9 +48,13 @@ export class CronService {
             populate: "action reaction" as unknown as PopulateOptions
         });
 
-        areas.forEach((area) => {
+        areas.forEach(async (area) => {
             // Process action
-            this.executeAction(area);
+            try {
+                await this.executeAction(area);
+            } catch (error) {
+                console.log(`Unable to execute action: ${area._id}: ${error}`);
+            }
         });
     };
 
