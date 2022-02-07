@@ -5,8 +5,9 @@ import TwitterApi, { SendTweetV2Params, TweetV2, UserV2Result } from "twitter-ap
 import User from "../classes/user.class";
 import ARea from "../classes/area.class";
 import { TwitchStreamResult, TwitterTweetResult, UnsplashPostResult } from "model/ActionResult";
-import { TwitterTweetConfig } from "model/ActionConfig";
+import { TwitchStreamConfig, TwitterTweetConfig } from "model/ActionConfig";
 import Action, { ActionType } from "@classes/action.class";
+import { utils } from "./utils";
 
 // doc :
 // https://www.npmjs.com/package/twitter-v2
@@ -175,6 +176,51 @@ export class TwitterService {
         if (tweet) {
             console.log("tweet will be :", tweet);
             TwitterService.TweetATweet(tweet, user);
+        }
+
+    }
+    private static async rea_BannerUnsplashPost(area: ARea): Promise<string> {
+        const post: UnsplashPostResult = area.trigger.outputs as UnsplashPostResult;
+
+        return post.downloadPath;
+    }
+
+    private static async rea_BannerTwitchStream(area: ARea): Promise<string> {
+        const stream: TwitchStreamResult = area.trigger.outputs as TwitchStreamResult;
+        const filepath = "/tmp/" + stream.StreamTitle;
+
+        utils.DownloadUrl(stream.StreamThumbnailUrl, filepath);
+        return filepath;
+    }
+
+    public static async rea_UpdateBanner(area: ARea, user: User) {
+        const client: TwitterApi = TwitterService.getClient(user);
+        const action: Action = area.trigger.action as Action;
+        let imagePath: string | null = null;
+
+        try {
+
+            switch (action.type) {
+                case ActionType.UNSPLASH_POST:
+                    imagePath = await TwitterService.rea_BannerUnsplashPost(area);
+                    break;
+                case ActionType.TWITCH_STREAM:
+                    imagePath = await TwitterService.rea_BannerTwitchStream(area);
+                    break;
+                default:
+                    console.log("todo: upload file from parameter given");
+
+            }
+        } catch (error: unknown) {
+            const some_error = error as Error;
+
+            console.log(some_error);
+            return;
+        }
+
+        if (imagePath) {
+            console.log("new banner will be :", imagePath);
+            TwitterService.UpdateProfileBanner(imagePath, user);
         }
 
     }
