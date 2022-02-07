@@ -53,34 +53,17 @@ export default class AreaController {
                 throw "Unknow user id";
             if (actionInput == undefined || reactionInput == undefined || action == undefined || reaction == undefined)
                 return res.status(400).send("Invalid body");
-            //TODO: GESTION D'ERREUR DU BODY
-            const actionInDb = await this._actionSchema.add(action);
-            const reactionInDb = await this._reactionSchema.add(reaction);
-            const area = await this._areaSchema.add({
-                trigger: {
-                    action: actionInDb,
-                    inputs: actionInput
-                },
-                consequence: {
-                    reaction: reactionInDb,
-                    inputs: reactionInput
-                }
-            });
-
-            if (!area._id)
-                throw "Undefined area id";
-            this._userSchema.addARea(userId, area._id);
-            res.status(201).json({
-                _id: area._id,
-                trigger: {
-                    action: actionInDb,
-                    inputs: actionInput
-                },
-                consequence: {
-                    reaction: reactionInDb,
-                    inputs: reactionInput
-                }
-            });
+            try {
+                const areaBody = await this._buildAreaBody(action, reaction, actionInput, reactionInput);
+                const area = await this._areaSchema.add(areaBody);
+                if (!area._id)
+                    throw "Undefined area id";
+                this._userSchema.addARea(userId, area._id);
+                res.status(201).json({ _id: area._id, ...areaBody });
+            } catch (e: any) {
+                console.log(e);
+                res.status(400).send("Invalid body: action reaction");
+            }
         } catch (error: any) {
             console.log("[AreaController] create :", error.toString());
             res.status(400).send(error.toString());
@@ -133,20 +116,23 @@ export default class AreaController {
         try {
             if (!userId || userId.length === 0)
                 throw "Unknow user id";
-            //const action: Action = new Action(req.body.action);
-            //const reaction: Reaction = new Reaction(req.body.reaction);
+            if (actionInput == undefined || reactionInput == undefined || action == undefined || reaction == undefined)
+                return res.status(400).send("Invalid body");
 
             const user = await AreaController._userSchema.getAreaList(userId);
             const area = (user.areas as Array<ARea>).find((element: ARea) => getStrObjectId(element) === getStrObjectId(areaId));
             if (!area)
                 return res.status(404).send(`Failed to find area with id: ${areaId}`);
-            // if (getStrObjectId(area?.trigger.action) !== getStrObjectId(action))
-            //     return res.status(404).send("Wrong action id");
-            // if (getStrObjectId(area?.consequence.reaction) !== getStrObjectId(reaction))
-            //     return res.status(404).send("Wrong reaction id");
-            // const actionUpdate = await this._actionSchema.edit(action);
-            // const reactionUpdate = await this._reactionSchema.edit(reaction);
-            res.json({ _id: areaId, ...area });
+
+            const areaBody = await this._buildAreaBody(action, reaction, actionInput, reactionInput);
+            const areaUpdate = await this._areaSchema.edit({
+                _id: area._id,
+                ...areaBody
+            });
+            res.status(200).json({
+                _id: areaUpdate._id,
+                ...areaBody
+            });
         } catch (error: any) {
             res.status(500).send(error.toString());
         }
