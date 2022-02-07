@@ -32,6 +32,6 @@ class twitter extends IService {
 
   @override
   String getUrl() {
-    return "/auth/twitter";
+    return "/auth/twitter/mobile";
   }
 }

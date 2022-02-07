@@ -1,4 +1,5 @@
 import 'package:mobile/api/apiService.dart';
+import 'package:mobile/api/model/codeRequest.dart';
 import 'package:mobile/api/model/loginRequest.dart';
 import 'dart:developer' as developer;
 import 'model/area.dart';
@@ -17,7 +18,9 @@ class areaService {
 
   Future<bool> updateServiceToken(String token, String url) async {
     try {
-      Future<dynamic> _ = await api.makeRequestGet("", 200); // TODO EDIT THIS LINE WITH ROUTE
+      Future<dynamic> response = await api.makeRequestPost<codeRequest>(url, codeRequest(token), 200);
+
+      this.token = registerResponse.fromJson(response);
       return true;
     } catch (e) {
       return false;
