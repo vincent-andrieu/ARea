@@ -8,13 +8,14 @@ import { ReactionConfig } from "../model/ReactionConfig";
 export default class ARea extends Model {
     trigger: {
         inputs: ActionConfig;
-        action: Action | ObjectId | string;
+        action: Action | ObjectId;
         outputs?: ActionResult;
     };
     consequence: {
         inputs: ReactionConfig;
-        reaction: Reaction | ObjectId | string;
+        reaction: Reaction | ObjectId;
     };
+
     constructor(area: ARea) {
         super(area);
 

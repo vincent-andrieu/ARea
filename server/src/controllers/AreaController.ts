@@ -1,11 +1,12 @@
+import { PopulateOptions } from "mongoose";
 import { Request, Response } from "express";
+
 import { AReaSchema } from "../schemas/area.schema";
 import ARea from "../classes/area.class";
 import { getStrObjectId } from "@classes/model.class";
 import { ActionSchema } from "@schemas/action.schema";
 import { ReactionSchema } from "@schemas/reaction.schema";
 import { UserSchema } from "@schemas/user.schema";
-import { PopulateOptions } from "mongoose";
 import { ActionConfig } from "model/ActionConfig";
 import { ReactionConfig } from "model/ReactionConfig";
 import { ActionSelector, ReactionSelector } from "model/AreaSelector";
@@ -23,11 +24,11 @@ export default class AreaController {
         let reactionInDb;
 
         if ((action as ActionSelector)?.type != undefined && (reaction as ReactionSelector)?.type != undefined) {
-            actionInDb = await this._actionSchema.getByType((action as ActionSelector).type);
-            reactionInDb = await this._reactionSchema.getByType((reaction as ReactionSelector).type);
+            actionInDb = await AreaController._actionSchema.getByType((action as ActionSelector).type);
+            reactionInDb = await AreaController._reactionSchema.getByType((reaction as ReactionSelector).type);
         } else {
-            actionInDb = await this._actionSchema.get(action as string);
-            reactionInDb = await this._reactionSchema.get(reaction as string);
+            actionInDb = await AreaController._actionSchema.get(action as string);
+            reactionInDb = await AreaController._reactionSchema.get(reaction as string);
         }
         return {
             trigger: {
@@ -41,7 +42,7 @@ export default class AreaController {
         };
     }
 
-    static create = async (req, res: Response) => {
+    public static async create(req: Request, res: Response) {
         try {
             const action: string | ActionSelector | undefined = req.body.trigger.action;
             const actionInput: ActionConfig | undefined = req.body.trigger.inputs;
@@ -54,11 +55,11 @@ export default class AreaController {
             if (actionInput == undefined || reactionInput == undefined || action == undefined || reaction == undefined)
                 return res.status(400).send("Invalid body");
             try {
-                const areaBody = await this._buildAreaBody(action, reaction, actionInput, reactionInput);
-                const area = await this._areaSchema.add(areaBody);
+                const areaBody = await AreaController._buildAreaBody(action, reaction, actionInput, reactionInput);
+                const area = await AreaController._areaSchema.add(areaBody);
                 if (!area._id)
                     throw "Undefined area id";
-                this._userSchema.addARea(userId, area._id);
+                AreaController._userSchema.addARea(userId, area._id);
                 res.status(201).json({ _id: area._id, ...areaBody });
             } catch (e: any) {
                 console.log(e);
@@ -70,7 +71,7 @@ export default class AreaController {
         }
     }
 
-    static readOne = async (req, res: Response) => {
+    public static async readOne(req: Request, res: Response) {
         const id = req.params.id;
         const userId = req.user?.data.user_id;
 
@@ -90,20 +91,20 @@ export default class AreaController {
             console.log(error.toString());
             return res.status(404).send(error.toString());
         }
-    };
+    }
 
-    static readList = async (req, res: Response) => {
+    public static async readList(req: Request, res: Response) {
         const userId = req.user?.data.user_id;
 
         try {
             if (!userId || userId.length === 0 || !req.user?.data.user_id)
                 throw "Unknow user id";
-            const user = await this._userSchema.getAreaList(req.user?.data.user_id);
+            const user = await AreaController._userSchema.getAreaList(req.user?.data.user_id);
             res.status(200).json(user.areas);
         } catch (error: any) {
             res.status(404).send(error.toString());
         }
-    };
+    }
 
     static async update(req: Request, res: Response) {
         const userId = req.user?.data.user_id;
@@ -124,8 +125,8 @@ export default class AreaController {
             if (!area)
                 return res.status(404).send(`Failed to find area with id: ${areaId}`);
 
-            const areaBody = await this._buildAreaBody(action, reaction, actionInput, reactionInput);
-            const areaUpdate = await this._areaSchema.edit({
+            const areaBody = await AreaController._buildAreaBody(action, reaction, actionInput, reactionInput);
+            const areaUpdate = await AreaController._areaSchema.edit({
                 _id: area._id,
                 ...areaBody
             });
@@ -153,8 +154,8 @@ export default class AreaController {
 
             if (!area)
                 return res.status(404).send(`Failed to find area with id: ${areaId}`);
-            await this._areaSchema.deleteById(areaId);
-            await this._userSchema.removeARea(userId, areaId);
+            await AreaController._areaSchema.deleteById(areaId);
+            await AreaController._userSchema.removeARea(userId, areaId);
 
             return res.status(200).send(`Successfully deleted area ${areaId}`);
         } catch (error: any) {
