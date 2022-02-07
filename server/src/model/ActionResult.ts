@@ -18,7 +18,14 @@ export interface TwitchStreamResult {
 
 export interface TwitterTweetResult {
     username: string;
-    tweet: string;
+    text: string;
+    lang: string;
+    coordinates: [number, number];
+    created_at: string;
+    like_count: number;
+    quote_count: number;
+    reply_count: number;
+    retweet_count: number;
 }
 
 export interface RSSResult {
