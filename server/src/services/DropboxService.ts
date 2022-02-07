@@ -22,10 +22,12 @@ export class DropboxService {
             client.filesUpload({ path: dropboxFilepath, contents })
                 .then((response: any) => {
                     console.log(response);
+                })
+                .catch((error: unknown) => {
+                    const uploadErr = error as Error/* <files.UploadError> */;
+
+                    console.log(uploadErr);
                 });
-            // .catch((uploadErr: Error<files.UploadError>) => {
-            // console.log(uploadErr);
-            // });
         });
     }
 

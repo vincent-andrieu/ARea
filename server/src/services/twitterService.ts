@@ -1,6 +1,6 @@
 import { env } from "process";
 
-import TwitterApi from "twitter-api-v2";
+import TwitterApi, { UserV2Result } from "twitter-api-v2";
 import User from "../classes/user.class";
 
 // doc :
@@ -21,20 +21,28 @@ export class TwitterService {
             accessToken: user.oauth.twitter?.accessToken,
             accessSecret: user.oauth.twitter?.secretToken
         });
-
     }
 
     public static async GetUserLastTweet(username: string, user: User): Promise<boolean> {
         const client = TwitterService.getClient(user);
-        const userTweeting = await client.v2.userByUsername(username);
-        const userTimeline = await client.v2.userTimeline(userTweeting.data.id, {
-            expansions: ["attachments.media_keys", "attachments.poll_ids", "referenced_tweets.id"],
-            "media.fields": ["url"]
-        });
-        const tweet = userTimeline[0];
 
-        if (tweet.referenced_tweets && tweet.referenced_tweets["type"] != "tweeted")
+        try {
+            const userTweeting = await client.v2.userByUsername(username);
+            const userTimeline = await client.v2.userTimeline(userTweeting.data.id, {
+                expansions: ["attachments.media_keys", "attachments.poll_ids", "referenced_tweets.id"],
+                "media.fields": ["url"]
+            });
+            const tweet = userTimeline[0];
+
+            if (tweet.referenced_tweets && tweet.referenced_tweets["type"] != "tweeted")
+                return false;
+        } catch (error: unknown) {
+            const some_error = error as Error;
+
+            console.log(some_error);
             return false;
+        }
+
         // TODO: tweet is new if :
         //      if id is different than last
         // or
@@ -45,18 +53,36 @@ export class TwitterService {
     public static async TweetATweet(text: string, user: User): Promise<void> {
         const client = TwitterService.getClient(user);
 
-        client.v2.tweet(text);
+        try {
+            client.v2.tweet(text);
+        } catch (error) {
+            const some_error = error as Error;
+
+            console.log(some_error);
+        }
     }
 
     public static async UpdateProfileBanner(imagePath: string, user: User): Promise<void> {
         const client = TwitterService.getClient(user);
 
-        client.v1.updateAccountProfileBanner(imagePath);
+        try {
+            client.v1.updateAccountProfileBanner(imagePath);
+        } catch (error) {
+            const some_error = error as Error;
+
+            console.log(some_error);
+        }
     }
 
     public static async UpdateProfileImage(imagePath: string, user: User): Promise<void> {
         const client = TwitterService.getClient(user);
 
-        client.v1.updateAccountProfileImage(imagePath);
+        try {
+            client.v1.updateAccountProfileImage(imagePath);
+        } catch (error) {
+            const some_error = error as Error;
+
+            console.log(some_error);
+        }
     }
 }

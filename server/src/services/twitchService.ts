@@ -27,16 +27,22 @@ export class TwitchService {
     }
 
     public static async IsStreamLive(area: ARea, userName: string): Promise<boolean> {
-        const client = TwitchService.getClient();
-        const user = await client.users.getUserByName(userName);
+        try {
+            const client = TwitchService.getClient();
+            const user = await client.users.getUserByName(userName);
 
-        if (!user)
+            if (!user)
+                return false;
+            const stream = await user.getStream();
+            if (stream === null)
+                return false;
+            this.areaSetStreamInfos(area, stream);
+        } catch (error) {
+            const some_error = error as Error;
+
+            console.log(some_error);
             return false;
-        const stream = await user.getStream();
-        if (stream === null)
-            return false;
-        this.areaSetStreamInfos(area, stream);
+        }
         return true;
-        // TODO: set stream infos to variable that is wether returned or passed as pointer param
     }
 }
