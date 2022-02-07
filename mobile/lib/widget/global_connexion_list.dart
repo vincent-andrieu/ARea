@@ -11,7 +11,7 @@ class GlobalConnexionList extends StatefulWidget {
   String urlSrv;
   areaService api;
   GlobalConnexionList(this.urlSrv, this.list, this.api, {Key? key}) : super(key: key) {
-    if (list.length != 6) {
+    if (list.length != 8) {
       throw Exception("Invalid input size: " + list.length.toString());
     }
   }
@@ -29,7 +29,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-      widthFactor: 0.4,
+      widthFactor: 0.45,
       child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -122,6 +122,38 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
                 success.then((value) => {
                   if (value) {
                     list[5].nowConnected(),
+                    Navigator.of(context).pushNamed('/List')
+                  } else {
+                    // TODO FAILED TO CONNECT WITH THIS SERVICE
+                  }
+                });
+              }
+            }),
+            const Padding(padding: EdgeInsets.all(5.0)),
+            connexion_with_button(context, (list[6].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[6].getName(), list[6].getIcon(), () {
+              if (list[6].getConnexionState()) {
+                // TODO PROBABLY NOTHING
+              } else {
+                Future<bool> success = list[6].getToken(urlSrv, api);
+                success.then((value) => {
+                  if (value) {
+                    list[6].nowConnected(),
+                    Navigator.of(context).pushNamed('/List')
+                  } else {
+                    // TODO FAILED TO CONNECT WITH THIS SERVICE
+                  }
+                });
+              }
+            }),
+            const Padding(padding: EdgeInsets.all(5.0)),
+            connexion_with_button(context, (list[7].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[7].getName(), list[7].getIcon(), () {
+              if (list[7].getConnexionState()) {
+                // TODO PROBABLY NOTHING
+              } else {
+                Future<bool> success = list[7].getToken(urlSrv, api);
+                success.then((value) => {
+                  if (value) {
+                    list[7].nowConnected(),
                     Navigator.of(context).pushNamed('/List')
                   } else {
                     // TODO FAILED TO CONNECT WITH THIS SERVICE

@@ -3,11 +3,13 @@ import 'package:mobile/api/areaService.dart';
 import 'package:mobile/page/color_list.dart';
 import 'package:mobile/service/IService.dart';
 import 'package:mobile/service/discord.dart';
+import 'package:mobile/service/dropbox.dart';
 import 'package:mobile/service/github.dart';
 import 'package:mobile/service/linkedin.dart';
 import 'package:mobile/service/notion.dart';
 import 'package:mobile/service/twitch.dart';
 import 'package:mobile/service/twitter.dart';
+import 'package:mobile/service/unsplash.dart';
 import 'package:mobile/widget/updatedList.dart';
 import 'package:mobile/api/model/area.dart';
 
@@ -46,7 +48,9 @@ class create_ifttt extends StatelessWidget {
     twitter(false),
     discord(false),
     linkedin(false),
-    notion(false)
+    notion(false),
+    unsplash(false),
+    dropbox(false),
   ];
   late IService serviceAction;
   late IService serviceReaction;
