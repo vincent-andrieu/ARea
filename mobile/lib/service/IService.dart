@@ -1,10 +1,12 @@
 import 'dart:developer';
 
 import 'package:flutter_web_auth/flutter_web_auth.dart';
-import 'package:mobile/api/apiService.dart';
 import 'package:mobile/api/areaService.dart';
 
 class IService {
+  bool connected;
+  IService(this.connected);
+
   String getName() {
     return "";
   }
@@ -30,7 +32,7 @@ class IService {
   }
 
   bool getConnexionState() {
-    return false;
+    return connected;
   }
 
   Future<bool> getToken(String srv, areaService api) async {
@@ -44,5 +46,9 @@ class IService {
       log(e.toString());
       return false;
     }
+  }
+
+  void nowConnected() {
+    connected = true;
   }
 }

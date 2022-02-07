@@ -1,8 +1,7 @@
 import 'package:mobile/service/IService.dart';
 
 class notion extends IService {
-  bool connected;
-  notion(this.connected);
+  notion(bool src) : super(src);
 
   @override
   List<String> getAction() {
@@ -30,10 +29,5 @@ class notion extends IService {
   @override
   String getUrl() {
     return "/auth/notion";
-  }
-
-  @override
-  bool getConnexionState() {
-    return connected;
   }
 }

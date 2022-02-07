@@ -1,8 +1,7 @@
 import 'package:mobile/service/IService.dart';
 
 class linkedin extends IService {
-  bool connected;
-  linkedin(this.connected);
+  linkedin(bool src) : super(src);
 
   @override
   List<String> getAction() {
@@ -30,10 +29,5 @@ class linkedin extends IService {
   @override
   String getUrl() {
     return "/auth/linkedin";
-  }
-
-  @override
-  bool getConnexionState() {
-    return connected;
   }
 }

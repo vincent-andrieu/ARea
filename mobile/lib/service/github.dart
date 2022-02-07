@@ -1,8 +1,7 @@
 import 'package:mobile/service/IService.dart';
 
 class github extends IService {
-  bool connected;
-  github(this.connected);
+  github(bool src) : super(src);
 
   @override
   List<String> getAction() {
@@ -34,10 +33,5 @@ class github extends IService {
   @override
   String getUrl() {
     return "/auth/github";
-  }
-
-  @override
-  bool getConnexionState() {
-    return connected;
   }
 }

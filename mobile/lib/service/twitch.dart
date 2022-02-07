@@ -1,8 +1,7 @@
 import 'package:mobile/service/IService.dart';
 
 class twitch extends IService {
-  bool connected;
-  twitch(this.connected);
+  twitch(bool src) : super(src);
 
   @override
   List<String> getAction() {
@@ -30,10 +29,5 @@ class twitch extends IService {
   @override
   String getUrl() {
     return "/auth/twitch";
-  }
-
-  @override
-  bool getConnexionState() {
-    return connected;
   }
 }

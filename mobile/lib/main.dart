@@ -25,7 +25,7 @@ Map<String, WidgetBuilder> buildRouteApp() {
     'github': github(false),
     'notion': notion(false),
     'linkedin': linkedin(false),
-    'None': undefined(),
+    'None': undefined(false),
   };
 
   Map<String, WidgetBuilder> route = {
