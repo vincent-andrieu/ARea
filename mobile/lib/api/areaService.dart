@@ -15,6 +15,15 @@ class areaService {
     }
   }
 
+  Future<bool> updateServiceToken(String token, String url) async {
+    try {
+      Future<dynamic> _ = await api.makeRequestGet("", 200); // TODO EDIT THIS LINE WITH ROUTE
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   void initConnexion(String url) {
     try {
       developer.log('initConnexion: IT\'S CALL MON KAKE');

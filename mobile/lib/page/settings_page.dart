@@ -51,7 +51,7 @@ class settings_page extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              GlobalConnexionList(api.api.srvUrl, serviceList),
+              GlobalConnexionList(api.api.srvUrl, serviceList, api),
               FractionallySizedBox(
                 widthFactor: 0.4,
                 child: ElevatedButton(

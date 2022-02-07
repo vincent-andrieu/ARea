@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter_web_auth/flutter_web_auth.dart';
+import 'package:mobile/api/apiService.dart';
+import 'package:mobile/api/areaService.dart';
 
 class IService {
   String getName() {
@@ -31,21 +33,13 @@ class IService {
     return false;
   }
 
-  Future<bool> getToken(String srv) async {
+  Future<bool> getToken(String srv, areaService api) async {
     try {
-      log('getToken: Start');
-      log(srv + getUrl());
-      log("http://localhost:8080/auth/twitch/redirect");
-      // final result = await FlutterWebAuth.authenticate(url: srv + getUrl(), callbackUrlScheme: "http://localhost:8080/auth/twitch/redirect");
       final result = await FlutterWebAuth.authenticate(url: srv + getUrl(), callbackUrlScheme: "area");
-      log('getToken: Authenticate');
-      log(result.toString());
 
       final token = Uri.parse(result).queryParameters['code'];
-      log('getToken: END');
 
-      log(token!);
-      return token != null;
+      return await api.updateServiceToken(token!, "{$getUrl()}/setService"); // TODO EDIT ROUTE
     } catch(e) {
       log(e.toString());
       return false;

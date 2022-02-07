@@ -193,6 +193,6 @@ class auth_page extends StatelessWidget {
   }
 
   Widget additionnal_connexion_widget(BuildContext context) {
-    return GlobalConnexionList(api.api.srvUrl, serviceList);
+    return GlobalConnexionList(api.api.srvUrl, serviceList, api);
   }
 }

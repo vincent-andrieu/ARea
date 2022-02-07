@@ -21,7 +21,7 @@ class apiService {
     }
   }
 
-  Future<dynamic> makeRequestGet<type>(String route, int exitExpect) async {
+  Future<dynamic> makeRequestGet(String route, int exitExpect) async {
     Response result = await get(
         Uri.parse(srvUrl + route),
         headers: {

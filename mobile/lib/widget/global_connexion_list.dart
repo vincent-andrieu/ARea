@@ -2,26 +2,29 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/api/areaService.dart';
 import 'package:mobile/page/color_list.dart';
 import 'package:mobile/service/IService.dart';
 
 class GlobalConnexionList extends StatefulWidget {
   List<IService> list;
   String urlSrv;
-  GlobalConnexionList(this.urlSrv, this.list, {Key? key}) : super(key: key) {
+  areaService api;
+  GlobalConnexionList(this.urlSrv, this.list, this.api, {Key? key}) : super(key: key) {
     if (list.length != 6) {
       throw Exception("Invalid input size: " + list.length.toString());
     }
   }
 
   @override
-  State<GlobalConnexionList> createState() => GlobalConnexionListState(urlSrv, list);
+  State<GlobalConnexionList> createState() => GlobalConnexionListState(urlSrv, list, api);
 }
 
 class GlobalConnexionListState extends State<GlobalConnexionList> {
   List<IService> list = [];
   String urlSrv;
-  GlobalConnexionListState(this.urlSrv, this.list);
+  areaService api;
+  GlobalConnexionListState(this.urlSrv, this.list, this.api);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +38,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
               if (list[0].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<bool> success = list[0].getToken(urlSrv);
+                Future<bool> success = list[0].getToken(urlSrv, api);
                 success.then((value) => {
                   if (value) {
                     Navigator.of(context).pushNamed('/List')
@@ -50,7 +53,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
               if (list[1].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<bool> success = list[1].getToken(urlSrv);
+                Future<bool> success = list[1].getToken(urlSrv, api);
                 success.then((value) => {
                   if (value) {
                     Navigator.of(context).pushNamed('/List')
@@ -65,7 +68,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
               if (list[2].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<bool> success = list[2].getToken(urlSrv);
+                Future<bool> success = list[2].getToken(urlSrv, api);
                 success.then((value) => {
                   if (value) {
                     Navigator.of(context).pushNamed('/List')
@@ -80,7 +83,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
               if (list[3].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<bool> success = list[3].getToken(urlSrv);
+                Future<bool> success = list[3].getToken(urlSrv, api);
                 success.then((value) => {
                   if (value) {
                     Navigator.of(context).pushNamed('/List')
@@ -95,7 +98,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
               if (list[4].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<bool> success = list[4].getToken(urlSrv);
+                Future<bool> success = list[4].getToken(urlSrv, api);
                 success.then((value) => {
                   if (value) {
                     Navigator.of(context).pushNamed('/List')
@@ -110,7 +113,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
               if (list[5].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<bool> success = list[5].getToken(urlSrv);
+                Future<bool> success = list[5].getToken(urlSrv, api);
                 success.then((value) => {
                   if (value) {
                     Navigator.of(context).pushNamed('/List')
