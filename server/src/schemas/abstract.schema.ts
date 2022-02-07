@@ -2,11 +2,17 @@ import mongoose, { PopulateOptions } from "mongoose";
 
 import Model, { getStrObjectId, ObjectId } from "@classes/model.class";
 
+type PopulateParam = string | string[] | PopulateOptions | PopulateOptions[];
+
 export abstract class ASchema<T extends Model> {
     protected _model: mongoose.Model<unknown>;
 
     constructor(protected _ctor: { new(model: T): T }, collectionName: string, schema: mongoose.Schema) {
-        this._model = mongoose.model<unknown>(collectionName, schema);
+        try {
+            this._model = mongoose.model(collectionName);
+        } catch (err) {
+            this._model = mongoose.model<unknown>(collectionName, schema);
+        }
     }
 
     public async add(model: T): Promise<T> {
@@ -31,7 +37,7 @@ export abstract class ASchema<T extends Model> {
         }
     }
 
-    public async get(model: string | ObjectId | Model, populate?: string | string[] | PopulateOptions | PopulateOptions[], select?: string): Promise<T> {
+    public async get(model: string | ObjectId | Model, populate?: PopulateParam, select?: string): Promise<T> {
         const id: string = getStrObjectId(model);
 
         if (!id || id.length === 0)
@@ -53,8 +59,12 @@ export abstract class ASchema<T extends Model> {
         }
     }
 
-    public async find(model: any): Promise<T[]> {
-        return await this._model.find(model).exec() as unknown as T[];
+    public async find(model: any, populate?: PopulateParam): Promise<T[]> {
+        let query = this._model.find(model);
+
+        if (populate)
+            query = query.populate(populate);
+        return await query.exec() as unknown as T[];
     }
 
     public async delete(model: T): Promise<void> {

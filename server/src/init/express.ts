@@ -16,32 +16,36 @@ import "../passport/discordPassport";
 import "../passport/unsplashPassport";
 import "../passport/dropboxPassport";
 
+export const app = express();
+
+export function preinitExpress() {
+    app.use(
+        cookieSession({
+            name: "session",
+            keys: [serverConfig.cookieKey], //TODO: generate true key
+            maxAge: 24 * 60 * 60 * 100
+        })
+    );
+    app.use(passport.initialize());
+    app.use(passport.session());
+    app.use(express.json());
+
+    app.use(cors());
+    app.use((_, response, next) => {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        next();
+    });
+
+    app.use("/", appRoutes);
+    app.use("/auth", authRoutes);
+    app.use("/area", areaRoutes);
+}
+
 export default {
 
     connect(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            const app = express();
-
-            app.use(
-                cookieSession({
-                    name: "session",
-                    keys: [serverConfig.cookieKey], //TODO: generate true key
-                    maxAge: 24 * 60 * 60 * 100
-                })
-            );
-            app.use(passport.initialize());
-            app.use(passport.session());
-            app.use(express.json());
-
-            app.use(cors());
-            app.use((_, response, next) => {
-                response.setHeader("Access-Control-Allow-Origin", "*");
-                next();
-            });
-
-            app.use("/", appRoutes);
-            app.use("/auth", authRoutes);
-            app.use("/area", areaRoutes);
+            preinitExpress();
 
             app.listen(serverConfig.port, () => {
                 console.info(`ARea server is listening on ${serverConfig.port}`);

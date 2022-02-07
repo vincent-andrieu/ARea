@@ -6,7 +6,7 @@ import { UserSchema } from "../schemas/user.schema";
 
 import AuthController from "../controllers/AuthController";
 import OAuthProvider from "../model/oAuthProvider.enum";
-import { unsplashConfig } from "../config/unsplashConfig";
+import { unsplashConfig } from "@config/unsplashConfig";
 import { getStrObjectId } from "@classes/model.class";
 
 const UnsplashStrategy = Unsplash.Strategy;

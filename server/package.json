@@ -10,7 +10,9 @@
         "rebuild": "npm run clean && npm i && npm run build",
         "clean": "rm -rf node_modules/ ; rm -rf ./build/",
         "auto": "npx nodemon -x npm run start -w src/ -e .ts",
-        "lint": "eslint src/ --fix ; exit 0"
+        "lint": "eslint src/ --fix ; exit 0",
+        "test": "tsc -p . && jest --setupFiles dotenv/config ",
+        "test:watch": "tsc -p . && jest --watch --setupFiles dotenv/config"
     },
     "repository": {
         "type": "git",
@@ -28,32 +30,41 @@
         "@schemas": "build/schemas"
     },
     "dependencies": {
+        "@babel/preset-env": "^7.16.11",
+        "@babel/preset-typescript": "^7.16.7",
         "@discordjs/rest": "^0.3.0",
         "@notionhq/client": "^0.4.12",
         "@oauth-everything/passport-discord": "^1.0.2",
         "@twurple/api": "^5.0.17",
         "@twurple/auth": "^5.0.17",
+        "@types/jest": "^27.4.0",
+        "aws-lambda": "^1.0.7",
+        "axios": "^0.25.0",
         "bcryptjs": "^2.4.3",
         "cookie-session": "^2.0.0",
         "cors": "^2.8.5",
         "discord-api-types": "^0.26.1",
         "discord.js": "^12.5.3",
         "dotenv": "^10.0.0",
+        "dropbox": "^10.23.0",
         "express": "^4.17.2",
+        "fs": "*",
         "jsonwebtoken": "^8.5.1",
         "module-alias": "^2.2.2",
         "moment": "^2.29.1",
         "mongoose": "^5.13.14",
+        "node-cron": "^3.0.0",
         "node-fetch": "^2.6.7",
+        "octokit": "^1.7.1",
         "passport": "^0.5.2",
         "passport-dropbox-oauth2": "^1.1.0",
         "passport-github2": "^0.1.12",
         "passport-linkedin-oauth2": "^2.0.0",
         "passport-twitch-new": "^0.0.2",
         "passport-twitter": "^1.0.4",
-        "swagger-jsdoc": "^6.1.0",
         "swagger-ui-express": "^4.3.0",
         "twitter-api-v2": "^1.10.0",
+        "typed-rest-client": "^1.8.6",
         "typescript": "^4.5.5",
         "unsplash-js": "^7.0.15",
         "unsplash-passport": "^1.0.3"
@@ -73,11 +84,23 @@
         "@types/swagger-ui-express": "^4.1.3",
         "@typescript-eslint/eslint-plugin": "^5.9.0",
         "@typescript-eslint/parser": "^5.9.0",
-        "eslint": "^8.6.0"
+        "eslint": "^8.6.0",
+        "jest": "^27.4.7",
+        "supertest": "^6.2.2"
     },
     "include": [
         "src/",
         "../global/",
         ".env"
-    ]
+    ],
+    "jest": {
+        "roots": [
+            "<rootDir>/src"
+        ],
+        "moduleNameMapper": {
+            "@classes/(.*)": "<rootDir>/build/classes/$1",
+            "@config/(.*)": "<rootDir>/build/config/$1",
+            "@schemas/(.*)": "<rootDir>/build/schemas/$1"
+        }
+    }
 }
