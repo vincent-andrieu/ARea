@@ -7,14 +7,7 @@ export const areaTwitchTwitter = {
                     username: "aypierre"
                 },
                 action: {
-                    type: "TWITCH_STREAM",
-                    cron: true,
-                    parameters: [
-                        {
-                            name: "username",
-                            type: "TEXT"
-                        }
-                    ]
+                    type: "TWITCH_STREAM"
                 }
             },
             consequence: {
@@ -22,11 +15,7 @@ export const areaTwitchTwitter = {
                     message: "New live on twitch"
                 },
                 reaction: {
-                    type: "TWITTER_MSG",
-                    parameters: {
-                        name: "message",
-                        type: "TEXT"
-                    }
+                    type: "TWITTER_MSG"
                 }
             }
         }

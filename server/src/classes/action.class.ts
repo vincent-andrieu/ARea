@@ -15,14 +15,12 @@ export enum ActionType {
 
 export default class Action extends Model {
     type: ActionType;
-    cron: boolean;
     parameters: Parameter[];
 
     constructor(action: Action) {
         super(action);
 
         this.type = action.type;
-        this.cron = !!action.cron;
         this.parameters = action.parameters;
     }
 }
