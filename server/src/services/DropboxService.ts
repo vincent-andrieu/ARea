@@ -1,5 +1,5 @@
 import { env } from "process";
-import { Dropbox, files } from "dropbox";
+import { Dropbox } from "dropbox";
 import { readFile } from "fs";
 
 // import User from "../classes/user.class";
@@ -39,10 +39,10 @@ export class DropboxService {
 
         client.filesListFolder({ path: path })
             .then(function (response) {
-                console.log(response.result.entries.at(0));
+                console.log(response.result.entries[0]);
             })
             .catch(function (error) {
-                console.log(error);
+                console.error(error);
             });
 
     }
