@@ -4,7 +4,7 @@ import AuthController from "../controllers/AuthController";
 import OAuthProvider from "../model/oAuthProvider.enum";
 import passport from "passport";
 import passportDropbox from "passport-dropbox-oauth2";
-import { dropboxConfig } from "../config/dropboxConfig";
+import { dropboxConfig } from "@config/dropboxConfig";
 
 const DropboxStrategy = passportDropbox.Strategy;
 
@@ -60,6 +60,6 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
 };
 
 passport.use(new DropboxStrategy(
-    {apiVersion: "2", ...dropboxConfig},
+    { apiVersion: "2", ...dropboxConfig },
     successfullyAuthentificated
 ));

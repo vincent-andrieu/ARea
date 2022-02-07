@@ -1,7 +1,7 @@
 import passport from "passport";
 
 import { Profile, VerifyCallback, Scope, Strategy as DiscordStrategy, VerifyFunction } from "@oauth-everything/passport-discord";
-import { discordConfig } from "../config/discordConfig";
+import { discordConfig } from "@config/discordConfig";
 import { UserSchema } from "@schemas/user.schema";
 import OAuthProvider from "../model/oAuthProvider.enum";
 import AuthController from "../controllers/AuthController";

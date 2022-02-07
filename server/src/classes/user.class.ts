@@ -94,11 +94,15 @@ export default class User extends Model {
                     refreshToken: user.oauth.unsplash.refreshToken
                 };
         }
-
         if (user.areas && Array.isArray(user.areas) && user.areas.length > 0)
-            if ((user.areas[0] as ARea)._id)
-                this.areas = (user.areas as Array<ARea>).map((area) => new ARea(area));
-            else
+            try {
+                if ((user.areas[0] as ARea).trigger.action != undefined)
+                    this.areas = (user.areas as Array<ARea>).map((area) => new ARea(area));
+                else
+                    this.areas = user.areas;
+
+            } catch (e) {
                 this.areas = user.areas;
+            }
     }
 }

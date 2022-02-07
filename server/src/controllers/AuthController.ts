@@ -72,7 +72,6 @@ export default class AuthController {
             } catch (err) {
                 oldUser = null;
             }
-
             if (oldUser != null)
                 return res.status(409).send("User Already Exist. Please Login");
             const encryptedPassword = await bcrypt.hash(password, 10);

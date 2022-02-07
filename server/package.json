@@ -10,7 +10,9 @@
         "rebuild": "npm run clean && npm i && npm run build",
         "clean": "rm -rf node_modules/ ; rm -rf ./build/",
         "auto": "npx nodemon -x npm run start -w src/ -e .ts",
-        "lint": "eslint src/ --fix ; exit 0"
+        "lint": "eslint src/ --fix ; exit 0",
+        "test": "tsc -p . && jest --setupFiles dotenv/config",
+        "test:watch": "tsc -p . && jest --watch --setupFiles dotenv/config"
     },
     "repository": {
         "type": "git",
@@ -28,11 +30,14 @@
         "@schemas": "build/schemas"
     },
     "dependencies": {
+        "@babel/preset-env": "^7.16.11",
+        "@babel/preset-typescript": "^7.16.7",
         "@discordjs/rest": "^0.3.0",
         "@notionhq/client": "^0.4.12",
         "@oauth-everything/passport-discord": "^1.0.2",
         "@twurple/api": "^5.0.17",
         "@twurple/auth": "^5.0.17",
+        "@types/jest": "^27.4.0",
         "axios": "^0.25.0",
         "bcryptjs": "^2.4.3",
         "cookie-session": "^2.0.0",
@@ -47,6 +52,7 @@
         "module-alias": "^2.2.2",
         "moment": "^2.29.1",
         "mongoose": "^5.13.14",
+        "node-cron": "^3.0.0",
         "node-fetch": "^2.6.7",
         "octokit": "^1.7.1",
         "node-cron": "^3.0.0",
@@ -76,11 +82,23 @@
         "@types/passport-twitter": "^1.0.37",
         "@typescript-eslint/eslint-plugin": "^5.9.0",
         "@typescript-eslint/parser": "^5.9.0",
-        "eslint": "^8.6.0"
+        "eslint": "^8.6.0",
+        "jest": "^27.4.7",
+        "supertest": "^6.2.2"
     },
     "include": [
         "src/",
         "../global/",
         ".env"
-    ]
+    ],
+    "jest": {
+        "roots": [
+            "<rootDir>/src"
+        ],
+        "moduleNameMapper": {
+            "@classes/(.*)": "<rootDir>/build/classes/$1",
+            "@config/(.*)": "<rootDir>/build/config/$1",
+            "@schemas/(.*)": "<rootDir>/build/schemas/$1"
+        }
+    }
 }

@@ -8,7 +8,11 @@ export abstract class ASchema<T extends Model> {
     protected _model: mongoose.Model<unknown>;
 
     constructor(protected _ctor: { new(model: T): T }, collectionName: string, schema: mongoose.Schema) {
-        this._model = mongoose.model<unknown>(collectionName, schema);
+        try {
+            this._model = mongoose.model(collectionName);
+        } catch (err) {
+            this._model = mongoose.model<unknown>(collectionName, schema);
+        }
     }
 
     public async add(model: T): Promise<T> {

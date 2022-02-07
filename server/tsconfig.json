@@ -75,6 +75,7 @@
     "include": [
         "src/",
         "../global/",
-        ".env"
+        ".env",
+        "__tests__"
     ]
 }
