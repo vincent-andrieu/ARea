@@ -4,6 +4,7 @@ import passport from "passport";
 import "../passport/setupPassport";
 import authMiddleware from "../middlewares/checkJwt";
 import AuthController from "../controllers/AuthController";
+import { TwitchMobileStrategy } from "../passport/twitchPassport";
 
 const router = express.Router();
 
@@ -95,12 +96,16 @@ router.get("/twitter/redirect", passport.authenticate("twitter", {
     failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));
 
-router.get("/twitch", passport.authenticate("twitch"));
+router.get("/twitch", passport.authenticate("twitch-web"));
 
-router.get("/twitch/redirect", passport.authenticate("twitch", {
+router.get("/twitch/mobile", passport.authenticate("twitch-mobile"));
+
+router.get("/twitch/redirect", passport.authenticate("twitch-web", {
     successRedirect: "/auth/redirect",
     failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));
+
+router.post("/twitch/redirect/mobile", TwitchMobileStrategy);
 
 router.get("/notion", passport.authenticate("notion"));
 
