@@ -63,7 +63,7 @@ export default class AreaController {
                 throw "Unknow user id";
             const user = await this._userSchema.get(req.user.data.user_id, {
                 path: "areas",
-                populate: "action reaction" as unknown as PopulateOptions
+                populate: "trigger.action consequence.reaction" as unknown as PopulateOptions
             });
             const area = (user.areas as Array<ARea>).find((element: ARea) => getStrObjectId(element) == id);
             if (area)
@@ -82,15 +82,12 @@ export default class AreaController {
         try {
             if (!userId || userId.length === 0)
                 throw "Unknow user id";
-            const user = await this._userSchema.get(req.user?.data.user_id, {
-                path: "areas",
-                populate: "action reaction" as unknown as PopulateOptions
-            }, "areas");
+            const user = await this._userSchema.getAreaList(req.user?.data.user_id);
             res.status(200).json(user.areas);
         } catch (error: any) {
             res.status(404).send(error.toString());
         }
-    }
+    };
 
     static update = async (req, res: Response) => {
         const userId: string = req.user.data.user_id;
