@@ -15,9 +15,7 @@ export abstract class ASchema<T extends Model> {
 
     public async add(model: T): Promise<T> {
         try {
-            console.log("prev", model);
             const result = await this._model.create(model);
-            console.log("post");
 
             return new this._ctor(result.toObject<T>());
         } catch (error: any) {
