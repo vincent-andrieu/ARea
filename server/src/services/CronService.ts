@@ -112,21 +112,7 @@ export class CronService {
 
         switch (reaction.type) {
             case ReactionType.TWITTER_MSG:
-
-                switch (action.type) {
-                    case ActionType.UNSPLASH_POST:
-                        console.log("action was unsplash post");
-                        break;
-                    case ActionType.TWITCH_STREAM:
-                        const stream: TwitchStreamResult = area.trigger.outputs as TwitchStreamResult;
-
-                        const text = "there is a stream by " + stream.Username + " its named " + stream.StreamTitle;
-                        // TwitterService.TweetATweet(text, /* user */);
-                        break;
-                    default:
-                        console.log("todo upload file from parameter given");
-                }
-                // TODO:
+                // TwitterService.rea_Tweet(area, user);
                 break;
             case ReactionType.TWITTER_BANNER:
 
