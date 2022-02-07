@@ -1,7 +1,7 @@
 export const action = {
     Action: {
         type: "object",
-        required: ["type", "cron", "parameters"],
+        required: ["type", "parameters"],
         properties: {
             type: {
                 type: "string",

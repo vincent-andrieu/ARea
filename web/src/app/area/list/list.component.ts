@@ -22,8 +22,7 @@ export class AReaListComponent {
         this.areas = [
             {
                 action: {
-                    label: "MyAction",
-                    cron: false
+                    label: "MyAction"
                 },
                 reaction: {
                     label: "MyReaction"

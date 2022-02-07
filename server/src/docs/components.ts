@@ -22,14 +22,15 @@ export const components = {
                             inputs: {
                                 type: "object",
                                 oneOf: [
-                                    {$ref: "#/components/schemas/DateTimeConfig"},
-                                    {$ref: "#/components/schemas/TimeConfig"},
-                                    {$ref: "#/components/schemas/TwitchStreamConfig"},
-                                    {$ref: "#/components/schemas/TwitterTweetConfig"},
-                                    {$ref: "#/components/schemas/RSSConfig"},
-                                    {$ref: "#/components/schemas/DiscordMessageConfig"},
-                                    {$ref: "#/components/schemas/GithubIssueConfig"},
-                                    {$ref: "#/components/schemas/GithubPulReqConfig"}
+                                    { $ref: "#/components/schemas/DateTimeConfig" },
+                                    { $ref: "#/components/schemas/TimeConfig" },
+                                    { $ref: "#/components/schemas/TwitchStreamConfig" },
+                                    { $ref: "#/components/schemas/TwitterTweetConfig" },
+                                    { $ref: "#/components/schemas/RSSConfig" },
+                                    { $ref: "#/components/schemas/DiscordMessageConfig" },
+                                    { $ref: "#/components/schemas/GithubIssueConfig" },
+                                    { $ref: "#/components/schemas/GithubPulReqConfig" }
+                                    { $ref: "#/components/schemas/UnsplashPostConfig" }
                                 ]
                             },
                             action: {
@@ -46,12 +47,13 @@ export const components = {
                             inputs: {
                                 type: "object",
                                 oneOf: [
-                                    {$ref: "#/components/schemas/TwitterPostConfig"},
-                                    {$ref: "#/components/schemas/LinkedinPostConfig"},
-                                    {$ref: "#/components/schemas/TwitterChangePPConfig"},
-                                    {$ref: "#/components/schemas/DiscordPostMsgConfig"},
-                                    {$ref: "#/components/schemas/GithubCreateIssueConfig"},
-                                    {$ref: "#/components/schemas/NotionAddMessageConfig"}
+                                    { $ref: "#/components/schemas/LinkedinPostConfig" },
+                                    { $ref: "#/components/schemas/TwitterPostTweetConfig" },
+                                    { $ref: "#/components/schemas/TwitterUpdatePictureConfig" },
+                                    { $ref: "#/components/schemas/DiscordPostMsgConfig" },
+                                    { $ref: "#/components/schemas/GithubCreateIssueConfig" },
+                                    { $ref: "#/components/schemas/NotionAddMessageConfig" },
+                                    { $ref: "#/components/schemas/DropboxUploadConfig" }
                                 ]
                             },
                             reaction: {
@@ -79,14 +81,14 @@ export const components = {
                             inputs: {
                                 type: "object",
                                 oneOf: [
-                                    {$ref: "#/components/schemas/DateTimeConfig"},
-                                    {$ref: "#/components/schemas/TimeConfig"},
-                                    {$ref: "#/components/schemas/TwitchStreamConfig"},
-                                    {$ref: "#/components/schemas/TwitterTweetConfig"},
-                                    {$ref: "#/components/schemas/RSSConfig"},
-                                    {$ref: "#/components/schemas/DiscordMessageConfig"},
-                                    {$ref: "#/components/schemas/GithubIssueConfig"},
-                                    {$ref: "#/components/schemas/GithubPulReqConfig"}
+                                    { $ref: "#/components/schemas/DateTimeConfig" },
+                                    { $ref: "#/components/schemas/TimeConfig" },
+                                    { $ref: "#/components/schemas/TwitchStreamConfig" },
+                                    { $ref: "#/components/schemas/TwitterTweetConfig" },
+                                    { $ref: "#/components/schemas/RSSConfig" },
+                                    { $ref: "#/components/schemas/DiscordMessageConfig" },
+                                    { $ref: "#/components/schemas/GithubIssueConfig" },
+                                    { $ref: "#/components/schemas/GithubPulReqConfig" }
                                 ]
                             },
                             action: {
@@ -103,12 +105,12 @@ export const components = {
                             inputs: {
                                 type: "object",
                                 oneOf: [
-                                    {$ref: "#/components/schemas/TwitterPostConfig"},
-                                    {$ref: "#/components/schemas/LinkedinPostConfig"},
-                                    {$ref: "#/components/schemas/TwitterChangePPConfig"},
-                                    {$ref: "#/components/schemas/DiscordPostMsgConfig"},
-                                    {$ref: "#/components/schemas/GithubCreateIssueConfig"},
-                                    {$ref: "#/components/schemas/NotionAddMessageConfig"}
+                                    { $ref: "#/components/schemas/TwitterPostConfig" },
+                                    { $ref: "#/components/schemas/LinkedinPostConfig" },
+                                    { $ref: "#/components/schemas/TwitterChangePPConfig" },
+                                    { $ref: "#/components/schemas/DiscordPostMsgConfig" },
+                                    { $ref: "#/components/schemas/GithubCreateIssueConfig" },
+                                    { $ref: "#/components/schemas/NotionAddMessageConfig" }
                                 ]
                             },
                             reaction: {

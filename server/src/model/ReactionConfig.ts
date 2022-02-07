@@ -31,6 +31,6 @@ export interface DropboxUploadConfig {
     filepath: string | null;
 }
 
-export type ReactionConfig = TwitterPostTweetConfig | LinkedinPostConfig
+export type ReactionConfig = LinkedinPostConfig | TwitterPostTweetConfig
     | TwitterUpdatePictureConfig | DiscordPostMsgConfig | GithubCreateIssueConfig
     | NotionAddMessageConfig | DropboxUploadConfig;
