@@ -41,7 +41,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
                 Future<bool> success = list[0].getToken(urlSrv, api);
                 success.then((value) => {
                   if (value) {
-                    list[0].nowConnected()
+                    list[0].nowConnected(),
                     Navigator.of(context).pushNamed('/List')
                   } else {
                     // TODO FAILED TO CONNECT WITH THIS SERVICE
@@ -57,7 +57,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
                 Future<bool> success = list[1].getToken(urlSrv, api);
                 success.then((value) => {
                   if (value) {
-                    list[1].nowConnected()
+                    list[1].nowConnected(),
                     Navigator.of(context).pushNamed('/List')
                   } else {
                     // TODO FAILED TO CONNECT WITH THIS SERVICE
@@ -73,7 +73,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
                 Future<bool> success = list[2].getToken(urlSrv, api);
                 success.then((value) => {
                   if (value) {
-                    list[2].nowConnected()
+                    list[2].nowConnected(),
                     Navigator.of(context).pushNamed('/List')
                   } else {
                     // TODO FAILED TO CONNECT WITH THIS SERVICE
@@ -89,7 +89,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
                 Future<bool> success = list[3].getToken(urlSrv, api);
                 success.then((value) => {
                   if (value) {
-                    list[3].nowConnected()
+                    list[3].nowConnected(),
                     Navigator.of(context).pushNamed('/List')
                   } else {
                     // TODO FAILED TO CONNECT WITH THIS SERVICE
@@ -105,7 +105,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
                 Future<bool> success = list[4].getToken(urlSrv, api);
                 success.then((value) => {
                   if (value) {
-                    list[4].nowConnected()
+                    list[4].nowConnected(),
                     Navigator.of(context).pushNamed('/List')
                   } else {
                     // TODO FAILED TO CONNECT WITH THIS SERVICE
@@ -121,7 +121,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
                 Future<bool> success = list[5].getToken(urlSrv, api);
                 success.then((value) => {
                   if (value) {
-                    list[5].nowConnected()
+                    list[5].nowConnected(),
                     Navigator.of(context).pushNamed('/List')
                   } else {
                     // TODO FAILED TO CONNECT WITH THIS SERVICE

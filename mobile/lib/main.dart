@@ -34,7 +34,7 @@ Map<String, WidgetBuilder> buildRouteApp() {
     '/SignUp': (BuildContext context) => auth_page(authentication_e.SIGN_UP, api),
     '/Settings': (BuildContext context) => settings_page(api),
     '/List': (BuildContext context) => list_ifttt(api),
-    '/Create': (BuildContext context) => create_ifttt(api, undefined(), undefined()),
+    '/Create': (BuildContext context) => create_ifttt(api, undefined(false), undefined(false)),
     '/area': (BuildContext context) => edit_ifttt(api),
   };
 
