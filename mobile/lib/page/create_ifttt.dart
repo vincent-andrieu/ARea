@@ -32,8 +32,8 @@ void callbackClose(BuildContext context) {
   Navigator.of(context).pop();
 }
 
-void callbackSaveIfttt(BuildContext context, areaService api, String actionLabel, String reactionLabel) {
-  api.createIfttt(Area("", actionLabel, reactionLabel)).then((value) => {
+void callbackSaveIfttt(BuildContext context, areaService api, String actionLabel, String reactionLabel, String token) {
+  api.createIfttt(Area("", actionLabel, reactionLabel, token)).then((value) => {
     if (value) {
       Navigator.of(context).pushNamed('/List')
     }
@@ -134,7 +134,7 @@ class create_ifttt extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          callbackSaveIfttt(context, api, condition.list.dropdownValue, toAction.list.dropdownValue);
+                          callbackSaveIfttt(context, api, condition.list.dropdownValue, toAction.list.dropdownValue, api.token!.token);
                         },
                         style: ElevatedButton.styleFrom(
                             primary: color_list.primary,
