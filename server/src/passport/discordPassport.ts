@@ -1,11 +1,12 @@
 import passport from "passport";
 
-import { Profile, VerifyCallback, Scope, Strategy as DiscordStrategy, VerifyFunction } from "@oauth-everything/passport-discord";
+import { Profile, VerifyCallback, Scope, Strategy as DiscordStrategy } from "@oauth-everything/passport-discord";
 import { discordConfig } from "@config/discordConfig";
+import User from "@classes/user.class";
 import { UserSchema } from "@schemas/user.schema";
+import { getStrObjectId } from "@classes/model.class";
 import OAuthProvider from "../model/oAuthProvider.enum";
 import AuthController from "../controllers/AuthController";
-import { getStrObjectId } from "@classes/model.class";
 
 const successfullyAuthentificated = async (accessToken: string, refreshToken: string, profile: Profile, done: VerifyCallback) => {
     const userSchema = new UserSchema();
@@ -31,7 +32,7 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
         } else {
             console.log("Create new user");
 
-            const user = await userSchema.add({
+            const user = await userSchema.add(new User({
                 username: profile.displayName || "",
                 oauthLoginProvider: OAuthProvider.DISCORD,
                 oauthLoginProviderId: profile.displayName,
@@ -41,7 +42,7 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
                         refreshToken: refreshToken
                     }
                 }
-            });
+            }));
             const token = AuthController.signToken({
                 user_id: getStrObjectId(user),
                 username: profile.username

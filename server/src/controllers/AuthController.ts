@@ -77,13 +77,13 @@ export default class AuthController {
             const encryptedPassword = await bcrypt.hash(password, 10);
 
             // Create user in our database
-            const user = await AuthController._userSchema.add({
+            const user = await AuthController._userSchema.add(new User({
                 username: username.toLowerCase(),
                 password: encryptedPassword,
                 token: "",
                 oauthLoginProvider: OAuthProvider.LOCAL,
                 oauth: {}
-            });
+            }));
 
             // Create token
             const token: string = AuthController.signToken({

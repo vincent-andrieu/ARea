@@ -1,13 +1,14 @@
+import { Request, Response } from "express";
 import passport from "passport";
-
-import { Response } from "express";
-import AuthController from "../controllers/AuthController";
 import passportTwitch from "passport-twitch-new";
+
 import { twitchConfig, twitchMobileConfig } from "@config/twitchConfig";
-import { TwitchService } from "../services/twitchService";
-import { UserSchema } from "@schemas/user.schema";
-import OAuthProvider from "../model/oAuthProvider.enum";
+import User from "@classes/user.class";
 import { getStrObjectId } from "@classes/model.class";
+import { UserSchema } from "@schemas/user.schema";
+import AuthController from "@controllers/AuthController";
+import { TwitchService } from "../services/twitchService";
+import OAuthProvider from "../model/oAuthProvider.enum";
 
 const TwitchStrategy = passportTwitch.Strategy;
 
@@ -40,7 +41,7 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
         } else {
             console.log("Create new user");
 
-            const user = await userSchema.add({
+            const user = await userSchema.add(new User({
                 username: profile.login,
                 oauthLoginProvider: OAuthProvider.TWITCH,
                 oauthLoginProviderId: profile.login,
@@ -50,7 +51,7 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
                         refreshToken: refreshToken
                     }
                 }
-            });
+            }));
 
             const token = AuthController.signToken({
                 user_id: getStrObjectId(user),
@@ -70,8 +71,8 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
     }
 };
 
-export const TwitchMobileStrategy = async (req, res: Response) => {
-    const { code } = req.body;
+export async function TwitchMobileStrategy(req: Request, res: Response) {
+    const code = req.body.code;
 
     if (code == undefined)
         return res.status(400).send("Missing 'code' attribut");
@@ -85,10 +86,10 @@ export const TwitchMobileStrategy = async (req, res: Response) => {
         user.oauth = {};
         res.json(user);
     } catch (error) {
-        console.log("TwtichMobileStrategy: Error", (error as Error).toString());
+        console.error("TwtichMobileStrategy: Error", (error as Error).toString());
         res.status(500).send((error as Error).toString());
     }
-};
+}
 
 passport.use("twitch-web", new TwitchStrategy(
     { ...twitchConfig, scope: "user_read" },

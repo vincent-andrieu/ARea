@@ -2,7 +2,6 @@ import { NextFunction, Response, Request } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
 import { serverConfig } from "@config/serverConfig";
-import OAuthProvider from "model/oAuthProvider.enum";
 
 export default (req: Request, res: Response, next: NextFunction) => {
     try {

@@ -1,13 +1,13 @@
 import passport from "passport";
-// app.use(bodyParser.urlencoded({ extended: true }));
-
 import Unsplash from "unsplash-passport";
-import { UserSchema } from "../schemas/user.schema";
 
-import AuthController from "../controllers/AuthController";
-import OAuthProvider from "../model/oAuthProvider.enum";
+
 import { unsplashConfig } from "@config/unsplashConfig";
+import User from "@classes/user.class";
 import { getStrObjectId } from "@classes/model.class";
+import { UserSchema } from "@schemas/user.schema";
+import AuthController from "@controllers/AuthController";
+import OAuthProvider from "../model/oAuthProvider.enum";
 
 const UnsplashStrategy = Unsplash.Strategy;
 
@@ -39,7 +39,7 @@ async function successfullyAuthentificated(accessToken: string, refreshToken: st
         } else {
             console.log("Create new user");
 
-            const user = await userSchema.add({
+            const user = await userSchema.add(new User({
                 username: profile.login,
                 oauthLoginProvider: OAuthProvider.UNSPLASH,
                 oauthLoginProviderId: profile.username,
@@ -49,7 +49,7 @@ async function successfullyAuthentificated(accessToken: string, refreshToken: st
                         refreshToken: refreshToken
                     }
                 }
-            });
+            }));
             const token = AuthController.signToken({
                 user_id: getStrObjectId(user),
                 username: profile.username

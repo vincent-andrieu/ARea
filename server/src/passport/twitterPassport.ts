@@ -37,7 +37,7 @@ const successfullyAuthentificated = async (accessToken: string, tokenSecret: str
         } else {
             console.log("Create new user");
 
-            const user = await userSchema.add({
+            const user = await userSchema.add(new User({
                 username: profile.username,
                 oauthLoginProvider: OAuthProvider.TWITTER,
                 oauthLoginProviderId: profile.username,
@@ -47,7 +47,7 @@ const successfullyAuthentificated = async (accessToken: string, tokenSecret: str
                         secretToken: tokenSecret
                     }
                 }
-            });
+            }));
 
             const token = AuthController.signToken({
                 user_id: getStrObjectId(user),

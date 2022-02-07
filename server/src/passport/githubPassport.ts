@@ -1,11 +1,12 @@
-import AuthController from "../controllers/AuthController";
 import passport from "passport";
 import passportGithub2 from "passport-github2";
 
-import { getStrObjectId } from "@classes/model.class";
-import OAuthProvider from "../model/oAuthProvider.enum";
 import { githubConfig } from "@config/githubConfig";
-import { UserSchema } from "../schemas/user.schema";
+import { getStrObjectId } from "@classes/model.class";
+import User from "@classes/user.class";
+import { UserSchema } from "@schemas/user.schema";
+import AuthController from "../controllers/AuthController";
+import OAuthProvider from "../model/oAuthProvider.enum";
 
 const GithubStrategy = passportGithub2.Strategy;
 //TODO: do the setting part
@@ -35,7 +36,7 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
         } else {
             console.log("Create new user");
 
-            const user = await userSchema.add({
+            const user = await userSchema.add(new User({
                 username: profile.login,
                 oauthLoginProvider: OAuthProvider.GITHUB,
                 oauthLoginProviderId: profile.username,
@@ -45,7 +46,7 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
                         refreshToken: refreshToken
                     }
                 }
-            });
+            }));
             console.log(user);
 
             const token = AuthController.signToken({
