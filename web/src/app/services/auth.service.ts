@@ -55,7 +55,7 @@ export class AuthService {
                     if (!user)
                         return reject();
                     this._cookieService.put(environment.cookiesKey.jwt, user.token);
-                    this._user = user;
+                    this.user = user;
                     resolve(user);
                 });
         });
