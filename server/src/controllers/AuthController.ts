@@ -48,7 +48,7 @@ export default class AuthController {
                 // save user token
                 user.token = token;
 
-                return res.status(200).json(await AuthController._userSchema.edit(user));
+                return res.status(200).json((await AuthController._userSchema.edit(user)).toRaw());
             } else
                 return res.status(400).json({ "message": "Invalid Credentials" });
         } catch (err) {
