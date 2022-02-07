@@ -27,8 +27,6 @@ const router = express.Router();
  *                     properties:
  *                       label:
  *                          type: string
- *                       cron:
- *                          type: boolean
  *                 reaction:
  *                      type: object
  *                      properties:
