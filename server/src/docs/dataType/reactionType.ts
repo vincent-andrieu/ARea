@@ -3,7 +3,7 @@ export const reactionType = {
         type: "string",
         enum: ["TWITTER_MSG", "LINKEDIN_MSG", "TWITTER_PP",
             "DISCORD_MSG", "GITHUB_ISSUE", "NOTION_MSG",
-            "ONEDRIVE_UPLOAD"
+            "DROPBOX_UPLOAD"
         ]
     }
 };

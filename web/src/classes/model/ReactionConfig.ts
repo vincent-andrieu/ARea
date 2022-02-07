@@ -26,11 +26,11 @@ export interface NotionAddMessageConfig {
     urlPage: string;
 }
 
-export interface OnedriveUploadTextConfig {
+export interface DropboxUploadTextConfig {
     content: string;
     filename: string;
 }
 
 export type ReactionConfig = TwitterPostTweetConfig | LinkedinPostConfig
     | TwitterChangePPConfig | DiscordPostMsgConfig | GithubCreateIssueConfig
-    | NotionAddMessageConfig | OnedriveUploadTextConfig;
+    | NotionAddMessageConfig | DropboxUploadTextConfig;

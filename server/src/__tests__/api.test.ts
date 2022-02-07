@@ -1,5 +1,6 @@
 import { app, preinitExpress } from "../init/express";
 import supertest from "supertest";
+import mongoose from "mongoose";
 
 import DBDataset from "../init/DBDataset";
 
@@ -31,87 +32,89 @@ beforeAll(async () => {
     }
 });
 
-// afterAll(() => {});
+afterAll(() => {
+    mongoose.connection.close();
+});
 
 /** TESTS */
 
-// it("GET root", async () => {
-//     const res = await request.get("/");
-//     expect(res.statusCode).toBe(204);
-// });
+it("GET root", async () => {
+    const res = await request.get("/");
+    expect(res.statusCode).toBe(204);
+});
 
-// describe("Authentification", () => {
-//     it("POST /auth/register", async () => {
-//         const res = await request.post("/auth/register")
-//             .send({
-//                 username: "simon",
-//                 password: "racaud"
-//             })
-//             ;
-//         expect(res.statusCode).toBe(201);
-//         expect(res.body).toHaveProperty("token");
-//     });
+describe("Authentification", () => {
+    it("POST /auth/register", async () => {
+        const res = await request.post("/auth/register")
+            .send({
+                username: "simon",
+                password: "racaud"
+            })
+            ;
+        expect(res.statusCode).toBe(201);
+        expect(res.body).toHaveProperty("token");
+    });
 
-//     it("POST /auth/register - already exist", async () => {
-//         const res = await request.post("/auth/register")
-//             .send({
-//                 username: "simon",
-//                 password: "racaud"
-//             })
-//             ;
-//         expect(res.statusCode).toBe(409); // already exist
-//     });
+    it("POST /auth/register - already exist", async () => {
+        const res = await request.post("/auth/register")
+            .send({
+                username: "simon",
+                password: "racaud"
+            })
+            ;
+        expect(res.statusCode).toBe(409); // already exist
+    });
 
-//     it("POST /auth/register - bad body", async () => {
-//         const res = await request.post("/auth/register")
-//             .send({
-//                 username: "",
-//                 password: ""
-//             })
-//             ;
-//         expect(res.statusCode).toBe(400);
-//     });
+    it("POST /auth/register - bad body", async () => {
+        const res = await request.post("/auth/register")
+            .send({
+                username: "",
+                password: ""
+            })
+            ;
+        expect(res.statusCode).toBe(400);
+    });
 
-//     it("POST /auth/register - bad body", async () => {
-//         const res = await request.post("/auth/register")
-//             .send({
-//                 username: "simon"
-//             })
-//             ;
-//         expect(res.statusCode).toBe(400);
-//     });
+    it("POST /auth/register - bad body", async () => {
+        const res = await request.post("/auth/register")
+            .send({
+                username: "simon"
+            })
+            ;
+        expect(res.statusCode).toBe(400);
+    });
 
-//     it("POST /auth/login", async () => {
-//         const res = await request.post("/auth/login")
-//             .send({
-//                 username: "simon",
-//                 password: "racaud"
-//             })
-//             ;
-//         expect(res.statusCode).toBe(200);
-//         expect(res.body).toHaveProperty("token");
-//     });
+    it("POST /auth/login", async () => {
+        const res = await request.post("/auth/login")
+            .send({
+                username: "simon",
+                password: "racaud"
+            })
+            ;
+        expect(res.statusCode).toBe(200);
+        expect(res.body).toHaveProperty("token");
+    });
 
-//     it("POST /auth/login - bad login", async () => {
-//         const res = await request.post("/auth/login")
-//             .send({
-//                 username: "simon2",
-//                 password: "racaud"
-//             })
-//             ;
-//         expect(res.statusCode).toBe(400);
-//     });
+    it("POST /auth/login - bad login", async () => {
+        const res = await request.post("/auth/login")
+            .send({
+                username: "simon2",
+                password: "racaud"
+            })
+            ;
+        expect(res.statusCode).toBe(400);
+    });
 
-//     it("POST /auth/login - bad login", async () => {
-//         const res = await request.post("/auth/login")
-//             .send({
-//                 username: "simon",
-//                 password: "xxx"
-//             })
-//             ;
-//         expect(res.statusCode).toBe(400);
-//     });
-// });
+    it("POST /auth/login - bad login", async () => {
+        const res = await request.post("/auth/login")
+            .send({
+                username: "simon",
+                password: "xxx"
+            })
+            ;
+        expect(res.statusCode).toBe(400);
+    });
+});
 
 // describe("CRUD AREA", () => {
 //     it("POST /area - access right", async () => {

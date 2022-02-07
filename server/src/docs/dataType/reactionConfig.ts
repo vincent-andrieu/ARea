@@ -75,7 +75,7 @@ export const reactionConfig = {
             }
         }
     },
-    OnedriveUploadTextConfig: {
+    DropboxUploadTextConfig: {
         type: "object",
         required: ["content", "filename"],
         properties: {

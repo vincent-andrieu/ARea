@@ -13,8 +13,9 @@ export default class DBDataset {
     private static _reactionSchema = new ReactionSchema();
 
     public static async load() {
-        await mongoose.connection.dropDatabase();
         await Database.connect();
+        await mongoose.connection.dropCollection("users");
+        await mongoose.connection.dropCollection("areas");
 
         actionDataset.forEach((item) => {
             this._actionSchema.add(item as Action);

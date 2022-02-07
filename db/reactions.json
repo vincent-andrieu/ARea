@@ -2,84 +2,84 @@
   {
     "type": "TWITTER_MSG",
     "parameters": [
-        {
-          "name": "message",
-          "type": "TEXT"
-        }
+      {
+        "name": "message",
+        "type": "TEXT"
+      }
     ]
   },
   {
     "type": "LINKEDIN_MSG",
     "parameters": [
-        {
-          "name": "message",
-          "type": "TEXT"
-        }
+      {
+        "name": "message",
+        "type": "TEXT"
+      }
     ]
   },
   {
     "type": "TWITTER_PP",
     "parameters": [
-        {
-          "name": "url",
-          "type": "URL"
-        }
+      {
+        "name": "url",
+        "type": "URL"
+      }
     ]
   },
   {
     "type": "DISCORD_MSG",
     "parameters": [
-        {
-          "name": "message",
-          "type": "TEXT"
-        }
+      {
+        "name": "message",
+        "type": "TEXT"
+      }
     ]
   },
   {
     "type": "GITHUB_ISSUE",
     "parameters": [
-        {
-          "name": "owner",
-          "type": "TEXT"
-        },
-        {
-          "name": "repository",
-          "type": "TEXT"
-        },
-        {
-          "name": "title",
-          "type": "TEXT"
-        },
-        {
-          "name": "body",
-          "type": "TEXT"
-        }
+      {
+        "name": "owner",
+        "type": "TEXT"
+      },
+      {
+        "name": "repository",
+        "type": "TEXT"
+      },
+      {
+        "name": "title",
+        "type": "TEXT"
+      },
+      {
+        "name": "body",
+        "type": "TEXT"
+      }
     ]
   },
   {
     "type": "NOTION_MSG",
     "parameters": [
-        {
-          "name": "message",
-          "type": "TEXT"
-        },
-        {
-          "name": "Page URL",
-          "type": "URL"
-        }
+      {
+        "name": "message",
+        "type": "TEXT"
+      },
+      {
+        "name": "Page URL",
+        "type": "URL"
+      }
     ]
   },
   {
-    "type": "ONEDRIVE_UPLOAD",
+    "type": "DROPBOX_UPLOAD",
     "parameters": [
-        {
-          "name": "File Content",
-          "type": "TEXT"
-        },
-        {
-          "name": "File name",
-          "type": "TEXT"
-        }
+      {
+        "name": "File Content",
+        "type": "TEXT"
+      },
+      {
+        "name": "File name",
+        "type": "TEXT"
+      }
     ]
   }
 ]
