@@ -1,20 +1,20 @@
 version: '3'
 
 services:
-    client_web:
-        build: web
-        ports:
-            - "8081:80"
-        volumes:
-            - client:/app/client
-        depends_on:
-            - client_mobile
-            - server
+    # client_web:
+    #     build: web
+    #     ports:
+    #         - "8081:80"
+    #     volumes:
+    #         - client:/app/client
+    #     depends_on:
+    #         - client_mobile
+    #         - server
 
-    client_mobile:
-        build: mobile
-        volumes:
-            - client:/app/client
+    # client_mobile:
+    #     build: mobile
+    #     volumes:
+    #         - client:/app/client
 
     server:
         build: server
@@ -28,13 +28,13 @@ services:
             - database
 
     database:
-        image: mongo:4.4
+        build: db
         volumes:
             - mongodb-data:/data/db
         ports:
             - "27017:27017"
         environment:
-            MONGO_INITDB_DATABASE: ARea
+            MONGO_INITDB_DATABASE: area-db
             MONGO_INITDB_ROOT_USERNAME: root
             MONGO_INITDB_ROOT_PASSWORD: root_password
         restart: always
