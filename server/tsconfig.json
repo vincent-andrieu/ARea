@@ -74,7 +74,6 @@
     },
     "include": [
         "src/",
-        "../global/",
         ".env"
     ]
 }
