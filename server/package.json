@@ -89,7 +89,6 @@
     },
     "include": [
         "src/",
-        "../global/",
         ".env"
     ],
     "jest": {
