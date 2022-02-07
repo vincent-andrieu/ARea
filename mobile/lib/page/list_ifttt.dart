@@ -65,12 +65,10 @@ class list_ifttt extends StatelessWidget {
   List<Widget> extractWidgetList(BuildContext context) {
     List<Widget> list = [];
 
-    list.add(buildCard("", area.Action("github", false), area.Reaction("discord"), context));
-    if (api.token == null) {
-      return [];
-    }
-    for (var element in api.token!.areas) {
-      list.add(buildCard(element.id, element.action, element.reaction, context));
+    if (api.token != null) {
+      for (var element in api.token!.areas) {
+        list.add(buildCard(element.id, element.action, element.reaction, context));
+      }
     }
     return list;
   }
