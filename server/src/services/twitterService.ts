@@ -61,26 +61,34 @@ export class TwitterService {
     }
 
     public static async GetUserLastTweet(user: User, area: ARea, username: string): Promise<boolean> {
-        const client = TwitterService.getClient(user);
 
         try {
+            const client = TwitterService.getClient(user);
+            if (!client)
+                return false;
             const userTweeting = await client.v2.userByUsername(username);
+            if (!userTweeting)
+                return false;
             const userTimeline = await client.v2.userTimeline(userTweeting.data.id, {
                 expansions: ["attachments.media_keys", "attachments.poll_ids", "referenced_tweets.id"],
                 "media.fields": ["url"]
             });
-            if (!userTimeline || !userTimeline[0])
+            if (!userTimeline)
                 return false;
-            const tweet = userTimeline[0];
+            for await (const tweet of userTimeline) {
+                if (tweet.referenced_tweets && tweet.referenced_tweets["type"] != "tweeted")
+                    continue;
 
-            if (tweet.referenced_tweets && tweet.referenced_tweets["type"] != "tweeted")
-                return false;
-            const inputs = area.trigger.inputs as TwitterTweetResult;
+                if (!TwitterService.IsNewPost(area, tweet.id))
+                    return false;
 
-            if (!TwitterService.IsNewPost(area, tweet.id))
-                return false;
-            this.setTweetInfos(area, tweet);
-            inputs.lastTweetId = tweet.id;
+                this.setTweetInfos(area, tweet);
+
+                const inputs = area.trigger.inputs as TwitterTweetResult;
+
+                inputs.lastTweetId = tweet.id;
+                break;
+            }
         } catch (error: unknown) {
             const some_error = error as Error;
 
@@ -139,9 +147,10 @@ export class TwitterService {
     private static async rea_TweetUnsplashPost(area: ARea, client: TwitterApi): Promise<SendTweetV2Params> {
         const post: UnsplashPostResult = area.trigger.outputs as UnsplashPostResult;
         const mediaIds = await Promise.all([
+            // https://github.com/PLhery/node-twitter-api-v2/blob/f4b468171907b28d6a2924b0c03b05d05a5b13d5/test/media-upload.test.ts
             client.v1.uploadMedia(post.downloadPath)
         ]);
-        const text = post.username + " just posted a new picture on splash !"
+        const text = post.username + " just posted a new picture on splash !";
         const tweet: SendTweetV2Params = { text: text, media: { media_ids: mediaIds } };
 
         return tweet;
@@ -208,7 +217,7 @@ export class TwitterService {
                     imagePath = await TwitterService.rea_BannerTwitchStream(area);
                     break;
                 default:
-                    console.log("todo: upload file from parameter given");
+                    console.log("todo: default action");
 
             }
         } catch (error: unknown) {
