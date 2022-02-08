@@ -6,16 +6,8 @@
         "name": "message",
         "type": "TEXT"
       }
-    ]
-  },
-  {
-    "type": "LINKEDIN_MSG",
-    "parameters": [
-      {
-        "name": "message",
-        "type": "TEXT"
-      }
-    ]
+    ],
+    "service": "TWITTER"
   },
   {
     "type": "TWITTER_PP",
@@ -24,7 +16,8 @@
         "name": "url",
         "type": "URL"
       }
-    ]
+    ],
+    "service": "TWITTER"
   },
   {
     "type": "DISCORD_MSG",
@@ -33,7 +26,8 @@
         "name": "message",
         "type": "TEXT"
       }
-    ]
+    ],
+    "service": "DISCORD"
   },
   {
     "type": "GITHUB_ISSUE",
@@ -54,7 +48,8 @@
         "name": "body",
         "type": "TEXT"
       }
-    ]
+    ],
+    "service": "GITHUB"
   },
   {
     "type": "NOTION_MSG",
@@ -67,7 +62,8 @@
         "name": "Page URL",
         "type": "URL"
       }
-    ]
+    ],
+    "service": "NOTION"
   },
   {
     "type": "DROPBOX_UPLOAD",
@@ -80,6 +76,7 @@
         "name": "File name",
         "type": "TEXT"
       }
-    ]
+    ],
+    "service": "DROPBOX"
   }
 ]

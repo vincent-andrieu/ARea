@@ -5,6 +5,7 @@ import cors from "cors";
 
 import { serverConfig } from "@config/serverConfig";
 import appRoutes from "../routes/appRoutes";
+import serviceRoutes from "../routes/serviceRoutes";
 import authRoutes from "../routes/authRoutes";
 import userRoutes from "../routes/userRoutes";
 import areaRoutes from "../routes/areaRoutes";
@@ -50,6 +51,7 @@ export function preinitExpress() {
     app.use("/", appRoutes);
     app.use("/auth", authRoutes);
     app.use("/user", userRoutes);
+    app.use("/service", serviceRoutes);
     app.use("/area", areaRoutes);
 }
 

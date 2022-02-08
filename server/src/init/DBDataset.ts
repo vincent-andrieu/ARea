@@ -19,6 +19,8 @@ export default class DBDataset {
             await this._removeCollection("users");
             await this._removeCollection("areas");
         }
+        await mongoose.connection.dropCollection("actions");
+        await mongoose.connection.dropCollection("reactions");
         actionDataset.forEach((item) => {
             this._actionSchema.add(item as Action);
         });

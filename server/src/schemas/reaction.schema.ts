@@ -2,13 +2,15 @@ import mongoose from "mongoose";
 
 import Reaction, { ReactionType } from "@classes/reaction.class";
 import { ASchema } from "./abstract.schema";
+import { ServiceType } from "../model/ServiceType";
 
 const reactionSchema = new mongoose.Schema({
     type: { type: String, enum: ReactionType, required: true },
     parameters: [{
         name: { type: String, required: true },
         type: { type: String, required: true }
-    }]
+    }],
+    service: { type: String, enum: ServiceType }
 }, {
     toObject: { virtuals: true },
     toJSON: { virtuals: true }
