@@ -13,5 +13,11 @@ export const reaction = {
                 $ref: "#/components/schemas/Parameters"
             }
         }
+    },
+    ReactionList: {
+        type: "array",
+        items: {
+            $ref: "#/components/schemas/Reaction"
+        }
     }
 };

@@ -5,6 +5,7 @@ import { reactionType } from "./reactionType";
 import { actionType } from "./actionType";
 import { reaction } from "./reaction";
 import { action } from "./action";
+import { serviceResponse } from "./service";
 
 export = {
     ...reaction,
@@ -13,5 +14,6 @@ export = {
     ...actionType,
     ...reactionConfig,
     ...actionConfig,
-    ...parameters
+    ...parameters,
+    ...serviceResponse
 };
