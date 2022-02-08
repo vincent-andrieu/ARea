@@ -228,3 +228,50 @@ describe("CRUD AREA", () => {
         expect(res.statusCode).toBe(200);
     });
 });
+
+describe("Info Service endpoints", () => {
+    it("GET /service/list", async () => {
+        const res = await request.get("/service/list")
+            .set("Authorization", "bearer " + token);
+
+        expect(res.statusCode).toBe(200);
+        expect(Array.isArray(res.body)).toBe(true);
+        expect(res.body.length).toBeGreaterThanOrEqual(9);
+    });
+
+    it("GET /service/action", async () => {
+        const res = await request.get("/service/action")
+            .set("Authorization", "bearer " + token);
+
+        expect(res.statusCode).toBe(200);
+        expect(Array.isArray(res.body)).toBe(true);
+        expect(res.body.length).toBeGreaterThanOrEqual(9);
+    });
+
+    it("GET /service/action - filter", async () => {
+        const res = await request.get("/service/action/GITHUB")
+            .set("Authorization", "bearer " + token);
+
+        expect(res.statusCode).toBe(200);
+        expect(Array.isArray(res.body)).toBe(true);
+        expect(res.body.length).toBe(2);
+    });
+
+    it("GET /service/reaction - filter", async () => {
+        const res = await request.get("/service/reaction/GITHUB")
+            .set("Authorization", "bearer " + token);
+
+        expect(res.statusCode).toBe(200);
+        expect(Array.isArray(res.body)).toBe(true);
+        expect(res.body.length).toBe(1);
+    });
+
+    it("GET /service/reaction", async () => {
+        const res = await request.get("/service/reaction")
+            .set("Authorization", "bearer " + token);
+
+        expect(res.statusCode).toBe(200);
+        expect(Array.isArray(res.body)).toBe(true);
+        expect(res.body.length).toBeGreaterThanOrEqual(6);
+    });
+});

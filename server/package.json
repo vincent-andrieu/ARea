@@ -111,7 +111,8 @@
         "moduleNameMapper": {
             "@classes/(.*)": "<rootDir>/build/classes/$1",
             "@config/(.*)": "<rootDir>/build/config/$1",
-            "@schemas/(.*)": "<rootDir>/build/schemas/$1"
+            "@schemas/(.*)": "<rootDir>/build/schemas/$1",
+            "@controllers/(.*)": "<rootDir>/build/controllers/$1"
         }
     }
 }
