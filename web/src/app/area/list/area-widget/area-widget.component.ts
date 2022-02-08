@@ -123,8 +123,6 @@ export class AreaWidgetComponent implements OnInit {
             return "Add Notion message";
         case 'DROPBOX_UPLOAD':
             return "Upload on Dropbox";
-        case 'UNSPLASH':
-            return "Post on Unsplash";
 
         default: {
             console.error("Unknow reaction type:", type);
@@ -154,8 +152,6 @@ export class AreaWidgetComponent implements OnInit {
             return (consequence.inputs as NotionAddMessageConfig).urlPage;
         case 'DROPBOX_UPLOAD':
             return (consequence.inputs as DropboxUploadConfig).remoteFilepath || "Undefined";
-        case 'UNSPLASH':
-            return (consequence.inputs as any);
 
         default: {
             console.error("Unknow reaction type:", consequence.reaction.type);
