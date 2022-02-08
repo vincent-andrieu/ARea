@@ -21,26 +21,31 @@ import { TwitchStreamResult } from "../model/ActionResult";
 
 export default class CronService {
 
-    private _areSchema: AReaSchema = new AReaSchema();
-    private _cron;
+    private static _areSchema: AReaSchema = new AReaSchema();
+    private static _cron: any = undefined;
 
-    constructor(cronTime = "* * * * *") {
-        this._cron = cron.schedule(cronTime, this.execute, { scheduled: false });
-        this.start();
-        this.execute(); // first execution
+    public static setup = (cronTime = "* * * * *") => {
+        CronService._cron = cron.schedule(cronTime, this.execute, { scheduled: false });
+        CronService.start();
+        CronService.execute(); // first execution
         DiscordService.connect();
         TimeService.initCronActions();
-    }
+    };
 
-    public start = () => {
+    public static reset = (cronTime: string) => {
+        this.stop();
+        CronService._cron = cron.schedule(cronTime, this.execute);
+    };
+
+    public static start = () => {
         this._cron.start();
     };
 
-    public stop = () => {
+    public static stop = () => {
         this._cron.stop();
     };
 
-    public execute = async () => {
+    public static execute = async () => {
         console.log("Running CRON");
 
         // Fetch action-reactions
@@ -56,7 +61,7 @@ export default class CronService {
         });
     };
 
-    private async executeAction(area: ARea) {
+    private static async executeAction(area: ARea) {
         const action = area.trigger.action as Action;
 
         switch (action.type) {

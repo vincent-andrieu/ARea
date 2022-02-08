@@ -9,6 +9,7 @@ import serviceRoutes from "../routes/serviceRoutes";
 import authRoutes from "../routes/authRoutes";
 import userRoutes from "../routes/userRoutes";
 import areaRoutes from "../routes/areaRoutes";
+import configRoutes from "../routes/configRoutes";
 import "../passport/githubPassport";
 import "../passport/twitterPassport";
 import "../passport/twitchPassport";
@@ -53,6 +54,7 @@ export function preinitExpress() {
     app.use("/user", userRoutes);
     app.use("/service", serviceRoutes);
     app.use("/area", areaRoutes);
+    app.use("/config", configRoutes);
 }
 
 export default {

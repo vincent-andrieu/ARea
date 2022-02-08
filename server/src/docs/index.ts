@@ -3,6 +3,7 @@ import { apiTags } from "./tags";
 import { components } from "./components";
 import areas from "./areas";
 import service from "./service";
+import config from "./config";
 
 export = {
     ...basicInfo,
@@ -10,6 +11,7 @@ export = {
     ...components,
     paths: {
         ...service,
-        ...areas
+        ...areas,
+        ...config
     }
 };

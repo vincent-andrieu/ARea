@@ -10,4 +10,4 @@ DBDataset.init(false);
 Express.connect();
 
 // Action cron job
-new CronService();
+CronService.setup();

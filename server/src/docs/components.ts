@@ -136,6 +136,16 @@ export const components = {
                     $ref: "#/components/schemas/Area"
                 }
             },
+            ConfigCron: {
+                type: "object",
+                properties: {
+                    schedule: {
+                        type: "string",
+                        description: "Cron schedule expression",
+                        example: "* * * * *"
+                    }
+                }
+            },
             ...dataType
         }
     }
