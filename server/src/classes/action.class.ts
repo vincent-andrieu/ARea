@@ -1,5 +1,6 @@
 import Model from "./model.class";
 import { Parameter } from "../model/Parameters";
+import { ServiceType } from "../model/ServiceType";
 
 export enum ActionType {
     DATE = "DATE",
@@ -16,11 +17,13 @@ export enum ActionType {
 export default class Action extends Model {
     type: ActionType;
     parameters: Parameter[];
+    service: ServiceType;
 
     constructor(action: Action) {
         super(action);
 
         this.type = action.type;
         this.parameters = action.parameters;
+        this.service = action.service;
     }
 }
