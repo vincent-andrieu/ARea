@@ -5,6 +5,8 @@ import User from "../classes/user.class";
 import ARea from "../classes/area.class";
 import { TwitterTweetResult } from "model/ActionResult";
 import { TwitterTweetConfig } from "model/ActionConfig";
+import { twitterConfig } from "@config/twitterConfig";
+import axios from "axios";
 
 // doc :
 // https://www.npmjs.com/package/twitter-v2
@@ -32,6 +34,18 @@ export class TwitterService {
             appSecret: env.TWITTER_API_SECRET_KEY,
             accessToken: user.oauth?.twitter?.accessToken,
             accessSecret: user.oauth?.twitter?.secretToken
+        });
+    }
+
+    private static getClientAfterAuth(accessToken: string, secretToken: string) {
+
+        if (!env.TWITTER_API_KEY || !env.TWITTER_API_SECRET_KEY)
+            throw "Invalid twitter credentials";
+        return new TwitterApi({
+            appKey: env.TWITTER_API_KEY,
+            appSecret: env.TWITTER_API_SECRET_KEY,
+            accessToken: accessToken,
+            accessSecret: secretToken
         });
     }
 
@@ -120,6 +134,71 @@ export class TwitterService {
             const some_error = error as Error;
 
             console.log(some_error);
+        }
+    }
+
+    public static parseProfileUser(json) {
+        const profile = {
+            id: "",
+            id_str: "",
+            username: "",
+            displayName: "",
+            emails: [{value: ""}],
+            photos: [{value: ""}],
+            provider: "",
+            _raw: "",
+            _json: {},
+            _accessLevel: "read-write"
+        };
+
+        profile.id = String(json.id);
+        if (json.id_str)
+            profile.id = json.id_str;
+        profile.username = json.screen_name;
+        profile.displayName = json.name;
+        if (json.email)
+            profile.emails = [{ value: json.email }];
+        profile.photos = [{ value: json.profile_image_url_https }];
+        profile.provider = "twitter";
+        profile._raw = JSON.stringify(json);
+        profile._json = json;
+        return profile;
+    }
+
+    public static async GetProfileInfo(accessToken: string, secretToken: string): Promise<object> {
+        const client = TwitterService.getClientAfterAuth(accessToken, secretToken);
+
+        const userProfile = await client.v1.verifyCredentials({
+            include_entities: true,
+            skip_status: false,
+            include_email: false
+        });
+        const profile = TwitterService.parseProfileUser(userProfile);
+        return profile;
+    }
+
+    public static async getAccessToken(oauthToken: string, oauthVerifier): Promise<any> {
+        const twitterConsumerKey = twitterConfig.consumerKey;
+
+        const url = "https://api.twitter.com/oauth/access_token";
+        const params = new URLSearchParams();
+        params.append("oauth_consumer_key", twitterConsumerKey);
+        params.append("oauth_token", oauthToken);
+        params.append("oauth_verifier", oauthVerifier);
+
+        try {
+            const response = await axios.post(`${url}?${params}`);
+            const responseParams = new URLSearchParams(response.data);
+
+            return {
+                oauth_token: responseParams.get("oauth_token"),
+                oauth_token_secret: responseParams.get("oauth_token_secret"),
+                user_id: responseParams.get("user_id"),
+                screen_name: responseParams.get("screen_name")
+            };
+        } catch (error) {
+            console.log("[TWITTER] getAccessToken: ", (error as Error).toString());
+            return {};
         }
     }
 }
