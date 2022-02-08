@@ -28,7 +28,8 @@ export interface NotionAddMessageConfig {
 }
 
 export interface DropboxUploadConfig {
-    filepath: string | null;
+    localFilepath: string | null;
+    remoteFilepath: string | null;
 }
 
 export type ReactionConfig = LinkedinPostConfig | TwitterPostTweetConfig

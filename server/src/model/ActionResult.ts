@@ -18,6 +18,7 @@ export interface TwitchStreamResult {
 
 export interface TwitterTweetResult {
     username: string;
+    lastTweetId: string; // target user
     text: string;
     lang: string;
     coordinates: [number, number];
@@ -51,6 +52,12 @@ export interface GithubPullReqResult {
 export interface UnsplashPostResult {
     username: string;
     downloadPath: string;
+    name: string;
+    lastname: string;
+    lastPostId: string;
+    created_at: string;
+    description: string;
+    likes: number;
 }
 
 export type ActionResult = DateTimeResult | TimeResult

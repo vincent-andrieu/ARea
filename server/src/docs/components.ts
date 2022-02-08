@@ -88,7 +88,8 @@ export const components = {
                                     { $ref: "#/components/schemas/RSSConfig" },
                                     { $ref: "#/components/schemas/DiscordMessageConfig" },
                                     { $ref: "#/components/schemas/GithubIssueConfig" },
-                                    { $ref: "#/components/schemas/GithubPulReqConfig" }
+                                    { $ref: "#/components/schemas/GithubPulReqConfig" },
+                                    { $ref: "#/components/schemas/UnsplashPostConfig" }
                                 ]
                             },
                             action: {
@@ -110,7 +111,8 @@ export const components = {
                                     { $ref: "#/components/schemas/TwitterChangePPConfig" },
                                     { $ref: "#/components/schemas/DiscordPostMsgConfig" },
                                     { $ref: "#/components/schemas/GithubCreateIssueConfig" },
-                                    { $ref: "#/components/schemas/NotionAddMessageConfig" }
+                                    { $ref: "#/components/schemas/NotionAddMessageConfig" },
+                                    { $ref: "#/components/schemas/DropboxUploadConfig" }
                                 ]
                             },
                             reaction: {

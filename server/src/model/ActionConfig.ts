@@ -12,7 +12,6 @@ export interface TwitchStreamConfig {
 
 export interface TwitterTweetConfig {
     username: string; // target user
-    lastTweetId: string; // target user
 }
 
 export interface RSSConfig {
