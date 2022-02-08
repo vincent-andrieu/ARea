@@ -42,7 +42,7 @@ export default class ServiceController {
             });
             res.status(200).send(serviceList);
         } catch (err: any) {
-            res.status(400).send(err.toString());
+            res.status(500).send(err.toString());
         }
     };
 
@@ -60,7 +60,7 @@ export default class ServiceController {
 
             res.status(200).send(actions);
         } catch (err: any) {
-            res.status(400).send(err.toString());
+            res.status(500).send(err.toString());
         }
     };
 
@@ -79,7 +79,7 @@ export default class ServiceController {
 
             res.status(200).send(reactions);
         } catch (err: any) {
-            res.status(400).send(err.toString());
+            res.status(500).send(err.toString());
         }
     };
 }
