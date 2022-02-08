@@ -1,9 +1,9 @@
 [
   {
-    "type": "DATE",
+    "type": "CRON",
     "parameters": [
       {
-        "name": "time",
+        "name": "Cron schedule expression",
         "type": "TIME"
       }
     ],
@@ -13,7 +13,7 @@
     "type": "DATETIME",
     "parameters": [
       {
-        "name": "time",
+        "name": "Timestamp",
         "type": "DATETIME"
       }
     ],
