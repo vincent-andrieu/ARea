@@ -7,20 +7,18 @@ import 'package:mobile/page/edit_ifttt.dart';
 import 'package:mobile/page/list_ifttt.dart';
 import 'package:mobile/page/settings_page.dart';
 import 'package:mobile/page/start_area.dart';
-import 'package:mobile/page/test_page.dart';
 import 'package:mobile/service/undefined.dart';
 
 Map<String, WidgetBuilder> buildRouteApp() {
   areaService api = areaService("");
 
   Map<String, WidgetBuilder> route = {
-    '/': (BuildContext context) => test_page(),
-    // '/': (BuildContext context) => start_area(api),
+    '/': (BuildContext context) => start_area(api),
     '/SignIn': (BuildContext context) => auth_page(authentication_e.SIGN_IN, api),
     '/SignUp': (BuildContext context) => auth_page(authentication_e.SIGN_UP, api),
     '/Settings': (BuildContext context) => settings_page(api),
     '/List': (BuildContext context) => list_ifttt(api),
-    '/Create': (BuildContext context) => create_ifttt(api, undefined(false), undefined(false)),
+    '/Create': (BuildContext context) => create_ifttt(api),
     '/area': (BuildContext context) => edit_ifttt(api),
   };
 

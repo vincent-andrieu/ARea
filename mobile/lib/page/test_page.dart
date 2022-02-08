@@ -14,7 +14,7 @@ import 'package:mobile/service/twitter.dart';
 import 'package:mobile/service/undefined.dart';
 import 'package:mobile/service/unsplash.dart';
 
-class test_page extends StatefulWidget {
+/*class test_page extends StatefulWidget {
   @override
   State<test_page> createState() => test_page_class();
 }
@@ -50,7 +50,7 @@ class test_page_class extends State<test_page> {
       )
     );
   }
-}
+}*/
 
 class TestList extends StatefulWidget {
   List<IService> service;
@@ -86,7 +86,15 @@ class _TestListState extends State<TestList> {
     return Column(
       children: [
         listBuilder(),
-        listBuilderChild()
+        const Padding(padding: EdgeInsets.only(
+            top: 10.0,
+            bottom: 10.0
+        )),
+        listBuilderChild(),
+        const Padding(padding: EdgeInsets.only(
+            top: 10.0,
+            bottom: 10.0
+        )),
       ],
     );
   }
