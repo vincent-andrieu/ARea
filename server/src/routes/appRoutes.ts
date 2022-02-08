@@ -2,8 +2,8 @@ import express from "express";
 import moment from "moment";
 import swaggerUi from "swagger-ui-express";
 import docs from "../docs";
+import { servicesList } from "@config/serverConfig";
 
-import { swaggerConfig } from "@config/swaggerConfig";
 import authMiddleware from "../middlewares/checkJwt";
 
 const router = express.Router();
@@ -14,7 +14,8 @@ router.get("/about.json", (req, res) => {
             host: req.ip
         },
         server: {
-            current_time: moment().unix()
+            current_time: moment().unix(),
+            ...servicesList
         }
     };
     res.json(aboutJson);
