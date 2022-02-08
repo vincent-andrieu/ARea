@@ -48,7 +48,7 @@ export default class AuthController {
                 // save user token
                 user.token = token;
 
-                return res.status(200).json(await AuthController._userSchema.edit(user));
+                return res.status(200).json((await AuthController._userSchema.edit(user)).toRaw());
             } else
                 return res.status(400).json({ "message": "Invalid Credentials" });
         } catch (err) {
@@ -77,13 +77,13 @@ export default class AuthController {
             const encryptedPassword = await bcrypt.hash(password, 10);
 
             // Create user in our database
-            const user = await AuthController._userSchema.add({
+            const user = await AuthController._userSchema.add(new User({
                 username: username.toLowerCase(),
                 password: encryptedPassword,
                 token: "",
                 oauthLoginProvider: OAuthProvider.LOCAL,
                 oauth: {}
-            });
+            }));
 
             // Create token
             const token: string = AuthController.signToken({
@@ -92,7 +92,7 @@ export default class AuthController {
             });
             user.token = token;
 
-            return res.status(201).json(await AuthController._userSchema.edit(user));
+            return res.status(201).json((await AuthController._userSchema.edit(user)).toRaw());
         } catch (err) {
             console.error(err);
             return res.status(500).json({ "message": "an error occured" });

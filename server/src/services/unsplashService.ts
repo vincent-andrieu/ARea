@@ -6,6 +6,8 @@ import ARea from "@classes/area.class";
 import { Full } from "unsplash-js/dist/methods/photos/types";
 import { UnsplashPostResult } from "model/ActionResult";
 import { utils } from "./utils";
+import { unsplashConfig } from "@config/unsplashConfig";
+import axios from "axios";
 
 export class unsplashService {
 
@@ -78,6 +80,61 @@ export class unsplashService {
             const some_error = error as Error;
 
             console.log(some_error);
+        }
+    }
+
+    public static async getAccessToken(code: string) {
+
+        const clientId = unsplashConfig.clientID;
+        const clientSecret = unsplashConfig.clientSecret;
+        const redirectUri = env.UNSPLASH_CALLBACK_MOBILE;
+
+        if (!clientId || !clientSecret || !redirectUri)
+            return;
+
+        const url = "https://unsplash.com/oauth/token";
+        const params = new URLSearchParams();
+        params.append("client_id", clientId);
+        params.append("client_secret", clientSecret);
+        params.append("code", code);
+        params.append("grant_type", "authorization_code");
+        params.append("redirect_uri", redirectUri);
+
+        try {
+            const response = await axios.post(`${url}?${params}`);
+            return response.data;
+        } catch (error) {
+            console.log("[UNSPLASH] getAccessToken: ", (error as Error).toString());
+            return;
+        }
+    }
+
+    public static async getUserProfile(accessToken: string) {
+
+        try {
+            const res = await axios.get("https://api.unsplash.com/me", {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            });
+            const parsedData = res.data;
+            const profile = {
+                provider: "unsplash",
+                name: {
+                    firstName: parsedData.first_name,
+                    lastName: parsedData.last_name
+                },
+                id: parsedData.uid,
+                username: parsedData.username,
+                email: parsedData.email,
+                _raw: JSON.stringify(parsedData),
+                _json: parsedData
+
+            };
+            return profile;
+        } catch (error) {
+            console.log("[TWITCH] getUserProfile: ", (error as Error).toString());
+            return;
         }
     }
 }

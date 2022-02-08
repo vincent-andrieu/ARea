@@ -6,12 +6,13 @@ export interface LinkedinPostConfig {
     message: string;
 }
 
-export interface TwitterChangePPConfig {
-    url: string; // image url (jpg)
+export interface TwitterUpdatePictureConfig {
+    nothing: string;
 }
 
 export interface DiscordPostMsgConfig {
     message: string;
+    channelId: string;
 }
 
 export interface GithubCreateIssueConfig {
@@ -26,11 +27,11 @@ export interface NotionAddMessageConfig {
     urlPage: string;
 }
 
-export interface OnedriveUploadTextConfig {
-    content: string;
-    filename: string;
+export interface DropboxUploadConfig {
+    localFilepath: string | null;
+    remoteFilepath: string | null;
 }
 
-export type ReactionConfig = TwitterPostTweetConfig | LinkedinPostConfig
-    | TwitterChangePPConfig | DiscordPostMsgConfig | GithubCreateIssueConfig
-    | NotionAddMessageConfig | OnedriveUploadTextConfig;
+export type ReactionConfig = LinkedinPostConfig | TwitterPostTweetConfig
+    | TwitterUpdatePictureConfig | DiscordPostMsgConfig | GithubCreateIssueConfig
+    | NotionAddMessageConfig | DropboxUploadConfig;

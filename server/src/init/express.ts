@@ -5,7 +5,9 @@ import cors from "cors";
 
 import { serverConfig } from "@config/serverConfig";
 import appRoutes from "../routes/appRoutes";
+import serviceRoutes from "../routes/serviceRoutes";
 import authRoutes from "../routes/authRoutes";
+import userRoutes from "../routes/userRoutes";
 import areaRoutes from "../routes/areaRoutes";
 import "../passport/githubPassport";
 import "../passport/twitterPassport";
@@ -36,8 +38,20 @@ export function preinitExpress() {
         next();
     });
 
+    app.use((request, _, next) => {
+        console.log(
+            "\x1b[36m%s\x1b[0m",
+            request.headers.referer,
+            "=>", "\x1b[33m" + request.method + "\x1b[0m",
+            "\x1b[32m" + request.url + "\x1b[0m"
+        );
+        next();
+    });
+
     app.use("/", appRoutes);
     app.use("/auth", authRoutes);
+    app.use("/user", userRoutes);
+    app.use("/service", serviceRoutes);
     app.use("/area", areaRoutes);
 }
 

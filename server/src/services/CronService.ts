@@ -1,11 +1,11 @@
 /* eslint-disable indent */
+import { PopulateOptions } from "mongoose";
 import cron from "node-cron";
 
 import { AReaSchema } from "@schemas/area.schema";
-import { PopulateOptions } from "mongoose";
 
-import ARea from "../classes/area.class";
-import Reaction, { ReactionType } from "../classes/reaction.class";
+import ARea from "@classes/area.class";
+import Reaction, { ReactionType } from "@classes/reaction.class";
 import Action, { ActionType } from "@classes/action.class";
 
 import { TwitchStreamConfig, UnsplashPostConfig } from "model/ActionConfig";
@@ -14,11 +14,9 @@ import { DiscordPostMsgConfig, DropboxUploadConfig } from "model/ReactionConfig"
 import DiscordService from "./DiscordService";
 import { TwitchService } from "./twitchService";
 import RSSService from "./RSSService";
-// import { IsNewPost, DownloadNewPost } from "./unsplashService";
 import { DropboxService } from "./DropboxService";
 import { unsplashService } from "./unsplashService";
-import { TwitterService } from "./twitterService";
-import { TwitchStreamResult } from "model/ActionResult";
+import { TwitchStreamResult } from "../model/ActionResult";
 
 export class CronService {
 
@@ -68,12 +66,13 @@ export class CronService {
             case ActionType.DATETIME:
                 // TODO:
                 break;
-            case ActionType.TWITCH_STREAM:
+            case ActionType.TWITCH_STREAM: {
                 const username = (area.trigger.inputs as TwitchStreamConfig).username;
 
                 if (await TwitchService.IsStreamLive(area, username))
                     CronService.triggerReaction(area);
                 break;
+            }
             case ActionType.TWITTER_MSG:
                 // TODO:
                 break;
@@ -90,13 +89,14 @@ export class CronService {
             case ActionType.DISCORD_MSG:
                 // See DiscordService Bot
                 break;
-            case ActionType.UNSPLASH_POST:
+            case ActionType.UNSPLASH_POST: {
                 const config: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
 
                 if (await unsplashService.DownloadIfNewPost(area, config.username, config.downloadPath))
                     CronService.triggerReaction(area);
 
                 break;
+            }
             default:
                 throw "CronService::executeAction: action unsupported.";
         }
@@ -120,11 +120,12 @@ export class CronService {
             case ReactionType.TWITTER_PP:
                 // TwitterService.rea_UpdatePP(area, user);
                 break;
-            case ReactionType.DISCORD_MSG:
+            case ReactionType.DISCORD_MSG: {
                 const input: DiscordPostMsgConfig = area.consequence.inputs as DiscordPostMsgConfig;
 
                 DiscordService.sendMessage(input.channelId, input.message);
                 break;
+            }
             case ReactionType.GITHUB_ISSUE:
                 // TODO:
                 break;
@@ -133,13 +134,14 @@ export class CronService {
                 break;
             case ReactionType.DROPBOX_UPLOAD:
                 switch (action.type) {
-                    case ActionType.UNSPLASH_POST:
+                    case ActionType.UNSPLASH_POST: {
                         const configUnsplash: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
                         const configDropbox: DropboxUploadConfig = area.consequence.inputs as DropboxUploadConfig;
                         const dropboxFilepath = (configDropbox.localFilepath ? configDropbox.localFilepath : configUnsplash.downloadPath);
 
                         DropboxService.uploadFile(configUnsplash.downloadPath, dropboxFilepath);
                         break;
+                    }
                     default:
                         console.log("todo upload file from parameter given");
 

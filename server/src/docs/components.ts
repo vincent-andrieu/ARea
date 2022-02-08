@@ -12,6 +12,11 @@ export const components = {
                 description: "An id of an area",
                 example: "98f01g435796ca42dd2737bt"
             },
+            service: {
+                type: "string",
+                description: "Name of a supported service",
+                example: "GITHUB"
+            },
             AreaInput: {
                 type: "object",
                 required: ["trigger", "consequence"],

@@ -1,11 +1,12 @@
 import passport from "passport";
-
-import AuthController from "../controllers/AuthController";
 import passportLinkedin from "passport-linkedin-oauth2";
+
 import { linkedinConfig } from "@config/linkedinConfig";
+import { getStrObjectId } from "@classes/model.class";
+import User from "@classes/user.class";
 import { UserSchema } from "@schemas/user.schema";
 import OAuthProvider from "../model/oAuthProvider.enum";
-import { getStrObjectId } from "@classes/model.class";
+import AuthController from "../controllers/AuthController";
 
 const LinkedinStrategy = passportLinkedin.Strategy;
 
@@ -35,7 +36,7 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
         } else {
             console.log("Create new user");
 
-            const user = await userSchema.add({
+            const user = await userSchema.add(new User({
                 username: profile.displayName,
                 oauthLoginProvider: OAuthProvider.LINKEDIN,
                 oauthLoginProviderId: profile.id,
@@ -45,7 +46,7 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
                         refreshToken: refreshToken
                     }
                 }
-            });
+            }));
 
             const token = AuthController.signToken({
                 user_id: getStrObjectId(user),
@@ -61,9 +62,7 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
 };
 
 passport.use(new LinkedinStrategy(
-    {
-        ...linkedinConfig,
-        scope: ["r_emailaddress", "r_liteprofile"],
-        state: true
+    {...linkedinConfig,
+        scope: ["r_emailaddress", "r_liteprofile"]
     }, successfullyAuthentificated
 ));

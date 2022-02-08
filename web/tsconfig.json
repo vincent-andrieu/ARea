@@ -29,6 +29,9 @@
             "@guards/*": [
                 "app/guards/*"
             ],
+            "@resolvers/*": [
+                "app/resolvers/*"
+            ],
             "@services/*": [
                 "app/services/*"
             ],

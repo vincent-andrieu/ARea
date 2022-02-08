@@ -2,6 +2,24 @@ import Model, { ObjectId } from "./model.class";
 import ARea from "./area.class";
 import OAuthProvider from "../model/oAuthProvider.enum";
 
+export interface IRawUser {
+    username: string;
+    oauthLoginProvider: OAuthProvider;
+    oauthLoginProviderId?: string;
+    token?: string;
+    areas?: Array<ARea> | Array<ObjectId>;
+    oauth?: {
+        twitter: boolean,
+        github: boolean,
+        discord: boolean
+        dropbox: boolean,
+        notion: boolean,
+        twitch: boolean,
+        linkedin: boolean,
+        unsplash: boolean
+    };
+}
+
 export default class User extends Model {
     username: string;
     password?: string;
@@ -43,7 +61,7 @@ export default class User extends Model {
         }
     };
 
-    constructor(user: User) {
+    constructor(user: Omit<User, "toRaw">) {
         super(user);
 
         this.username = user.username || "";
@@ -104,5 +122,25 @@ export default class User extends Model {
             } catch (e) {
                 this.areas = user.areas;
             }
+    }
+
+    public toRaw(): IRawUser {
+        return {
+            username: this.username,
+            oauthLoginProvider: this.oauthLoginProvider,
+            oauthLoginProviderId: this.oauthLoginProviderId,
+            token: this.token,
+            areas: this.areas,
+            oauth: {
+                twitter: !!this.oauth?.twitter,
+                github: !!this.oauth?.github,
+                discord: !!this.oauth?.discord,
+                dropbox: !!this.oauth?.dropbox,
+                notion: !!this.oauth?.notion,
+                twitch: !!this.oauth?.twitch,
+                linkedin: !!this.oauth?.linkedin,
+                unsplash: !!this.oauth?.unsplash
+            }
+        };
     }
 }

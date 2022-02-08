@@ -5,6 +5,8 @@ import "../passport/setupPassport";
 import authMiddleware from "../middlewares/checkJwt";
 import AuthController from "../controllers/AuthController";
 import { TwitchMobileStrategy } from "../passport/twitchPassport";
+import { TwitterMobileStrategy } from "../passport/twitterPassport";
+import { UnsplashMobileStrategy } from "../passport/unsplashPassport";
 
 const router = express.Router();
 
@@ -89,12 +91,16 @@ router.get("/github/redirect", passport.authenticate("github", {
     failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));
 
-router.get("/twitter", passport.authenticate("twitter"));
+router.get("/twitter", passport.authenticate("twitter-web"));
 
-router.get("/twitter/redirect", passport.authenticate("twitter", {
+router.get("/twitter/mobile", passport.authenticate("twitter-mobile"));
+
+router.get("/twitter/redirect", passport.authenticate("twitter-web", {
     successRedirect: "/auth/redirect",
     failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));
+
+router.post("/twitter/redirect/mobile", TwitterMobileStrategy);
 
 router.get("/twitch", passport.authenticate("twitch-web"));
 
@@ -135,13 +141,16 @@ router.get("/discord/redirect", passport.authenticate("discord", {
     failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));
 
+router.get("/unsplash", passport.authenticate("unsplash-web"));
 
-router.get("/unsplash", passport.authenticate("unsplash"));
+router.get("/unsplash/mobile", passport.authenticate("unsplash-mobile"));
 
-router.get("/unsplash/redirect", passport.authenticate("unsplash", {
+router.get("/unsplash/redirect", passport.authenticate("unsplash-web", {
     successRedirect: "/auth/redirect",
     failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));
+
+router.post("/unsplash/redirect/mobile", UnsplashMobileStrategy);
 
 router.get("/redirect", (request: Request, response: Response) => {
     response.redirect(`${env.CLIENT_HOST}/areas?token=${request.user?.data.token}`);

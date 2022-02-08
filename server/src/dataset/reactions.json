@@ -1,0 +1,82 @@
+[
+  {
+    "type": "TWITTER_MSG",
+    "parameters": [
+      {
+        "name": "message",
+        "type": "TEXT"
+      }
+    ],
+    "service": "TWITTER"
+  },
+  {
+    "type": "TWITTER_PP",
+    "parameters": [
+      {
+        "name": "url",
+        "type": "URL"
+      }
+    ],
+    "service": "TWITTER"
+  },
+  {
+    "type": "DISCORD_MSG",
+    "parameters": [
+      {
+        "name": "message",
+        "type": "TEXT"
+      }
+    ],
+    "service": "DISCORD"
+  },
+  {
+    "type": "GITHUB_ISSUE",
+    "parameters": [
+      {
+        "name": "owner",
+        "type": "TEXT"
+      },
+      {
+        "name": "repository",
+        "type": "TEXT"
+      },
+      {
+        "name": "title",
+        "type": "TEXT"
+      },
+      {
+        "name": "body",
+        "type": "TEXT"
+      }
+    ],
+    "service": "GITHUB"
+  },
+  {
+    "type": "NOTION_MSG",
+    "parameters": [
+      {
+        "name": "message",
+        "type": "TEXT"
+      },
+      {
+        "name": "Page URL",
+        "type": "URL"
+      }
+    ],
+    "service": "NOTION"
+  },
+  {
+    "type": "DROPBOX_UPLOAD",
+    "parameters": [
+      {
+        "name": "File Content",
+        "type": "TEXT"
+      },
+      {
+        "name": "File name",
+        "type": "TEXT"
+      }
+    ],
+    "service": "DROPBOX"
+  }
+]

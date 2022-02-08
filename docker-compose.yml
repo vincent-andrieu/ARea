@@ -30,7 +30,7 @@ services:
             - database
 
     database:
-        build: db
+        build: database
         volumes:
             - mongodb-data:/data/db
         ports:

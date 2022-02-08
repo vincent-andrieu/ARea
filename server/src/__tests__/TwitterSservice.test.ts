@@ -14,6 +14,7 @@ import { TwitchStreamResult } from "../model/ActionResult";
 import { TwitterPostTweetConfig } from "../model/ReactionConfig";
 import Reaction, { ReactionType } from "../classes/reaction.class";
 import ARea from "../classes/area.class";
+import { ServiceType } from "../model/ServiceType";
 
 /** INIT */
 
@@ -51,7 +52,7 @@ describe("TwitterService", () => {
 
         const config: TwitterTweetConfig = { username: "aypierre" };
         const actionType: ActionType = ActionType.TWITTER_MSG;
-        const action: Action = { type: actionType, parameters: [] };
+        const action: Action = { type: actionType, parameters: [], service: ServiceType.TWITTER };
         const twitchStreamResult: TwitchStreamResult = {
             Username: "",
             StreamTitle: "",
@@ -61,8 +62,8 @@ describe("TwitterService", () => {
             StreamViewers: 0
         };
         const twitterConfig: TwitterPostTweetConfig = { message: "" };
-        const reaction: Reaction = { type: ReactionType.TWITTER_MSG, parameters: [] };
-        let my_area: ARea = { trigger: { inputs: config, action: action, outputs: twitchStreamResult }, consequence: { inputs: twitterConfig, reaction: reaction } };
+        const reaction: Reaction = { type: ReactionType.TWITTER_MSG, parameters: [], service: ServiceType.TWITTER };
+        const my_area: ARea = { trigger: { inputs: config, action: action, outputs: twitchStreamResult }, consequence: { inputs: twitterConfig, reaction: reaction } };
 
         if (await TwitterService.GetUserLastTweet(user/* TODO: get user from db */, my_area, config.username) === false) {
             console.log("User has no tweet, select an other user for test");

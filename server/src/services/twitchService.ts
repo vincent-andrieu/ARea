@@ -90,12 +90,8 @@ export class TwitchService {
                 provider: "twitch"
             };
         } catch (error) {
-            console.log("[TWITCH] getAccessToken: ", (error as Error).toString());
+            console.log("[TWITCH] getUserProfile: ", (error as Error).toString());
             return;
         }
     }
 }
-
-
-
-

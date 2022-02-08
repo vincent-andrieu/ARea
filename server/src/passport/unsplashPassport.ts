@@ -1,13 +1,15 @@
 import passport from "passport";
-// app.use(bodyParser.urlencoded({ extended: true }));
-
 import Unsplash from "unsplash-passport";
-import { UserSchema } from "../schemas/user.schema";
 
-import AuthController from "../controllers/AuthController";
-import OAuthProvider from "../model/oAuthProvider.enum";
-import { unsplashConfig } from "@config/unsplashConfig";
+
+import { unsplasConfigMobile, unsplashConfig } from "@config/unsplashConfig";
+import User from "@classes/user.class";
 import { getStrObjectId } from "@classes/model.class";
+import { UserSchema } from "@schemas/user.schema";
+import AuthController from "@controllers/AuthController";
+import OAuthProvider from "../model/oAuthProvider.enum";
+import { Request, Response } from "express";
+import { unsplashService } from "../services/unsplashService";
 
 const UnsplashStrategy = Unsplash.Strategy;
 
@@ -34,13 +36,17 @@ async function successfullyAuthentificated(accessToken: string, refreshToken: st
                 oldUser.oauth.unsplash.accessToken = accessToken;
                 oldUser.oauth.unsplash.refreshToken = refreshToken;
             }
+            const userEdited = await userSchema.edit(oldUser);
 
-            done(null, await userSchema.edit(oldUser));
+            if (done)
+                done(null, userEdited);
+            else
+                return userEdited;
         } else {
             console.log("Create new user");
 
-            const user = await userSchema.add({
-                username: profile.login,
+            const user = await userSchema.add(new User({
+                username: profile.username,
                 oauthLoginProvider: OAuthProvider.UNSPLASH,
                 oauthLoginProviderId: profile.username,
                 oauth: {
@@ -49,20 +55,53 @@ async function successfullyAuthentificated(accessToken: string, refreshToken: st
                         refreshToken: refreshToken
                     }
                 }
-            });
+            }));
             const token = AuthController.signToken({
                 user_id: getStrObjectId(user),
                 username: profile.username
             });
             user.token = token;
-            done(null, await userSchema.edit(user));
+            const userEdited = await userSchema.edit(user);
+            if (done)
+                done(null, userEdited);
+            else
+                return userEdited;
         }
     } catch (error) {
-        done(error, undefined);
+        if (done)
+            done(error, undefined);
     }
 }
 
-passport.use(new UnsplashStrategy(
+export async function UnsplashMobileStrategy(req: Request, res: Response) {
+    const { code } = req.body;
+
+    if (!code)
+        return res.status(400).send("Missing 'code' attribut");
+    try {
+        const oauth = await unsplashService.getAccessToken(code);
+        const userProfile = await unsplashService.getUserProfile(oauth.access_token);
+        const user = await successfullyAuthentificated(oauth.access_token, oauth.refresh_token, userProfile, undefined);
+
+        if (!user)
+            throw "get empty user";
+        res.json(user.toRaw());
+    } catch (error) {
+        console.error("UnsplashMobileStrategy: Error", (error as Error).toString());
+        res.status(500).send((error as Error).toString());
+    }
+}
+
+passport.use("unsplash-web", new UnsplashStrategy(
     unsplashConfig,
     successfullyAuthentificated
+));
+
+passport.use("unsplash-mobile", new UnsplashStrategy(
+    unsplasConfigMobile,
+    (accessToken: string, refreshToken: string, profile, done) => {
+        console.log(accessToken);
+        console.log(refreshToken);
+        console.log(profile);
+    }
 ));
