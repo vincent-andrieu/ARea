@@ -1,4 +1,3 @@
-
 export enum ParameterType {
     TEXT = "TEXT",
     DATETIME = "DATETIME",

@@ -25,13 +25,15 @@ class UserServiceData implements ServiceData {
     styleUrls: ['./settings.component.scss']
 })
 export class AReaSettingsComponent {
-    constructor(private _authService: AuthService) {}
+    public services: Array<UserServiceData>;
 
-    public get services(): Array<UserServiceData> {
-        if (!this._authService.user.oauth)
-            return [];
-        return Object.entries(this._authService.user.oauth).map(([oauthName, oauthValue]) => {
-            const serviceData = this._authService.apps.find((app) => app.name === oauthName[0]);
+    constructor(private _authService: AuthService) {
+        if (!this._authService.user?.oauth) {
+            this.services = [];
+            return;
+        }
+        this.services = Object.entries(this._authService.user.oauth).map(([oauthName, oauthValue]) => {
+            const serviceData = this._authService.apps.find((app) => app.name === oauthName);
 
             if (!serviceData)
                 throw "Fail to find oauth app";

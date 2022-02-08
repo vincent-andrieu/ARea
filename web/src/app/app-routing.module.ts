@@ -5,6 +5,7 @@ import { ServerGuard } from '@guards/server.guard';
 import { AuthGuard } from '@guards/auth.guard';
 import { LoginGuard } from '@guards/login.guard';
 import { AppRedirectFailureGuard } from "@guards/app-redirect-failure.guard";
+import { UserResolver } from "@resolvers/user.resolver";
 
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './auth/login/login.component';
@@ -32,7 +33,14 @@ const routes: Routes = [
             { path: ':areaId', component: AReaEditModalComponent }
         ]
     },
-    { path: 'settings', component: AReaSettingsComponent, canActivate: [ServerGuard, AuthGuard] },
+    {
+        path: 'settings',
+        component: AReaSettingsComponent,
+        canActivate: [ServerGuard, AuthGuard],
+        resolve: {
+            user: UserResolver
+        }
+    },
     { path: '**', redirectTo: '/', pathMatch: 'full' }
 ];
 

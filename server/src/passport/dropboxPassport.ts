@@ -1,10 +1,12 @@
+import passport from "passport";
+import passportDropbox from "passport-dropbox-oauth2";
+
+import { dropboxConfig } from "@config/dropboxConfig";
 import { getStrObjectId } from "@classes/model.class";
+import User from "@classes/user.class";
 import { UserSchema } from "@schemas/user.schema";
 import AuthController from "../controllers/AuthController";
 import OAuthProvider from "../model/oAuthProvider.enum";
-import passport from "passport";
-import passportDropbox from "passport-dropbox-oauth2";
-import { dropboxConfig } from "@config/dropboxConfig";
 
 const DropboxStrategy = passportDropbox.Strategy;
 
@@ -34,7 +36,7 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
         } else {
             console.log("Create new user");
 
-            const user = await userSchema.add({
+            const user = await userSchema.add(new User({
                 username: profile.id,
                 oauthLoginProvider: OAuthProvider.DROPBOX,
                 oauthLoginProviderId: profile.id,
@@ -44,7 +46,7 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
                         refreshToken: refreshToken
                     }
                 }
-            });
+            }));
 
             const token = AuthController.signToken({
                 user_id: getStrObjectId(user),
