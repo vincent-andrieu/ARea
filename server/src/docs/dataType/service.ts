@@ -4,8 +4,7 @@ export const serviceResponse = {
         required: ["label", "haveAction", "haveReaction"],
         properties: {
             label: {
-                type: "string",
-                description: "name of the service"
+                $ref: "#/components/schemas/ServiceType"
             },
             haveAction: {
                 type: "boolean",
