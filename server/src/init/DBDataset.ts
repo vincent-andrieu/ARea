@@ -32,7 +32,7 @@ export default class DBDataset {
         });
         reactionDataset.forEach(async (item) => {
             try {
-                const result = await this._actionSchema.find({ type: item.service });
+                const result = await this._reactionSchema.find({ type: item.type });
 
                 if (result.length === 0)
                     this._reactionSchema.add(item as Reaction);
