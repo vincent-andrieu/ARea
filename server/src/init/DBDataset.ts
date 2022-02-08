@@ -1,12 +1,13 @@
-import { ActionSchema } from "../schemas/action.schema";
-import { ReactionSchema } from "../schemas/reaction.schema";
 import mongoose from "mongoose";
-import Database from "../init/database";
-import Action from "../classes/action.class";
-import Reaction from "../classes/reaction.class";
 
-import actionDataset from "../../dataset/actions.json";
-import reactionDataset from "../../dataset/reactions.json";
+import Action from "@classes/action.class";
+import Reaction from "@classes/reaction.class";
+import { ActionSchema } from "@schemas/action.schema";
+import { ReactionSchema } from "@schemas/reaction.schema";
+import Database from "../init/database";
+
+import actionDataset from "../dataset/actions.json";
+import reactionDataset from "../dataset/reactions.json";
 
 export default class DBDataset {
     private static _actionSchema = new ActionSchema();
