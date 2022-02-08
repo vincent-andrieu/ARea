@@ -41,7 +41,7 @@ class IService {
 
       final token = Uri.parse(result).queryParameters['code'];
 
-      return await api.updateServiceToken(token!, "{$getUrl()}/setService"); // TODO EDIT ROUTE
+      return await api.updateServiceToken(token!, "/auth/${getName()}/redirect/mobile");
     } catch(e) {
       log(e.toString());
       return false;

@@ -28,6 +28,6 @@ class linkedin extends IService {
 
   @override
   String getUrl() {
-    return "/auth/linkedin";
+    return "/auth/linkedin/mobile";
   }
 }

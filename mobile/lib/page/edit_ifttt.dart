@@ -76,7 +76,7 @@ class edit_ifttt extends StatelessWidget {
                           child: ElevatedButton(
                             onPressed: () {
                               // TODO EDIT
-                              api.updateIfttt(area.id, Area(area.id, area.action.label, area.reaction.label));
+                              api.updateIfttt(area.id, Area(area.id, area.action.label, area.reaction.label, api.token!.token));
                               Navigator.of(context).pushNamed('/List');
                             },
                             style: ElevatedButton.styleFrom(

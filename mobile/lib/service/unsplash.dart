@@ -5,7 +5,7 @@ class unsplash extends IService {
 
   @override
   List<String> getAction() {
-    return [];
+    return ["None"];
   }
 
   @override
@@ -20,11 +20,11 @@ class unsplash extends IService {
 
   @override
   List<String> getReaction() {
-    return [];
+    return ["None"];
   }
 
   @override
   String getUrl() {
-    return "/auth/unsplash";
+    return "/auth/unsplash/mobile";
   }
 }
