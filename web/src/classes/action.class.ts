@@ -15,7 +15,7 @@ export enum ActionType {
 
 export default class Action extends Model {
     type: ActionType;
-    parameters: Parameter[];
+    parameters: Array<Parameter>;
 
     constructor(action: Action) {
         super(action);

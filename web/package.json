@@ -21,6 +21,7 @@
         "@angular/platform-browser": "~13.1.0",
         "@angular/platform-browser-dynamic": "~13.1.0",
         "@angular/router": "~13.1.0",
+        "moment": "^2.29.1",
         "mongoose": "^5.13.14",
         "ngx-cookie": "^5.0.2",
         "rxjs": "~7.4.0",

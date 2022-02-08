@@ -15,7 +15,7 @@ export enum ReactionType {
 
 export default class Reaction extends Model {
     type: ReactionType;
-    parameters: Parameter[];
+    parameters: Array<Parameter>;
 
     constructor(reaction: Reaction) {
         super(reaction);
