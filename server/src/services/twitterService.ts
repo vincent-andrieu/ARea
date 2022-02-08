@@ -188,13 +188,13 @@ export class TwitterService {
         }
 
     }
-    private static async rea_BannerUnsplashPost(area: ARea): Promise<string> {
+    private static async rea_UnsplashPost(area: ARea): Promise<string> {
         const post: UnsplashPostResult = area.trigger.outputs as UnsplashPostResult;
 
         return post.downloadPath;
     }
 
-    private static async rea_BannerTwitchStream(area: ARea): Promise<string> {
+    private static async rea_TwitchStream(area: ARea): Promise<string> {
         const stream: TwitchStreamResult = area.trigger.outputs as TwitchStreamResult;
         const filepath = "/tmp/" + stream.StreamTitle;
 
@@ -211,10 +211,10 @@ export class TwitterService {
 
             switch (action.type) {
                 case ActionType.UNSPLASH_POST:
-                    imagePath = await TwitterService.rea_BannerUnsplashPost(area);
+                    imagePath = await TwitterService.rea_UnsplashPost(area);
                     break;
                 case ActionType.TWITCH_STREAM:
-                    imagePath = await TwitterService.rea_BannerTwitchStream(area);
+                    imagePath = await TwitterService.rea_TwitchStream(area);
                     break;
                 default:
                     console.log("todo: default action");
@@ -230,6 +230,37 @@ export class TwitterService {
         if (imagePath) {
             console.log("new banner will be :", imagePath);
             TwitterService.UpdateProfileBanner(imagePath, user);
+        }
+
+    }
+
+    public static async rea_UpdatePP(area: ARea, user: User) {
+        const client: TwitterApi = TwitterService.getClient(user);
+        const action: Action = area.trigger.action as Action;
+        let imagePath: string | null = null;
+
+        try {
+            switch (action.type) {
+                case ActionType.UNSPLASH_POST:
+                    imagePath = await TwitterService.rea_UnsplashPost(area);
+                    break;
+                case ActionType.TWITCH_STREAM:
+                    imagePath = await TwitterService.rea_TwitchStream(area);
+                    break;
+                default:
+                    console.log("todo: default action");
+
+            }
+        } catch (error: unknown) {
+            const some_error = error as Error;
+
+            console.log(some_error);
+            return;
+        }
+
+        if (imagePath) {
+            console.log("new PP will be :", imagePath);
+            TwitterService.UpdateProfileImage(imagePath, user);
         }
 
     }

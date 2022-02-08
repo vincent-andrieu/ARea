@@ -118,15 +118,7 @@ export class CronService {
                 // TwitterService.rea_UpdateBanner(area, user);
                 break;
             case ReactionType.TWITTER_PP:
-                switch (action.type) {
-                    case ActionType.UNSPLASH_POST:
-                        const configUnsplash: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
-
-                        // TwitterService.UpdateProfileImage(configUnsplash.downloadPath/* , user */);
-                        break;
-                    default:
-                        console.log("todo upload file from parameter given");
-                }
+                // TwitterService.rea_UpdatePP(area, user);
                 break;
             case ReactionType.DISCORD_MSG:
                 const input: DiscordPostMsgConfig = area.consequence.inputs as DiscordPostMsgConfig;
