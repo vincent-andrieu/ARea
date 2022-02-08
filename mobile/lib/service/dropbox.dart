@@ -5,7 +5,7 @@ class dropbox extends IService {
 
   @override
   List<String> getAction() {
-    return [];
+    return ["None"];
   }
 
   @override
@@ -20,7 +20,7 @@ class dropbox extends IService {
 
   @override
   List<String> getReaction() {
-    return [];
+    return ["None"];
   }
 
   @override

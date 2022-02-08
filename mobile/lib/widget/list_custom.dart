@@ -1,19 +1,49 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:mobile/page/color_list.dart';
 import 'dart:developer' as developer;
 
-class ListCustom extends StatelessWidget {
+class ListCustom extends StatefulWidget {
   List<String> list = <String>[];
   String defaultValue = "";
   String dropdownValue = "";
   String desc = "";
-  late void Function(String selected) onUpdate;
+  void Function(String selected) onUpdateTest;
+  static List<String> of (BuildContext context) => context.dependOnInheritedWidgetOfExactType() as List<String>;
 
-  ListCustom(String descSrc, List<String> listSrc, String defaultValueSrc, this.onUpdate, {Key? key}) : super(key: key) {
-    list = listSrc;
+  ListCustom(this.desc, this.list, String defaultValueSrc, this.onUpdateTest, {Key? key}) : super(key: key) {
+    developer.log("Too much build");
     defaultValue = defaultValueSrc;
     dropdownValue = defaultValueSrc;
-    desc = descSrc;
+  }
+
+  @override
+  State<ListCustom> createState() => list_custom_class(desc, list, defaultValue, onUpdateTest);
+}
+
+class list_custom_class extends State<ListCustom> {
+  List<String> list = <String>[];
+  String defaultValue = "";
+  String dropdownValue = "";
+  String desc = "";
+  void Function(String selected) onUpdateTest;
+
+  list_custom_class(this.desc, this.list, String defaultValueSrc, this.onUpdateTest, {Key? key}){
+    defaultValue = defaultValueSrc;
+    dropdownValue = defaultValueSrc;
+  }
+
+  void onMyFieldChange(List<String> src) {
+    setState(() {
+      list = src;
+    });
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    developer.log("mdr");
+    super.setState(fn);
   }
 
   @override
@@ -55,9 +85,11 @@ class ListCustom extends StatelessWidget {
                 color: color_list.fourth,
               ),
               onChanged: (String? newValue) {
-                developer.log(newValue!);
-                dropdownValue = newValue;
-                onUpdate(newValue);
+                setState(() {
+                  developer.log(newValue!);
+                  dropdownValue = newValue;
+                  onUpdateTest(newValue);
+                });
               },
               items: list.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(

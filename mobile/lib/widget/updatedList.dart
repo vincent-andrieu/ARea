@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'list_custom.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -6,10 +8,11 @@ class updatedList extends ChangeNotifier {
 
   updatedList(String descSrc, List<String> listSrc, String defaultValueSrc, void Function(String)? onUpdate) {
     list = ListCustom(descSrc, listSrc, defaultValueSrc, (String selected) {
-      //notifyListeners();
+      log("JE FONCTIONNE");
       if (onUpdate != null) {
         onUpdate(selected);
       }
+      notifyListeners();
     });
   }
 }
