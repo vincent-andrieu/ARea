@@ -1,4 +1,4 @@
-FROM mongo:5.0.6
+FROM mongo:4.4
 
 WORKDIR /app
 

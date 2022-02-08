@@ -5,8 +5,8 @@ import Database from "../init/database";
 import Action from "../classes/action.class";
 import Reaction from "../classes/reaction.class";
 
-import actionDataset from "../../../db/actions.json";
-import reactionDataset from "../../../db/reactions.json";
+import actionDataset from "../../dataset/actions.json";
+import reactionDataset from "../../dataset/reactions.json";
 
 export default class DBDataset {
     private static _actionSchema = new ActionSchema();
