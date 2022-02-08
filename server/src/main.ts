@@ -1,10 +1,13 @@
+import DBDataset from "init/DBDataset";
 import "module-alias/register";
 
-import Database from "./init/database";
 import Express from "./init/express";
 
 Express.connect();
-Database.connect();
+
+// Connection to the database and loading of the dataset.
+DBDataset.init(false);
+
 import { CronService } from "./services/CronService";
 
 // Action cron job

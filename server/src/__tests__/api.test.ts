@@ -24,7 +24,7 @@ beforeAll(async () => {
     try {
         preinitExpress();
         //expressInit.connect();
-        await DBDataset.load();
+        await DBDataset.init(true);
 
         return await loginUser();
     } catch (err) {
@@ -116,71 +116,115 @@ describe("Authentification", () => {
     });
 });
 
-// describe("CRUD AREA", () => {
-//     it("POST /area - access right", async () => {
-//         const res = await request.post("/area").send({});
-//         expect(res.statusCode).toBe(403);
-//     });
+describe("CRUD AREA", () => {
+    it("POST /area - access right", async () => {
+        const res = await request.post("/area").send({});
+        expect(res.statusCode).toBe(403);
+    });
 
-//     let areaId = null;
-//     it("POST /area", async () => {
+    let areaId = null;
+    it("POST /area", async () => {
 
-//         const res = await request.post("/area")
-//             .send({
-//                 "trigger": {
-//                     "inputs": {
-//                         "channelId": "xxx"
-//                     },
-//                     "action": {
-//                         "type": "DISCORD_MSG"
-//                     }
-//                 },
-//                 "consequence": {
-//                     "inputs": {
-//                         "channelId": "xxx",
-//                         "message": "hello world"
-//                     },
-//                     "reaction": {
-//                         "type": "DISCORD_MSG"
-//                     }
-//                 }
-//             })
-//             .set("Authorization", "bearer " + token);
-//         expect(res.statusCode).toBe(201);
-//         expect(res.body).toHaveProperty("trigger");
-//         expect(res.body).toHaveProperty("consequence");
-//         expect(res.body.trigger.inputs.channelId).toBe("xxx");
-//         expect(res.body.trigger.action.parameters[0].type).toBe("TEXT");
-//         expect(res.body.consequence.reaction.parameters[0].type).toBe("TEXT");
-//         expect(res.body.consequence.inputs.message).toBe("hello world");
-//         areaId = res.body._id;
-//     });
+        const res = await request.post("/area")
+            .send({
+                "trigger": {
+                    "inputs": {
+                        "channelId": "xxx"
+                    },
+                    "action": {
+                        "type": "DISCORD_MSG"
+                    }
+                },
+                "consequence": {
+                    "inputs": {
+                        "channelId": "xxx",
+                        "message": "hello world"
+                    },
+                    "reaction": {
+                        "type": "DISCORD_MSG"
+                    }
+                }
+            })
+            .set("Authorization", "bearer " + token);
+        if (res.statusCode != 201)
+            console.error(res.error);
+        expect(res.statusCode).toBe(201);
+        expect(res.body).toHaveProperty("trigger");
+        expect(res.body).toHaveProperty("consequence");
+        expect(res.body.trigger.inputs.channelId).toBe("xxx");
+        expect(res.body.trigger.action.parameters[0].type).toBe("TEXT");
+        expect(res.body.consequence.reaction.parameters[0].type).toBe("TEXT");
+        expect(res.body.consequence.inputs.message).toBe("hello world");
+        areaId = res.body._id;
+    });
 
-//     it("PATCH /area", async () => {
-//         const res = await request.patch("/area/" + areaId)
-//             .send({
-//                 "trigger": {
-//                     "inputs": {
-//                         "time": "* * * * *"
-//                     },
-//                     "action": {
-//                         "type": "DATE"
-//                     }
-//                 },
-//                 "consequence": {
-//                     "inputs": {
-//                         "message": "hello world"
-//                     },
-//                     "reaction": {
-//                         "type": "TWITTER_MSG"
-//                     }
-//                 }
-//             })
-//             .set("Authorization", "bearer " + token);
-//         expect(res.statusCode).toBe(200);
-//         expect(res.body).toHaveProperty("trigger");
-//         expect(res.body).toHaveProperty("consequence");
-//         expect(res.body.trigger.action.type).toBe("DATE");
-//         expect(res.body.consequence.reaction.type).toBe("TWITTER_MSG");
-//     });
-// });
+    it("PATCH /area", async () => {
+        const res = await request.put("/area/" + areaId)
+            .send({
+                "trigger": {
+                    "inputs": {
+                        "time": "* * * * *"
+                    },
+                    "action": {
+                        "type": "DATE"
+                    }
+                },
+                "consequence": {
+                    "inputs": {
+                        "message": "hello world"
+                    },
+                    "reaction": {
+                        "type": "TWITTER_MSG"
+                    }
+                }
+            })
+            .set("Authorization", "bearer " + token);
+        if (res.statusCode != 200)
+            console.info(res.error);
+        expect(res.statusCode).toBe(200);
+        expect(res.body).toHaveProperty("trigger");
+        expect(res.body).toHaveProperty("consequence");
+        expect(res.body.trigger.action.type).toBe("DATE");
+        expect(res.body.consequence.reaction.type).toBe("TWITTER_MSG");
+    });
+
+    it("GET /area", async () => {
+        const res = await request.get("/area/" + areaId)
+            .set("Authorization", "bearer " + token);
+        if (res.statusCode != 200)
+            console.error(res.error);
+        expect(res.statusCode).toBe(200);
+
+        expect(res.body).toHaveProperty("trigger");
+        expect(res.body).toHaveProperty("consequence");
+        expect(res.body.trigger.inputs.time).toBe("* * * * *");
+        expect(res.body.trigger.action.type).toBe("DATE");
+        expect(res.body.consequence.reaction.type).toBe("TWITTER_MSG");
+        expect(res.body.consequence.inputs.message).toBe("hello world");
+    });
+
+    it("GET /area/list", async () => {
+        const res = await request.get("/area/list")
+            .set("Authorization", "bearer " + token);
+        if (res.statusCode != 200)
+            console.error(res.error);
+        expect(res.statusCode).toBe(200);
+
+        expect(Array.isArray(res.body)).toBe(true);
+        expect(res.body.length).toBe(1);
+        expect(res.body[0]).toHaveProperty("trigger");
+        expect(res.body[0]).toHaveProperty("consequence");
+        expect(res.body[0].trigger.inputs.time).toBe("* * * * *");
+        expect(res.body[0].trigger.action.type).toBe("DATE");
+        expect(res.body[0].consequence.reaction.type).toBe("TWITTER_MSG");
+        expect(res.body[0].consequence.inputs.message).toBe("hello world");
+    });
+
+    it("DELETE /area", async () => {
+        const res = await request.delete("/area/" + areaId)
+            .set("Authorization", "bearer " + token);
+        if (res.statusCode != 200)
+            console.error(res.error);
+        expect(res.statusCode).toBe(200);
+    });
+});

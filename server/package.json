@@ -11,8 +11,8 @@
         "clean": "rm -rf node_modules/ ; rm -rf ./build/",
         "auto": "npx nodemon -x npm run start -w src/ -e .ts",
         "lint": "eslint src/ --fix ; exit 0",
-        "test": "jest --detectOpenHandles --setupFiles dotenv/config ",
-        "test:watch": "jest --watch --setupFiles dotenv/config"
+        "test": "jest --setupFiles dotenv/config --runInBand",
+        "test:watch": "jest --watch --setupFiles dotenv/config --runInBand"
     },
     "repository": {
         "type": "git",

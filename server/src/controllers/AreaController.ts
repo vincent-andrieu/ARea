@@ -54,21 +54,21 @@ export default class AreaController {
             if (actionInput == undefined || reactionInput == undefined || action == undefined || reaction == undefined)
                 return res.status(400).send("Invalid body");
             try {
-                const areaBody = await this._buildAreaBody(action, reaction, actionInput, reactionInput);
+                const areaBody = await AreaController._buildAreaBody(action, reaction, actionInput, reactionInput);
                 const area = await this._areaSchema.add(areaBody);
                 if (!area._id)
                     throw "Undefined area id";
                 this._userSchema.addARea(userId, area._id);
                 res.status(201).json({ _id: area._id, ...areaBody });
             } catch (e: any) {
-                console.log(e);
+                console.error("AreaController::create ", e);
                 res.status(400).send("Invalid body: action reaction");
             }
         } catch (error: any) {
             console.log("[AreaController] create :", error.toString());
             res.status(400).send(error.toString());
         }
-    }
+    };
 
     static readOne = async (req, res: Response) => {
         const id = req.params.id;
@@ -105,7 +105,7 @@ export default class AreaController {
         }
     };
 
-    static async update(req: Request, res: Response) {
+    static update = async (req: Request, res: Response) => {
         const userId = req.user?.data.user_id;
         const areaId = req.params.id;
         const action: string | ActionSelector | undefined = req.body.trigger.action;
@@ -124,7 +124,7 @@ export default class AreaController {
             if (!area)
                 return res.status(404).send(`Failed to find area with id: ${areaId}`);
 
-            const areaBody = await this._buildAreaBody(action, reaction, actionInput, reactionInput);
+            const areaBody = await AreaController._buildAreaBody(action, reaction, actionInput, reactionInput);
             const areaUpdate = await this._areaSchema.edit({
                 _id: area._id,
                 ...areaBody
@@ -136,9 +136,9 @@ export default class AreaController {
         } catch (error: any) {
             res.status(500).send(error.toString());
         }
-    }
+    };
 
-    static async delete(req: Request, res: Response) {
+    static delete = async (req: Request, res: Response) => {
         const areaId = req.params.id;
         const userId = req.user?.data.user_id;
 
@@ -160,5 +160,5 @@ export default class AreaController {
         } catch (error: any) {
             return res.status(500).send(error.toString());
         }
-    }
+    };
 }
