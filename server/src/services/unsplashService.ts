@@ -9,12 +9,7 @@ import { utils } from "./utils";
 
 export class unsplashService {
 
-    static downloadedPath: string;
     static lastPostId: string | undefined;
-
-    static getDownloadedPath(): string {
-        return unsplashService.downloadedPath;
-    }
 
     private static IsNewPost(area: ARea, postId: string): boolean {
         const last: UnsplashPostResult = area.trigger.outputs as UnsplashPostResult;
