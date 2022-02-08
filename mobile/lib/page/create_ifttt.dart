@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/api/areaService.dart';
 import 'package:mobile/page/color_list.dart';
-import 'package:mobile/page/test_page.dart';
 import 'package:mobile/service/IService.dart';
 import 'package:mobile/service/discord.dart';
 import 'package:mobile/service/dropbox.dart';
@@ -12,6 +11,7 @@ import 'package:mobile/service/twitch.dart';
 import 'package:mobile/service/twitter.dart';
 import 'package:mobile/service/undefined.dart';
 import 'package:mobile/service/unsplash.dart';
+import 'package:mobile/widget/DynamicList.dart';
 import 'package:mobile/widget/input_custom.dart';
 import 'package:mobile/api/model/area.dart';
 
@@ -60,8 +60,8 @@ class create_ifttt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TestList action = TestList(serviceList, true, "Service", "Action");
-    TestList reaction = TestList(serviceList, false, "Service", "Reaction");
+    DynamicList action = DynamicList(serviceList, true, "Service", "Action");
+    DynamicList reaction = DynamicList(serviceList, false, "Service", "Reaction");
     InputCustom actionParameter = InputCustom('Action Parameters', 'Enter your Parameters', '');
     InputCustom reactionParameter = InputCustom('Reaction Parameters', 'Enter your Parameters', '');
 
@@ -81,7 +81,7 @@ class create_ifttt extends StatelessWidget {
                 ),
                 child: Column(
                   children: <Widget>[
-                    action,
+                    action.widget,
                     actionParameter,
                     const Padding(padding: EdgeInsets.only(
                         top: 20.0,
@@ -92,7 +92,7 @@ class create_ifttt extends StatelessWidget {
                       color: color_list.primary,
                       size: 100.0,
                     ),
-                    reaction,
+                    reaction.widget,
                     reactionParameter,
                     const Padding(padding: EdgeInsets.only(
                         top: 10.0,
@@ -111,6 +111,10 @@ class create_ifttt extends StatelessWidget {
 
                           // actionParameter.controller.text;
                           // reactionParameter.controller.text;
+                          // action.controllerFirst.text
+                          // action.controllerSecond.text
+                          // reaction.controllerFirst.text
+                          // reaction.controllerSecond.text
                         },
                         style: ElevatedButton.styleFrom(
                             primary: color_list.primary,

@@ -7,7 +7,6 @@ import 'package:mobile/page/edit_ifttt.dart';
 import 'package:mobile/page/list_ifttt.dart';
 import 'package:mobile/page/settings_page.dart';
 import 'package:mobile/page/start_area.dart';
-import 'package:mobile/service/undefined.dart';
 
 Map<String, WidgetBuilder> buildRouteApp() {
   areaService api = areaService("");

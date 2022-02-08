@@ -1,56 +1,23 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/page/color_list.dart';
 import 'package:mobile/service/IService.dart';
-import 'package:mobile/service/discord.dart';
-import 'package:mobile/service/dropbox.dart';
-import 'package:mobile/service/github.dart';
-import 'package:mobile/service/linkedin.dart';
-import 'package:mobile/service/notion.dart';
-import 'package:mobile/service/twitch.dart';
-import 'package:mobile/service/twitter.dart';
-import 'package:mobile/service/undefined.dart';
-import 'package:mobile/service/unsplash.dart';
 
-/*class test_page extends StatefulWidget {
-  @override
-  State<test_page> createState() => test_page_class();
-}
+class DynamicList {
+  bool isService;
+  String firstTitle;
+  String secondTitle;
+  List<IService> service;
+  TextEditingController controllerFirst = TextEditingController();
+  TextEditingController controllerSecond = TextEditingController();
+  late TestList widget;
 
-class test_page_class extends State<test_page> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Container(
-          padding: const EdgeInsets.all(20.0),
-          child: FractionallySizedBox(
-            widthFactor: 0.45,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                TestList([
-                  github(false),
-                  twitch(false),
-                  twitter(false),
-                  discord(false),
-                  linkedin(false),
-                  notion(false),
-                  unsplash(false),
-                  dropbox(false),
-                  undefined(false),
-                ], true, "Service", "Action"),
-              ]
-            ),
-          )
-        )
-      )
-    );
+  DynamicList(this.service, this.isService, this.firstTitle, this.secondTitle) {
+    controllerFirst.text = "None";
+    controllerSecond.text = "None";
+    widget = TestList(service, isService, firstTitle, secondTitle, controllerFirst, controllerSecond);
   }
-}*/
+}
 
 class TestList extends StatefulWidget {
   List<IService> service;
@@ -58,26 +25,31 @@ class TestList extends StatefulWidget {
   String firstTitle;
   String secondTitle;
 
-  TestList(this.service, this.isService, this.firstTitle, this.secondTitle, {Key? key}) : super(key: key);
+  TextEditingController controllerFirst;
+  TextEditingController controllerSecond;
+
+  TestList(this.service, this.isService, this.firstTitle, this.secondTitle, this.controllerFirst, this.controllerSecond, {Key? key}) : super(key: key);
 
   @override
-  _TestListState createState() => _TestListState(service, isService, firstTitle, secondTitle);
+  _TestListState createState() => _TestListState(service, isService, firstTitle, secondTitle, controllerFirst, controllerSecond);
 }
 
 class _TestListState extends State<TestList> {
   List<IService> service;
   bool isService;
 
-  String text = "None";
-  List<String> list = [];
+  List<String> list = ["None"];
 
-  String textChild = "None";
   List<String> listChild = ["None"];
 
   String firstTitle = "";
   String secondTitle = "";
 
-  _TestListState(this.service, this.isService, this.firstTitle, this.secondTitle) {
+
+  TextEditingController textChild;
+  TextEditingController controllerSecond;
+
+  _TestListState(this.service, this.isService, this.firstTitle, this.secondTitle, this.textChild, this.controllerSecond) {
     list = getList();
   }
 
@@ -129,7 +101,7 @@ class _TestListState extends State<TestList> {
             ),
             DropdownButton<String>(
               isExpanded: true,
-              value: text,
+              value: textChild.text,
               icon: const Icon(Icons.arrow_downward),
               style: const TextStyle(color: color_list.fourth),
               underline: Container(
@@ -138,12 +110,12 @@ class _TestListState extends State<TestList> {
               ),
               onChanged: (String? newValue) {
                 setState(() {
-                  text = newValue!;
-                  textChild = "None";
+                  textChild.text = newValue!;
+                  controllerSecond.text = "None";
                   if (isService) {
-                    listChild = getChildListAction(text);
+                    listChild = getChildListAction(textChild.text);
                   } else {
-                    listChild = getChildListReaction(text);
+                    listChild = getChildListReaction(textChild.text);
                   }
                 });
               },
@@ -189,7 +161,7 @@ class _TestListState extends State<TestList> {
             ),
             DropdownButton<String>(
               isExpanded: true,
-              value: textChild,
+              value: controllerSecond.text,
               icon: const Icon(Icons.arrow_downward),
               style: const TextStyle(color: color_list.fourth),
               underline: Container(
@@ -198,7 +170,7 @@ class _TestListState extends State<TestList> {
               ),
               onChanged: (String? newValue) {
                 setState(() {
-                  textChild = newValue!;
+                  controllerSecond.text = newValue!;
                 });
               },
               items: listChild.map<DropdownMenuItem<String>>((String value) {
@@ -236,7 +208,7 @@ class _TestListState extends State<TestList> {
 
     for (var it in service) {
       list.add(it.getName());
-    } 
+    }
     return list;
   }
 }
