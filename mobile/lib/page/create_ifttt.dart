@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/api/areaService.dart';
+import 'package:mobile/api/model/area/Area.dart';
 import 'package:mobile/page/color_list.dart';
 import 'package:mobile/service/IService.dart';
 import 'package:mobile/service/discord.dart';
@@ -13,7 +14,6 @@ import 'package:mobile/service/undefined.dart';
 import 'package:mobile/service/unsplash.dart';
 import 'package:mobile/widget/DynamicList.dart';
 import 'package:mobile/widget/input_custom.dart';
-import 'package:mobile/api/model/area.dart';
 
 void buildRedirection(String action, String reaction, BuildContext context) {
   String route = '/Create\${$action|$reaction}';
@@ -35,7 +35,7 @@ void callbackClose(BuildContext context) {
 }
 
 void callbackSaveIfttt(BuildContext context, areaService api, String actionLabel, String reactionLabel, String token) {
-  api.createIfttt(Area("", actionLabel, reactionLabel, token)).then((value) => {
+  api.createIfttt(Area("", token, actionLabel, reactionLabel)).then((value) => {
     if (value) {
       Navigator.of(context).pushNamed('/List')
     }

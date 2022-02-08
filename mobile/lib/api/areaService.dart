@@ -2,7 +2,7 @@ import 'package:mobile/api/apiService.dart';
 import 'package:mobile/api/model/codeRequest.dart';
 import 'package:mobile/api/model/loginRequest.dart';
 import 'dart:developer' as developer;
-import 'model/area.dart';
+import 'model/area/Area.dart';
 import 'model/registerResponse.dart';
 import 'model/tokenRequest.dart';
 

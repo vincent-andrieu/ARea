@@ -1,4 +1,4 @@
-import 'package:mobile/api/model/area.dart';
+import 'area/Area.dart';
 
 class registerResponse {
   String _id = "";

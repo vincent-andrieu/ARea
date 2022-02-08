@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/api/areaService.dart';
-import 'package:mobile/api/model/area.dart' as area;
+import 'package:mobile/api/model/area/Action.dart' as area;
+import 'package:mobile/api/model/area/Reaction.dart';
 import 'package:mobile/page/color_list.dart';
 
 void callbackParams(BuildContext context) {
@@ -67,7 +68,7 @@ class list_ifttt extends StatelessWidget {
 
     if (api.token != null) {
       for (var element in api.token!.areas) {
-        list.add(buildCard(element.id, element.action, element.reaction, context));
+        list.add(buildCard(element.id, element.trigger, element.consequence, context));
       }
     }
     return list;
@@ -89,7 +90,7 @@ class list_ifttt extends StatelessWidget {
     );
   }
 
-  Widget buildCard(String id, area.Action action, area.Reaction reaction, BuildContext context) {
+  Widget buildCard(String id, area.Action action, Reaction reaction, BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(
           bottom: 20.0

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/api/areaService.dart';
-import 'package:mobile/api/model/area.dart';
+import 'package:mobile/api/model/area/Area.dart';
 import 'package:mobile/page/color_list.dart';
 import 'create_ifttt.dart';
 
@@ -76,7 +76,7 @@ class edit_ifttt extends StatelessWidget {
                           child: ElevatedButton(
                             onPressed: () {
                               // TODO EDIT
-                              api.updateIfttt(area.id, Area(area.id, area.action.label, area.reaction.label, api.token!.token));
+                              api.updateIfttt(area.id, Area(area.id, api.token!.token, area.action.label, area.reaction.label));
                               Navigator.of(context).pushNamed('/List');
                             },
                             style: ElevatedButton.styleFrom(
