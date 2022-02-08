@@ -62,7 +62,7 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
             if (done)
                 done(null, userEdited);
             else
-                return user;
+                return userEdited;
         }
     } catch (error: unknown) {
         console.log("twitchStrategy callback error: ", (error as Error).toString());
@@ -83,10 +83,9 @@ export async function TwitchMobileStrategy(req: Request, res: Response) {
 
         if (!user)
             throw "get empty user";
-        user.oauth = {};
-        res.json(user);
+        res.json(user.toRaw());
     } catch (error) {
-        console.error("TwtichMobileStrategy: Error", (error as Error).toString());
+        console.error("TwitchMobileStrategy: Error", (error as Error).toString());
         res.status(500).send((error as Error).toString());
     }
 }
@@ -97,7 +96,7 @@ passport.use("twitch-web", new TwitchStrategy(
 ));
 
 passport.use("twitch-mobile", new TwitchStrategy(
-    {...twitchMobileConfig, scope: "user_read"},
+    { ...twitchMobileConfig, scope: "user_read" },
     (accessToken: string, refreshToken: string, profile, done) => {
         console.log(accessToken);
         console.log(refreshToken);
