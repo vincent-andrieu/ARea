@@ -2,7 +2,7 @@ import { env } from "process";
 import { ApiClient, HelixStream } from "@twurple/api";
 import { ClientCredentialsAuthProvider } from "@twurple/auth";
 import ARea from "../classes/area.class";
-import { TwitchStreamResult } from "model/ActionResult";
+import { TwitchStreamResult } from "models/ActionResult";
 import axios from "axios";
 
 export class TwitchService {

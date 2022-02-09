@@ -7,7 +7,7 @@ import User from "@classes/user.class";
 import { UserSchema } from "@schemas/user.schema";
 import AuthController from "../controllers/AuthController";
 import { twitterConfig, twitterConfigMobile } from "@config/twitterConfig";
-import OAuthProvider from "../model/oAuthProvider.enum";
+import OAuthProvider from "../models/oAuthProvider.enum";
 import { TwitterService } from "../services/twitterService";
 
 const TwitterStrategy = passportTwitter.Strategy;

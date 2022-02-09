@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 import Action, { ActionType } from "@classes/action.class";
 import { ASchema } from "./abstract.schema";
-import { ServiceType } from "../model/ServiceType";
+import { ServiceType } from "../models/ServiceType";
 
 const actionSchema = new mongoose.Schema({
     type: { type: String, enum: ActionType },

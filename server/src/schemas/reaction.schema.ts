@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 import Reaction, { ReactionType } from "@classes/reaction.class";
 import { ASchema } from "./abstract.schema";
-import { ServiceType } from "../model/ServiceType";
+import { ServiceType } from "../models/ServiceType";
 
 const reactionSchema = new mongoose.Schema({
     type: { type: String, enum: ReactionType, required: true },
