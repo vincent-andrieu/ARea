@@ -51,7 +51,7 @@ export class TwitchService {
 
         const clientId = env.TWITCH_CLIENT_ID;
         const clientSecret = env.TWITCH_CLIENT_SECRET;
-        const redirectUri = env.TWITCH_CALLBACK_URL;
+        const redirectUri = env.TWITCH_CALLBACK_MOBILE;
         if (!clientId || !clientSecret || !redirectUri)
             return;
 
@@ -67,6 +67,7 @@ export class TwitchService {
             const response = await axios.post(`${url}?${params}`);
             return response.data;
         } catch (error) {
+            console.log("[TWITCH]:", (error as any).response.data.message);
             console.log("[TWITCH] getAccessToken: ", (error as Error).toString());
             return;
         }
