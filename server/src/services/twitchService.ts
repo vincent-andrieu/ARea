@@ -51,7 +51,7 @@ export class TwitchService {
 
         const clientId = env.TWITCH_CLIENT_ID;
         const clientSecret = env.TWITCH_CLIENT_SECRET;
-        const redirectUri = env.TWITCH_CALLBACK_URL;
+        const redirectUri = env.TWITCH_CALLBACK_MOBILE;
         if (!clientId || !clientSecret || !redirectUri)
             return;
 
@@ -95,7 +95,3 @@ export class TwitchService {
         }
     }
 }
-
-
-
-
