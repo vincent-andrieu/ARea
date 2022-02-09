@@ -3,13 +3,15 @@ import { Request, Response } from "express";
 
 import { AReaSchema } from "../schemas/area.schema";
 import ARea from "../classes/area.class";
-import { getStrObjectId } from "@classes/model.class";
+import Action, { ActionType } from "../classes/action.class";
+import { getStrObjectId, ObjectId } from "@classes/model.class";
 import { ActionSchema } from "@schemas/action.schema";
 import { ReactionSchema } from "@schemas/reaction.schema";
 import { UserSchema } from "@schemas/user.schema";
 import { ActionConfig } from "model/ActionConfig";
 import { ReactionConfig } from "model/ReactionConfig";
 import { ActionSelector, ReactionSelector } from "model/AreaSelector";
+import TimeService from "../services/TimeService";
 
 export default class AreaController {
 
@@ -56,10 +58,13 @@ export default class AreaController {
                 return res.status(400).send("Invalid body");
             try {
                 const areaBody = await AreaController._buildAreaBody(action, reaction, actionInput, reactionInput);
-                const area = await AreaController._areaSchema.add(areaBody);
+                const area: ARea = await AreaController._areaSchema.add(areaBody);
                 if (!area._id)
                     throw "Undefined area id";
                 AreaController._userSchema.addARea(userId, area._id);
+
+                if (areaBody.trigger.action.type == ActionType.CRON)
+                    TimeService.registerCron(area); // start cron job
                 res.status(201).json({ _id: area._id, ...areaBody });
             } catch (e: any) {
                 console.error("AreaController::create ", e);
@@ -124,12 +129,16 @@ export default class AreaController {
             const area = (user.areas as Array<ARea>).find((element: ARea) => getStrObjectId(element) === getStrObjectId(areaId));
             if (!area)
                 return res.status(404).send(`Failed to find area with id: ${areaId}`);
-
+            if ((area.trigger.action as Action)?.type == ActionType.CRON)
+                TimeService.unregisterCron(area._id as ObjectId); // stop cron job
             const areaBody = await AreaController._buildAreaBody(action, reaction, actionInput, reactionInput);
             const areaUpdate = await AreaController._areaSchema.edit({
                 _id: area._id,
                 ...areaBody
             });
+            if ((areaUpdate.trigger.action as Action)?.type == ActionType.CRON
+                && (area.trigger.action as Action)?.type != ActionType.CRON)
+                TimeService.registerCron(area); // start cron job
             res.status(200).json({
                 _id: areaUpdate._id,
                 ...areaBody
@@ -154,6 +163,8 @@ export default class AreaController {
 
             if (!area)
                 return res.status(404).send(`Failed to find area with id: ${areaId}`);
+            if ((area.trigger.action as Action)?.type == ActionType.CRON)
+                TimeService.unregisterCron(area._id as ObjectId); // stop cron job
             await AreaController._areaSchema.deleteById(areaId);
             await AreaController._userSchema.removeARea(userId, areaId);
 

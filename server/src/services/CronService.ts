@@ -8,7 +8,7 @@ import ARea from "@classes/area.class";
 import Reaction, { ReactionType } from "@classes/reaction.class";
 import Action, { ActionType } from "@classes/action.class";
 
-import { TwitchStreamConfig, UnsplashPostConfig } from "model/ActionConfig";
+import { DateTimeConfg, TwitchStreamConfig, UnsplashPostConfig } from "model/ActionConfig";
 import { DiscordPostMsgConfig, DropboxUploadConfig } from "model/ReactionConfig";
 
 import DiscordService from "./DiscordService";
@@ -16,35 +16,40 @@ import { TwitchService } from "./twitchService";
 import RSSService from "./RSSService";
 import { DropboxService } from "./DropboxService";
 import { unsplashService } from "./unsplashService";
+import TimeService from "./TimeService";
 import { TwitchStreamResult } from "../model/ActionResult";
 
-export class CronService {
+export default class CronService {
 
-    private _areSchema: AReaSchema = new AReaSchema();
-    private _cron;
+    private static _areSchema: AReaSchema = new AReaSchema();
+    private static _cron: any = undefined;
 
-    constructor(cronTime = "* * * * *") {
-        this._cron = cron.schedule(cronTime, this.execute, { scheduled: false });
-        this.start();
-        this.execute(); // first execution
-    }
+    public static setup = (cronTime = "* * * * *") => {
+        CronService._cron = cron.schedule(cronTime, this.execute, { scheduled: false });
+        CronService.start();
+        CronService.execute(); // first execution
+        DiscordService.connect();
+        TimeService.initCronActions();
+    };
 
-    public start = () => {
+    public static reset = (cronTime: string) => {
+        this.stop();
+        CronService._cron = cron.schedule(cronTime, this.execute);
+    };
+
+    public static start = () => {
         this._cron.start();
     };
 
-    public stop = () => {
+    public static stop = () => {
         this._cron.stop();
     };
 
-    public execute = async () => {
+    public static execute = async () => {
         console.log("Running CRON");
 
         // Fetch action-reactions
-        const areas = await this._areSchema.find({}, {
-            path: "areas",
-            populate: "action reaction" as unknown as PopulateOptions
-        });
+        const areas = await this._areSchema.getAreaList();
 
         areas.forEach(async (area) => {
             // Process action
@@ -56,16 +61,19 @@ export class CronService {
         });
     };
 
-    private async executeAction(area: ARea) {
+    private static async executeAction(area: ARea) {
         const action = area.trigger.action as Action;
 
         switch (action.type) {
-            case ActionType.DATE:
-                // TODO:
+            case ActionType.CRON: {
+                // cron action are scheduled
                 break;
-            case ActionType.DATETIME:
-                // TODO:
+            }
+            case ActionType.DATETIME: {
+                if (TimeService.evalDatetime(area))
+                    CronService.triggerReaction(area);
                 break;
+            }
             case ActionType.TWITCH_STREAM: {
                 const username = (area.trigger.inputs as TwitchStreamConfig).username;
 
@@ -73,22 +81,27 @@ export class CronService {
                     CronService.triggerReaction(area);
                 break;
             }
-            case ActionType.TWITTER_MSG:
+            case ActionType.TWITTER_MSG: {
                 // TODO:
                 break;
-            case ActionType.RSS_ENTRY:
+            }
+            case ActionType.RSS_ENTRY: {
                 if (await RSSService.evalAction(area))
                     CronService.triggerReaction(area);
                 break;
-            case ActionType.GITHUB_ISSUE:
+            }
+            case ActionType.GITHUB_ISSUE: {
                 // TODO:
                 break;
-            case ActionType.GITHUB_PULL_REQ:
+            }
+            case ActionType.GITHUB_PULL_REQ: {
                 // TODO:
                 break;
-            case ActionType.DISCORD_MSG:
+            }
+            case ActionType.DISCORD_MSG: {
                 // See DiscordService Bot
                 break;
+            }
             case ActionType.UNSPLASH_POST: {
                 const config: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
 
@@ -112,47 +125,13 @@ export class CronService {
 
         switch (reaction.type) {
             case ReactionType.TWITTER_MSG:
-
-                switch (action.type) {
-                    case ActionType.UNSPLASH_POST:
-                        console.log("action was unsplash post");
-                        break;
-                    case ActionType.TWITCH_STREAM: {
-                        const stream: TwitchStreamResult = area.trigger.outputs as TwitchStreamResult;
-
-                        const text = "there is a stream by " + stream.Username + " its named " + stream.StreamTitle;
-                        // TwitterService.TweetATweet(text, /* user */);
-                        break;
-                    }
-                    default:
-                        console.log("todo upload file from parameter given");
-                }
-                // TODO:
+                // TwitterService.rea_Tweet(area, user);
                 break;
             case ReactionType.TWITTER_BANNER:
-
-                switch (action.type) {
-                    case ActionType.UNSPLASH_POST: {
-                        const configUnsplash: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
-
-                        // TwitterService.UpdateProfileBanner(configUnsplash.downloadPath/* , user */);
-                        break;
-                    }
-                    default:
-                        console.log("todo upload file from parameter given");
-                }
+                // TwitterService.rea_UpdateBanner(area, user);
                 break;
             case ReactionType.TWITTER_PP:
-                switch (action.type) {
-                    case ActionType.UNSPLASH_POST: {
-                        const configUnsplash: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
-
-                        // TwitterService.UpdateProfileImage(configUnsplash.downloadPath/* , user */);
-                        break;
-                    }
-                    default:
-                        console.log("todo upload file from parameter given");
-                }
+                // TwitterService.rea_UpdatePP(area, user);
                 break;
             case ReactionType.DISCORD_MSG: {
                 const input: DiscordPostMsgConfig = area.consequence.inputs as DiscordPostMsgConfig;

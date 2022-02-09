@@ -2,20 +2,16 @@ import { env } from "process";
 
 import nodeFetch from "node-fetch";
 import { createApi } from "unsplash-js";
-import { readFile, createWriteStream } from "fs";
-import { HttpClient } from "typed-rest-client/HttpClient";
 import ARea from "@classes/area.class";
 import { Full } from "unsplash-js/dist/methods/photos/types";
 import { UnsplashPostResult } from "model/ActionResult";
+import { utils } from "./utils";
+import { unsplashConfig } from "@config/unsplashConfig";
+import axios from "axios";
 
 export class unsplashService {
 
-    static downloadedPath: string;
     static lastPostId: string | undefined;
-
-    static getDownloadedPath(): string {
-        return unsplashService.downloadedPath;
-    }
 
     private static IsNewPost(area: ARea, postId: string): boolean {
         const last: UnsplashPostResult = area.trigger.outputs as UnsplashPostResult;
@@ -23,31 +19,6 @@ export class unsplashService {
             return false;
         last.lastPostId = postId;
         return true;
-    }
-
-    private static async DownloadUrl(url: string, filepath: string) {
-        try {
-            const client = new HttpClient("clientTest");
-            const response = await client.get(url);
-            const file: NodeJS.WritableStream = createWriteStream(filepath);
-
-            if (response.message.statusCode !== 200) {
-                const err: Error = new Error(`Unexpected HTTP response: ${response.message.statusCode}`);
-                err["httpStatusCode"] = response.message.statusCode;
-                throw err;
-            }
-            return new Promise((resolve, reject) => {
-                file.on("error", (err) => reject(err));
-                const stream = response.message.pipe(file);
-                stream.on("close", () => {
-                    resolve(filepath);
-                });
-            });
-        } catch (error) {
-            const some_error = error as Error;
-
-            console.log(some_error);
-        }
     }
 
     private static setDownloadInfos(area: ARea, downloadUrl: string, post: Full) {
@@ -83,7 +54,7 @@ export class unsplashService {
             const dlPic = await unsplash.photos.trackDownload({ downloadLocation: pic.response?.links.download });
             if (!dlPic.response?.url)
                 return false;
-            await unsplashService.DownloadUrl(dlPic.response?.url, downloadPath);
+            await utils.DownloadUrl(dlPic.response?.url, downloadPath);
             this.setDownloadInfos(area, downloadPath, pic.response);
         } catch (error) {
             const some_error = error as Error;
@@ -109,6 +80,61 @@ export class unsplashService {
             const some_error = error as Error;
 
             console.log(some_error);
+        }
+    }
+
+    public static async getAccessToken(code: string) {
+
+        const clientId = unsplashConfig.clientID;
+        const clientSecret = unsplashConfig.clientSecret;
+        const redirectUri = env.UNSPLASH_CALLBACK_MOBILE;
+
+        if (!clientId || !clientSecret || !redirectUri)
+            return;
+
+        const url = "https://unsplash.com/oauth/token";
+        const params = new URLSearchParams();
+        params.append("client_id", clientId);
+        params.append("client_secret", clientSecret);
+        params.append("code", code);
+        params.append("grant_type", "authorization_code");
+        params.append("redirect_uri", redirectUri);
+
+        try {
+            const response = await axios.post(`${url}?${params}`);
+            return response.data;
+        } catch (error) {
+            console.log("[UNSPLASH] getAccessToken: ", (error as Error).toString());
+            return;
+        }
+    }
+
+    public static async getUserProfile(accessToken: string) {
+
+        try {
+            const res = await axios.get("https://api.unsplash.com/me", {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            });
+            const parsedData = res.data;
+            const profile = {
+                provider: "unsplash",
+                name: {
+                    firstName: parsedData.first_name,
+                    lastName: parsedData.last_name
+                },
+                id: parsedData.uid,
+                username: parsedData.username,
+                email: parsedData.email,
+                _raw: JSON.stringify(parsedData),
+                _json: parsedData
+
+            };
+            return profile;
+        } catch (error) {
+            console.log("[TWITCH] getUserProfile: ", (error as Error).toString());
+            return;
         }
     }
 }

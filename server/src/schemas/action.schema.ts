@@ -2,13 +2,15 @@ import mongoose from "mongoose";
 
 import Action, { ActionType } from "@classes/action.class";
 import { ASchema } from "./abstract.schema";
+import { ServiceType } from "../model/ServiceType";
 
 const actionSchema = new mongoose.Schema({
     type: { type: String, enum: ActionType },
     parameters: [{
         name: { type: String, required: true },
         type: { type: String, required: true }
-    }]
+    }],
+    service: { type: String, enum: ServiceType }
 }, {
     toObject: { virtuals: true },
     toJSON: { virtuals: true }

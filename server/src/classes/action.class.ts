@@ -1,8 +1,9 @@
 import Model from "./model.class";
 import { Parameter } from "../model/Parameters";
+import { ServiceType } from "../model/ServiceType";
 
 export enum ActionType {
-    DATE = "DATE",
+    CRON = "CRON",
     DATETIME = "DATETIME",
     TWITCH_STREAM = "TWITCH_STREAM",
     TWITTER_MSG = "TWITTER_MSG",
@@ -16,11 +17,13 @@ export enum ActionType {
 export default class Action extends Model {
     type: ActionType;
     parameters: Parameter[];
+    service: ServiceType;
 
     constructor(action: Action) {
         super(action);
 
         this.type = action.type;
         this.parameters = action.parameters;
+        this.service = action.service;
     }
 }

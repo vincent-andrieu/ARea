@@ -1,35 +1,32 @@
-export const getArea = {
+export const getReactionList = {
     get: {
-        tags: ["Area"],
+        tags: ["Service"],
         security: [{
             bearerAuth: []
         }],
-        description: "Get an area",
-        operationId: "getArea",
+        description: "Get a list of reaction available",
+        operationId: "getReactionList",
         parameters: [
             {
-                name: "id",
+                name: "service",
                 in: "path",
                 schema: {
-                    $ref: "#/components/schemas/id"
+                    $ref: "#/components/schemas/service"
                 },
-                required: true,
-                description: "Id of the area"
+                required: false,
+                description: "Service name"
             }
         ],
         responses: {
             "200": {
-                description: "Area is obtained",
+                description: "A list of reaction is obtained",
                 content: {
                     "application/json": {
                         schema: {
-                            $ref: "#/components/schemas/Area"
+                            $ref: "#/components/schemas/ReactionList"
                         }
                     }
                 }
-            },
-            "404": {
-                description: "Area not found"
             },
             "500": {
                 description: "Server error"
