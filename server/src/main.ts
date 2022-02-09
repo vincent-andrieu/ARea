@@ -2,12 +2,20 @@ import "module-alias/register";
 
 import Express from "./init/express";
 import DBDataset from "./init/DBDataset";
-import { CronService } from "./services/CronService";
+import CronService from "./services/CronService";
+import { sys } from "typescript";
 
-// Connection to the database and loading of the dataset.
-DBDataset.init(false);
+(async function() {
+    // Connection to the database and loading of the dataset.
+    try {
+        await DBDataset.init(false);
+    } catch (error) {
+        console.error("DBDataset.init(): ", (error as Error).toString());
+        sys.exit(1);
+    }
+    Express.connect();
 
-Express.connect();
+    // Action cron job
+    CronService.setup();
 
-// Action cron job
-new CronService();
+}());

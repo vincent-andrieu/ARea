@@ -15,7 +15,7 @@ export const actionConfig = {
         properties: {
             time: {
                 type: "string",
-                description: "cron config string",
+                description: "cron schedule expression",
                 example: "* * * * *"
             }
         }

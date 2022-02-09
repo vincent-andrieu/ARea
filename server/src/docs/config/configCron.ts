@@ -1,0 +1,26 @@
+export const configCron = {
+    post: {
+        tags: ["Config"],
+        description: "Change action cron schedule",
+        operationId: "configCron",
+        parameters: [],
+        requestBody: {
+            required: "true",
+            content: {
+                "application/json": {
+                    schema: {
+                        $ref: "#/components/schemas/ConfigCron"
+                    }
+                }
+            }
+        },
+        responses: {
+            "200": {
+                description: "Success"
+            },
+            "400": {
+                description: "Invalid parameter or access denied"
+            }
+        }
+    }
+};

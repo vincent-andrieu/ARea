@@ -158,7 +158,7 @@ describe("CRUD AREA", () => {
         areaId = res.body._id;
     });
 
-    it("PATCH /area", async () => {
+    it("PUT /area", async () => {
         const res = await request.put("/area/" + areaId)
             .send({
                 "trigger": {
@@ -166,7 +166,7 @@ describe("CRUD AREA", () => {
                         "time": "* * * * *"
                     },
                     "action": {
-                        "type": "DATE"
+                        "type": "CRON"
                     }
                 },
                 "consequence": {
@@ -180,11 +180,11 @@ describe("CRUD AREA", () => {
             })
             .set("Authorization", "bearer " + token);
         if (res.statusCode != 200)
-            console.info(res.error);
+            console.error(res.error);
         expect(res.statusCode).toBe(200);
         expect(res.body).toHaveProperty("trigger");
         expect(res.body).toHaveProperty("consequence");
-        expect(res.body.trigger.action.type).toBe("DATE");
+        expect(res.body.trigger.action.type).toBe("CRON");
         expect(res.body.consequence.reaction.type).toBe("TWITTER_MSG");
     });
 
@@ -198,7 +198,7 @@ describe("CRUD AREA", () => {
         expect(res.body).toHaveProperty("trigger");
         expect(res.body).toHaveProperty("consequence");
         expect(res.body.trigger.inputs.time).toBe("* * * * *");
-        expect(res.body.trigger.action.type).toBe("DATE");
+        expect(res.body.trigger.action.type).toBe("CRON");
         expect(res.body.consequence.reaction.type).toBe("TWITTER_MSG");
         expect(res.body.consequence.inputs.message).toBe("hello world");
     });
@@ -215,7 +215,7 @@ describe("CRUD AREA", () => {
         expect(res.body[0]).toHaveProperty("trigger");
         expect(res.body[0]).toHaveProperty("consequence");
         expect(res.body[0].trigger.inputs.time).toBe("* * * * *");
-        expect(res.body[0].trigger.action.type).toBe("DATE");
+        expect(res.body[0].trigger.action.type).toBe("CRON");
         expect(res.body[0].consequence.reaction.type).toBe("TWITTER_MSG");
         expect(res.body[0].consequence.inputs.message).toBe("hello world");
     });

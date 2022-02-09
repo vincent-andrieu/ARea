@@ -3,7 +3,7 @@ import { Parameter } from "../model/Parameters";
 import { ServiceType } from "../model/ServiceType";
 
 export enum ActionType {
-    DATE = "DATE",
+    CRON = "CRON",
     DATETIME = "DATETIME",
     TWITCH_STREAM = "TWITCH_STREAM",
     TWITTER_MSG = "TWITTER_MSG",
