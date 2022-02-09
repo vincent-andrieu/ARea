@@ -6,7 +6,7 @@ import { UserSchema } from "@schemas/user.schema";
 import AuthController from "../controllers/AuthController";
 import { Strategy as NotionStrategy } from "../module/passport-notion";
 import { notionConfig } from "@config/notionConfig";
-import OAuthProvider from "../model/oAuthProvider.enum";
+import OAuthProvider from "../models/oAuthProvider.enum";
 
 const successfullyAuthentificated = async (_req, accessToken: string, _, oauthData, userNotion, done) => {
     const userSchema = new UserSchema();

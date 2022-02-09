@@ -2,7 +2,7 @@ import mongoose, { PopulateOptions } from "mongoose";
 
 import User from "@classes/user.class";
 import { getStrObjectId, ObjectId } from "@classes/model.class";
-import OAuthProvider from "../model/oAuthProvider.enum";
+import OAuthProvider from "../models/oAuthProvider.enum";
 import { ASchema } from "./abstract.schema";
 import ARea from "@classes/area.class";
 

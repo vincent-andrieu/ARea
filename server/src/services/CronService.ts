@@ -8,16 +8,15 @@ import ARea from "@classes/area.class";
 import Reaction, { ReactionType } from "@classes/reaction.class";
 import Action, { ActionType } from "@classes/action.class";
 
-import { DateTimeConfg, TwitchStreamConfig, UnsplashPostConfig } from "model/ActionConfig";
-import { DiscordPostMsgConfig, DropboxUploadConfig } from "model/ReactionConfig";
+import { DateTimeConfg, TwitchStreamConfig, UnsplashPostConfig } from "models/ActionConfig";
+import { DiscordPostMsgConfig, DropboxUploadConfig } from "models/ReactionConfig";
 
-import DiscordService from "./DiscordService";
-import { TwitchService } from "./twitchService";
-import RSSService from "./RSSService";
-import { DropboxService } from "./DropboxService";
-import { unsplashService } from "./unsplashService";
-import TimeService from "./TimeService";
-import { TwitchStreamResult } from "../model/ActionResult";
+import DiscordService from "@services/DiscordService";
+import { TwitchService } from "@services/twitchService";
+import RSSService from "@services/RSSService";
+import { DropboxService } from "@services/DropboxService";
+import unsplashService from "@services/unsplashService";
+import TimeService from "@services/TimeService";
 
 export default class CronService {
 
@@ -107,7 +106,13 @@ export default class CronService {
 
                 if (await unsplashService.DownloadIfNewPost(area, config.username, config.downloadPath))
                     CronService.triggerReaction(area);
+                break;
+            }
+            case ActionType.UNSPLASH_RANDOM_POST: {
+                const config: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
 
+                if (await unsplashService.DownloadRandomPost(area, config.downloadPath))
+                    CronService.triggerReaction(area);
                 break;
             }
             default:

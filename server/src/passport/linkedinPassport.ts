@@ -5,7 +5,7 @@ import { linkedinConfig } from "@config/linkedinConfig";
 import { getStrObjectId } from "@classes/model.class";
 import User from "@classes/user.class";
 import { UserSchema } from "@schemas/user.schema";
-import OAuthProvider from "../model/oAuthProvider.enum";
+import OAuthProvider from "../models/oAuthProvider.enum";
 import AuthController from "../controllers/AuthController";
 
 const LinkedinStrategy = passportLinkedin.Strategy;
@@ -62,7 +62,8 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
 };
 
 passport.use(new LinkedinStrategy(
-    {...linkedinConfig,
+    {
+        ...linkedinConfig,
         scope: ["r_emailaddress", "r_liteprofile"]
     }, successfullyAuthentificated
 ));

@@ -7,12 +7,11 @@ import User from "@classes/user.class";
 import { getStrObjectId } from "@classes/model.class";
 import { UserSchema } from "@schemas/user.schema";
 import AuthController from "@controllers/AuthController";
-import OAuthProvider from "../model/oAuthProvider.enum";
+import OAuthProvider from "@models/oAuthProvider.enum";
 import { Request, Response } from "express";
-import { unsplashService } from "../services/unsplashService";
+import unsplashService from "@services/unsplashService";
 
 const UnsplashStrategy = Unsplash.Strategy;
-
 
 // export async function unsplashPassport(profile): Promise<void> {
 async function successfullyAuthentificated(accessToken: string, refreshToken: string, profile, done) {

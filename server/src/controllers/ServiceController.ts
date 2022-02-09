@@ -1,7 +1,7 @@
 import { ActionSchema } from "@schemas/action.schema";
 import { ReactionSchema } from "@schemas/reaction.schema";
 import { Request, Response } from "express";
-import { ServiceType } from "../model/ServiceType";
+import { ServiceType } from "../models/ServiceType";
 import Action from "../classes/action.class";
 import Reaction from "../classes/reaction.class";
 

@@ -1,6 +1,6 @@
 import Model from "./model.class";
-import { Parameter } from "../model/Parameters";
-import { ServiceType } from "../model/ServiceType";
+import { Parameter } from "../models/Parameters";
+import { ServiceType } from "../models/ServiceType";
 
 export enum ActionType {
     CRON = "CRON",
@@ -12,6 +12,7 @@ export enum ActionType {
     GITHUB_PULL_REQ = "GITHUB_PULL_REQ",
     DISCORD_MSG = "DISCORD_MSG",
     UNSPLASH_POST = "UNSPLASH_POST",
+    UNSPLASH_RANDOM_POST = "UNSPLASH_RANDOM_POST",
 }
 
 export default class Action extends Model {

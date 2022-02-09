@@ -6,7 +6,7 @@ import { serverConfig } from "@config/serverConfig";
 import { getStrObjectId } from "@classes/model.class";
 import { UserSchema } from "@schemas/user.schema";
 import { JwtData } from "../middlewares/checkJwt";
-import OAuthProvider from "../model/oAuthProvider.enum";
+import OAuthProvider from "../models/oAuthProvider.enum";
 import User from "@classes/user.class";
 
 export default class AuthController {

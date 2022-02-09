@@ -1,6 +1,6 @@
 import Model, { ObjectId } from "./model.class";
 import ARea from "./area.class";
-import OAuthProvider from "../model/oAuthProvider.enum";
+import OAuthProvider from "../models/oAuthProvider.enum";
 
 export interface IRawUser {
     username: string;

@@ -8,9 +8,9 @@ import { getStrObjectId, ObjectId } from "@classes/model.class";
 import { ActionSchema } from "@schemas/action.schema";
 import { ReactionSchema } from "@schemas/reaction.schema";
 import { UserSchema } from "@schemas/user.schema";
-import { ActionConfig } from "model/ActionConfig";
-import { ReactionConfig } from "model/ReactionConfig";
-import { ActionSelector, ReactionSelector } from "model/AreaSelector";
+import { ActionConfig } from "models/ActionConfig";
+import { ReactionConfig } from "models/ReactionConfig";
+import { ActionSelector, ReactionSelector } from "models/AreaSelector";
 import TimeService from "../services/TimeService";
 
 export default class AreaController {

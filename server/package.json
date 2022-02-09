@@ -28,7 +28,9 @@
         "@classes": "build/classes",
         "@config": "build/config",
         "@schemas": "build/schemas",
-        "@controllers": "build/controllers"
+        "@controllers": "build/controllers",
+        "@services": "build/services",
+        "@models": "build/models"
     },
     "dependencies": {
         "@discordjs/rest": "^0.3.0",
@@ -112,7 +114,9 @@
             "@classes/(.*)": "<rootDir>/build/classes/$1",
             "@config/(.*)": "<rootDir>/build/config/$1",
             "@schemas/(.*)": "<rootDir>/build/schemas/$1",
-            "@controllers/(.*)": "<rootDir>/build/controllers/$1"
+            "@controllers/(.*)": "<rootDir>/build/controllers/$1",
+            "@services/(.*)": "<rootDir>/build/services/$1",
+            "@models/(.*)": "<rootDir>/build/models/$1"
         }
     }
 }

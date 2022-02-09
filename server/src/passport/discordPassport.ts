@@ -5,7 +5,7 @@ import { discordConfig } from "@config/discordConfig";
 import User from "@classes/user.class";
 import { UserSchema } from "@schemas/user.schema";
 import { getStrObjectId } from "@classes/model.class";
-import OAuthProvider from "../model/oAuthProvider.enum";
+import OAuthProvider from "../models/oAuthProvider.enum";
 import AuthController from "../controllers/AuthController";
 
 const successfullyAuthentificated = async (accessToken: string, refreshToken: string, profile: Profile, done: VerifyCallback) => {

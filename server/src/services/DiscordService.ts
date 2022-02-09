@@ -3,7 +3,7 @@ import ARea from "@classes/area.class";
 import { AReaSchema } from "@schemas/area.schema";
 import { Client, Message, TextChannel } from "discord.js";
 import { discordBotConfig } from "@config/discordConfig";
-import { DiscordMessageConfig } from "../model/ActionConfig";
+import { DiscordMessageConfig } from "../models/ActionConfig";
 import CronService from "./CronService";
 
 interface ChannelListenerItem {

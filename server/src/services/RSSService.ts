@@ -1,6 +1,6 @@
 import { AReaSchema } from "../schemas/area.schema";
 import ARea from "../classes/area.class";
-import { RSSConfig } from "../model/ActionConfig";
+import { RSSConfig } from "../models/ActionConfig";
 import axios from "axios";
 import bcrypt from "bcryptjs";
 
