@@ -1,25 +1,25 @@
-export const listAreas = {
+export const getServiceList = {
     get: {
-        tags: ["Area"],
+        tags: ["Service"],
         security: [{
             bearerAuth: []
         }],
-        description: "List all the areas of an user",
-        operationId: "listAreas",
+        description: "Get a list of service available",
+        operationId: "getServiceList",
         parameters: [],
         responses: {
             "200": {
-                description: "Area were obtained",
+                description: "A list of service is obtained",
                 content: {
                     "application/json": {
                         schema: {
-                            $ref: "#/components/schemas/Areas"
+                            $ref: "#/components/schemas/ServiceList"
                         }
                     }
                 }
             },
-            "404": {
-                description: "Area list not found"
+            "500": {
+                description: "Server error"
             }
         }
     }

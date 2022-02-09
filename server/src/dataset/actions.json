@@ -1,86 +1,95 @@
 [
   {
-    "type": "DATE",
+    "type": "CRON",
     "parameters": [
-        {
-          "name": "time",
-          "type": "TIME"
-        }
-    ]
+      {
+        "name": "Cron schedule expression",
+        "type": "TIME"
+      }
+    ],
+    "service": "CRON"
   },
   {
     "type": "DATETIME",
     "parameters": [
-        {
-          "name": "time",
-          "type": "DATETIME"
-        }
-    ]
+      {
+        "name": "Timestamp",
+        "type": "DATETIME"
+      }
+    ],
+    "service": "CRON"
   },
   {
     "type": "TWITCH_STREAM",
     "parameters": [
-        {
-          "name": "username",
-          "type": "TEXT"
-        }
-    ]
+      {
+        "name": "username",
+        "type": "TEXT"
+      }
+    ],
+    "service": "TWITCH"
   },
   {
     "type": "TWITTER_MSG",
     "parameters": [
-        {
-          "name": "username",
-          "type": "TEXT"
-        }
-    ]
+      {
+        "name": "username",
+        "type": "TEXT"
+      }
+    ],
+    "service": "TWITTER"
   },
   {
     "type": "RSS_ENTRY",
     "parameters": [
-        {
-          "name": "url",
-          "type": "URL"
-        }
-    ]
+      {
+        "name": "url",
+        "type": "URL"
+      }
+    ],
+    "service": "RSS"
   },
   {
     "type": "GITHUB_ISSUE",
     "parameters": [
-        {
-          "name": "Owner",
-          "type": "TEXT"
-        },
-        {
-          "name": "Respository",
-          "type": "TEXT"
-        }
-    ]
+      {
+        "name": "Owner",
+        "type": "TEXT"
+      },
+      {
+        "name": "Respository",
+        "type": "TEXT"
+      }
+    ],
+    "service": "GITHUB"
   },
   {
     "type": "GITHUB_PULL_REQ",
     "parameters": [
-        {
-          "name": "Owner",
-          "type": "TEXT"
-        },
-        {
-          "name": "Respository",
-          "type": "TEXT"
-        }
-    ]
+      {
+        "name": "Owner",
+        "type": "TEXT"
+      },
+      {
+        "name": "Respository",
+        "type": "TEXT"
+      }
+    ],
+    "service": "GITHUB"
   },
   {
     "type": "DISCORD_MSG",
     "parameters": [
-        {
-          "name": "Channel Id",
-          "type": "TEXT"
-        }
-    ]
+      {
+        "name": "Channel Id",
+        "type": "TEXT"
+      }
+    ],
+    "service": "DISCORD"
   },
   {
     "type": "UNSPLASH_POST",
-    "parameters": []
+    "parameters": [],
+    "service": "UNSPLASH"
   }
 ]

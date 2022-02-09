@@ -51,7 +51,7 @@ export class TwitchService {
 
         const clientId = env.TWITCH_CLIENT_ID;
         const clientSecret = env.TWITCH_CLIENT_SECRET;
-        const redirectUri = env.TWITCH_CALLBACK_URL;
+        const redirectUri = env.TWITCH_CALLBACK_MOBILE;
         if (!clientId || !clientSecret || !redirectUri)
             return;
 
@@ -90,12 +90,8 @@ export class TwitchService {
                 provider: "twitch"
             };
         } catch (error) {
-            console.log("[TWITCH] getAccessToken: ", (error as Error).toString());
+            console.log("[TWITCH] getUserProfile: ", (error as Error).toString());
             return;
         }
     }
 }
-
-
-
-

@@ -17,5 +17,11 @@ export const action = {
                 $ref: "#/components/schemas/Parameters"
             }
         }
+    },
+    ActionList: {
+        type: "array",
+        items: {
+            $ref: "#/components/schemas/Action"
+        }
     }
 };

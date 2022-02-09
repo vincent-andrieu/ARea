@@ -1,6 +1,9 @@
 export const updateArea = {
     put: {
         tags: ["Area"],
+        security: [{
+            bearerAuth: []
+        }],
         description: "Update an area",
         operationId: "updateArea",
         parameters: [

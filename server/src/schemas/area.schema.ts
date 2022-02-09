@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { PopulateOptions } from "mongoose";
 
 import ARea from "@classes/area.class";
 import { ASchema } from "./abstract.schema";
@@ -27,10 +27,25 @@ export class AReaSchema extends ASchema<ARea> {
     }
 
     public async fetchByAction(type: ActionType) {
-        const list = await AReaSchema.actionSchema.find({ type });
-        const idList = list.map((action: Action) => action._id);
+        const result = await this.getAreaList();
 
-        return await this._model.find(
-            { action: { $in: idList } }).populate("action reaction") as unknown as ARea[];
+        return result.filter(area => {
+            return (area.trigger.action as Action)?.type == type;
+        });
     }
+
+    public async getAreaList(): Promise<ARea[]> {
+        const result = this.find({}, [
+            {
+                path: "trigger",
+                populate: "action" as unknown as PopulateOptions
+            },
+            {
+                path: "consequence",
+                populate: "reaction" as unknown as PopulateOptions
+            }
+        ]);
+        return result;
+    }
+
 }

@@ -1,14 +1,17 @@
 export const deleteArea = {
     delete: {
         tags: ["Area"],
+        security: [{
+            bearerAuth: []
+        }],
         description: "Deleting an area",
         operationId: "deleteArea",
         parameters: [
             {
                 name: "id",
                 in: "path",
-                schema:{
-                    $ref:"#/components/schemas/id"
+                schema: {
+                    $ref: "#/components/schemas/id"
                 },
                 required: true,
                 description: "Id of the area to be deleted"
