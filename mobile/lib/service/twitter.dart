@@ -25,6 +25,7 @@ class twitter extends IService {
   List<String> getReaction() {
     return [
       'Make a tweet',
+      'Change Banner',
       'Update profile image',
       'None'
     ];

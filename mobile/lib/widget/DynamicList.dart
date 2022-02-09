@@ -8,13 +8,11 @@ class DynamicList {
   String firstTitle;
   String secondTitle;
   List<IService> service;
-  TextEditingController controllerFirst = TextEditingController();
-  TextEditingController controllerSecond = TextEditingController();
+  TextEditingController controllerFirst = TextEditingController(text: "None");
+  TextEditingController controllerSecond = TextEditingController(text: "None");
   late TestList widget;
 
   DynamicList(this.service, this.isService, this.firstTitle, this.secondTitle) {
-    controllerFirst.text = "None";
-    controllerSecond.text = "None";
     widget = TestList(service, isService, firstTitle, secondTitle, controllerFirst, controllerSecond);
   }
 }
@@ -25,8 +23,8 @@ class TestList extends StatefulWidget {
   String firstTitle;
   String secondTitle;
 
-  TextEditingController controllerFirst;
-  TextEditingController controllerSecond;
+  final controllerFirst;
+  final controllerSecond;
 
   TestList(this.service, this.isService, this.firstTitle, this.secondTitle, this.controllerFirst, this.controllerSecond, {Key? key}) : super(key: key);
 

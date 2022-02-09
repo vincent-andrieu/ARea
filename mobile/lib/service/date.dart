@@ -1,33 +1,36 @@
 import 'package:mobile/service/IService.dart';
 
-class dropbox extends IService {
-  dropbox(bool src) : super(src);
+class date extends IService {
+  date(bool src) : super(src);
 
   @override
   List<String> getAction() {
-    return ["None"];
+    return [
+      'Date',
+      'Date time',
+      'None'
+    ];
   }
 
   @override
   String getIcon() {
-    return "assets/dropbox.png";
+    return "assets/date.png";
   }
 
   @override
   String getName() {
-    return "dropbox";
+    return "date";
   }
 
   @override
   List<String> getReaction() {
     return [
-      "Upload file",
-      "None"
+      'None'
     ];
   }
 
   @override
   String getUrl() {
-    return "/auth/dropbox/mobile";
+    return "";
   }
 }
