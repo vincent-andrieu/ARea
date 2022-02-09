@@ -8,7 +8,7 @@ import { UserSchema } from "../schemas/user.schema";
 import OAuthProvider from "../model/oAuthProvider.enum";
 
 import { TwitterService } from "../services/twitterService";
-import { ActionConfig, TwitchStreamConfig, TwitterTweetConfig } from "../model/ActionConfig";
+import { TwitterTweetConfig } from "../model/ActionConfig";
 import Action, { ActionType } from "../classes/action.class";
 import { TwitchStreamResult } from "../model/ActionResult";
 import { TwitterPostTweetConfig } from "../model/ReactionConfig";

@@ -1,10 +1,13 @@
+/* eslint-disable indent */
 import { env } from "process";
 
-import TwitterApi, { TweetV2, UserV2Result } from "twitter-api-v2";
+import TwitterApi, { SendTweetV2Params, TweetV2, UserV2Result } from "twitter-api-v2";
 import User from "../classes/user.class";
 import ARea from "../classes/area.class";
-import { TwitterTweetResult } from "model/ActionResult";
-import { TwitterTweetConfig } from "model/ActionConfig";
+import { TwitchStreamResult, TwitterTweetResult, UnsplashPostResult } from "model/ActionResult";
+import { TwitchStreamConfig, TwitterTweetConfig } from "model/ActionConfig";
+import Action, { ActionType } from "@classes/action.class";
+import { utils } from "./utils";
 import { twitterConfig } from "@config/twitterConfig";
 import axios from "axios";
 
@@ -25,7 +28,7 @@ export class TwitterService {
         return true;
     }
 
-    private static getClient(user: User) {
+    private static getClient(user: User): TwitterApi {
 
         if (!env.TWITTER_API_KEY || !env.TWITTER_API_SECRET_KEY || !user.oauth?.twitter)
             throw "Invalid twitter credentials";
@@ -72,26 +75,34 @@ export class TwitterService {
     }
 
     public static async GetUserLastTweet(user: User, area: ARea, username: string): Promise<boolean> {
-        const client = TwitterService.getClient(user);
 
         try {
+            const client = TwitterService.getClient(user);
+            if (!client)
+                return false;
             const userTweeting = await client.v2.userByUsername(username);
+            if (!userTweeting)
+                return false;
             const userTimeline = await client.v2.userTimeline(userTweeting.data.id, {
                 expansions: ["attachments.media_keys", "attachments.poll_ids", "referenced_tweets.id"],
                 "media.fields": ["url"]
             });
-            if (!userTimeline || !userTimeline[0])
+            if (!userTimeline)
                 return false;
-            const tweet = userTimeline[0];
+            for await (const tweet of userTimeline) {
+                if (tweet.referenced_tweets && tweet.referenced_tweets["type"] != "tweeted")
+                    continue;
 
-            if (tweet.referenced_tweets && tweet.referenced_tweets["type"] != "tweeted")
-                return false;
-            const inputs = area.trigger.inputs as TwitterTweetResult;
+                if (!TwitterService.IsNewPost(area, tweet.id))
+                    return false;
 
-            if (!TwitterService.IsNewPost(area, tweet.id))
-                return false;
-            this.setTweetInfos(area, tweet);
-            inputs.lastTweetId = tweet.id;
+                this.setTweetInfos(area, tweet);
+
+                const inputs = area.trigger.inputs as TwitterTweetResult;
+
+                inputs.lastTweetId = tweet.id;
+                break;
+            }
         } catch (error: unknown) {
             const some_error = error as Error;
 
@@ -101,11 +112,14 @@ export class TwitterService {
         return true;
     }
 
-    public static async TweetATweet(text: string, user: User): Promise<void> {
+
+    // Reactions
+
+    private static async TweetATweet(tweet: SendTweetV2Params, user: User): Promise<void> {
         const client = TwitterService.getClient(user);
 
         try {
-            client.v2.tweet(text);
+            client.v2.tweet(tweet);
         } catch (error) {
             const some_error = error as Error;
 
@@ -113,7 +127,7 @@ export class TwitterService {
         }
     }
 
-    public static async UpdateProfileBanner(imagePath: string, user: User): Promise<void> {
+    private static async UpdateProfileBanner(imagePath: string, user: User): Promise<void> {
         const client = TwitterService.getClient(user);
 
         try {
@@ -125,7 +139,7 @@ export class TwitterService {
         }
     }
 
-    public static async UpdateProfileImage(imagePath: string, user: User): Promise<void> {
+    private static async UpdateProfileImage(imagePath: string, user: User): Promise<void> {
         const client = TwitterService.getClient(user);
 
         try {
@@ -137,14 +151,142 @@ export class TwitterService {
         }
     }
 
+    private static async rea_TweetTwitchStream(area: ARea, client: TwitterApi): Promise<SendTweetV2Params> {
+        const stream: TwitchStreamResult = area.trigger.outputs as TwitchStreamResult;
+        const text = "there is a stream by " + stream.Username + " its named " + stream.StreamTitle;
+
+        return { text: text };
+    }
+
+    private static async rea_TweetUnsplashPost(area: ARea, client: TwitterApi): Promise<SendTweetV2Params> {
+        const post: UnsplashPostResult = area.trigger.outputs as UnsplashPostResult;
+        const mediaIds = await Promise.all([
+            // https://github.com/PLhery/node-twitter-api-v2/blob/f4b468171907b28d6a2924b0c03b05d05a5b13d5/test/media-upload.test.ts
+            client.v1.uploadMedia(post.downloadPath)
+        ]);
+        const text = post.username + " just posted a new picture on splash !";
+        const tweet: SendTweetV2Params = { text: text, media: { media_ids: mediaIds } };
+
+        return tweet;
+    }
+
+    public static async rea_Tweet(area: ARea, user: User) {
+        const client: TwitterApi = TwitterService.getClient(user);
+        const action: Action = area.trigger.action as Action;
+        let tweet: SendTweetV2Params | null = null;
+
+        try {
+
+            switch (action.type) {
+                case ActionType.UNSPLASH_POST:
+                    tweet = await TwitterService.rea_TweetUnsplashPost(area, client);
+                    console.log("action was unsplash post");
+                    break;
+                case ActionType.TWITCH_STREAM:
+                    tweet = await TwitterService.rea_TweetTwitchStream(area, client);
+                    break;
+                default:
+                    console.log("todo upload file from parameter given");
+
+            }
+        } catch (error: unknown) {
+            const some_error = error as Error;
+
+            console.log(some_error);
+            return;
+        }
+
+        if (tweet) {
+            console.log("tweet will be :", tweet);
+            TwitterService.TweetATweet(tweet, user);
+        }
+
+    }
+    private static async rea_UnsplashPost(area: ARea): Promise<string> {
+        const post: UnsplashPostResult = area.trigger.outputs as UnsplashPostResult;
+
+        return post.downloadPath;
+    }
+
+    private static async rea_TwitchStream(area: ARea): Promise<string> {
+        const stream: TwitchStreamResult = area.trigger.outputs as TwitchStreamResult;
+        const filepath = "/tmp/" + stream.StreamTitle;
+
+        utils.DownloadUrl(stream.StreamThumbnailUrl, filepath);
+        return filepath;
+    }
+
+    public static async rea_UpdateBanner(area: ARea, user: User) {
+        const client: TwitterApi = TwitterService.getClient(user);
+        const action: Action = area.trigger.action as Action;
+        let imagePath: string | null = null;
+
+        try {
+
+            switch (action.type) {
+                case ActionType.UNSPLASH_POST:
+                    imagePath = await TwitterService.rea_UnsplashPost(area);
+                    break;
+                case ActionType.TWITCH_STREAM:
+                    imagePath = await TwitterService.rea_TwitchStream(area);
+                    break;
+                default:
+                    console.log("todo: default action");
+
+            }
+        } catch (error: unknown) {
+            const some_error = error as Error;
+
+            console.log(some_error);
+            return;
+        }
+
+        if (imagePath) {
+            console.log("new banner will be :", imagePath);
+            TwitterService.UpdateProfileBanner(imagePath, user);
+        }
+
+    }
+
+    public static async rea_UpdatePP(area: ARea, user: User) {
+        const client: TwitterApi = TwitterService.getClient(user);
+        const action: Action = area.trigger.action as Action;
+        let imagePath: string | null = null;
+
+        try {
+            switch (action.type) {
+                case ActionType.UNSPLASH_POST:
+                    imagePath = await TwitterService.rea_UnsplashPost(area);
+                    break;
+                case ActionType.TWITCH_STREAM:
+                    imagePath = await TwitterService.rea_TwitchStream(area);
+                    break;
+                default:
+                    console.log("todo: default action");
+
+            }
+        } catch (error: unknown) {
+            const some_error = error as Error;
+
+            console.log(some_error);
+            return;
+        }
+
+        if (imagePath) {
+            console.log("new PP will be :", imagePath);
+            TwitterService.UpdateProfileImage(imagePath, user);
+        }
+
+    }
+
     public static parseProfileUser(json) {
         const profile = {
             id: "",
             id_str: "",
             username: "",
             displayName: "",
-            emails: [{value: ""}],
-            photos: [{value: ""}],
+            emails: [{ value: "" }],
+            photos: [{ value: "" }],
             provider: "",
             _raw: "",
             _json: {},

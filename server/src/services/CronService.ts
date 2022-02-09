@@ -125,47 +125,13 @@ export default class CronService {
 
         switch (reaction.type) {
             case ReactionType.TWITTER_MSG:
-
-                switch (action.type) {
-                    case ActionType.UNSPLASH_POST:
-                        console.log("action was unsplash post");
-                        break;
-                    case ActionType.TWITCH_STREAM: {
-                        const stream: TwitchStreamResult = area.trigger.outputs as TwitchStreamResult;
-
-                        const text = "there is a stream by " + stream.Username + " its named " + stream.StreamTitle;
-                        // TwitterService.TweetATweet(text, /* user */);
-                        break;
-                    }
-                    default:
-                        console.log("todo upload file from parameter given");
-                }
-                // TODO:
+                // TwitterService.rea_Tweet(area, user);
                 break;
             case ReactionType.TWITTER_BANNER:
-
-                switch (action.type) {
-                    case ActionType.UNSPLASH_POST: {
-                        const configUnsplash: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
-
-                        // TwitterService.UpdateProfileBanner(configUnsplash.downloadPath/* , user */);
-                        break;
-                    }
-                    default:
-                        console.log("todo upload file from parameter given");
-                }
+                // TwitterService.rea_UpdateBanner(area, user);
                 break;
             case ReactionType.TWITTER_PP:
-                switch (action.type) {
-                    case ActionType.UNSPLASH_POST: {
-                        const configUnsplash: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
-
-                        // TwitterService.UpdateProfileImage(configUnsplash.downloadPath/* , user */);
-                        break;
-                    }
-                    default:
-                        console.log("todo upload file from parameter given");
-                }
+                // TwitterService.rea_UpdatePP(area, user);
                 break;
             case ReactionType.DISCORD_MSG: {
                 const input: DiscordPostMsgConfig = area.consequence.inputs as DiscordPostMsgConfig;

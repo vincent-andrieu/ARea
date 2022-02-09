@@ -10,8 +10,7 @@ export enum ReactionType {
     DISCORD_MSG = "DISCORD_MSG",
     GITHUB_ISSUE = "GITHUB_ISSUE",
     NOTION_MSG = "NOTION_MSG",
-    DROPBOX_UPLOAD = "DROPBOX_UPLOAD",
-    UNSPLASH = "UNSPLASH"
+    DROPBOX_UPLOAD = "DROPBOX_UPLOAD"
 }
 
 export default class Reaction extends Model {
