@@ -1,6 +1,9 @@
 export const getServiceList = {
     get: {
         tags: ["Service"],
+        security: [{
+            bearerAuth: []
+        }],
         description: "Get a list of service available",
         operationId: "getServiceList",
         parameters: [],

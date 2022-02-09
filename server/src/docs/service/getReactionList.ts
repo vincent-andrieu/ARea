@@ -1,6 +1,9 @@
 export const getReactionList = {
     get: {
         tags: ["Service"],
+        security: [{
+            bearerAuth: []
+        }],
         description: "Get a list of reaction available",
         operationId: "getReactionList",
         parameters: [

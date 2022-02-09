@@ -1,6 +1,9 @@
 export const getArea = {
     get: {
         tags: ["Area"],
+        security: [{
+            bearerAuth: []
+        }],
         description: "Get an area",
         operationId: "getArea",
         parameters: [
@@ -17,9 +20,9 @@ export const getArea = {
         responses: {
             "200": {
                 description: "Area is obtained",
-                content:{
+                content: {
                     "application/json": {
-                        schema:{
+                        schema: {
                             $ref: "#/components/schemas/Area"
                         }
                     }

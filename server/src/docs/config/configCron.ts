@@ -1,6 +1,9 @@
 export const configCron = {
     post: {
         tags: ["Config"],
+        security: [{
+            bearerAuth: []
+        }],
         description: "Change action cron schedule",
         operationId: "configCron",
         parameters: [],
