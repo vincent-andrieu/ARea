@@ -1,6 +1,9 @@
 export const listAreas = {
     get: {
         tags: ["Area"],
+        security: [{
+            bearerAuth: []
+        }],
         description: "List all the areas of an user",
         operationId: "listAreas",
         parameters: [],

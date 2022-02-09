@@ -1,6 +1,9 @@
 export const getActionList = {
     get: {
         tags: ["Service"],
+        security: [{
+            bearerAuth: []
+        }],
         description: "Get a list of action available",
         operationId: "getActionList",
         parameters: [

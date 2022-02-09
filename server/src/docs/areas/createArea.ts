@@ -1,14 +1,17 @@
 export const createArea = {
     post: {
         tags: ["Area"],
+        security: [{
+            bearerAuth: []
+        }],
         description: "Create a new Area",
         operationId: "createArea",
-        parameters:[],
+        parameters: [],
         requestBody: {
             required: "true",
-            content:{
+            content: {
                 "application/json": {
-                    schema:{
+                    schema: {
                         $ref: "#/components/schemas/AreaInput"
                     },
                     examples: {
@@ -19,12 +22,12 @@ export const createArea = {
                 }
             }
         },
-        responses:{
-            "201":{
+        responses: {
+            "201": {
                 description: "Area created successfully",
                 content: {
                     "application/json": {
-                        schema:{
+                        schema: {
                             $ref: "#/components/schemas/Area"
                         }
                     }
@@ -33,7 +36,7 @@ export const createArea = {
             "400": {
                 description: "Invalid body"
             },
-            "500":{
+            "500": {
                 description: "Server error"
             }
         }
