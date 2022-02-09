@@ -26,7 +26,7 @@ export default class AuthController {
 
     public static async login(req: Request, res: Response) {
         try {
-            const username: string = req.body.username;
+            const username: string = req.body.username?.toLowerCase();
             const password: string = req.body.password;
             let user: User;
 
@@ -59,7 +59,7 @@ export default class AuthController {
 
     public static async register(req: Request, res: Response) {
         try {
-            const username: string = req.body.username;
+            const username: string = req.body.username?.toLowerCase();
             const password: string = req.body.password;
 
             if (!(username && password))
@@ -78,7 +78,7 @@ export default class AuthController {
 
             // Create user in our database
             const user = await AuthController._userSchema.add(new User({
-                username: username.toLowerCase(),
+                username: username,
                 password: encryptedPassword,
                 token: "",
                 oauthLoginProvider: OAuthProvider.LOCAL,
