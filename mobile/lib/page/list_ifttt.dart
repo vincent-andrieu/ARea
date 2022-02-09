@@ -3,6 +3,8 @@ import 'package:mobile/api/areaService.dart';
 import 'package:mobile/api/model/area/Action.dart' as area;
 import 'package:mobile/api/model/area/Reaction.dart';
 import 'package:mobile/page/color_list.dart';
+import 'package:mobile/service/IService.dart';
+import 'package:mobile/tools/ActionReactionTools.dart';
 
 void callbackParams(BuildContext context) {
   Navigator.of(context).pushNamed('/Settings');
@@ -91,6 +93,9 @@ class list_ifttt extends StatelessWidget {
   }
 
   Widget buildCard(String id, area.Action action, Reaction reaction, BuildContext context) {
+    IService actionName = getServiceActionName(action.type);
+    IService reactionName = getServiceReactionName(reaction.type);
+
     return Container(
       padding: const EdgeInsets.only(
           bottom: 20.0
@@ -104,13 +109,13 @@ class list_ifttt extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                buildSubCard(action.label, "Not dev", "assets/${action.label}.png", context),
+                buildSubCard(actionName.getName(), "Nombre: ${action.parameters.length}", actionName.getIcon(), context),
                 const Icon(
                   Icons.arrow_forward_outlined,
                   color: color_list.primary,
                   size: 50.0,
                 ),
-                buildSubCard(reaction.label, "Not dev", "assets/${reaction.label}.png", context)
+                buildSubCard(reactionName.getName(), "Nombre: ${reaction.parameters.length}", reactionName.getIcon(), context)
               ],
             )
         ),

@@ -3,11 +3,13 @@ import 'package:mobile/api/areaService.dart';
 import 'package:mobile/enum/authentication_e.dart';
 import 'package:mobile/page/color_list.dart';
 import 'package:mobile/service/IService.dart';
+import 'package:mobile/service/date.dart' as areaDate;
 import 'package:mobile/service/discord.dart';
 import 'package:mobile/service/dropbox.dart';
 import 'package:mobile/service/github.dart';
 import 'package:mobile/service/linkedin.dart';
 import 'package:mobile/service/notion.dart';
+import 'package:mobile/service/rss.dart';
 import 'package:mobile/service/twitch.dart';
 import 'package:mobile/service/twitter.dart';
 import 'package:mobile/service/unsplash.dart';
@@ -57,6 +59,8 @@ class auth_page extends StatelessWidget {
     notion(false),      // TODO EDIT
     unsplash(false),    // TODO EDIT
     dropbox(false),     // TODO EDIT
+    rss(false),     // TODO EDIT
+    areaDate.date(false),     // TODO EDIT
   ];
 
   auth_page(authentication_e typeSrc, areaService apiSrc, {Key? key}) : super(key: key) {
