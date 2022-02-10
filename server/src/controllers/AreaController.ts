@@ -1,9 +1,9 @@
 import { PopulateOptions } from "mongoose";
 import { Request, Response } from "express";
 
-import { AReaSchema } from "../schemas/area.schema";
-import ARea from "../classes/area.class";
-import Action, { ActionType } from "../classes/action.class";
+import { AReaSchema } from "@schemas/area.schema";
+import ARea from "@classes/area.class";
+import Action, { ActionType } from "@classes/action.class";
 import { getStrObjectId, ObjectId } from "@classes/model.class";
 import { ActionSchema } from "@schemas/action.schema";
 import { ReactionSchema } from "@schemas/reaction.schema";
@@ -57,11 +57,11 @@ export default class AreaController {
             return null;
         return {
             trigger: {
-                action: actionInDb,
+                action: new Action(actionInDb),
                 inputs: actionInput
             },
             consequence: {
-                reaction: reactionInDb,
+                reaction: new Reaction(reactionInDb),
                 inputs: reactionInput
             }
         };
@@ -83,6 +83,7 @@ export default class AreaController {
                 const areaBody = await AreaController._buildAreaBody(action, reaction, actionInput, reactionInput);
                 if (!areaBody)
                     return res.status(400).send("Missing parameters");
+                const area: ARea = new ARea(await AreaController._areaSchema.add(areaBody));
                 if (!area._id)
                     throw "Undefined area id";
                 AreaController._userSchema.addARea(userId, area._id);
@@ -90,13 +91,13 @@ export default class AreaController {
                 if (areaBody.trigger.action.type == ActionType.CRON)
                     TimeService.registerCron(area); // start cron job
                 res.status(201).json({ _id: area._id, ...areaBody });
-            } catch (e: any) {
-                console.error("AreaController::create ", e);
+            } catch (error) {
+                console.error("AreaController::create ", (error as Error).toString());
                 res.status(400).send("Invalid body: action reaction");
             }
-        } catch (error: any) {
-            console.log("[AreaController] create :", error.toString());
-            res.status(400).send(error.toString());
+        } catch (error) {
+            console.log("[AreaController] create :", (error as Error).toString());
+            res.status(400).send((error as Error).toString());
         }
     }
 
@@ -116,9 +117,9 @@ export default class AreaController {
                 return res.json(area);
             else
                 return res.status(404).send(`Failed to find area with id: ${id}`);
-        } catch (error: any) {
-            console.log(error.toString());
-            return res.status(404).send(error.toString());
+        } catch (error) {
+            console.log((error as Error).toString());
+            return res.status(404).send((error as Error).toString());
         }
     }
 
@@ -129,9 +130,12 @@ export default class AreaController {
             if (!userId || userId.length === 0 || !req.user?.data.user_id)
                 throw "Unknow user id";
             const user = await AreaController._userSchema.getAreaList(req.user?.data.user_id);
-            res.status(200).json(user.areas);
-        } catch (error: any) {
-            res.status(404).send(error.toString());
+            const areas = user.areas?.map(area => {
+                return new ARea(area);
+            });
+            res.status(200).json(areas);
+        } catch (error) {
+            res.status(404).send((error as Error).toString());
         }
     }
 
@@ -157,7 +161,7 @@ export default class AreaController {
                 TimeService.unregisterCron(area._id as ObjectId); // stop cron job
             const areaBody = await AreaController._buildAreaBody(action, reaction, actionInput, reactionInput);
             if (!areaBody)
-                return res.status(400).send("Missing parameters"); 
+                return res.status(400).send("Missing parameters");
             const areaUpdate = await AreaController._areaSchema.edit({
                 _id: area._id,
                 ...areaBody
@@ -169,8 +173,8 @@ export default class AreaController {
                 _id: areaUpdate._id,
                 ...areaBody
             });
-        } catch (error: any) {
-            res.status(500).send(error.toString());
+        } catch (error) {
+            res.status(500).send((error as Error).toString());
         }
     };
 
@@ -195,8 +199,8 @@ export default class AreaController {
             await AreaController._userSchema.removeARea(userId, areaId);
 
             return res.status(200).send(`Successfully deleted area ${areaId}`);
-        } catch (error: any) {
-            return res.status(500).send(error.toString());
+        } catch (error) {
+            return res.status(500).send((error as Error).toString());
         }
     };
 }
