@@ -7,9 +7,12 @@ export const parameters = {
     },
     Parameter: {
         type: "object",
-        required: ["name", "type"],
+        required: ["name", "type", "label"],
         properties: {
             name: {
+                type: "string"
+            },
+            label: {
                 type: "string"
             },
             type: {
