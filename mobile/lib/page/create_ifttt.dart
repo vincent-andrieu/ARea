@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/api/areaService.dart';
+import 'package:mobile/api/model/area/Action.dart' as area;
+import 'package:mobile/api/model/area/Area.dart';
+import 'package:mobile/api/model/area/Parameter.dart';
+import 'package:mobile/api/model/area/ParameterType.dart';
+import 'package:mobile/api/model/area/Reaction.dart';
 import 'package:mobile/page/color_list.dart';
 import 'package:mobile/service/IService.dart';
 import 'package:mobile/service/discord.dart';
@@ -7,13 +12,15 @@ import 'package:mobile/service/dropbox.dart';
 import 'package:mobile/service/github.dart';
 import 'package:mobile/service/linkedin.dart';
 import 'package:mobile/service/notion.dart';
+import 'package:mobile/service/rss.dart';
+import 'package:mobile/service/date.dart' as areaDate;
 import 'package:mobile/service/twitch.dart';
 import 'package:mobile/service/twitter.dart';
 import 'package:mobile/service/undefined.dart';
 import 'package:mobile/service/unsplash.dart';
+import 'package:mobile/tools/ActionReactionTools.dart';
 import 'package:mobile/widget/DynamicList.dart';
 import 'package:mobile/widget/input_custom.dart';
-import 'package:mobile/api/model/area.dart';
 
 void buildRedirection(String action, String reaction, BuildContext context) {
   String route = '/Create\${$action|$reaction}';
@@ -34,8 +41,8 @@ void callbackClose(BuildContext context) {
   Navigator.of(context).pop();
 }
 
-void callbackSaveIfttt(BuildContext context, areaService api, String actionLabel, String reactionLabel, String token) {
-  api.createIfttt(Area("", actionLabel, reactionLabel, token)).then((value) => {
+void callbackSaveIfttt(BuildContext context, areaService api, area.Action action, Reaction reaction, String token) {
+  api.createIfttt(Area("", token, action, reaction)).then((value) => {
     if (value) {
       Navigator.of(context).pushNamed('/List')
     }
@@ -53,6 +60,8 @@ class create_ifttt extends StatelessWidget {
     notion(false),
     unsplash(false),
     dropbox(false),
+    rss(false),
+    areaDate.date(false),
     undefined(false),
   ];
 
@@ -107,10 +116,21 @@ class create_ifttt extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () {
                           // TODO IMPLEMENT THIS
-                          // callbackSaveIfttt(context, api, condition.list.dropdownValue, toAction.list.dropdownValue, api.token!.token);
+                          area.Action actionBuild = area.Action(
+                              getActionTypeByDescr(action.controllerSecond.text),
+                              [
+                                Parameter(actionParameter.controller.text, ParameterType.TEXT)
+                              ]
+                          );
+                          Reaction reactionBuild = Reaction(
+                              getReactionTypeByDescr(reaction.controllerSecond.text),
+                              [
+                                Parameter(reactionParameter.controller.text, ParameterType.TEXT)
+                              ]
+                          );
 
-                          // actionParameter.controller.text;
-                          // reactionParameter.controller.text;
+                          callbackSaveIfttt(context, api, actionBuild, reactionBuild, api.token!.token);
+
                           // action.controllerFirst.text
                           // action.controllerSecond.text
                           // reaction.controllerFirst.text

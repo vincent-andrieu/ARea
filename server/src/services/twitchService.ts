@@ -2,7 +2,7 @@ import { env } from "process";
 import { ApiClient, HelixStream } from "@twurple/api";
 import { ClientCredentialsAuthProvider } from "@twurple/auth";
 import ARea from "../classes/area.class";
-import { TwitchStreamResult } from "model/ActionResult";
+import { TwitchStreamResult } from "models/ActionResult";
 import axios from "axios";
 
 export class TwitchService {
@@ -41,7 +41,7 @@ export class TwitchService {
         } catch (error) {
             const some_error = error as Error;
 
-            console.log(some_error);
+            console.log(some_error.toString());
             return false;
         }
         return true;
@@ -67,6 +67,7 @@ export class TwitchService {
             const response = await axios.post(`${url}?${params}`);
             return response.data;
         } catch (error) {
+            console.log("[TWITCH]:", (error as any).response.data.message);
             console.log("[TWITCH] getAccessToken: ", (error as Error).toString());
             return;
         }

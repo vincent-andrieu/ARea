@@ -23,6 +23,12 @@ export const createArea = {
             }
         },
         responses: {
+            "401": {
+                $ref: "#/components/responses/MissingToken"
+            },
+            "403": {
+                $ref: "#/components/responses/UnauthorizedError"
+            },
             "201": {
                 description: "Area created successfully",
                 content: {

@@ -1,8 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/api/areaService.dart';
-import 'package:mobile/api/model/area.dart';
+import 'package:mobile/api/model/area/Action.dart' as areaLib;
+import 'package:mobile/api/model/area/Area.dart';
+import 'package:mobile/api/model/area/Parameter.dart';
+import 'package:mobile/api/model/area/ParameterType.dart';
+import 'package:mobile/api/model/area/Reaction.dart';
 import 'package:mobile/page/color_list.dart';
+import 'package:mobile/tools/ActionReactionTools.dart';
 import 'create_ifttt.dart';
 
 class edit_ifttt extends StatelessWidget {
@@ -75,8 +80,21 @@ class edit_ifttt extends StatelessWidget {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                              // TODO EDIT
-                              api.updateIfttt(area.id, Area(area.id, area.action.label, area.reaction.label, api.token!.token));
+                              // TODO FILL THIS WHEN PAGE WAS BUILD
+                              areaLib.Action actionBuild = areaLib.Action(
+                                  getActionTypeByDescr(""),
+                                  [
+                                    Parameter("", ParameterType.TEXT)
+                                  ]
+                              );
+                              Reaction reactionBuild = Reaction(
+                                  getReactionTypeByDescr(""),
+                                  [
+                                    Parameter("", ParameterType.TEXT)
+                                  ]
+                              );
+
+                              api.updateIfttt(area.id, Area(area.id, api.token!.token, actionBuild, reactionBuild));
                               Navigator.of(context).pushNamed('/List');
                             },
                             style: ElevatedButton.styleFrom(

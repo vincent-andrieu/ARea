@@ -5,7 +5,10 @@ class unsplash extends IService {
 
   @override
   List<String> getAction() {
-    return ["None"];
+    return [
+      "Unsplash post"
+      "None"
+    ];
   }
 
   @override
@@ -20,7 +23,10 @@ class unsplash extends IService {
 
   @override
   List<String> getReaction() {
-    return ["None"];
+    return [
+      "Unsplash",
+      "None"
+    ];
   }
 
   @override

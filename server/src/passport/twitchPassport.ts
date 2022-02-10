@@ -8,7 +8,7 @@ import { getStrObjectId } from "@classes/model.class";
 import { UserSchema } from "@schemas/user.schema";
 import AuthController from "@controllers/AuthController";
 import { TwitchService } from "../services/twitchService";
-import OAuthProvider from "../model/oAuthProvider.enum";
+import OAuthProvider from "../models/oAuthProvider.enum";
 
 const TwitchStrategy = passportTwitch.Strategy;
 
@@ -77,9 +77,13 @@ export async function TwitchMobileStrategy(req: Request, res: Response) {
     if (code == undefined)
         return res.status(400).send("Missing 'code' attribut");
     try {
+        console.log(code);
         const oauth = await TwitchService.getAccessToken(code);
+        console.log(oauth);
         const userProfile = await TwitchService.getUserProfile(oauth.access_token);
+        console.log(userProfile);
         const user = await successfullyAuthentificated(oauth.access_token, oauth.refresh_token, userProfile, undefined);
+        console.log(user);
 
         if (!user)
             throw "get empty user";

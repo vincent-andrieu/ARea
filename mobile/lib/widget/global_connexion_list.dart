@@ -11,7 +11,7 @@ class GlobalConnexionList extends StatefulWidget {
   String urlSrv;
   areaService api;
   GlobalConnexionList(this.urlSrv, this.list, this.api, {Key? key}) : super(key: key) {
-    if (list.length != 8) {
+    if (list.length != 10) {
       throw Exception("Invalid input size: " + list.length.toString());
     }
   }

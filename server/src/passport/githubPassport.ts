@@ -6,7 +6,7 @@ import { getStrObjectId } from "@classes/model.class";
 import User from "@classes/user.class";
 import { UserSchema } from "@schemas/user.schema";
 import AuthController from "../controllers/AuthController";
-import OAuthProvider from "../model/oAuthProvider.enum";
+import OAuthProvider from "../models/oAuthProvider.enum";
 
 const GithubStrategy = passportGithub2.Strategy;
 //TODO: do the setting part
@@ -21,7 +21,7 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
             console.log("User already exist");
             const token = AuthController.signToken({
                 user_id: getStrObjectId(oldUser),
-                username: profile.login
+                username: profile.username
             });
             // save user token
             oldUser.oauthLoginProvider = OAuthProvider.GITHUB;
@@ -37,7 +37,7 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
             console.log("Create new user");
 
             const user = await userSchema.add(new User({
-                username: profile.login,
+                username: profile.username,
                 oauthLoginProvider: OAuthProvider.GITHUB,
                 oauthLoginProviderId: profile.username,
                 oauth: {

@@ -11,13 +11,22 @@ export const getReactionList = {
                 name: "service",
                 in: "path",
                 schema: {
-                    $ref: "#/components/schemas/service"
+                    $ref: "#/components/schemas/ServiceType"
                 },
                 required: false,
                 description: "Service name"
             }
         ],
         responses: {
+            "400": {
+                description: "Missing or wrong params"
+            },
+            "401": {
+                $ref: "#/components/responses/MissingToken"
+            },
+            "403": {
+                $ref: "#/components/responses/UnauthorizedError"
+            },
             "200": {
                 description: "A list of reaction is obtained",
                 content: {

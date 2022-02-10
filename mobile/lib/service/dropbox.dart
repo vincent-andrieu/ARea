@@ -20,7 +20,10 @@ class dropbox extends IService {
 
   @override
   List<String> getReaction() {
-    return ["None"];
+    return [
+      "Upload file",
+      "None"
+    ];
   }
 
   @override

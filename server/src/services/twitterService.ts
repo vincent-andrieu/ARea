@@ -4,8 +4,8 @@ import { env } from "process";
 import TwitterApi, { SendTweetV2Params, TweetV2, UserV2Result } from "twitter-api-v2";
 import User from "../classes/user.class";
 import ARea from "../classes/area.class";
-import { TwitchStreamResult, TwitterTweetResult, UnsplashPostResult } from "model/ActionResult";
-import { TwitchStreamConfig, TwitterTweetConfig } from "model/ActionConfig";
+import { TwitchStreamResult, TwitterTweetResult, UnsplashPostResult } from "@models/ActionResult";
+import { TwitchStreamConfig, TwitterTweetConfig } from "models/ActionConfig";
 import Action, { ActionType } from "@classes/action.class";
 import { utils } from "./utils";
 import { twitterConfig } from "@config/twitterConfig";
@@ -227,6 +227,9 @@ export class TwitterService {
                 case ActionType.UNSPLASH_POST:
                     imagePath = await TwitterService.rea_UnsplashPost(area);
                     break;
+                case ActionType.UNSPLASH_RANDOM_POST:
+                    imagePath = await TwitterService.rea_UnsplashPost(area);
+                    break;
                 case ActionType.TWITCH_STREAM:
                     imagePath = await TwitterService.rea_TwitchStream(area);
                     break;
@@ -256,6 +259,9 @@ export class TwitterService {
         try {
             switch (action.type) {
                 case ActionType.UNSPLASH_POST:
+                    imagePath = await TwitterService.rea_UnsplashPost(area);
+                    break;
+                case ActionType.UNSPLASH_RANDOM_POST:
                     imagePath = await TwitterService.rea_UnsplashPost(area);
                     break;
                 case ActionType.TWITCH_STREAM:

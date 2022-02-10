@@ -5,16 +5,16 @@ import Express from "../init/express";
 
 import { UserSchema } from "../schemas/user.schema";
 
-import OAuthProvider from "../model/oAuthProvider.enum";
+import OAuthProvider from "../models/oAuthProvider.enum";
 
 import { TwitterService } from "../services/twitterService";
-import { TwitterTweetConfig } from "../model/ActionConfig";
+import { TwitterTweetConfig } from "../models/ActionConfig";
 import Action, { ActionType } from "../classes/action.class";
-import { TwitchStreamResult } from "../model/ActionResult";
-import { TwitterPostTweetConfig } from "../model/ReactionConfig";
+import { TwitchStreamResult } from "../models/ActionResult";
+import { TwitterPostTweetConfig } from "../models/ReactionConfig";
 import Reaction, { ReactionType } from "../classes/reaction.class";
 import ARea from "../classes/area.class";
-import { ServiceType } from "../model/ServiceType";
+import { ServiceType } from "../models/ServiceType";
 
 /** INIT */
 

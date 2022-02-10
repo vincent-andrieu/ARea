@@ -2,14 +2,15 @@ import { env } from "process";
 
 import nodeFetch from "node-fetch";
 import { createApi } from "unsplash-js";
+import { Full, Random } from "unsplash-js/dist/methods/photos/types";
+
 import ARea from "@classes/area.class";
-import { Full } from "unsplash-js/dist/methods/photos/types";
-import { UnsplashPostResult } from "model/ActionResult";
+import { UnsplashPostResult } from "@models/ActionResult";
 import { utils } from "./utils";
 import { unsplashConfig } from "@config/unsplashConfig";
 import axios from "axios";
 
-export class unsplashService {
+export default class unsplashService {
 
     static lastPostId: string | undefined;
 
@@ -21,10 +22,10 @@ export class unsplashService {
         return true;
     }
 
-    private static setDownloadInfos(area: ARea, downloadUrl: string, post: Full) {
+    private static setDownloadInfos(area: ARea, downloadPath: string, post: Full | Random) {
         const result: UnsplashPostResult = area.trigger.outputs as UnsplashPostResult;
 
-        result.downloadPath = downloadUrl;
+        result.downloadPath = downloadPath;
         result.created_at = post.created_at;
         result.name = post.user.first_name;
         if (post.user.last_name)
@@ -65,22 +66,35 @@ export class unsplashService {
         return true;
     }
 
-    public static async GetRandomPicture(): Promise<void> {
+    public static async DownloadRandomPost(area: ARea, downloadPath: string): Promise<boolean> {
         if (!env.UNSPLASH_API_KEY || !nodeFetch)
-            return;
+            return false;
         try {
             const unsplash = createApi({
                 accessKey: env.UNSPLASH_API_KEY,
                 fetch: nodeFetch as any
             });
 
-            const pic = await unsplash.photos.getRandom({});
-            console.log("pic : ", pic);
+            const pic = await unsplash.photos.getRandom(undefined);
+            console.log(pic.response);
+            if (!pic || !pic.response)
+                return false;
+            if (Array.isArray(pic.response))
+                return false;
+            if (!pic.response?.links.download)
+                return false;
+            const dlPic = await unsplash.photos.trackDownload({ downloadLocation: pic.response?.links.download });
+            if (!dlPic.response?.url)
+                return false;
+            await utils.DownloadUrl(dlPic.response?.url, downloadPath);
+            this.setDownloadInfos(area, downloadPath, pic.response);
         } catch (error) {
             const some_error = error as Error;
 
             console.log(some_error);
+            return false;
         }
+        return true;
     }
 
     public static async getAccessToken(code: string) {

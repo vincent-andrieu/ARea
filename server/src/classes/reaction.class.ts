@@ -1,6 +1,6 @@
 import Model from "./model.class";
-import { Parameter } from "../model/Parameters";
-import { ServiceType } from "../model/ServiceType";
+import { Parameter } from "../models/Parameters";
+import { ServiceType } from "../models/ServiceType";
 
 export enum ReactionType {
     TWITTER_MSG = "TWITTER_MSG",
