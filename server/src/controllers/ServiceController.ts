@@ -53,9 +53,7 @@ export default class ServiceController {
         try {
             if (!userId || userId.length === 0 || !req.user?.data.user_id)
                 throw "Unknow user id";
-            if (filterService === undefined)
-                return res.status(400).send("Missing service params");
-            if (!(filterService in ServiceType))
+            if (filterService && !(filterService in ServiceType))
                 return res.status(400).send(`${filterService} doesnt exist in ServiceType`);
             let actions: Array<Action> = (await this._actionSchema.find({})).map(action => {
                 return new Action(action);
@@ -65,8 +63,8 @@ export default class ServiceController {
                 actions = actions.filter(el => el.service.toUpperCase() === filterService);
 
             res.status(200).send(actions);
-        } catch (err: any) {
-            res.status(500).send(err.toString());
+        } catch (err) {
+            res.status(500).send((err as Error).toString());
         }
     };
 
@@ -77,9 +75,7 @@ export default class ServiceController {
         try {
             if (!userId || userId.length === 0 || !req.user?.data.user_id)
                 throw "Unknow user id";
-            if (filterService === undefined)
-                return res.status(400).send("Missing service params");
-            if (!(filterService in ServiceType))
+            if (filterService && !(filterService in ServiceType))
                 return res.status(400).send(`${filterService} doesnt exist in ServiceType`);
             let reactions: Array<Reaction> = (await this._reactionSchema.find({})).map((reaction => {
                 return new Reaction(reaction);
@@ -89,8 +85,8 @@ export default class ServiceController {
                 reactions = reactions.filter(el => el.service.toUpperCase() === filterService);
 
             res.status(200).send(reactions);
-        } catch (err: any) {
-            res.status(500).send(err.toString());
+        } catch (err) {
+            res.status(500).send((err as Error).toString());
         }
     };
 }
