@@ -1,6 +1,6 @@
 export const register = {
     post: {
-        tags: ["Users"],
+        tags: ["Auth"],
         description: "Register a new user",
         operationId: "registerUser",
         parameters: [],
