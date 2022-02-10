@@ -52,7 +52,7 @@
           "type": "TEXT"
         },
         {
-          "name": "Respository",
+          "name": "Repository",
           "type": "TEXT"
         }
     ]
@@ -65,7 +65,7 @@
           "type": "TEXT"
         },
         {
-          "name": "Respository",
+          "name": "Repository",
           "type": "TEXT"
         }
     ]

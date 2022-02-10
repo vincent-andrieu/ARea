@@ -63,7 +63,7 @@
         "type": "TEXT"
       },
       {
-        "name": "respository",
+        "name": "repository",
         "label": "Repository",
         "type": "TEXT"
       }
@@ -79,7 +79,7 @@
         "type": "TEXT"
       },
       {
-        "name": "respository",
+        "name": "repository",
         "label": "Repository",
         "type": "TEXT"
       }
