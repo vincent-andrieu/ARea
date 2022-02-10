@@ -31,6 +31,7 @@ export interface GithubIssueConfig {
 export interface GithubPullReqConfig {
     owner: string;
     repository: string;
+    lastId: number;
 }
 
 export interface UnsplashPostConfig {
