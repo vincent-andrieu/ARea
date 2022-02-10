@@ -19,7 +19,7 @@ export const reactionConfig = {
             }
         }
     },
-    TwitterChangePPConfig: {
+    TwitterUpdatePictureConfig: {
         type: "object",
         required: ["url"],
         properties: {

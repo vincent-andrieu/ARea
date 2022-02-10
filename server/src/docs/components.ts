@@ -127,7 +127,7 @@ export const components = {
                                 oneOf: [
                                     { $ref: "#/components/schemas/TwitterPostTweetConfig" },
                                     { $ref: "#/components/schemas/LinkedinPostConfig" },
-                                    { $ref: "#/components/schemas/TwitterChangePPConfig" },
+                                    { $ref: "#/components/schemas/TwitterUpdatePictureConfig" },
                                     { $ref: "#/components/schemas/DiscordPostMsgConfig" },
                                     { $ref: "#/components/schemas/GithubCreateIssueConfig" },
                                     { $ref: "#/components/schemas/NotionAddMessageConfig" },
