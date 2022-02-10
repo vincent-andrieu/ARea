@@ -32,7 +32,7 @@ export class ServiceService {
 
     public getReaction(): Promise<Array<Reaction>> {
         return new Promise<Array<Reaction>>((resolve, reject) => {
-            this._httpClient.get<Array<Reaction>>('/service/action')
+            this._httpClient.get<Array<Reaction>>('/service/reaction')
                 .pipe(catchError((err) => {
                     reject(err);
                     this._snackbarService.openError(err);
