@@ -1,6 +1,6 @@
 export const login = {
     post: {
-        tags: ["Users"],
+        tags: ["Auth"],
         description: "Login as user",
         operationId: "loginUser",
         parameters: [],
