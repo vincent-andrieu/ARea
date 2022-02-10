@@ -1,8 +1,9 @@
 import Model from "./model.class";
 import { Parameter } from "./model/Parameters";
+import { ServiceType } from "./model/ServiceType";
 
 export enum ActionType {
-    DATE = "DATE",
+    CRON = "CRON",
     DATETIME = "DATETIME",
     TWITCH_STREAM = "TWITCH_STREAM",
     TWITTER_MSG = "TWITTER_MSG",
@@ -16,11 +17,41 @@ export enum ActionType {
 export default class Action extends Model {
     type: ActionType;
     parameters: Array<Parameter>;
+    service: ServiceType;
 
     constructor(action: Action) {
         super(action);
 
         this.type = action.type;
         this.parameters = action.parameters;
+        this.service = action.service;
+    }
+
+    public get label(): string {
+        switch (this.type) {
+        case 'DATETIME':
+            return "Date";
+        case 'CRON':
+            return "CRON";
+        case 'DISCORD_MSG':
+            return "Send message";
+        case 'GITHUB_ISSUE':
+            return "GitHub issue";
+        case 'GITHUB_PULL_REQ':
+            return "GitHub pull request";
+        case 'RSS_ENTRY':
+            return "RSS";
+        case 'TWITCH_STREAM':
+            return "Twitch stream";
+        case 'TWITTER_MSG':
+            return "Twitter message";
+        case 'UNSPLASH_POST':
+            return "Post on Unsplash";
+
+        default: {
+            console.error("Unknow action type:", this.type);
+            return "";
+        }
+        }
     }
 }

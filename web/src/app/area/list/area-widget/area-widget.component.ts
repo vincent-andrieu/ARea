@@ -2,12 +2,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import * as moment from 'moment';
 
 import ARea, { AReaConsequence, AReaTrigger } from "@classes/area.class";
-import { ActionType } from "@classes/action.class";
-import { ReactionType } from "@classes/reaction.class";
 import { DateTimeConfig, DiscordMessageConfig, GithubIssueConfig, GithubPullReqConfig, RSSConfig, TimeConfig, TwitchStreamConfig, TwitterTweetConfig, UnsplashPostConfig } from "@classes/model/ActionConfig";
 import { DiscordPostMsgConfig, DropboxUploadConfig, GithubCreateIssueConfig, LinkedinPostConfig, NotionAddMessageConfig, TwitterPostTweetConfig, TwitterUpdatePictureConfig } from "@classes/model/ReactionConfig";
 import { AuthService } from "@services/auth.service";
 import { isObjectId } from "utils";
+import { ServiceType } from "@classes/model/ServiceType";
 
 @Component({
     selector: 'app-area-widget',
@@ -35,43 +34,15 @@ export class AreaWidgetComponent implements OnInit {
             throw "Invalid area";
 
         this.displayableAreaAction = {
-            title: this._getActionTitle(this.area.trigger.action.type),
+            title: this.area.trigger.action.label,
             subtitle: this._getActionSubtitle(this.area.trigger),
-            svgPath: this._getSvgPath(this.area.trigger.action.type)
+            svgPath: this._getSvgPath(this.area.trigger.action.service)
         };
         this.displayableAreaReaction = {
-            title: this._getReactionTitle(this.area.consequence.reaction.type),
+            title: this.area.consequence.reaction.label,
             subtitle: this._getReactionSubtitle(this.area.consequence),
-            svgPath: this._getSvgPath(this.area.consequence.reaction.type)
+            svgPath: this._getSvgPath(this.area.consequence.reaction.service)
         };
-    }
-
-    private _getActionTitle(type: ActionType): string {
-        switch (type) {
-        case 'DATETIME':
-            return "Date";
-        case 'DATE':
-            return "CRON";
-        case 'DISCORD_MSG':
-            return "Send message";
-        case 'GITHUB_ISSUE':
-            return "GitHub issue";
-        case 'GITHUB_PULL_REQ':
-            return "GitHub pull request";
-        case 'RSS_ENTRY':
-            return "RSS";
-        case 'TWITCH_STREAM':
-            return "Twitch stream";
-        case 'TWITTER_MSG':
-            return "Twitter message";
-        case 'UNSPLASH_POST':
-            return "Post on Unsplash";
-
-        default: {
-            console.error("Unknow action type:", type);
-            return "";
-        }
-        }
     }
 
     private _getActionSubtitle(trigger: AReaTrigger): string {
@@ -81,7 +52,7 @@ export class AreaWidgetComponent implements OnInit {
         switch (trigger.action.type) {
         case 'DATETIME':
             return moment((trigger.inputs as DateTimeConfig).time).format('LLL');
-        case 'DATE':
+        case 'CRON':
             return (trigger.inputs as TimeConfig).time;
         case 'DISCORD_MSG':
             return (trigger.inputs as DiscordMessageConfig).channelId;
@@ -100,32 +71,6 @@ export class AreaWidgetComponent implements OnInit {
 
         default: {
             console.error("Unknow action type:", trigger.action.type);
-            return "";
-        }
-        }
-    }
-
-    private _getReactionTitle(type: ReactionType): string {
-        switch (type) {
-        case 'TWITTER_MSG':
-            return "Send Twitter message";
-        case 'TWITTER_BANNER':
-            return "Edit Twitter banner";
-        case 'TWITTER_PP':
-            return "Edit Twitter PP";
-        case 'LINKEDIN_MSG':
-            return "Send Linkedin message";
-        case 'DISCORD_MSG':
-            return "Send Discord message";
-        case 'GITHUB_ISSUE':
-            return "Add GitHub issue";
-        case 'NOTION_MSG':
-            return "Add Notion message";
-        case 'DROPBOX_UPLOAD':
-            return "Upload on Dropbox";
-
-        default: {
-            console.error("Unknow reaction type:", type);
             return "";
         }
         }
@@ -160,7 +105,7 @@ export class AreaWidgetComponent implements OnInit {
         }
     }
 
-    private _getSvgPath(type: string): string {
-        return this._authService.apps.find((app) => type.includes(app.name))?.iconSvgPath || '';
+    private _getSvgPath(type: ServiceType): string {
+        return this._authService.apps.find((app) => app.name === type)?.redirect || '';
     }
 }

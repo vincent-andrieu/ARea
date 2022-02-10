@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 
+import { ServiceType } from "@classes/model/ServiceType";
 import { AuthService, ServiceData } from "@services/auth.service";
 
 class UserServiceData implements ServiceData {
     iconSvgPath: string;
     label: string;
-    name: string;
+    name: ServiceType;
     redirect: string;
     isConnected: boolean;
 

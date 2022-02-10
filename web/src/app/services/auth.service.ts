@@ -6,13 +6,13 @@ import { CookieService } from "ngx-cookie";
 
 import { environment } from "@environment";
 import User from "@classes/user.class";
-import { ServiceName } from "@classes/model/services";
+import { ServiceType } from "@classes/model/ServiceType";
 import { SnackbarService } from "./snackbar.service";
 
 export interface ServiceData {
     iconSvgPath: string;
     label: string;
-    name: string;
+    name: ServiceType;
     redirect: string;
 }
 
@@ -22,14 +22,14 @@ export interface ServiceData {
 export class AuthService {
 
     public readonly apps: ReadonlyArray<ServiceData> = [
-        { iconSvgPath: 'assets/icons/github.svg', label: 'GitHub', name: ServiceName.GITHUB, redirect: '/github' },
-        { iconSvgPath: 'assets/icons/twitch.svg', label: 'Twitch', name: ServiceName.TWITCH, redirect: '/twitch' },
-        { iconSvgPath: 'assets/icons/twitter.svg', label: 'Twitter', name: ServiceName.TWITTER, redirect: '/twitter' },
-        { iconSvgPath: 'assets/icons/dropbox.svg', label: 'Dropbox', name: ServiceName.DROPBOX, redirect: '/dropbox' },
-        { iconSvgPath: 'assets/icons/discord.svg', label: 'Discord', name: ServiceName.DISCORD, redirect: '/discord' },
-        { iconSvgPath: 'assets/icons/linkedin.svg', label: 'Linkedin', name: ServiceName.LINKEDIN, redirect: '/linkedin' },
-        { iconSvgPath: 'assets/icons/notion.svg', label: 'Notion', name: ServiceName.NOTION, redirect: '/notion' },
-        { iconSvgPath: 'assets/icons/unsplash.svg', label: 'Unsplash', name: ServiceName.UNSPLASH, redirect: '/unsplash' }
+        { iconSvgPath: 'assets/icons/github.svg', label: 'GitHub', name: ServiceType.GITHUB, redirect: '/github' },
+        { iconSvgPath: 'assets/icons/twitch.svg', label: 'Twitch', name: ServiceType.TWITCH, redirect: '/twitch' },
+        { iconSvgPath: 'assets/icons/twitter.svg', label: 'Twitter', name: ServiceType.TWITTER, redirect: '/twitter' },
+        { iconSvgPath: 'assets/icons/dropbox.svg', label: 'Dropbox', name: ServiceType.DROPBOX, redirect: '/dropbox' },
+        { iconSvgPath: 'assets/icons/discord.svg', label: 'Discord', name: ServiceType.DISCORD, redirect: '/discord' },
+        { iconSvgPath: 'assets/icons/linkedin.svg', label: 'Linkedin', name: ServiceType.LINKEDIN, redirect: '/linkedin' },
+        { iconSvgPath: 'assets/icons/notion.svg', label: 'Notion', name: ServiceType.NOTION, redirect: '/notion' },
+        { iconSvgPath: 'assets/icons/unsplash.svg', label: 'Unsplash', name: ServiceType.UNSPLASH, redirect: '/unsplash' }
     ];
 
     public user?: User;

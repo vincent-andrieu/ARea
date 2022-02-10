@@ -1,5 +1,6 @@
 import Model from "./model.class";
 import { Parameter } from "./model/Parameters";
+import { ServiceType } from "./model/ServiceType";
 
 export enum ReactionType {
     TWITTER_MSG = "TWITTER_MSG",
@@ -15,11 +16,39 @@ export enum ReactionType {
 export default class Reaction extends Model {
     type: ReactionType;
     parameters: Array<Parameter>;
+    service: ServiceType;
 
     constructor(reaction: Reaction) {
         super(reaction);
 
         this.type = reaction.type;
         this.parameters = reaction.parameters;
+        this.service = reaction.service;
+    }
+
+    public get label(): string {
+        switch (this.type) {
+        case 'TWITTER_MSG':
+            return "Send Twitter message";
+        case 'TWITTER_BANNER':
+            return "Edit Twitter banner";
+        case 'TWITTER_PP':
+            return "Edit Twitter PP";
+        case 'LINKEDIN_MSG':
+            return "Send Linkedin message";
+        case 'DISCORD_MSG':
+            return "Send Discord message";
+        case 'GITHUB_ISSUE':
+            return "Add GitHub issue";
+        case 'NOTION_MSG':
+            return "Add Notion message";
+        case 'DROPBOX_UPLOAD':
+            return "Upload on Dropbox";
+
+        default: {
+            console.error("Unknow reaction type:", this.type);
+            return "";
+        }
+        }
     }
 }
