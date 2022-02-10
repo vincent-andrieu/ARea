@@ -56,7 +56,7 @@ export default class ServiceController {
             let actions: Action[] = await this._actionSchema.find({});
 
             if (filterService != undefined)
-                actions = actions.filter(el => el.service == filterService);
+                actions = actions.filter(el => el.service.toUpperCase() === filterService.toUpperCase());
 
             res.status(200).send(actions);
         } catch (err: any) {
@@ -75,7 +75,7 @@ export default class ServiceController {
             let reactions: Reaction[] = await this._reactionSchema.find({});
 
             if (filterService != undefined)
-                reactions = reactions.filter(el => el.service == filterService);
+                reactions = reactions.filter(el => el.service.toUpperCase() === filterService.toUpperCase());
 
             res.status(200).send(reactions);
         } catch (err: any) {
