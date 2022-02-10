@@ -20,6 +20,11 @@ export const listAreas = {
                     "application/json": {
                         schema: {
                             $ref: "#/components/schemas/Areas"
+                        },
+                        examples: {
+                            ListAreas: {
+                                $ref: "#/components/examples/ListAreas"
+                            }
                         }
                     }
                 }
