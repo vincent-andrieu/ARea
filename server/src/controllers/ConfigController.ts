@@ -17,9 +17,9 @@ export default class ConfigController {
                 throw "Invalid schedule";
             console.log("Reset cron ", schedule);
             CronService.reset(schedule as string);
-            return res.status(200).send();
-        } catch (err: any) {
-            return res.status(400).send(err.toString());
+            return res.status(200).send("OK");
+        } catch (err) {
+            return res.status(400).send((err as Error).toString());
         }
     };
 

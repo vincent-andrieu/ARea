@@ -4,14 +4,16 @@ import { components } from "./components";
 import areas from "./areas";
 import service from "./service";
 import config from "./config";
-import users from "./users";
+import auth from "./auth";
+import user from "./user";
 
 export = {
     ...basicInfo,
     ...apiTags,
     ...components,
     paths: {
-        ...users,
+        ...auth,
+        ...user,
         ...service,
         ...areas,
         ...config
