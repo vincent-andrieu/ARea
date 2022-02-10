@@ -114,7 +114,7 @@ export default class AreaController {
             });
             const area = (user.areas as Array<ARea>).find((element: ARea) => getStrObjectId(element) == id);
             if (area)
-                return res.json(area);
+                return res.json(new ARea(area));
             else
                 return res.status(404).send(`Failed to find area with id: ${id}`);
         } catch (error) {
