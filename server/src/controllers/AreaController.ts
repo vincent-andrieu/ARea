@@ -69,10 +69,10 @@ export default class AreaController {
 
     public static async create(req: Request, res: Response) {
         try {
-            const action: string | ActionSelector | undefined = req.body.trigger.action;
-            const actionInput: ActionConfig | undefined = req.body.trigger.inputs;
-            const reaction: string | ReactionSelector | undefined = req.body.consequence.reaction;
-            const reactionInput: ReactionConfig | undefined = req.body.consequence.inputs;
+            const action: string | ActionSelector | undefined = req.body.trigger?.action;
+            const actionInput: ActionConfig | undefined = req.body.trigger?.inputs;
+            const reaction: string | ReactionSelector | undefined = req.body.consequence?.reaction;
+            const reactionInput: ReactionConfig | undefined = req.body.consequence?.inputs;
             const userId = req.user?.data.user_id;
 
             if (!userId || userId.length === 0)
@@ -142,10 +142,10 @@ export default class AreaController {
     static update = async (req: Request, res: Response) => {
         const userId = req.user?.data.user_id;
         const areaId = req.params.id;
-        const action: string | ActionSelector | undefined = req.body.trigger.action;
-        const actionInput: ActionConfig | undefined = req.body.trigger.inputs;
-        const reaction: string | ReactionSelector | undefined = req.body.consequence.reaction;
-        const reactionInput: ReactionConfig | undefined = req.body.consequence.inputs;
+        const action: string | ActionSelector | undefined = req.body.trigger?.action;
+        const actionInput: ActionConfig | undefined = req.body.trigger?.inputs;
+        const reaction: string | ReactionSelector | undefined = req.body.consequence?.reaction;
+        const reactionInput: ReactionConfig | undefined = req.body.consequence?.inputs;
 
         try {
             if (!userId || userId.length === 0)
