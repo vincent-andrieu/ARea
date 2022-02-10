@@ -1,5 +1,5 @@
 export const reactionConfig = {
-    TwitterPostConfig: {
+    TwitterPostTweetConfig: {
         type: "object",
         required: ["message"],
         properties: {
