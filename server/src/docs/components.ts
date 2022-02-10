@@ -47,6 +47,7 @@ export const components = {
                 properties: {
                     trigger: {
                         type: "object",
+                        required: ["inputs", "action"],
                         properties: {
                             inputs: {
                                 type: "object",
@@ -64,7 +65,13 @@ export const components = {
                             },
                             action: {
                                 type: "object",
-                                $ref: "#/components/schemas/Action",
+                                required: ["type"],
+                                properties: {
+                                    type: {
+                                        type: "object",
+                                        $ref: "#/components/schemas/ActionType"
+                                    }
+                                },
                                 description: ""
                             }
                         },
@@ -72,6 +79,7 @@ export const components = {
                     },
                     consequence: {
                         type: "object",
+                        required: ["inputs", "reaction"],
                         properties: {
                             inputs: {
                                 type: "object",
@@ -87,7 +95,11 @@ export const components = {
                             },
                             reaction: {
                                 type: "object",
-                                $ref: "#/components/schemas/Reaction",
+                                properties: {
+                                    type: {
+                                        $ref: "#/components/schemas/ReactionType"
+                                    }
+                                },
                                 description: ""
                             }
                         },
