@@ -8,7 +8,7 @@ import { getStrObjectId } from "@classes/model.class";
 import { UserSchema } from "@schemas/user.schema";
 import AuthController from "@controllers/AuthController";
 import { TwitchService } from "../services/twitchService";
-import OAuthProvider from "../model/oAuthProvider.enum";
+import OAuthProvider from "../models/oAuthProvider.enum";
 
 const TwitchStrategy = passportTwitch.Strategy;
 

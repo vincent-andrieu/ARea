@@ -1,5 +1,5 @@
 export const reactionConfig = {
-    TwitterPostConfig: {
+    TwitterPostTweetConfig: {
         type: "object",
         required: ["message"],
         properties: {
@@ -19,7 +19,7 @@ export const reactionConfig = {
             }
         }
     },
-    TwitterChangePPConfig: {
+    TwitterUpdatePictureConfig: {
         type: "object",
         required: ["url"],
         properties: {

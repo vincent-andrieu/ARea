@@ -17,7 +17,28 @@ export const updateArea = {
                 description: "Id of the area to be updated"
             }
         ],
+        requestBody: {
+            required: true,
+            content: {
+                "application/json": {
+                    schema: {
+                        $ref: "#/components/schemas/AreaInput"
+                    },
+                    examples: {
+                        TwitterTwitch: {
+                            $ref: "#/components/examples/TwitterTwitch"
+                        }
+                    }
+                }
+            }
+        },
         responses: {
+            "401": {
+                $ref: "#/components/responses/MissingToken"
+            },
+            "403": {
+                $ref: "#/components/responses/UnauthorizedError"
+            },
             "200": {
                 description: "Area updated successfully"
             },

@@ -1,16 +1,16 @@
 export const action = {
     Action: {
         type: "object",
-        required: ["type", "parameters"],
+        required: ["type", "parameters", "service"],
         properties: {
             type: {
                 type: "string",
                 $ref: "#/components/schemas/ActionType",
                 description: ""
             },
-            cron: {
-                type: "boolean",
-                description: ""
+            service: {
+                type: "object",
+                $ref: "#/components/schemas/ServiceType"
             },
             parameters: {
                 type: "object",

@@ -1,9 +1,9 @@
 import Model, { ObjectId } from "./model.class";
 import Action from "./action.class";
 import Reaction from "./reaction.class";
-import { ActionConfig } from "../model/ActionConfig";
-import { ActionResult } from "../model/ActionResult";
-import { ReactionConfig } from "../model/ReactionConfig";
+import { ActionConfig } from "../models/ActionConfig";
+import { ActionResult } from "../models/ActionResult";
+import { ReactionConfig } from "../models/ReactionConfig";
 
 export default class ARea extends Model {
     trigger: {

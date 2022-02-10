@@ -1,6 +1,6 @@
 import { AReaSchema } from "../schemas/area.schema";
 import ARea from "../classes/area.class";
-import { DateTimeConfg, TimeConfig } from "../model/ActionConfig";
+import { DateTimeConfg, TimeConfig } from "../models/ActionConfig";
 import cron from "node-cron";
 import CronService from "./CronService";
 import { ObjectId } from "@classes/model.class";
