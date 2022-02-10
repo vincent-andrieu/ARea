@@ -7,8 +7,14 @@ import { reaction } from "./reaction";
 import { action } from "./action";
 import { serviceResponse } from "./service";
 import { serviceType } from "./serviceType";
+import { userInput } from "./userInput";
+import { user } from "./user";
+import { oauthLoginProvider } from "./oauthLoginProvider";
 
 export = {
+    ...oauthLoginProvider,
+    ...userInput,
+    ...user,
     ...serviceType,
     ...reaction,
     ...action,
