@@ -11,13 +11,16 @@ export const getActionList = {
                 name: "service",
                 in: "path",
                 schema: {
-                    $ref: "#/components/schemas/service"
+                    $ref: "#/components/schemas/ServiceType"
                 },
                 required: false,
                 description: "Service name"
             }
         ],
         responses: {
+            "400": {
+                description: "Missing or wrong params"
+            },
             "401": {
                 $ref: "#/components/responses/MissingToken"
             },

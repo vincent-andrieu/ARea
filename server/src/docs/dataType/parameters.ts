@@ -3,17 +3,20 @@ export const parameters = {
         type: "string",
         enum: ["TEXT", "DATETIME", "TIME",
             "URL", "NUMBER"
-        ]
+        ],
+        description: "type of the parameter"
     },
     Parameter: {
         type: "object",
         required: ["name", "type", "label"],
         properties: {
             name: {
-                type: "string"
+                type: "string",
+                description: "field name in input object"
             },
             label: {
-                type: "string"
+                type: "string",
+                description: "label to display in client"
             },
             type: {
                 type: "object",

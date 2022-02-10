@@ -48,15 +48,21 @@ export default class ServiceController {
 
     static getActionList = async (req: Request, res: Response) => {
         const userId = req.user?.data.user_id;
-        const filterService: string = req.params.service;
+        const filterService: string = req.params.service?.toUpperCase();
 
         try {
             if (!userId || userId.length === 0 || !req.user?.data.user_id)
                 throw "Unknow user id";
-            let actions: Action[] = await this._actionSchema.find({});
+            if (filterService === undefined)
+                return res.status(400).send("Missing service params");
+            if (!(filterService in ServiceType))
+                return res.status(400).send(`${filterService} doesnt exist in ServiceType`);
+            let actions: Array<Action> = (await this._actionSchema.find({})).map(action => {
+                return new Action(action);
+            });
 
             if (filterService != undefined)
-                actions = actions.filter(el => el.service.toUpperCase() === filterService.toUpperCase());
+                actions = actions.filter(el => el.service.toUpperCase() === filterService);
 
             res.status(200).send(actions);
         } catch (err: any) {
@@ -66,16 +72,21 @@ export default class ServiceController {
 
     static getReactionList = async (req: Request, res: Response) => {
         const userId = req.user?.data.user_id;
-        const filterService: string = req.params.service;
+        const filterService: string = req.params.service?.toUpperCase();
 
         try {
             if (!userId || userId.length === 0 || !req.user?.data.user_id)
                 throw "Unknow user id";
-
-            let reactions: Reaction[] = await this._reactionSchema.find({});
+            if (filterService === undefined)
+                return res.status(400).send("Missing service params");
+            if (!(filterService in ServiceType))
+                return res.status(400).send(`${filterService} doesnt exist in ServiceType`);
+            let reactions: Array<Reaction> = (await this._reactionSchema.find({})).map((reaction => {
+                return new Reaction(reaction);
+            }));
 
             if (filterService != undefined)
-                reactions = reactions.filter(el => el.service.toUpperCase() === filterService.toUpperCase());
+                reactions = reactions.filter(el => el.service.toUpperCase() === filterService);
 
             res.status(200).send(reactions);
         } catch (err: any) {
