@@ -17,6 +17,16 @@ export const components = {
                             Bearer: xxxxxx.yyyyyyy.zzzzzz"
             }
         },
+        responses: {
+            MissingToken: {
+                //403
+                description: "A token is required for authentication"
+            },
+            UnauthorizedError: {
+                //401
+                description: "Access token is invalid"
+            }
+        },
         examples: {
             ...examples
         },

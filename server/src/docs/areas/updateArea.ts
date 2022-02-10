@@ -18,6 +18,12 @@ export const updateArea = {
             }
         ],
         responses: {
+            "401": {
+                $ref: "#/components/responses/MissingToken"
+            },
+            "403": {
+                $ref: "#/components/responses/UnauthorizedError"
+            },
             "200": {
                 description: "Area updated successfully"
             },
