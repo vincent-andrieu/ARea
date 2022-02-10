@@ -43,8 +43,8 @@ export default class AreaController {
 
     private static async _buildAreaBody(action: string | ActionSelector, reaction: string | ReactionSelector,
         actionInput: ActionConfig, reactionInput: ReactionConfig) {
-        let actionInDb;
-        let reactionInDb;
+        let actionInDb: Action;
+        let reactionInDb: Reaction;
 
         if ((action as ActionSelector)?.type != undefined && (reaction as ReactionSelector)?.type != undefined) {
             actionInDb = await AreaController._actionSchema.getByType((action as ActionSelector).type);
@@ -57,11 +57,11 @@ export default class AreaController {
             return null;
         return {
             trigger: {
-                action: new Action(actionInDb),
+                action: actionInDb,
                 inputs: actionInput
             },
             consequence: {
-                reaction: new Reaction(reactionInDb),
+                reaction: reactionInDb,
                 inputs: reactionInput
             }
         };
@@ -139,7 +139,7 @@ export default class AreaController {
         }
     }
 
-    static update = async (req: Request, res: Response) => {
+    static async update(req: Request, res: Response) {
         const userId = req.user?.data.user_id;
         const areaId = req.params.id;
         const action: string | ActionSelector | undefined = req.body.trigger?.action;
@@ -176,9 +176,9 @@ export default class AreaController {
         } catch (error) {
             res.status(500).send((error as Error).toString());
         }
-    };
+    }
 
-    static delete = async (req: Request, res: Response) => {
+    static async delete(req: Request, res: Response) {
         const areaId = req.params.id;
         const userId = req.user?.data.user_id;
 
@@ -195,12 +195,12 @@ export default class AreaController {
                 return res.status(404).send(`Failed to find area with id: ${areaId}`);
             if ((area.trigger.action as Action)?.type == ActionType.CRON)
                 TimeService.unregisterCron(area._id as ObjectId); // stop cron job
-            await AreaController._areaSchema.deleteById(areaId);
+            await AreaController._areaSchema.delete(areaId);
             await AreaController._userSchema.removeARea(userId, areaId);
 
             return res.status(200).send(`Successfully deleted area ${areaId}`);
         } catch (error) {
             return res.status(500).send((error as Error).toString());
         }
-    };
+    }
 }

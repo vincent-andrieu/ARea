@@ -37,7 +37,7 @@
             <button *ngFor="let app of appsLoginButton" mat-raised-button class="login-app-button"
                     (click)="redirectToAppAuth(app.redirect)" [disabled]="isLoading">
                 <img class="app-button-icon" [src]="app.iconSvgPath">
-                <span>Login with {{ app.name }}</span>
+                <span>Login with {{ app.label }}</span>
             </button>
         </div>
     </div>

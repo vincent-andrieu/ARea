@@ -31,7 +31,7 @@ router.get("/about.json", (req, res) => {
  *          200:
  *              description: Api is working correctly
  */
-router.get("/", (req, res) => {
+router.get("/", authMiddleware, (_, res) => {
     res.status(204).send();
 });
 

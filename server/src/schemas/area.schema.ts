@@ -35,7 +35,7 @@ export class AReaSchema extends ASchema<ARea> {
     }
 
     public async getAreaList(): Promise<ARea[]> {
-        const result = this.find({}, [
+        const result = this.find(undefined, [
             {
                 path: "trigger",
                 populate: "action" as unknown as PopulateOptions

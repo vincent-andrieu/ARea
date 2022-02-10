@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
+import { catchError, of } from "rxjs";
 
 import { SnackbarService } from "./snackbar.service";
 import Action from "@classes/action.class";
-import { catchError, of } from "rxjs";
 import Reaction from "@classes/reaction.class";
 
 @Injectable({
@@ -24,9 +24,9 @@ export class ServiceService {
                     this._snackbarService.openError(err);
                     return of([] as Array<Action>);
                 }))
-                .subscribe((result) => {
-                    resolve(result);
-                });
+                .subscribe((result) =>
+                    resolve(result)
+                );
         });
     }
 

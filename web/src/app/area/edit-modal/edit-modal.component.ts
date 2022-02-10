@@ -26,6 +26,8 @@ export class AReaEditModalComponent {
     });
     public actions: Array<Action> = [];
     public reactions: Array<Reaction> = [];
+    public actionServices: Array<ServiceData> = [];
+    public reactionServices: Array<ServiceData> = [];
     public eParamType = ParameterType;
     public dateNow = Date.now;
 
@@ -36,8 +38,14 @@ export class AReaEditModalComponent {
         private _areaService: AreaService,
         private _serviceService: ServiceService
     ) {
-        this._serviceService.getAction().then((result) => this.actions = result);
-        this._serviceService.getReaction().then((result) => this.reactions = result);
+        this._serviceService.getAction().then((result) => {
+            this.actions = result;
+            this.actionServices = this._getActionServices();
+        });
+        this._serviceService.getReaction().then((result) => {
+            this.reactions = result;
+            this.reactionServices = this._getReactionServices();
+        });
 
         this.form.get('actionService')?.valueChanges.subscribe((value: ServiceType) => this._onActionServiceUpdate(value));
         this.form.get('reactionService')?.valueChanges.subscribe((value: ServiceType) => this._onReactionServiceUpdate(value));
@@ -45,46 +53,6 @@ export class AReaEditModalComponent {
 
     public get isEdit(): boolean {
         return !!this.area;
-    }
-
-    // Services getters
-    public get actionServices(): Array<ServiceData> {
-        return this.actions.map((action) => {
-            if (action.service === ServiceType.CRON || action.service === ServiceType.RSS)
-                return {
-                    iconSvgPath: '',
-                    label: action.label,
-                    name: action.service,
-                    redirect: ''
-                } as ServiceData;
-
-            const app = this._authService.apps.find((app) =>
-                app.name === action.service
-            );
-
-            if (!app)
-                throw `Service ${action.service.toString()} app not found`;
-            return app;
-        });
-    }
-    public get reactionServices(): Array<ServiceData> {
-        return this.reactions.map((reaction) => {
-            if (reaction.service === ServiceType.CRON || reaction.service === ServiceType.RSS)
-                return {
-                    iconSvgPath: '',
-                    label: reaction.label,
-                    name: reaction.service,
-                    redirect: ''
-                } as ServiceData;
-
-            const app = this._authService.apps.find((app) =>
-                app.name === reaction.service
-            );
-
-            if (!app)
-                throw `Service ${reaction.service.toString()} app not found`;
-            return app;
-        });
     }
 
     // Get form values
@@ -127,6 +95,46 @@ export class AReaEditModalComponent {
         if (!reactionForm || reactionForm.invalid || !reactionForm.value)
             return [];
         return (reactionForm.value as Reaction).parameters;
+    }
+
+    // Services getters
+    private _getActionServices(): Array<ServiceData> {
+        return this.actions.map((action) => {
+            if (action.service === ServiceType.CRON || action.service === ServiceType.RSS)
+                return {
+                    iconSvgPath: '',
+                    label: action.label,
+                    name: action.service,
+                    redirect: ''
+                } as ServiceData;
+
+            const app = this._authService.apps.find((app) =>
+                app.name === action.service
+            );
+
+            if (!app)
+                throw `Service ${action.service.toString()} app not found`;
+            return app;
+        });
+    }
+    private _getReactionServices(): Array<ServiceData> {
+        return this.reactions.map((reaction) => {
+            if (reaction.service === ServiceType.CRON || reaction.service === ServiceType.RSS)
+                return {
+                    iconSvgPath: '',
+                    label: reaction.label,
+                    name: reaction.service,
+                    redirect: ''
+                } as ServiceData;
+
+            const app = this._authService.apps.find((app) =>
+                app.name === reaction.service
+            );
+
+            if (!app)
+                throw `Service ${reaction.service.toString()} app not found`;
+            return app;
+        });
     }
 
     // Action updates
