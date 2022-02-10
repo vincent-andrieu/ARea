@@ -12,6 +12,8 @@ import { ActionConfig } from "models/ActionConfig";
 import { ReactionConfig } from "models/ReactionConfig";
 import { ActionSelector, ReactionSelector } from "models/AreaSelector";
 import TimeService from "../services/TimeService";
+import Reaction from "@classes/reaction.class";
+import { Parameter } from "../models/Parameters";
 
 export default class AreaController {
 
@@ -19,6 +21,25 @@ export default class AreaController {
     private static _actionSchema = new ActionSchema();
     private static _reactionSchema = new ReactionSchema();
     private static _userSchema = new UserSchema();
+
+    private static _checkValidParameters(action: Action, actionConfig: ActionConfig, reaction: Reaction,
+        reactionConfig: ReactionConfig): boolean {
+        let retVal = true;
+
+        action.parameters.forEach((parameter: Parameter) => {
+            if (!actionConfig[parameter.name]) {
+                console.log("Missing parameter: ", parameter.name);
+                retVal = false;
+            }
+        });
+        reaction.parameters.forEach((parameter: Parameter) => {
+            if (!reactionConfig[parameter.name]) {
+                console.log("Missing parameter: ", parameter.name);
+                retVal = false;
+            }
+        });
+        return retVal;
+    }
 
     private static async _buildAreaBody(action: string | ActionSelector, reaction: string | ReactionSelector,
         actionInput: ActionConfig, reactionInput: ReactionConfig) {
@@ -32,6 +53,8 @@ export default class AreaController {
             actionInDb = await AreaController._actionSchema.get(action as string);
             reactionInDb = await AreaController._reactionSchema.get(reaction as string);
         }
+        if (!AreaController._checkValidParameters(actionInDb, actionInput, reactionInDb, reactionInput))
+            return null;
         return {
             trigger: {
                 action: actionInDb,
@@ -58,7 +81,8 @@ export default class AreaController {
                 return res.status(400).send("Invalid body");
             try {
                 const areaBody = await AreaController._buildAreaBody(action, reaction, actionInput, reactionInput);
-                const area: ARea = await AreaController._areaSchema.add(areaBody);
+                if (!areaBody)
+                    return res.status(400).send("Missing parameters");
                 if (!area._id)
                     throw "Undefined area id";
                 AreaController._userSchema.addARea(userId, area._id);
@@ -132,6 +156,8 @@ export default class AreaController {
             if ((area.trigger.action as Action)?.type == ActionType.CRON)
                 TimeService.unregisterCron(area._id as ObjectId); // stop cron job
             const areaBody = await AreaController._buildAreaBody(action, reaction, actionInput, reactionInput);
+            if (!areaBody)
+                return res.status(400).send("Missing parameters"); 
             const areaUpdate = await AreaController._areaSchema.edit({
                 _id: area._id,
                 ...areaBody
