@@ -21,7 +21,7 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
             console.log("User already exist");
             const token = AuthController.signToken({
                 user_id: getStrObjectId(oldUser),
-                username: profile.login
+                username: profile.username
             });
             // save user token
             oldUser.oauthLoginProvider = OAuthProvider.GITHUB;
@@ -37,7 +37,7 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
             console.log("Create new user");
 
             const user = await userSchema.add(new User({
-                username: profile.login,
+                username: profile.username,
                 oauthLoginProvider: OAuthProvider.GITHUB,
                 oauthLoginProviderId: profile.username,
                 oauth: {
