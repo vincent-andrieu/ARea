@@ -8,6 +8,7 @@ const actionSchema = new mongoose.Schema({
     type: { type: String, enum: ActionType },
     parameters: [{
         name: { type: String, required: true },
+        label: { type: String, required: true },
         type: { type: String, required: true }
     }],
     service: { type: String, enum: ServiceType }

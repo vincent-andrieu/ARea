@@ -3,7 +3,8 @@
     "type": "CRON",
     "parameters": [
       {
-        "name": "Cron schedule expression",
+        "name": "time",
+        "label": "Cron schedule expression",
         "type": "TIME"
       }
     ],
@@ -13,7 +14,8 @@
     "type": "DATETIME",
     "parameters": [
       {
-        "name": "Timestamp",
+        "name": "time",
+        "label": "Timestamp",
         "type": "DATETIME"
       }
     ],
@@ -24,6 +26,7 @@
     "parameters": [
       {
         "name": "username",
+        "label": "Username",
         "type": "TEXT"
       }
     ],
@@ -33,7 +36,8 @@
     "type": "TWITTER_MSG",
     "parameters": [
       {
-        "name": "username",
+        "name": "Username",
+        "label": "username",
         "type": "TEXT"
       }
     ],
@@ -44,6 +48,7 @@
     "parameters": [
       {
         "name": "url",
+        "label": "URL",
         "type": "URL"
       }
     ],
@@ -53,11 +58,13 @@
     "type": "GITHUB_ISSUE",
     "parameters": [
       {
-        "name": "Owner",
+        "name": "owner",
+        "label": "Owner",
         "type": "TEXT"
       },
       {
-        "name": "Respository",
+        "name": "respository",
+        "label": "Repository",
         "type": "TEXT"
       }
     ],
@@ -67,11 +74,13 @@
     "type": "GITHUB_PULL_REQ",
     "parameters": [
       {
-        "name": "Owner",
+        "name": "owner",
+        "label": "Owner",
         "type": "TEXT"
       },
       {
-        "name": "Respository",
+        "name": "respository",
+        "label": "Repository",
         "type": "TEXT"
       }
     ],
@@ -81,7 +90,8 @@
     "type": "DISCORD_MSG",
     "parameters": [
       {
-        "name": "Channel Id",
+        "name": "channelId",
+        "label": "Channel Id",
         "type": "TEXT"
       }
     ],
@@ -89,7 +99,18 @@
   },
   {
     "type": "UNSPLASH_POST",
-    "parameters": [],
+    "parameters": [
+      {
+        "name": "username",
+        "label": "Username",
+        "type": "TEXT"
+      },
+      {
+        "name": "downloadPath",
+        "label": "Download Path",
+        "type": "TEXT"
+      }
+    ],
     "service": "UNSPLASH"
   }
 ]
