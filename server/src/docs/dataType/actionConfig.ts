@@ -68,7 +68,7 @@ export const actionConfig = {
     },
     GithubIssueConfig: {
         type: "object",
-        required: ["owner", "repository"],
+        required: ["owner", "repository", "lastId"],
         properties: {
             owner: {
                 type: "string",
@@ -82,7 +82,7 @@ export const actionConfig = {
     },
     GithubPulReqConfig: {
         type: "object",
-        required: ["owner", "repository"],
+        required: ["owner", "repository", "lastId"],
         properties: {
             owner: {
                 type: "string",
@@ -91,6 +91,11 @@ export const actionConfig = {
             repository: {
                 type: "string",
                 description: "name of the repository"
+            },
+            lastId: {
+                type: "number",
+                description: "Id of the last fetched pull request, can be 0 if no fetch has ever been made",
+                example: 723547175
             }
         }
     },
