@@ -1,6 +1,6 @@
 export const about = {
     get: {
-        tag: ["About"],
+        tags: ["App"],
         description: "Short description of service, action and reaction",
         operationId: "about",
         parameters: [],
