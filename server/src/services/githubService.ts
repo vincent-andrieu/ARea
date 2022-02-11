@@ -2,7 +2,7 @@ import { env } from "process";
 import { Octokit } from "octokit";
 // import User from "@classes/user.class";
 import ARea from "@classes/area.class";
-import { GithubPullReqResult } from "@models/ActionResult";
+import { GithubResult } from "@models/ActionResult";
 import { GithubIssueConfig, GithubPullReqConfig } from "@models/ActionConfig";
 import User from "@classes/user.class";
 
@@ -25,7 +25,7 @@ export default class githubService {
         });
     }
 
-    private static isNewPullRequest(area: ARea, id: number): boolean {
+    private static isNewId(area: ARea, id: number): boolean {
         const last: GithubPullReqConfig = area.trigger.inputs as GithubPullReqConfig;
 
         if (!last)
@@ -36,8 +36,8 @@ export default class githubService {
         return true;
     }
 
-    private static areaSetPullRequestInfos(area: ARea, repo: string, owner: string, pr) {
-        const result: GithubPullReqResult = area.trigger.outputs as GithubPullReqResult;
+    private static areaSetInfos(area: ARea, repo: string, owner: string, pr) {
+        const result: GithubResult = area.trigger.outputs as GithubResult;
 
         result.owner = owner;
         result.repository = repo;
@@ -52,6 +52,8 @@ export default class githubService {
         result.userUrl = pr.user.html_url;
         result.body = pr.body;
         result.created_at = pr.created_at;
+        if (!Array.isArray(pr.labels) || !Array.isArray(result.labels))
+            return;
         for (const label of pr.labels)
             result.labels.push(label.name);
     }
@@ -72,33 +74,40 @@ export default class githubService {
             per_page: pagination
         });
 
-        if (!pullRequests)
+        if (!pullRequests || !pullRequests.data[0])
             return false;
-        if (!pullRequests.data[0])
+        if (!githubService.isNewId(area, pullRequests.data[0].id))
             return false;
-        if (!githubService.isNewPullRequest(area, pullRequests.data[0].id))
-            return false;
-        githubService.areaSetPullRequestInfos(area, repo, owner, pullRequests.data[0]);
+        githubService.areaSetInfos(area, repo, owner, pullRequests.data[0]);
 
         return true;
     }
 
+    public static async getIfNewIssue(area: ARea, user: User, repo: string, owner: string): Promise<boolean> {
 
+        if (!user || !user.oauth || !user.oauth.github)
+            return false;
+        const octokit = githubService.launchOctokit(user.oauth.github.accessToken);
 
-    /*
-    export async  isNewIssue(repo: string, owner: string): Promise<boolean> {
+        if (!octokit)
+            return false;
 
-        const octokit = launchOctokit("<personnal access token here>");
-
-        console.log(await octokit.rest.issues.listForRepo({
+        const issues = await octokit.rest.issues.listForRepo({
             repo: repo,
             owner: owner,
-            per_page: 10
-        }));
+            per_page: pagination
+        });
 
-        return false;
+        if (!issues || !issues.data || !issues.data[0])
+            return false;
+        if (!githubService.isNewId(area, issues.data[0].id))
+            return false;
+        githubService.areaSetInfos(area, repo, owner, issues.data[0]);
+
+        return true;
     }
 
+    /*
     export async  CreateIssue(
         repo: string,
         owner: string,

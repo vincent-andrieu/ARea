@@ -39,12 +39,7 @@ export interface DiscordMessageResult {
     message: string;
 }
 
-export interface GithubIssueResult {
-    owner: string;
-    repository: string;
-}
-
-export interface GithubPullReqResult {
+export interface GithubResult {
     owner: string;
     repository: string;
     url: string;
@@ -74,4 +69,4 @@ export interface UnsplashPostResult {
 
 export type ActionResult = DateTimeResult | TimeResult
     | TwitchStreamResult | TwitterTweetResult | RSSResult
-    | DiscordMessageResult | GithubIssueResult | GithubPullReqResult | UnsplashPostResult;
+    | DiscordMessageResult | GithubResult | UnsplashPostResult;
