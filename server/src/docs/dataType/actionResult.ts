@@ -140,21 +140,7 @@ export const actionResult = {
                 }
             }
         },
-        GithubIssueResult: {
-            type: "object",
-            // required: ["url"/* html url */, "id", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-            properties: {
-                owner: {
-                    type: "string",
-                    description: "username of the repository owner"
-                },
-                repository: {
-                    type: "string",
-                    description: "name of the repository"
-                }
-            }
-        },
-        GithubPulReqResult: {
+        GithubResult: {
             type: "object",
             required: ["owner", "repository", "url", "id", "number", "state", "locked", "title", "username", "userId", "userUrl"/* html url */, "body", "created_at", "labels"],
             properties: {

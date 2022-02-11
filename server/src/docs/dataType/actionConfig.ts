@@ -72,11 +72,16 @@ export const actionConfig = {
         properties: {
             owner: {
                 type: "string",
-                description: "username of the repository owner"
+                description: "Username of the repository owner"
             },
             repository: {
                 type: "string",
-                description: "name of the repository"
+                description: "Name of the repository"
+            },
+            lastId: {
+                type: "number",
+                description: "Id of the last fetched issue, can be 0 if no fetch has ever been made",
+                example: 723547175
             }
         }
     },
