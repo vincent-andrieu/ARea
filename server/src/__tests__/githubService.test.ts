@@ -6,7 +6,7 @@ import { UserSchema } from "../schemas/user.schema";
 import githubService from "../services/githubService";
 import { GithubPullReqConfig } from "../models/ActionConfig";
 import Action, { ActionType } from "../classes/action.class";
-import { GithubPullReqResult } from "../models/ActionResult";
+import { GithubResult } from "../models/ActionResult";
 import { TwitterPostTweetConfig } from "../models/ReactionConfig";
 import Reaction, { ReactionType } from "../classes/reaction.class";
 import ARea from "../classes/area.class";
@@ -41,7 +41,7 @@ describe("githubService", () => {
         const config: GithubPullReqConfig = { owner: "octokit", repository: "octokit.js", lastId: 0 };
         const actionType: ActionType = ActionType.GITHUB_PULL_REQ;
         const action: Action = { type: actionType, parameters: [], service: ServiceType.GITHUB };
-        const pullReqResult: GithubPullReqResult = {
+        const pullReqResult: GithubResult = {
             owner: "",
             repository: "",
             url: "",
@@ -63,7 +63,7 @@ describe("githubService", () => {
 
         expect(await githubService.getIfNewPullRequest(my_area, my_user, config.owner, config.repository)).toBe(true);
 
-        const result: GithubPullReqResult = my_area.trigger.outputs as GithubPullReqResult;
+        const result: GithubResult = my_area.trigger.outputs as GithubResult;
 
         expect(result.owner === "").toBeFalsy;
         expect(result.repository === "").toBeFalsy;
