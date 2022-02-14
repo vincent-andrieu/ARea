@@ -21,10 +21,10 @@ export class SnackbarService {
             message = "Not found";
         else if (typeof error?.error === 'string')
             message = error.error;
-        else if (typeof error?.error?.text === 'string')
-            message = error.error.text;
         else if (typeof error?.error?.message === 'string')
             message = error.error.message;
+        else if (typeof error?.error?.text === 'string')
+            message = error.error.text;
         this._matSnackBar.open(message, undefined, { panelClass: 'snackbar-error' });
     }
 
