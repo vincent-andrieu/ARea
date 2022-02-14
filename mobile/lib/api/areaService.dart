@@ -151,10 +151,10 @@ class areaService {
     }
   }
 
-  List<configFetch> _getInList(List<configFetch> list, String name) {
+  List<configFetch> _getInList(List<configFetch> listSrc, String name) {
     List<configFetch> list = [];
 
-    for (var element in list) {
+    for (var element in listSrc) {
       if (element.service == name) {
         list.add(element);
       }

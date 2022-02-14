@@ -17,7 +17,7 @@ class DynamicList {
   late TestList widget;
 
   DynamicList(this.service, this.isService, this.firstTitle, this.secondTitle, this.listService) {
-    actionParameter = paramsListBuilder(listService, controllerFirst.text, controllerSecond.text, true);
+    actionParameter = paramsListBuilder(listService, controllerFirst.text, controllerSecond.text, isService);
     widget = TestList(service, isService, firstTitle, secondTitle, controllerFirst, controllerSecond, actionParameter);
   }
 }

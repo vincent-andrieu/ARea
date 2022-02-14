@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/api/areaService.dart';
 import 'package:mobile/page/color_list.dart';
 import 'package:mobile/service/IService.dart';
-import 'package:mobile/tools/getListService.dart';
+import 'package:mobile/tools/serviceListBuilder.dart';
 import 'package:mobile/widget/global_connexion_list.dart';
 import 'create_ifttt.dart';
 
@@ -16,7 +16,7 @@ class settings_page extends StatelessWidget {
   late List<IService> serviceList;
 
   settings_page(this.api, {Key? key}) : super(key: key) {
-    serviceList = getListService(api.token!.oauth);
+    serviceList = serviceListBuilder(api, false);
   }
 
   @override

@@ -7,20 +7,9 @@ import 'package:mobile/api/model/area/ParameterType.dart';
 import 'package:mobile/api/model/area/Reaction.dart';
 import 'package:mobile/page/color_list.dart';
 import 'package:mobile/service/IService.dart';
-import 'package:mobile/service/discord.dart';
-import 'package:mobile/service/dropbox.dart';
-import 'package:mobile/service/github.dart';
-import 'package:mobile/service/linkedin.dart';
-import 'package:mobile/service/notion.dart';
-import 'package:mobile/service/rss.dart';
-import 'package:mobile/service/date.dart' as areaDate;
-import 'package:mobile/service/twitch.dart';
-import 'package:mobile/service/twitter.dart';
-import 'package:mobile/service/undefined.dart';
-import 'package:mobile/service/unsplash.dart';
 import 'package:mobile/tools/ActionReactionTools.dart';
+import 'package:mobile/tools/serviceListBuilder.dart';
 import 'package:mobile/widget/DynamicList.dart';
-import 'package:mobile/widget/paramsListBuilder.dart';
 
 void buildRedirection(String action, String reaction, BuildContext context) {
   String route = '/Create\${$action|$reaction}';
@@ -51,21 +40,11 @@ void callbackSaveIfttt(BuildContext context, areaService api, area.Action action
 
 class create_ifttt extends StatelessWidget {
   late areaService api;
-  List<IService> serviceList = [
-    github(false),
-    twitch(false),
-    twitter(false),
-    discord(false),
-    linkedin(false),
-    notion(false),
-    unsplash(false),
-    dropbox(false),
-    rss(false),
-    areaDate.date(false),
-    undefined(false),
-  ];
+  late List<IService> serviceList;
 
-  create_ifttt(this.api, {Key? key}) : super(key: key);
+  create_ifttt(this.api, {Key? key}) : super(key: key) {
+    serviceList = serviceListBuilder(api, true);
+  }
 
   @override
   Widget build(BuildContext context) {
