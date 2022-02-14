@@ -96,6 +96,12 @@ export class AuthService {
 
     public logout(): void {
         this._cookieService.remove(environment.cookiesKey.jwt);
-        this._router.navigateByUrl("/login");
+
+        this._httpClient.get('/auth/logout')
+            .pipe(catchError((err: HttpErrorResponse) => of(this._snackbarService.openError(err))))
+            .subscribe((result) => {
+                if (result)
+                    this._router.navigateByUrl("/login");
+            });
     }
 }
