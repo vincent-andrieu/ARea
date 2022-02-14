@@ -8,11 +8,20 @@ import 'package:mobile/widget/input_custom.dart';
 class paramsListBuilder {
   serviceFecth service = serviceFecth();
   bool isAction;
+  List<serviceFecth> list;
 
-  paramsListBuilder(List<serviceFecth> list, String srv, String act, this.isAction) {
+  paramsListBuilder(this.list, String srv, String act, this.isAction) {
     try {
       service = getFromType(list, srv);
     } catch(_) {
+    }
+  }
+
+  void setService(String srv, String act) {
+    try {
+      service = getFromType(list, srv);
+    } catch(_) {
+      service = serviceFecth();
     }
   }
 

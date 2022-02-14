@@ -69,10 +69,8 @@ class create_ifttt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DynamicList action = DynamicList(serviceList, true, "Service", "Action");
-    DynamicList reaction = DynamicList(serviceList, false, "Service", "Reaction");
-    paramsListBuilder actionParameter = paramsListBuilder(api.listService, action.controllerFirst.text, action.controllerSecond.text, true);
-    paramsListBuilder reactionParameter = paramsListBuilder(api.listService, reaction.controllerFirst.text, reaction.controllerSecond.text, false);
+    DynamicList action = DynamicList(serviceList, true, "Service", "Action", api.listService);
+    DynamicList reaction = DynamicList(serviceList, false, "Service", "Reaction", api.listService);
 
     return Scaffold(
         body: Center(
@@ -91,7 +89,6 @@ class create_ifttt extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     action.widget,
-                    actionParameter.build(context),
                     const Padding(padding: EdgeInsets.only(
                         top: 20.0,
                         bottom: 20.0
@@ -102,7 +99,6 @@ class create_ifttt extends StatelessWidget {
                       size: 100.0,
                     ),
                     action.widget,
-                    reactionParameter.build(context),
                     const Padding(padding: EdgeInsets.only(
                         top: 10.0,
                         bottom: 10.0
