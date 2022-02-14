@@ -127,28 +127,29 @@ class areaService {
       dynamic action = await api.makeRequestGet("/service/action", _getToken(), 200);
       dynamic reaction = await api.makeRequestGet("/service/reaction", _getToken(), 200);
 
-      developer.log("fetchDataConfig -> $service");
-      List<serviceFecth> serviceList = service.map((dynamic item) => serviceFecth.fromJson(item)).toList();
-      developer.log("fetchDataConfig -> $action");
-      List<configFetch> actionList = action.map((dynamic item) => configFetch.fromJson(item)).toList();
-      developer.log("fetchDataConfig -> $reaction");
-      List<configFetch> reactionList = reaction.map((dynamic item) => configFetch.fromJson(item)).toList();
+      //developer.log("fetchDataConfig -> $service");
+      List<serviceFecth> serviceList = List.from(service).map((dynamic item) => serviceFecth.fromJson(item)).toList();
+      //developer.log("fetchDataConfig -> $action");
+      List<configFetch> actionList = List.from(action).map((dynamic item) => configFetch.fromJson(item)).toList();
+      //developer.log("fetchDataConfig -> $reaction");
+      List<configFetch> reactionList = List.from(reaction).map((dynamic item) => configFetch.fromJson(item)).toList();
 
       for (var element in serviceList) {
-        developer.log("fetchDataConfig -> 1");
+        //developer.log("fetchDataConfig -> 1");
         configFetch? tmp = _getInList(reactionList, element.label);
         if (tmp != null) {
           element.reaction = tmp;
         }
-        developer.log("fetchDataConfig -> 2");
+        //developer.log("fetchDataConfig -> 2");
         tmp = _getInList(actionList, element.label);
         if (tmp != null) {
           element.action = tmp;
         }
-        developer.log("fetchDataConfig -> 3");
+        //developer.log("fetchDataConfig -> 3");
         listService.add(element);
-        developer.log("fetchDataConfig -> 4");
+        //developer.log("fetchDataConfig -> 4");
       }
+      //developer.log("fetchDataConfig -> $listService");
       return true;
     } catch (e) {
       developer.log("fetchDataConfig -> ${e.toString()}");

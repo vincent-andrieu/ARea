@@ -10,5 +10,5 @@ class configFetch {
   configFetch.fromJson(dynamic json)
       : type = json['type'],
         service = json['service'],
-        parameters = List.from(json['parameters']);
+        parameters = List.from(json['parameters']).map((dynamic item) => parameterFetch.fromJson(item)).toList();
 }
