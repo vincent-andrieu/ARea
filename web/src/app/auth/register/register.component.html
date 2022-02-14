@@ -37,7 +37,7 @@
             <button *ngFor="let app of appsLoginButton" mat-raised-button class="register-app-button"
                     (click)="redirectToAppAuth(app.redirect)" [disabled]="isLoading">
                 <img class="app-button-icon" [src]="app.iconSvgPath">
-                <span>Register with {{ app.name }}</span>
+                <span>Register with {{ app.label }}</span>
             </button>
         </div>
     </div>

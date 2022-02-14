@@ -26,8 +26,8 @@ export class ActionSchema extends ASchema<Action> {
         const result = await this._model.find({
             type: type
         });
-        if (!result || result.length == 0)
+        if (!result || result.length === 0)
             throw "getByType: action not found";
-        return result[0];
+        return new this._ctor(result[0].toObject<Action>());
     }
 }

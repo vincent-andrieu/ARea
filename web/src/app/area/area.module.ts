@@ -11,11 +11,14 @@ import { MatCardModule } from "@angular/material/card";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatSelectModule } from "@angular/material/select";
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 import { AReaListComponent } from './list/list.component';
 import { AReaEditModalComponent } from './edit-modal/edit-modal.component';
 import { AReaSettingsComponent } from './settings/settings.component';
 import { AreaWidgetComponent } from './list/area-widget/area-widget.component';
+import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from "@angular-material-components/datetime-picker";
 
 @NgModule({
     declarations: [
@@ -31,13 +34,18 @@ import { AreaWidgetComponent } from './list/area-widget/area-widget.component';
         ReactiveFormsModule,
         FormsModule,
 
+        NgxMatTimepickerModule,
+        NgxMatDatetimePickerModule,
+
         MatRippleModule,
         MatButtonModule,
         MatIconModule,
         MatCardModule,
         MatProgressSpinnerModule,
         MatDialogModule,
-        MatFormFieldModule
+        MatFormFieldModule,
+        MatSelectModule,
+        MatDatepickerModule
     ]
 })
 export class AReaModule {}

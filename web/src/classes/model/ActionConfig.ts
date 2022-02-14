@@ -1,4 +1,4 @@
-export interface DateTimeConfg {
+export interface DateTimeConfig {
     time: number; // timestamp
 }
 
@@ -39,6 +39,6 @@ export interface UnsplashPostConfig {
     downloadPath: string;
 }
 
-export type ActionConfig = DateTimeConfg | TimeConfig
+export type ActionConfig = DateTimeConfig | TimeConfig
     | TwitchStreamConfig | TwitterTweetConfig | RSSConfig
     | DiscordMessageConfig | GithubIssueConfig | GithubPullReqConfig | UnsplashPostConfig;
