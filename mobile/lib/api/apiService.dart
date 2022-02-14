@@ -13,7 +13,7 @@ class apiService {
 
   Future<bool> ping() async {
     try {
-      dynamic _ = await makeRequestGet("/about.json", 200);
+      dynamic _ = await makeRequestGet("/about.json", "", 200);
       return true;
     } catch(e) {
       log('ping: ${e.toString()}');
@@ -21,11 +21,12 @@ class apiService {
     }
   }
 
-  Future<dynamic> makeRequestGet(String route, int exitExpect) async {
+  Future<dynamic> makeRequestGet(String route, String token, int exitExpect) async {
     Response result = await get(
         Uri.parse(srvUrl + route),
         headers: {
-          HttpHeaders.contentTypeHeader: 'application/json'
+          HttpHeaders.contentTypeHeader: 'application/json',
+          HttpHeaders.authorizationHeader: 'Bearer $token'
         }
     );
 
@@ -36,13 +37,14 @@ class apiService {
     }
   }
 
-  Future<dynamic> makeRequestPost<query>(String route, query params, int exitExpect) async {
+  Future<dynamic> makeRequestPost<query>(String route, String token, query params, int exitExpect) async {
     developer.log("$srvUrl$route ${json.encode(params)}");
     Response result = await post(
       Uri.parse(srvUrl + route),
       body: json.encode(params),
       headers: {
-        HttpHeaders.contentTypeHeader: 'application/json'
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer $token'
       }
     );
 
@@ -54,12 +56,13 @@ class apiService {
     }
   }
 
-  Future<dynamic> makeRequestPut<query>(String route, query params, int exitExpect) async {
+  Future<dynamic> makeRequestPut<query>(String route, String token, query params, int exitExpect) async {
     Response result = await put(
       Uri.parse(srvUrl + route),
       body: json.encode(params),
       headers: {
-        HttpHeaders.contentTypeHeader: 'application/json'
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer $token'
       }
     );
 
@@ -70,12 +73,13 @@ class apiService {
     }
   }
 
-  Future<dynamic> makeRequestDelete<query>(String route, query params, int exitExpect) async {
+  Future<dynamic> makeRequestDelete<query>(String route, String token, query params, int exitExpect) async {
     Response result = await delete(
       Uri.parse(srvUrl + route),
       body: json.encode(params),
       headers: {
-        HttpHeaders.contentTypeHeader: 'application/json'
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer $token'
       }
     );
 
@@ -86,8 +90,14 @@ class apiService {
     }
   }
 
-  Future<List<dynamic>> makeRequestGetList<query>(String route, int exitExpect) async {
-    Response result = await get(Uri.parse(srvUrl + route));
+  Future<List<dynamic>> makeRequestGetList<query>(String route, String token, int exitExpect) async {
+    Response result = await get(
+        Uri.parse(srvUrl + route),
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          HttpHeaders.authorizationHeader: 'Bearer $token'
+        }
+    );
 
     if (result.statusCode == exitExpect) {
       dynamic body = jsonDecode(result.body);
