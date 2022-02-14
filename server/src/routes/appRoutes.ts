@@ -21,7 +21,7 @@ router.get("/about.json", (req, res) => {
     res.json(aboutJson);
 });
 
-router.get("/", (req, res) => {
+router.get("/", authMiddleware, (_, res) => {
     res.status(204).send();
 });
 

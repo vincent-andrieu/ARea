@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 
-import { AuthService } from "@services/auth.service";
+import { AuthService, ServiceData } from "@services/auth.service";
 
 @Component({
     selector: 'app-login',
@@ -21,7 +21,7 @@ export class LoginComponent {
         private _authService: AuthService
     ) {}
 
-    public get appsLoginButton(): ReadonlyArray<{ iconSvgPath: string, name: string, redirect: string }> {
+    public get appsLoginButton(): ReadonlyArray<ServiceData> {
         return this._authService.apps;
     }
 

@@ -1,11 +1,106 @@
 <h1 mat-dialog-title>{{ isEdit ? "Edit" : "Add" }} an IFTTT</h1>
 
 <form [formGroup]="form" (ngSubmit)="submit()">
-    <div mat-dialog-content>
+    <div mat-dialog-content fxLayout="column">
+        <div fxLayout="column">
+            <!-- Service -->
+            <mat-form-field>
+                <mat-label>Action service</mat-label>
+                <mat-select formControlName="actionService">
+                    <mat-option *ngFor="let service of actionServices" [value]="service.name">
+                        <img [src]="service.iconSvgPath">
+                        <span>{{ service.label }}</span>
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <div *ngIf="form.get('actionService')?.valid">
+                <!-- Condition -->
+                <mat-form-field>
+                    <mat-label>Condition</mat-label>
+                    <mat-select [formControlName]="form.get('actionService')?.value + '-action'">
+                        <mat-option *ngFor="let elem of serviceActions" [value]="elem">
+                            {{ elem.label }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <!-- Parameters -->
+                <mat-form-field *ngFor="let parameter of actionParameters">
+                    <mat-label>{{ parameter.label }}</mat-label>
+                    <ng-container *ngSwitch="parameter.type">
+                        <input *ngSwitchCase="eParamType.TEXT" matInput type="text"
+                               [formControlName]="action.service + '-' + action.type + '-actionParam-' + parameter.name">
+                        <input *ngSwitchCase="eParamType.NUMBER" matInput type="number"
+                               [formControlName]="action.service + '-' + action.type + '-actionParam-' + parameter.name">
+                        <input *ngSwitchCase="eParamType.URL" matInput type="url"
+                               [formControlName]="action.service + '-' + action.type + '-actionParam-' + parameter.name">
+                        <input *ngSwitchCase="eParamType.TIME" matInput type="text"
+                               [formControlName]="action.service + '-' + action.type + '-actionParam-' + parameter.name">
+                        <input *ngSwitchCase="eParamType.DATETIME" matInput [min]="dateNow()"
+                               [ngxMatDatetimePicker]="datePicker"
+                               [formControlName]="action.service + '-' + action.type + '-actionParam-' + parameter.name">
+                        <mat-datepicker-toggle matSuffix [for]="$any(datePicker)"></mat-datepicker-toggle>
+                        <ngx-mat-datetime-picker #datePicker [showSeconds]="false">
+                        </ngx-mat-datetime-picker>
+                    </ng-container>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <img class="action-to-reaction-arrow" src="assets/icons/arrow_down.svg">
+
+        <div fxLayout="column">
+            <!-- Service -->
+            <mat-form-field>
+                <mat-label>Reaction service</mat-label>
+                <mat-select formControlName="reactionService">
+                    <mat-option *ngFor="let service of reactionServices" [value]="service.name">
+                        <img [src]="service.iconSvgPath">
+                        <span>{{ service.label }}</span>
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <div *ngIf="form.get('reactionService')?.valid">
+                <!-- Action -->
+                <mat-form-field>
+                    <mat-label>Action</mat-label>
+                    <mat-select [formControlName]="form.get('reactionService')?.value + '-reaction'">
+                        <mat-option *ngFor="let elem of serviceReactions" [value]="elem">
+                            {{ elem.label }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <!-- Parameters -->
+                <mat-form-field *ngFor="let parameter of reactionParameters">
+                    <mat-label>{{ parameter.label }}</mat-label>
+                    <ng-container *ngSwitch="parameter.type">
+                        <input *ngSwitchCase="eParamType.TEXT" matInput type="text"
+                               [formControlName]="reaction.service + '-' + reaction.type + '-reactionParam-' + parameter.name">
+                        <input *ngSwitchCase="eParamType.NUMBER" matInput type="number"
+                               [formControlName]="reaction.service + '-' + reaction.type + '-reactionParam-' + parameter.name">
+                        <input *ngSwitchCase="eParamType.URL" matInput type="url"
+                               [formControlName]="reaction.service + '-' + reaction.type + '-reactionParam-' + parameter.name">
+                        <input *ngSwitchCase="eParamType.TIME" matInput type="text"
+                               [formControlName]="reaction.service + '-' + reaction.type + '-reactionParam-' + parameter.name">
+
+                        <input *ngSwitchCase="eParamType.DATETIME" matInput [min]="dateNow()"
+                               [ngxMatDatetimePicker]="datePicker"
+                               [formControlName]="reaction.service + '-' + reaction.type + '-reactionParam-' + parameter.name">
+                        <mat-datepicker-toggle matSuffix [for]="$any(datePicker)"></mat-datepicker-toggle>
+                        <ngx-mat-datetime-picker #datePicker [showSeconds]="false">
+                        </ngx-mat-datetime-picker>
+                    </ng-container>
+                </mat-form-field>
+            </div>
+        </div>
     </div>
 
-    <div mat-dialog-actions>
-        <button mat-button mat-dialog-close>Cancel</button>
-        <button mat-button>{{ isEdit ? "Save" : "Add" }}</button>
+    <div mat-dialog-actions fxLayout="row" fxLayoutAlign="end">
+        <button mat-button mat-dialog-close type="button">Cancel</button>
+        <button *ngIf="isEdit" mat-button type="button" color="warn">{{ "Delete" }}</button>
+        <button mat-button type="submit">{{ isEdit ? "Save" : "Add" }}</button>
     </div>
 </form>

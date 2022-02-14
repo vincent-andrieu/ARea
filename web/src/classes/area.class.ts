@@ -5,16 +5,20 @@ import { ActionConfig } from "./model/ActionConfig";
 import { ReactionConfig } from "./model/ReactionConfig";
 import { ActionResult } from "./model/ActionResult";
 
+export interface AReaTrigger {
+    inputs: ActionConfig;
+    action: Action | ObjectId;
+    outputs?: ActionResult;
+}
+
+export interface AReaConsequence {
+    inputs: ReactionConfig;
+    reaction: Reaction | ObjectId;
+}
+
 export default class ARea extends Model {
-    trigger: {
-        inputs: ActionConfig;
-        action: Action | ObjectId;
-        outputs?: ActionResult;
-    };
-    consequence: {
-        inputs: ReactionConfig;
-        reaction: Reaction | ObjectId;
-    };
+    trigger: AReaTrigger;
+    consequence: AReaConsequence;
 
     constructor(area: ARea) {
         super(area);

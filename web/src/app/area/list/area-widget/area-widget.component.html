@@ -1,12 +1,21 @@
 <mat-card *ngIf="area" matRipple class="area-card" fxLayout="row" fxLayoutAlign="space-around center"
           fxLayoutGap="30px">
+
+    <!-- Action -->
     <div fxLayout="column">
-        <!-- <h2>{{ actionLabel }}</h2> -->
-        <!-- <mat-card-subtitle>Start</mat-card-subtitle> -->
+        <h2>{{ displayableAreaAction?.title }}</h2>
+        <mat-card-subtitle>{{ displayableAreaAction?.subtitle }}</mat-card-subtitle>
+        <img [src]="displayableAreaAction?.svgPath">
     </div>
-    <img class="action-to-reaction-arrow" src="assets/icons/arrow_right.svg">
+
+    <!-- Arrow -->
+    <img class=" action-to-reaction-arrow" src="assets/icons/arrow_right.svg">
+
+    <!-- Reaction -->
     <div fxLayout="column" class="last-card-element">
-        <!-- <h2>{{ reactionLabel }}</h2> -->
-        <!-- <mat-card-subtitle>Start</mat-card-subtitle> -->
+        <h2>{{ displayableAreaReaction?.title }}</h2>
+        <mat-card-subtitle>{{ displayableAreaReaction?.subtitle }}</mat-card-subtitle>
+        <img [src]="displayableAreaReaction?.svgPath">
     </div>
+
 </mat-card>
