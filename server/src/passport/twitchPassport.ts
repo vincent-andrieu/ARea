@@ -29,10 +29,12 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
             oldUser.oauthLoginProvider = OAuthProvider.TWITCH;
             oldUser.oauthLoginProviderId = profile.login;
             oldUser.token = token;
-            if (oldUser.oauth?.twitch) {
-                oldUser.oauth.twitch.accessToken = accessToken;
-                oldUser.oauth.twitch.refreshToken = refreshToken;
-            }
+            if (!oldUser.oauth)
+                oldUser.oauth = {};
+            oldUser.oauth.twitch = {
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            };
             const user = await userSchema.edit(oldUser);
             if (done)
                 done(null, user);

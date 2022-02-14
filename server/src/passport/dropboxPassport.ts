@@ -27,10 +27,12 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
             oldUser.oauthLoginProvider = OAuthProvider.DROPBOX;
             oldUser.oauthLoginProviderId = profile.id;
             oldUser.token = token;
-            if (oldUser.oauth?.dropbox) {
-                oldUser.oauth.dropbox.accessToken = accessToken;
-                oldUser.oauth.dropbox.refreshToken = refreshToken;
-            }
+            if (!oldUser.oauth)
+                oldUser.oauth = {};
+            oldUser.oauth.dropbox = {
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            };
 
             done(null, await userSchema.edit(oldUser));
         } else {

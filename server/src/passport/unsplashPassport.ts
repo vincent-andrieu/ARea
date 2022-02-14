@@ -31,10 +31,12 @@ async function successfullyAuthentificated(accessToken: string, refreshToken: st
             oldUser.oauthLoginProvider = OAuthProvider.UNSPLASH;
             oldUser.oauthLoginProviderId = profile.displayName;
             oldUser.token = token;
-            if (oldUser.oauth?.unsplash) {
-                oldUser.oauth.unsplash.accessToken = accessToken;
-                oldUser.oauth.unsplash.refreshToken = refreshToken;
-            }
+            if (!oldUser.oauth)
+                oldUser.oauth = {};
+            oldUser.oauth.unsplash = {
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            };
             const userEdited = await userSchema.edit(oldUser);
 
             if (done)
