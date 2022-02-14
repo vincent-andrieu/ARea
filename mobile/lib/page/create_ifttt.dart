@@ -77,7 +77,7 @@ class create_ifttt extends StatelessWidget {
                       color: color_list.primary,
                       size: 100.0,
                     ),
-                    action.widget,
+                    reaction.widget,
                     const Padding(padding: EdgeInsets.only(
                         top: 10.0,
                         bottom: 10.0
