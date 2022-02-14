@@ -136,15 +136,9 @@ class areaService {
 
       for (var element in serviceList) {
         //developer.log("fetchDataConfig -> 1");
-        configFetch? tmp = _getInList(reactionList, element.label);
-        if (tmp != null) {
-          element.reaction = tmp;
-        }
+        element.reaction = _getInList(reactionList, element.label);
         //developer.log("fetchDataConfig -> 2");
-        tmp = _getInList(actionList, element.label);
-        if (tmp != null) {
-          element.action = tmp;
-        }
+        element.action = _getInList(actionList, element.label);
         //developer.log("fetchDataConfig -> 3");
         listService.add(element);
         //developer.log("fetchDataConfig -> 4");
@@ -157,13 +151,15 @@ class areaService {
     }
   }
 
-  configFetch? _getInList(List<configFetch> list, String name) {
+  List<configFetch> _getInList(List<configFetch> list, String name) {
+    List<configFetch> list = [];
+
     for (var element in list) {
       if (element.service == name) {
-        return element;
+        list.add(element);
       }
     }
-    return null;
+    return list;
   }
 
   String _getToken() {

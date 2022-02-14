@@ -7,10 +7,11 @@ import 'package:mobile/widget/input_custom.dart';
 
 class paramsListBuilder {
   serviceFecth service = serviceFecth();
+  String actionTrigger = "";
   bool isAction;
   List<serviceFecth> list;
 
-  paramsListBuilder(this.list, String srv, String act, this.isAction) {
+  paramsListBuilder(this.list, String srv, this.actionTrigger, this.isAction) {
     try {
       service = getFromType(list, srv);
     } catch(_) {
@@ -18,6 +19,7 @@ class paramsListBuilder {
   }
 
   void setService(String srv, String act) {
+    actionTrigger = act;
     try {
       service = getFromType(list, srv);
     } catch(_) {
@@ -45,11 +47,20 @@ class paramsListBuilder {
     );
   }
 
-  configFetch getConfig(bool fetchAction) {
-    if (fetchAction) {
-      return service.action;
+  configFetch getValue(List<configFetch> list, String act) {
+    for (var it in list) {
+      if (it.type == act) {
+        return it;
+      }
     }
-    return service.reaction;
+    throw "Invalid action $act";
+  }
+
+  configFetch getConfig(bool fetchAction, String act) {
+    if (fetchAction) {
+      return getValue(service.action, act);
+    }
+    return getValue(service.reaction, act);
   }
 
   Widget textWidget(parameterFetch data) {
@@ -58,7 +69,7 @@ class paramsListBuilder {
 
 
   List<Widget> getListToBuild() {
-    configFetch conf = getConfig(isAction);
+    configFetch conf = getConfig(isAction, actionTrigger);
     List<Widget> list = [];
     Map<ParameterType,  Widget Function(parameterFetch)>  link = {
       ParameterType.DATETIME: textWidget,
