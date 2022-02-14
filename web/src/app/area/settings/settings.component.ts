@@ -34,10 +34,10 @@ export class AReaSettingsComponent {
             return;
         }
         this.services = Object.entries(this._authService.user.oauth).map(([oauthName, oauthValue]) => {
-            const serviceData = this._authService.apps.find((app) => app.name === oauthName);
+            const serviceData = this._authService.apps.find((app) => app.name.toUpperCase() === oauthName.toUpperCase());
 
             if (!serviceData)
-                throw "Fail to find oauth app";
+                throw "Fail to find oauth app: " + oauthName.toString();
             return new UserServiceData(serviceData, oauthValue);
         });
     }

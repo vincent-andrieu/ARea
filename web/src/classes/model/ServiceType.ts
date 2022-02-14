@@ -6,8 +6,8 @@ export enum ServiceType {
     TWITTER = 'TWITTER',
     RSS = 'RSS',
     DISCORD = 'DISCORD',
-    LINKEDIN = 'LINKEDIN',
     GITHUB = 'GITHUB',
     NOTION = 'NOTION',
-    DROPBOX = 'DROPBOX'
+    DROPBOX = 'DROPBOX',
+    LINKEDIN = 'LINKEDIN'
 }
