@@ -5,7 +5,7 @@ class registerResponse {
   List<Area> areas = []; // TODO REPLACE STRING BY AREA TYPE
   String username = "";
   int oauthLoginProvider = 0;
-  String oauthLoginProviderId = "";
+  String? oauthLoginProviderId = "";
   String token = "";
   Map<String, bool> oauth = {};
 
