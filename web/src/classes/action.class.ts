@@ -12,6 +12,7 @@ export enum ActionType {
     GITHUB_PULL_REQ = "GITHUB_PULL_REQ",
     DISCORD_MSG = "DISCORD_MSG",
     UNSPLASH_POST = "UNSPLASH_POST",
+    UNSPLASH_RANDOM_POST = "UNSPLASH_RANDOM_POST"
 }
 
 export default class Action extends Model {
@@ -47,6 +48,8 @@ export default class Action extends Model {
             return "Twitter message";
         case 'UNSPLASH_POST':
             return "Post on Unsplash";
+        case 'UNSPLASH_RANDOM_POST':
+            return "Post a random post on Unsplash";
 
         default: {
             console.error("Unknow action type:", this.type);

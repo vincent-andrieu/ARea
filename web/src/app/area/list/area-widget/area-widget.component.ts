@@ -68,6 +68,8 @@ export class AreaWidgetComponent implements OnInit {
             return (trigger.inputs as TwitterTweetConfig).username;
         case 'UNSPLASH_POST':
             return (trigger.inputs as UnsplashPostConfig).username;
+        case 'UNSPLASH_RANDOM_POST':
+            return (trigger.inputs as UnsplashPostConfig).username;
 
         default: {
             console.error("Unknow action type:", trigger.action.type);
