@@ -5,7 +5,7 @@ class dropbox extends IService {
 
   @override
   List<String> getAction() {
-    return [];
+    return ["None"];
   }
 
   @override
@@ -20,11 +20,14 @@ class dropbox extends IService {
 
   @override
   List<String> getReaction() {
-    return [];
+    return [
+      "Upload file",
+      "None"
+    ];
   }
 
   @override
   String getUrl() {
-    return "/auth/dropbox";
+    return "/auth/dropbox/mobile";
   }
 }

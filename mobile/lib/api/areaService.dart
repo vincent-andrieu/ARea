@@ -1,7 +1,8 @@
 import 'package:mobile/api/apiService.dart';
+import 'package:mobile/api/model/codeRequest.dart';
 import 'package:mobile/api/model/loginRequest.dart';
 import 'dart:developer' as developer;
-import 'model/area.dart';
+import 'model/area/Area.dart';
 import 'model/registerResponse.dart';
 import 'model/tokenRequest.dart';
 
@@ -17,9 +18,15 @@ class areaService {
 
   Future<bool> updateServiceToken(String token, String url) async {
     try {
-      Future<dynamic> _ = await api.makeRequestGet("", 200); // TODO EDIT THIS LINE WITH ROUTE
+      developer.log("updateServiceToken START");
+      dynamic response = await api.makeRequestPost<codeRequest>(url, codeRequest(token), 200);
+
+      developer.log("updateServiceToken fromJson");
+      this.token = registerResponse.fromJson(response);
+      developer.log("updateServiceToken END");
       return true;
     } catch (e) {
+      developer.log("updateServiceToken  -> ${e.toString()}");
       return false;
     }
   }

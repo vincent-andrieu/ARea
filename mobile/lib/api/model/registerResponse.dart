@@ -1,32 +1,30 @@
-import 'package:mobile/api/model/area.dart';
+import 'area/Area.dart';
 
 class registerResponse {
   String _id = "";
   List<Area> areas = []; // TODO REPLACE STRING BY AREA TYPE
   String username = "";
-  String password = "";
   int oauthLoginProvider = 0;
   String oauthLoginProviderId = "";
   String token = "";
+  Map<String, bool> oauth = {};
 
   registerResponse.fromJson(dynamic json)
-      : _id = json['_id'],
-        areas = List.from(json['areas']),
+      : areas = List.from(json['areas']),
         username = json['username'],
-        password = json['password'],
         oauthLoginProvider = json['oauthLoginProvider'],
         oauthLoginProviderId = json['oauthLoginProviderId'],
-        token = json['token'];
+        token = json['token'],
+        oauth = Map.from(json['oauth']);
 
   Map<String, dynamic> toJson() {
     return {
-      '_id': _id,
       'areas': areas,
       'username': username,
-      'password': password,
       'oauthLoginProvider': oauthLoginProvider,
       'oauthLoginProviderId': oauthLoginProviderId,
-      'token': token
+      'token': token,
+      'oauth': oauth
     };
   }
 }

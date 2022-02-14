@@ -67,6 +67,7 @@ export class TwitchService {
             const response = await axios.post(`${url}?${params}`);
             return response.data;
         } catch (error) {
+            console.log("[TWITCH]:", (error as any).response.data.message);
             console.log("[TWITCH] getAccessToken: ", (error as Error).toString());
             return;
         }

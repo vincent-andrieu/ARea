@@ -1,33 +1,35 @@
 import 'package:mobile/service/IService.dart';
 
-class twitch extends IService {
-  twitch(bool src) : super(src);
+class rss extends IService {
+  rss(bool src) : super(src);
 
   @override
   List<String> getAction() {
     return [
-      'New stream started',
+      'Rss entry',
       'None'
     ];
   }
 
   @override
   String getIcon() {
-    return "assets/twitch.png";
+    return "assets/rss.png";
   }
 
   @override
   String getName() {
-    return "twitch";
+    return "rss";
   }
 
   @override
   List<String> getReaction() {
-    return ['None'];
+    return [
+      'None'
+    ];
   }
 
   @override
   String getUrl() {
-    return "/auth/twitch/mobile";
+    return "";
   }
 }
