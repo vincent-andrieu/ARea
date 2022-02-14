@@ -105,20 +105,19 @@ export default class AuthController {
     }
 
     public static async disconnectService(req: Request, res: Response) {
-        const serviceList = ["twitter", "github", "discord", "dropbox", "notion", "twitch", "linkedin", "unsplash"];
         const { service } = req.params;
         const userId = req.user?.data.user_id;
 
         if (!userId)
             return res.status(500).send();
-        if (serviceList.find(e => e == req.params.service))
+        if (service.toUpperCase() in ServiceType)
             try {
                 const user = await AuthController._userSchema.get(userId);
 
                 if (user.oauth)
-                    delete user.oauth[service];
-                AuthController._userSchema.edit(user);
-                res.status(200).send("Successfully disconnected");
+                    delete user.oauth[service.toLowerCase()];
+                await AuthController._userSchema.edit(user);
+                res.sendStatus(204);
             } catch (error: unknown) {
                 console.log("disconnectService: ", (error as Error).toString());
                 res.status(500).send((error as Error).toString());
