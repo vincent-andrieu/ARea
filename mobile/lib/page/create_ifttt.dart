@@ -20,7 +20,7 @@ import 'package:mobile/service/undefined.dart';
 import 'package:mobile/service/unsplash.dart';
 import 'package:mobile/tools/ActionReactionTools.dart';
 import 'package:mobile/widget/DynamicList.dart';
-import 'package:mobile/widget/input_custom.dart';
+import 'package:mobile/widget/paramsListBuilder.dart';
 
 void buildRedirection(String action, String reaction, BuildContext context) {
   String route = '/Create\${$action|$reaction}';
@@ -71,8 +71,8 @@ class create_ifttt extends StatelessWidget {
   Widget build(BuildContext context) {
     DynamicList action = DynamicList(serviceList, true, "Service", "Action");
     DynamicList reaction = DynamicList(serviceList, false, "Service", "Reaction");
-    InputCustom actionParameter = InputCustom('Action Parameters', 'Enter your Parameters', '');
-    InputCustom reactionParameter = InputCustom('Reaction Parameters', 'Enter your Parameters', '');
+    paramsListBuilder actionParameter = paramsListBuilder(api.listService, action.controllerFirst.text, action.controllerSecond.text, true);
+    paramsListBuilder reactionParameter = paramsListBuilder(api.listService, reaction.controllerFirst.text, reaction.controllerSecond.text, false);
 
     return Scaffold(
         body: Center(
@@ -91,7 +91,7 @@ class create_ifttt extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     action.widget,
-                    actionParameter,
+                    actionParameter.build(context),
                     const Padding(padding: EdgeInsets.only(
                         top: 20.0,
                         bottom: 20.0
@@ -101,8 +101,8 @@ class create_ifttt extends StatelessWidget {
                       color: color_list.primary,
                       size: 100.0,
                     ),
-                    reaction.widget,
-                    reactionParameter,
+                    action.widget,
+                    reactionParameter.build(context),
                     const Padding(padding: EdgeInsets.only(
                         top: 10.0,
                         bottom: 10.0
@@ -119,13 +119,13 @@ class create_ifttt extends StatelessWidget {
                           area.Action actionBuild = area.Action(
                               getActionTypeByDescr(action.controllerSecond.text),
                               [
-                                Parameter(actionParameter.controller.text, ParameterType.TEXT)
+                                Parameter("", ParameterType.TEXT)
                               ]
                           );
                           Reaction reactionBuild = Reaction(
                               getReactionTypeByDescr(reaction.controllerSecond.text),
                               [
-                                Parameter(reactionParameter.controller.text, ParameterType.TEXT)
+                                Parameter("", ParameterType.TEXT)
                               ]
                           );
 
