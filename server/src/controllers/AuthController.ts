@@ -1,3 +1,5 @@
+import { env } from "process";
+
 import { Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
@@ -6,7 +8,8 @@ import { serverConfig } from "@config/serverConfig";
 import { getStrObjectId } from "@classes/model.class";
 import { UserSchema } from "@schemas/user.schema";
 import { JwtData } from "../middlewares/checkJwt";
-import OAuthProvider from "../models/oAuthProvider.enum";
+import OAuthProvider from "@models/oAuthProvider.enum";
+import { ServiceType } from "@models/ServiceType";
 import User from "@classes/user.class";
 
 export default class AuthController {
@@ -59,7 +62,7 @@ export default class AuthController {
 
     public static async logout(req: Request, res: Response) {
         req.logout();
-        res.status(200).send("OK");
+        res.redirect(`${env.CLIENT_HOST}/login`);
     }
 
     public static async register(req: Request, res: Response) {
