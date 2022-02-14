@@ -2,7 +2,7 @@ import 'package:mobile/api/model/area/ActionType.dart';
 import 'package:mobile/api/model/area/Parameter.dart';
 
 class Action {
-  ActionType type;
+  String type;
   List<Parameter> parameters;
 
   Action(this.type, this.parameters);
@@ -13,7 +13,7 @@ class Action {
 
   Map<String, dynamic> toJson() {
     return {
-      'type': enumToString(type),
+      'type': type,
       'parameters': parameters,
     };
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:mobile/api/model/area/Parameter.dart';
 import 'package:mobile/api/model/area/ParameterType.dart';
 import 'package:mobile/api/model/serviceFetch/configFecth.dart';
 import 'package:mobile/api/model/serviceFetch/parameterFetch.dart';
@@ -66,7 +67,6 @@ class paramsListBuilder {
   Widget textWidget(parameterFetch data) {
     return InputCustom(data.name, data.label, "");
   }
-
 
   List<Widget> getListToBuild() {
     configFetch conf = getConfig(isAction, actionTrigger);

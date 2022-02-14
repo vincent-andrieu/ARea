@@ -92,13 +92,13 @@ class create_ifttt extends StatelessWidget {
                         onPressed: () {
                           // TODO IMPLEMENT THIS
                           area.Action actionBuild = area.Action(
-                              getActionTypeByDescr(action.controllerSecond.text),
+                              action.controllerSecond.text,
                               [
                                 Parameter("", ParameterType.TEXT)
                               ]
                           );
                           Reaction reactionBuild = Reaction(
-                              getReactionTypeByDescr(reaction.controllerSecond.text),
+                              reaction.controllerSecond.text,
                               [
                                 Parameter("", ParameterType.TEXT)
                               ]

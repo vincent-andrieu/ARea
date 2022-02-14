@@ -82,13 +82,13 @@ class edit_ifttt extends StatelessWidget {
                             onPressed: () {
                               // TODO FILL THIS WHEN PAGE WAS BUILD
                               areaLib.Action actionBuild = areaLib.Action(
-                                  getActionTypeByDescr(""),
+                                  "",
                                   [
                                     Parameter("", ParameterType.TEXT)
                                   ]
                               );
                               Reaction reactionBuild = Reaction(
-                                  getReactionTypeByDescr(""),
+                                  "",
                                   [
                                     Parameter("", ParameterType.TEXT)
                                   ]

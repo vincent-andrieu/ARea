@@ -2,7 +2,7 @@ import 'package:mobile/api/model/area/Parameter.dart';
 import 'ReactionType.dart';
 
 class Reaction {
-  ReactionType type;
+  String type;
   List<Parameter> parameters;
 
   Reaction(this.type, this.parameters);
@@ -13,7 +13,7 @@ class Reaction {
 
   Map<String, dynamic> toJson() {
     return {
-      'type': enumToString(type),
+      'type': type,
       'parameters': parameters,
     };
   }
