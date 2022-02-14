@@ -57,6 +57,11 @@ export default class AuthController {
         }
     }
 
+    public static async logout(req: Request, res: Response) {
+        req.logout();
+        res.status(200).send("OK");
+    }
+
     public static async register(req: Request, res: Response) {
         try {
             const username: string = req.body.username?.toLowerCase();
