@@ -82,6 +82,7 @@ class paramsListBuilder {
     for (var it in conf.parameters) {
       try {
         list.add(link[stringToEnum(it.type)]!(it));
+        list.add(const Padding(padding: EdgeInsets.only(top: 10.0, bottom: 10.0)));
       } catch(_) {
         throw "Unknown parameter type";
       }
