@@ -10,6 +10,8 @@ import 'package:mobile/api/model/area/ParameterType.dart';
 import 'package:mobile/api/model/area/Reaction.dart';
 import 'package:mobile/api/model/createAreaRequest.dart';
 import 'package:mobile/page/color_list.dart';
+import 'package:mobile/tools/serviceListBuilder.dart';
+import 'package:mobile/widget/DynamicList.dart';
 import 'create_ifttt.dart';
 
 class edit_ifttt extends StatelessWidget {
@@ -31,6 +33,15 @@ class edit_ifttt extends StatelessWidget {
     String args = ModalRoute.of(context)!.settings.arguments as String;
     createAreaRequest area = getArea(args);
 
+
+    DynamicList action = DynamicList(serviceListBuilder(api, true), true, "Service", "Action", api.listService);
+    DynamicList reaction = DynamicList(serviceListBuilder(api, true), false, "Service", "Reaction", api.listService);
+
+    /*action.controllerSecond.text = area.trigger.typeData;
+    action.actionParameter.setParams(area.trigger.map);
+    reaction.controllerSecond.text = area.consequence.typeData;
+    reaction.actionParameter.setParams(area.consequence.map);*/
+
     return Scaffold(
       body: Center(
         child: Container(
@@ -48,10 +59,41 @@ class edit_ifttt extends StatelessWidget {
                     child: Column(
                       children: <Widget>[
                         Container(
-                          padding: const EdgeInsets.only(
-                              top: 20.0,
-                              bottom: 20.0
-                          ),
+                            padding: const EdgeInsets.all(20.0),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Container(
+                                    padding: const EdgeInsets.only(
+                                      left: 100.0,
+                                      right: 100.0,
+                                    ),
+                                    child: Column(
+                                      children: <Widget>[
+                                        action.widget,
+                                        const Padding(padding: EdgeInsets.only(
+                                            top: 20.0,
+                                            bottom: 20.0
+                                        )),
+                                        const Icon(
+                                          Icons.arrow_downward_rounded,
+                                          color: color_list.primary,
+                                          size: 100.0,
+                                        ),
+                                        reaction.widget,
+                                        const Padding(padding: EdgeInsets.only(
+                                            top: 10.0,
+                                            bottom: 10.0
+                                        )
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ]
+                            )
+                        ),
+                        Container(
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
@@ -78,29 +120,22 @@ class edit_ifttt extends StatelessWidget {
                           ),
                         ),
                         Container(
-                          padding: const EdgeInsets.only(
-                              top: 20.0,
-                              bottom: 20.0
-                          ),
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                              // TODO FILL THIS WHEN PAGE WAS BUILD
-                              areaLib.Action actionBuild = areaLib.Action(
-                                  "",
-                                  [
-                                    Parameter("", ParameterType.TEXT)
-                                  ]
-                              );
-                              Reaction reactionBuild = Reaction(
-                                  "",
-                                  [
-                                    Parameter("", ParameterType.TEXT)
-                                  ]
-                              );
-
-                              api.updateIfttt(area.id, Area(area.id, api.token!.token, actionBuild, reactionBuild));
-                              Navigator.of(context).pushNamed('/List');
+                              api.updateIfttt(
+                                args,
+                                createAreaRequest(
+                                  action.controllerSecond.text,
+                                  action.actionParameter.getParams(),
+                                  reaction.controllerSecond.text,
+                                  reaction.actionParameter.getParams(),
+                                )
+                              ).then((value) => {
+                                if (value) {
+                                  Navigator.of(context).pushNamed('/List')
+                                }
+                              });
                             },
                             style: ElevatedButton.styleFrom(
                                 primary: color_list.primary,
@@ -165,4 +200,51 @@ class edit_ifttt extends StatelessWidget {
         ]
     );
   }
+
+  /*Widget buildEditing(BuildContext context, createAreaRequest area) {
+    DynamicList action = DynamicList(serviceListBuilder(api, true), true, "Service", "Action", api.listService);
+    DynamicList reaction = DynamicList(serviceListBuilder(api, true), false, "Service", "Reaction", api.listService);
+
+    action.controllerSecond.text = area.trigger.typeData;
+    action.actionParameter.setParams(area.trigger.map);
+    reaction.controllerSecond.text = area.consequence.typeData;
+    reaction.actionParameter.setParams(area.consequence.map);
+
+    return Container(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          buildTopPage(context),
+          Container(
+            padding: const EdgeInsets.only(
+              left: 100.0,
+              right: 100.0,
+            ),
+            child: Column(
+              children: <Widget>[
+                action.widget,
+                const Padding(padding: EdgeInsets.only(
+                    top: 20.0,
+                    bottom: 20.0
+                )),
+                const Icon(
+                  Icons.arrow_downward_rounded,
+                  color: color_list.primary,
+                  size: 100.0,
+                ),
+                reaction.widget,
+                const Padding(padding: EdgeInsets.only(
+                    top: 10.0,
+                    bottom: 10.0
+                  )
+                ),
+              ],
+            ),
+          )
+        ]
+      )
+    );
+  }*/
 }
