@@ -2,20 +2,20 @@
           fxLayoutGap="30px">
 
     <!-- Action -->
-    <div fxLayout="column">
+    <div fxLayout="column" fxLayoutAlign="space-between center">
         <h2>{{ displayableAreaAction?.title }}</h2>
         <mat-card-subtitle>{{ displayableAreaAction?.subtitle }}</mat-card-subtitle>
-        <img [src]="displayableAreaAction?.svgPath">
+        <img *ngIf="displayableAreaAction?.svgPath" [src]="displayableAreaAction?.svgPath">
     </div>
 
     <!-- Arrow -->
     <img class=" action-to-reaction-arrow" src="assets/icons/arrow_right.svg">
 
     <!-- Reaction -->
-    <div fxLayout="column" class="last-card-element">
+    <div fxLayout="column" fxLayoutAlign="space-between center" class="last-card-element">
         <h2>{{ displayableAreaReaction?.title }}</h2>
         <mat-card-subtitle>{{ displayableAreaReaction?.subtitle }}</mat-card-subtitle>
-        <img [src]="displayableAreaReaction?.svgPath">
+        <img *ngIf="displayableAreaReaction?.svgPath" [src]="displayableAreaReaction?.svgPath">
     </div>
 
 </mat-card>

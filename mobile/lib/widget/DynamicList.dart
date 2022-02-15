@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/api/model/serviceFetch/serviceFetch.dart';
 import 'package:mobile/page/color_list.dart';
 import 'package:mobile/service/IService.dart';
+import 'package:mobile/widget/paramsListBuilder.dart';
 
 class DynamicList {
   bool isService;
@@ -10,10 +12,13 @@ class DynamicList {
   List<IService> service;
   TextEditingController controllerFirst = TextEditingController(text: "None");
   TextEditingController controllerSecond = TextEditingController(text: "None");
+  List<serviceFecth> listService;
+  late paramsListBuilder actionParameter;
   late TestList widget;
 
-  DynamicList(this.service, this.isService, this.firstTitle, this.secondTitle) {
-    widget = TestList(service, isService, firstTitle, secondTitle, controllerFirst, controllerSecond);
+  DynamicList(this.service, this.isService, this.firstTitle, this.secondTitle, this.listService) {
+    actionParameter = paramsListBuilder(listService, controllerFirst.text, controllerSecond.text, isService);
+    widget = TestList(service, isService, firstTitle, secondTitle, controllerFirst, controllerSecond, actionParameter);
   }
 }
 
@@ -23,13 +28,14 @@ class TestList extends StatefulWidget {
   String firstTitle;
   String secondTitle;
 
+  final actionParameter;
   final controllerFirst;
   final controllerSecond;
 
-  TestList(this.service, this.isService, this.firstTitle, this.secondTitle, this.controllerFirst, this.controllerSecond, {Key? key}) : super(key: key);
+  TestList(this.service, this.isService, this.firstTitle, this.secondTitle, this.controllerFirst, this.controllerSecond, this.actionParameter, {Key? key}) : super(key: key);
 
   @override
-  _TestListState createState() => _TestListState(service, isService, firstTitle, secondTitle, controllerFirst, controllerSecond);
+  _TestListState createState() => _TestListState(service, isService, firstTitle, secondTitle, controllerFirst, controllerSecond, actionParameter);
 }
 
 class _TestListState extends State<TestList> {
@@ -44,10 +50,11 @@ class _TestListState extends State<TestList> {
   String secondTitle = "";
 
 
+  paramsListBuilder actionParameter;
   TextEditingController textChild;
   TextEditingController controllerSecond;
 
-  _TestListState(this.service, this.isService, this.firstTitle, this.secondTitle, this.textChild, this.controllerSecond) {
+  _TestListState(this.service, this.isService, this.firstTitle, this.secondTitle, this.textChild, this.controllerSecond, this.actionParameter) {
     list = getList();
   }
 
@@ -65,6 +72,7 @@ class _TestListState extends State<TestList> {
             top: 10.0,
             bottom: 10.0
         )),
+        actionParameter.build(context)
       ],
     );
   }
@@ -115,6 +123,7 @@ class _TestListState extends State<TestList> {
                   } else {
                     listChild = getChildListReaction(textChild.text);
                   }
+                  actionParameter.setService(textChild.text, controllerSecond.text);
                 });
               },
               items: list.map<DropdownMenuItem<String>>((String value) {
@@ -169,6 +178,7 @@ class _TestListState extends State<TestList> {
               onChanged: (String? newValue) {
                 setState(() {
                   controllerSecond.text = newValue!;
+                  actionParameter.setService(textChild.text, controllerSecond.text);
                 });
               },
               items: listChild.map<DropdownMenuItem<String>>((String value) {

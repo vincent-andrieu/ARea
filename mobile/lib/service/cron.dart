@@ -1,7 +1,7 @@
 import 'package:mobile/service/IService.dart';
 
-class date extends IService {
-  date(bool src) : super(src);
+class cron extends IService {
+  cron(bool src) : super(src);
 
   @override
   List<String> getAction() {
@@ -14,12 +14,12 @@ class date extends IService {
 
   @override
   String getIcon() {
-    return "assets/date.png";
+    return "assets/cron.png";
   }
 
   @override
   String getName() {
-    return "date";
+    return "cron";
   }
 
   @override

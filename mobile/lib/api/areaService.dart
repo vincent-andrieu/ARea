@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:mobile/api/apiService.dart';
 import 'package:mobile/api/model/codeRequest.dart';
+import 'package:mobile/api/model/createAreaRequest.dart';
 import 'package:mobile/api/model/loginRequest.dart';
 import 'package:mobile/api/model/serviceFetch/configFecth.dart';
 import 'package:mobile/api/model/serviceFetch/serviceFetch.dart';
@@ -30,6 +31,7 @@ class areaService {
       this.token = registerResponse.fromJson(response);
       developer.log("updateServiceToken END");
       await fetchDataConfig();
+      await getListIfttt();
       return true;
     } catch (e) {
       developer.log("updateServiceToken  -> ${e.toString()}");
@@ -54,6 +56,7 @@ class areaService {
       token = registerResponse.fromJson(response);
       developer.log('tryConnexion: parse OK');
       await fetchDataConfig();
+      await getListIfttt();
       return true;
     } catch (e) {
       developer.log('tryConnexion: Server failed invalid response -> ' + e.toString());
@@ -66,6 +69,7 @@ class areaService {
       dynamic response = await api.makeRequestPost<loginRequest>("/auth/register", "", loginRequest(user, pass), 201);
       token = registerResponse.fromJson(response);
       await fetchDataConfig();
+      await getListIfttt();
       return true;
     } catch (e) {
       developer.log('createUserAndConnexion: Server failed invalid response -> ' + e.toString());
@@ -73,9 +77,9 @@ class areaService {
     }
   }
 
-  Future<bool> createIfttt(Area newArea) async {
+  Future<bool> createIfttt(createAreaRequest newArea) async {
     try {
-      dynamic _ = await api.makeRequestPost<Area>("/area/", _getToken(), newArea, 201);
+      dynamic _ = await api.makeRequestPost<createAreaRequest>("/area/", _getToken(), newArea, 201);
 
       // TODO CAN BE UPDATE IN LOCAL FOR SYSTEM OPTIMISATION
       return getListIfttt();
@@ -87,7 +91,7 @@ class areaService {
 
   Future<bool> deleteIfttt(String iftttId) async {
     try {
-      dynamic _ = await api.makeRequestDelete("/area/$iftttId", _getToken(), {}, 200);
+      dynamic _ = await api.makeRequestDelete("/area/$iftttId", _getToken(), {}, 204);
 
       // TODO CAN BE UPDATE IN LOCAL FOR SYSTEM OPTIMISATION
       return getListIfttt();
@@ -111,9 +115,14 @@ class areaService {
 
   Future<bool> getListIfttt() async {
     try {
-      dynamic list = api.makeRequestGetList<tokenRequest>("/area/list", _getToken(), 200);
-      // TODO exctract data Future<List<iftttResponse>>
-      token?.areas = list;
+      dynamic list = await api.makeRequestGet("/area/list", _getToken(), 200);
+
+      log(list.toString());
+      log("getListIfttt -> REQUEST OK");
+
+      token?.areas = List.from(list).map((dynamic item) => createAreaRequest.fromJson(item)).toList();
+
+      log("getListIfttt -> LIST OK");
       return true;
     } catch (e) {
       developer.log('getListIfttt: Server failed invalid response -> ' + e.toString());
@@ -127,28 +136,23 @@ class areaService {
       dynamic action = await api.makeRequestGet("/service/action", _getToken(), 200);
       dynamic reaction = await api.makeRequestGet("/service/reaction", _getToken(), 200);
 
-      developer.log("fetchDataConfig -> $service");
-      List<serviceFecth> serviceList = service.map((dynamic item) => serviceFecth.fromJson(item)).toList();
-      developer.log("fetchDataConfig -> $action");
-      List<configFetch> actionList = action.map((dynamic item) => configFetch.fromJson(item)).toList();
-      developer.log("fetchDataConfig -> $reaction");
-      List<configFetch> reactionList = reaction.map((dynamic item) => configFetch.fromJson(item)).toList();
+      //developer.log("fetchDataConfig -> $service");
+      List<serviceFecth> serviceList = List.from(service).map((dynamic item) => serviceFecth.fromJson(item)).toList();
+      //developer.log("fetchDataConfig -> $action");
+      List<configFetch> actionList = List.from(action).map((dynamic item) => configFetch.fromJson(item)).toList();
+      //developer.log("fetchDataConfig -> $reaction");
+      List<configFetch> reactionList = List.from(reaction).map((dynamic item) => configFetch.fromJson(item)).toList();
 
       for (var element in serviceList) {
-        developer.log("fetchDataConfig -> 1");
-        configFetch? tmp = _getInList(reactionList, element.label);
-        if (tmp != null) {
-          element.reaction = tmp;
-        }
-        developer.log("fetchDataConfig -> 2");
-        tmp = _getInList(actionList, element.label);
-        if (tmp != null) {
-          element.action = tmp;
-        }
-        developer.log("fetchDataConfig -> 3");
+        //developer.log("fetchDataConfig -> 1");
+        element.reaction = _getInList(reactionList, element.label);
+        //developer.log("fetchDataConfig -> 2");
+        element.action = _getInList(actionList, element.label);
+        //developer.log("fetchDataConfig -> 3");
         listService.add(element);
-        developer.log("fetchDataConfig -> 4");
+        //developer.log("fetchDataConfig -> 4");
       }
+      //developer.log("fetchDataConfig -> $listService");
       return true;
     } catch (e) {
       developer.log("fetchDataConfig -> ${e.toString()}");
@@ -156,13 +160,15 @@ class areaService {
     }
   }
 
-  configFetch? _getInList(List<configFetch> list, String name) {
-    for (var element in list) {
+  List<configFetch> _getInList(List<configFetch> listSrc, String name) {
+    List<configFetch> list = [];
+
+    for (var element in listSrc) {
       if (element.service == name) {
-        return element;
+        list.add(element);
       }
     }
-    return null;
+    return list;
   }
 
   String _getToken() {

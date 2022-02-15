@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:mobile/api/areaService.dart';
-import 'package:mobile/api/model/area/Action.dart' as area;
-import 'package:mobile/api/model/area/Reaction.dart';
+import 'package:mobile/api/model/area/ActionType.dart' as areaAction;
+import 'package:mobile/api/model/area/ReactionType.dart' as areaReaction;
+import 'package:mobile/api/model/createAreaRequest.dart';
 import 'package:mobile/page/color_list.dart';
 import 'package:mobile/service/IService.dart';
 import 'package:mobile/tools/ActionReactionTools.dart';
@@ -19,6 +22,7 @@ class list_ifttt extends StatelessWidget {
 
   list_ifttt(areaService apiSrc, {Key? key}) : super(key: key) {
     api = apiSrc;
+    log("BUILD LIST");
   }
 
   @override
@@ -70,7 +74,7 @@ class list_ifttt extends StatelessWidget {
 
     if (api.token != null) {
       for (var element in api.token!.areas) {
-        list.add(buildCard(element.id, element.trigger, element.consequence, context));
+        list.add(buildCard(element.id, element, context));
       }
     }
     return list;
@@ -92,9 +96,9 @@ class list_ifttt extends StatelessWidget {
     );
   }
 
-  Widget buildCard(String id, area.Action action, Reaction reaction, BuildContext context) {
-    IService actionName = getServiceActionName(action.type);
-    IService reactionName = getServiceReactionName(reaction.type);
+  Widget buildCard(String id, createAreaRequest ifttt, BuildContext context) {
+    IService actionName = getServiceActionName(areaAction.stringToEnum(ifttt.trigger.typeData));
+    IService reactionName = getServiceReactionName(areaReaction.stringToEnum(ifttt.consequence.typeData));
 
     return Container(
       padding: const EdgeInsets.only(
@@ -109,13 +113,13 @@ class list_ifttt extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                buildSubCard(actionName.getName(), "Nombre: ${action.parameters.length}", actionName.getIcon(), context),
+                buildSubCard(actionName.getName(), "Nombre: ${ifttt.trigger.map.length}", actionName.getIcon(), context),
                 const Icon(
                   Icons.arrow_forward_outlined,
                   color: color_list.primary,
                   size: 50.0,
                 ),
-                buildSubCard(reactionName.getName(), "Nombre: ${reaction.parameters.length}", reactionName.getIcon(), context)
+                buildSubCard(reactionName.getName(), "Nombre: ${ifttt.consequence.map.length}", reactionName.getIcon(), context)
               ],
             )
         ),

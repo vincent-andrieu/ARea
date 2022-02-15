@@ -12,12 +12,11 @@ export interface TwitchStreamConfig {
 
 export interface TwitterTweetConfig {
     username: string; // target user
-    lastTweetId: string; // target user
 }
 
 export interface RSSConfig {
     url: string;
-    prevHash: string;
+    prevHash?: string;
 }
 
 export interface DiscordMessageConfig {

@@ -1,15 +1,10 @@
-import { Schema, Types } from "mongoose";
-
-export type ObjectId = Schema.Types.ObjectId;
-export const ObjectId = Schema.Types.ObjectId;
+export type ObjectId = string;
 
 export default abstract class Model {
     _id?: ObjectId;
 
     constructor(model: Model) {
-        this._id = typeof model._id === "string" ? new Types.ObjectId(model._id) as unknown as ObjectId : model._id;
-
-        delete (model as any).__v;
+        this._id = model._id?.toString();
     }
 }
 

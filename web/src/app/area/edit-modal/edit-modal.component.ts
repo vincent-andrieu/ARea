@@ -9,10 +9,10 @@ import { ActionConfig } from "@classes/model/ActionConfig";
 import { ReactionConfig } from "@classes/model/ReactionConfig";
 import { ServiceType } from "@classes/model/ServiceType";
 import { Parameter, ParameterType } from "@classes/model/Parameters";
+import Model, { ObjectId } from "@classes/model.class";
 import { AreaService } from "@services/area.service";
 import { ServiceService } from "@services/service.service";
 import { AuthService, ServiceData } from "@services/auth.service";
-import { ObjectId } from "@classes/model.class";
 
 @Component({
     selector: 'app-edit-modal',
@@ -32,7 +32,7 @@ export class AReaEditModalComponent {
     public dateNow = Date.now;
 
     constructor(
-        private _matDialogRef: MatDialogRef<AReaEditModalComponent, ARea | undefined>,
+        private _matDialogRef: MatDialogRef<AReaEditModalComponent, ARea | undefined | null>,
         @Inject(MAT_DIALOG_DATA) public area: ARea | undefined,
         private _authService: AuthService,
         private _areaService: AreaService,
@@ -41,14 +41,23 @@ export class AReaEditModalComponent {
         this._serviceService.getAction().then((result) => {
             this.actions = result;
             this.actionServices = this._getActionServices();
+
+            const actionServiceForm = this.form.get('actionService');
+
+            if (actionServiceForm?.value)
+                this._onActionServiceUpdate(actionServiceForm.value);
+            actionServiceForm?.valueChanges.subscribe((value: ServiceType) => this._onActionServiceUpdate(value));
         });
         this._serviceService.getReaction().then((result) => {
             this.reactions = result;
             this.reactionServices = this._getReactionServices();
-        });
 
-        this.form.get('actionService')?.valueChanges.subscribe((value: ServiceType) => this._onActionServiceUpdate(value));
-        this.form.get('reactionService')?.valueChanges.subscribe((value: ServiceType) => this._onReactionServiceUpdate(value));
+            const reactionServiceForm = this.form.get('reactionService');
+
+            if (reactionServiceForm?.value)
+                this._onReactionServiceUpdate(reactionServiceForm.value);
+            reactionServiceForm?.valueChanges.subscribe((value: ServiceType) => this._onReactionServiceUpdate(value));
+        });
     }
 
     public get isEdit(): boolean {
@@ -63,12 +72,27 @@ export class AReaEditModalComponent {
             throw "Action form not found";
         return value;
     }
+    public get actionForm(): FormControl {
+        const form = this.form.get(this.form.get('actionService')?.value + '-action');
+
+        if (!form)
+            throw "Undefined action form";
+        return form as FormControl;
+    }
+
     public get reaction(): Reaction {
         const value: Reaction | undefined = this.form.get(this.form.get('reactionService')?.value + '-reaction')?.value;
 
         if (!value)
             throw "Reaction form not found";
         return value;
+    }
+    public get reactionForm(): FormControl {
+        const form = this.form.get(this.form.get('reactionService')?.value + '-reaction');
+
+        if (!form)
+            throw "Undefined reaction form";
+        return form as FormControl;
     }
 
     // Get service actions
@@ -86,7 +110,7 @@ export class AReaEditModalComponent {
 
         if (!actionForm || actionForm.invalid || !actionForm.value)
             return [];
-        return (actionForm.value as Action).parameters;
+        return (actionForm.value as Action).parameters.filter((param) => this.form.contains(this.action.service + '-' + this.action.type + '-actionParam-' + param.name));
     }
     // Get reaction parameters
     public get reactionParameters(): Array<Parameter> {
@@ -94,77 +118,107 @@ export class AReaEditModalComponent {
 
         if (!reactionForm || reactionForm.invalid || !reactionForm.value)
             return [];
-        return (reactionForm.value as Reaction).parameters;
+        return (reactionForm.value as Reaction).parameters.filter((param) => this.form.contains(this.reaction.service + '-' + this.reaction.type + '-reactionParam-' + param.name));
+    }
+
+    public compareModels(compared1: Model | undefined, compared2: Model | undefined) {
+        return compared1?._id?.toString() === compared2?._id?.toString();
     }
 
     // Services getters
     private _getActionServices(): Array<ServiceData> {
-        return this.actions.map((action) => {
-            if (action.service === ServiceType.CRON || action.service === ServiceType.RSS)
-                return {
-                    iconSvgPath: '',
-                    label: action.label,
-                    name: action.service,
-                    redirect: ''
-                } as ServiceData;
+        return this.actions
+            .filter((action, index, self) => self.findIndex((value) => value.service === action.service) === index)
+            .map((action) => {
+                if (action.service === ServiceType.RSS)
+                    return {
+                        iconSvgPath: 'assets/icons/rss.svg',
+                        label: action.label,
+                        name: action.service,
+                        redirect: ''
+                    } as ServiceData;
+                if (action.service === ServiceType.CRON)
+                    return {
+                        iconSvgPath: 'assets/icons/calendar.svg',
+                        label: action.label,
+                        name: action.service,
+                        redirect: ''
+                    } as ServiceData;
 
-            const app = this._authService.apps.find((app) =>
-                app.name === action.service
-            );
+                const app = this._authService.apps.find((app) =>
+                    app.name === action.service
+                );
 
-            if (!app)
-                throw `Service ${action.service.toString()} app not found`;
-            return app;
-        });
+                if (!app)
+                    throw `Service ${action.service.toString()} app not found`;
+                return app;
+            });
     }
     private _getReactionServices(): Array<ServiceData> {
-        return this.reactions.map((reaction) => {
-            if (reaction.service === ServiceType.CRON || reaction.service === ServiceType.RSS)
-                return {
-                    iconSvgPath: '',
-                    label: reaction.label,
-                    name: reaction.service,
-                    redirect: ''
-                } as ServiceData;
+        return this.reactions
+            .filter((reaction, index, self) => self.findIndex((value) => value.service === reaction.service) === index)
+            .map((reaction) => {
+                if (reaction.service === ServiceType.RSS)
+                    return {
+                        iconSvgPath: 'assets/icons/rss.svg',
+                        label: reaction.label,
+                        name: reaction.service,
+                        redirect: ''
+                    } as ServiceData;
+                if (reaction.service === ServiceType.CRON)
+                    return {
+                        iconSvgPath: 'assets/icons/calendar.svg',
+                        label: reaction.label,
+                        name: reaction.service,
+                        redirect: ''
+                    } as ServiceData;
 
-            const app = this._authService.apps.find((app) =>
-                app.name === reaction.service
-            );
+                const app = this._authService.apps.find((app) =>
+                    app.name === reaction.service
+                );
 
-            if (!app)
-                throw `Service ${reaction.service.toString()} app not found`;
-            return app;
-        });
+                if (!app)
+                    throw `Service ${reaction.service.toString()} app not found`;
+                return app;
+            });
     }
 
     // Action updates
     private _onActionServiceUpdate(service: ServiceType): void {
-        this.form.setControl(service + '-action', new FormControl(this.area?.trigger.action));
+        const formControl = new FormControl(this.area?.trigger.action || (this.serviceActions.length === 1 ? this.serviceActions[0] : undefined));
+        this.form.setControl(service + '-action', formControl);
 
-        this.form.get(service + '-action')?.valueChanges.subscribe((value: Action) => this._onActionUpdate(value));
+        if (formControl.value)
+            this._onActionUpdate(formControl.value);
+        formControl.valueChanges.subscribe((value: Action) => this._onActionUpdate(value));
     }
 
     private _onActionUpdate(action: Action): void {
         action.parameters.forEach((param) =>
-            this.form.setControl(action.service + '-' + action.type + '-actionParam-' + param.name, new FormControl((this.area?.trigger.inputs as { [key: string]: any })[param.name]))
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            this.form.setControl(action.service + '-' + action.type + '-actionParam-' + param.name, new FormControl(this.area ? (this.area.trigger.inputs as { [key: string]: any })[param.name] : undefined))
         );
     }
 
     // Reaction updates
     private _onReactionServiceUpdate(service: ServiceType): void {
-        this.form.setControl(service + '-reaction ', new FormControl(this.area?.consequence.reaction));
+        const formControl = new FormControl(this.area?.consequence.reaction || (this.serviceReactions.length === 1 ? this.serviceReactions[0] : undefined));
+        this.form.setControl(service + '-reaction', formControl);
 
-        this.form.get(service + '-reaction')?.valueChanges.subscribe((value: Reaction) => this._onReactionUpdate(value));
+        if (formControl.value)
+            this._onReactionUpdate(formControl.value);
+        formControl.valueChanges.subscribe((value: Reaction) => this._onReactionUpdate(value));
     }
 
     private _onReactionUpdate(reaction: Reaction): void {
         reaction.parameters.forEach((param) =>
-            this.form.setControl(reaction.service + '-' + reaction.type + '-reactionParam-' + param.name, new FormControl((this.area?.consequence.inputs as { [key: string]: any })[param.name]))
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            this.form.setControl(reaction.service + '-' + reaction.type + '-reactionParam-' + param.name, new FormControl(this.area ? (this.area?.consequence.inputs as { [key: string]: any })[param.name] : undefined))
         );
     }
 
     public async submit(): Promise<void> {
-        const area: ARea = Object.assign<ARea | undefined, ARea>(this.area, {
+        const area: ARea = new ARea(Object.assign(this.area || {}, {
             trigger: {
                 action: this.action._id as ObjectId,
                 inputs: this._getTriggerInputs()
@@ -173,7 +227,7 @@ export class AReaEditModalComponent {
                 reaction: this.reaction._id as ObjectId,
                 inputs: this._getConsequenceInputs()
             }
-        });
+        }));
 
         const result: ARea = await (!this.isEdit ? this._areaService.add(area) : this._areaService.edit(area));
 
@@ -204,5 +258,13 @@ export class AReaEditModalComponent {
                 result[param.name] = (result[param.name] as Date).getTime();
         });
         return result as unknown as ReactionConfig;
+    }
+
+    public async deleteArea(): Promise<void> {
+        if (!this.isEdit || !this.area)
+            throw "Not in edit mode";
+
+        await this._areaService.delete(this.area);
+        this._matDialogRef.close(null);
     }
 }
