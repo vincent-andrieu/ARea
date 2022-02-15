@@ -118,9 +118,11 @@ class areaService {
       dynamic list = await api.makeRequestGet("/area/list", _getToken(), 200);
 
       log(list.toString());
-      List<Area> fetchList = List.from(list).map((dynamic item) => Area.fromJson(item)).toList();
+      log("getListIfttt -> REQUEST OK");
 
-      token?.areas = fetchList;
+      token?.areas = List.from(list).map((dynamic item) => createAreaRequest.fromJson(item)).toList();
+
+      log("getListIfttt -> LIST OK");
       return true;
     } catch (e) {
       developer.log('getListIfttt: Server failed invalid response -> ' + e.toString());

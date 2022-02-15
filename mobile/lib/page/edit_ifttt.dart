@@ -6,8 +6,8 @@ import 'package:mobile/api/model/area/Area.dart';
 import 'package:mobile/api/model/area/Parameter.dart';
 import 'package:mobile/api/model/area/ParameterType.dart';
 import 'package:mobile/api/model/area/Reaction.dart';
+import 'package:mobile/api/model/createAreaRequest.dart';
 import 'package:mobile/page/color_list.dart';
-import 'package:mobile/tools/ActionReactionTools.dart';
 import 'create_ifttt.dart';
 
 class edit_ifttt extends StatelessWidget {
@@ -15,7 +15,7 @@ class edit_ifttt extends StatelessWidget {
 
   edit_ifttt(this.api, {Key? key}) : super(key: key);
 
-  Area getArea(String id) {
+  createAreaRequest getArea(String id) {
     for (var it in api.token!.areas) {
       if (it.id == id) {
         return it;
@@ -27,7 +27,7 @@ class edit_ifttt extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String args = ModalRoute.of(context)!.settings.arguments as String;
-    Area area = getArea(args);
+    createAreaRequest area = getArea(args);
 
     return Scaffold(
       body: Center(
