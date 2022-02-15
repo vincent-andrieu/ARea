@@ -24,7 +24,7 @@ export const deleteArea = {
             "403": {
                 $ref: "#/components/responses/UnauthorizedError"
             },
-            "200": {
+            "204": {
                 description: "Area deleted successfully"
             },
             "404": {

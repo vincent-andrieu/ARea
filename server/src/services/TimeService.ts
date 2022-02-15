@@ -1,6 +1,6 @@
 import { AReaSchema } from "../schemas/area.schema";
 import ARea from "../classes/area.class";
-import { DateTimeConfg, TimeConfig } from "../models/ActionConfig";
+import { DateTimeConfig, TimeConfig } from "../models/ActionConfig";
 import cron from "node-cron";
 import CronService from "./CronService";
 import { ObjectId } from "@classes/model.class";
@@ -58,14 +58,14 @@ export default class TimeService {
 
     static evalDatetime = (area: ARea): boolean => {
         try {
-            const timestamp: number | undefined = (area.trigger.inputs as DateTimeConfg)?.time;
+            const timestamp: number | undefined = (area.trigger.inputs as DateTimeConfig)?.time;
 
             if (timestamp == undefined) {
                 console.error("TimeService::evalDatetime invalid area inputs.");
                 return false;
             }
             if (timestamp && Date.now() >= timestamp) {
-                (area.trigger.inputs as DateTimeConfg).time = 0;
+                (area.trigger.inputs as DateTimeConfig).time = 0;
                 this._areaSchema.edit(area); // disable action
                 return true;
             }
