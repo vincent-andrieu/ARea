@@ -89,8 +89,8 @@ export class AuthService {
         window.location.href = url;
     }
 
-    public async disconnectFromService(name: string): Promise<void> {
-        return await firstValueFrom(this._httpClient.post<void>(`/auth/disconnect/${name}`, {}))
+    public disconnectFromService(name: string): Promise<void> {
+        return firstValueFrom(this._httpClient.post<void>(`/auth/disconnect/${name}`, {}))
             .catch((err) => this._snackbarService.openError(err));
     }
 

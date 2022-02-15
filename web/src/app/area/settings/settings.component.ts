@@ -44,7 +44,8 @@ export class AReaSettingsComponent {
 
     public redirectToServiceAuth(service: UserServiceData): void {
         if (service.isConnected)
-            this._authService.disconnectFromService(service.name);
+            this._authService.disconnectFromService(service.name)
+                .then(() => service.isConnected = false);
         else
             this._authService.loginToService(service.redirect);
     }
