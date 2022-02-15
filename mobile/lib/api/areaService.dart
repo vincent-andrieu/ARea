@@ -91,7 +91,7 @@ class areaService {
 
   Future<bool> deleteIfttt(String iftttId) async {
     try {
-      dynamic _ = await api.makeRequestDelete("/area/$iftttId", _getToken(), {}, 200);
+      dynamic _ = await api.makeRequestDelete("/area/$iftttId", _getToken(), {}, 204);
 
       // TODO CAN BE UPDATE IN LOCAL FOR SYSTEM OPTIMISATION
       return getListIfttt();
