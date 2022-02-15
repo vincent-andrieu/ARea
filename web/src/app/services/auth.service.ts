@@ -89,19 +89,16 @@ export class AuthService {
         window.location.href = url;
     }
 
-    public async disconnectFromService(name: string): Promise<void> {
-        return await firstValueFrom(this._httpClient.post<void>(`/auth/disconnect/${name}`, {}))
+    public disconnectFromService(name: string): Promise<void> {
+        return firstValueFrom(this._httpClient.post<void>(`/auth/disconnect/${name}`, {}))
             .catch((err) => this._snackbarService.openError(err));
     }
 
     public logout(): void {
         this._cookieService.remove(environment.cookiesKey.jwt);
 
-        this._httpClient.get('/auth/logout')
-            .pipe(catchError((err: HttpErrorResponse) => of(this._snackbarService.openError(err))))
-            .subscribe((result) => {
-                if (result)
-                    this._router.navigateByUrl("/login");
-            });
+        const host = this._cookieService.get(environment.cookiesKey.serverHost);
+
+        window.location.href = `${host}${host.endsWith('/') ? 'auth' : '/auth'}/logout`;
     }
 }

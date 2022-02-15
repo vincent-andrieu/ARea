@@ -23,10 +23,12 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
             });
             // save user token
             oldUser.token = token;
-            if (oldUser.oauth?.discord) {
-                oldUser.oauth.discord.accessToken = accessToken;
-                oldUser.oauth.discord.refreshToken = refreshToken;
-            }
+            if (!oldUser.oauth)
+                oldUser.oauth = {};
+            oldUser.oauth.discord = {
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            };
             await userSchema.edit(oldUser);
             done(null, oldUser);
         } else {

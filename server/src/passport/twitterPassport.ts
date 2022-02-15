@@ -31,10 +31,12 @@ const successfullyAuthentificated = async (accessToken: string, tokenSecret: str
             oldUser.oauthLoginProvider = OAuthProvider.TWITTER;
             oldUser.oauthLoginProviderId = profile.username;
             oldUser.token = token;
-            if (oldUser.oauth?.twitter) {
-                oldUser.oauth.twitter.accessToken = accessToken;
-                oldUser.oauth.twitter.secretToken = tokenSecret;
-            }
+            if (!oldUser.oauth)
+                oldUser.oauth = {};
+            oldUser.oauth.twitter = {
+                accessToken: accessToken,
+                secretToken: tokenSecret
+            };
             const userEdited = await userSchema.edit(oldUser);
             if (done)
                 done(null, userEdited);

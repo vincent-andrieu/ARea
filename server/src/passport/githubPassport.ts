@@ -27,12 +27,12 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
             oldUser.oauthLoginProvider = OAuthProvider.GITHUB;
             oldUser.oauthLoginProviderId = profile.username;
             oldUser.token = token;
-            if (oldUser.oauth?.github) {
-                oldUser.oauth.github.accessToken = accessToken;
-                oldUser.oauth.github.refreshToken = refreshToken;
-            }
-
-            done(null, await userSchema.edit(oldUser));
+            if (!oldUser.oauth)
+                oldUser.oauth = {};
+            oldUser.oauth.github = {
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            };
         } else {
             console.log("Create new user");
 

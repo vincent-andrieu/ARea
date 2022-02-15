@@ -6,12 +6,14 @@ import service from "./service";
 import config from "./config";
 import auth from "./auth";
 import user from "./user";
+import app from "./app";
 
 export = {
     ...basicInfo,
     ...apiTags,
     ...components,
     paths: {
+        ...app,
         ...auth,
         ...user,
         ...service,
