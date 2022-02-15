@@ -9,7 +9,7 @@ import { ActionConfig } from "@classes/model/ActionConfig";
 import { ReactionConfig } from "@classes/model/ReactionConfig";
 import { ServiceType } from "@classes/model/ServiceType";
 import { Parameter, ParameterType } from "@classes/model/Parameters";
-import { ObjectId } from "@classes/model.class";
+import Model, { ObjectId } from "@classes/model.class";
 import { AreaService } from "@services/area.service";
 import { ServiceService } from "@services/service.service";
 import { AuthService, ServiceData } from "@services/auth.service";
@@ -32,7 +32,7 @@ export class AReaEditModalComponent {
     public dateNow = Date.now;
 
     constructor(
-        private _matDialogRef: MatDialogRef<AReaEditModalComponent, ARea | undefined>,
+        private _matDialogRef: MatDialogRef<AReaEditModalComponent, ARea | undefined | null>,
         @Inject(MAT_DIALOG_DATA) public area: ARea | undefined,
         private _authService: AuthService,
         private _areaService: AreaService,
@@ -121,6 +121,10 @@ export class AReaEditModalComponent {
         return (reactionForm.value as Reaction).parameters.filter((param) => this.form.contains(this.reaction.service + '-' + this.reaction.type + '-reactionParam-' + param.name));
     }
 
+    public compareModels(compared1: Model | undefined, compared2: Model | undefined) {
+        return compared1?._id?.toString() === compared2?._id?.toString();
+    }
+
     // Services getters
     private _getActionServices(): Array<ServiceData> {
         return this.actions
@@ -191,6 +195,7 @@ export class AReaEditModalComponent {
 
     private _onActionUpdate(action: Action): void {
         action.parameters.forEach((param) =>
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             this.form.setControl(action.service + '-' + action.type + '-actionParam-' + param.name, new FormControl(this.area ? (this.area.trigger.inputs as { [key: string]: any })[param.name] : undefined))
         );
     }
@@ -207,6 +212,7 @@ export class AReaEditModalComponent {
 
     private _onReactionUpdate(reaction: Reaction): void {
         reaction.parameters.forEach((param) =>
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             this.form.setControl(reaction.service + '-' + reaction.type + '-reactionParam-' + param.name, new FormControl(this.area ? (this.area?.consequence.inputs as { [key: string]: any })[param.name] : undefined))
         );
     }
@@ -259,6 +265,6 @@ export class AReaEditModalComponent {
             throw "Not in edit mode";
 
         await this._areaService.delete(this.area);
-        this._matDialogRef.close();
+        this._matDialogRef.close(null);
     }
 }

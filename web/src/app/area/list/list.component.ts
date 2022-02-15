@@ -27,7 +27,7 @@ export class AReaListComponent {
             data: area
         })
             .afterClosed().subscribe((result) => {
-                if (result) {
+                if (result !== undefined) {
                     this.isLoading = true;
                     this._areaService.getAll()
                         .then((result) => this.areas = result)

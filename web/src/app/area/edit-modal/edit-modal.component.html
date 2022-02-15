@@ -16,11 +16,12 @@
                 </mat-select>
             </mat-form-field>
 
-            <div *ngIf="form.get('actionService')?.valid" fxLayout="column">
+            <div *ngIf="form.get('actionService')?.valid && form.contains(form.get('actionService')?.value + '-action')"
+                 fxLayout="column">
                 <!-- Condition -->
                 <mat-form-field>
                     <mat-label>Condition</mat-label>
-                    <mat-select [formControl]="actionForm">
+                    <mat-select [formControl]="actionForm" [compareWith]="compareModels">
                         <mat-option *ngFor="let elem of serviceActions" [value]="elem">
                             {{ elem.label }}
                         </mat-option>
@@ -79,11 +80,12 @@
                 </mat-select>
             </mat-form-field>
 
-            <div *ngIf="form.get('reactionService')?.valid" fxLayout="column">
-                <!-- Action -->
+            <div *ngIf="form.get('reactionService')?.valid && form.contains(form.get('reactionService')?.value + '-reaction')"
+                 fxLayout="column">
+                <!-- Consequence -->
                 <mat-form-field>
-                    <mat-label>Action</mat-label>
-                    <mat-select [formControl]="reactionForm">
+                    <mat-label>Consequence</mat-label>
+                    <mat-select [formControl]="reactionForm" [compareWith]="compareModels">
                         <mat-option *ngFor="let elem of serviceReactions" [value]="elem">
                             {{ elem.label }}
                         </mat-option>
@@ -128,7 +130,7 @@
     </div>
 
     <div mat-dialog-actions fxLayout="row" [fxLayoutAlign]="isEdit ? 'space-between' : 'end'">
-        <button *ngIf="isEdit" mat-button type="button" color="warn" (click)="deleteArea()">Delete</button>
+        <button *ngIf="isEdit" mat-raised-button type="button" color="warn" (click)="deleteArea()">Delete</button>
         <div>
             <button mat-button mat-dialog-close type="button">Cancel</button>
             <button mat-raised-button type="submit" color="primary">{{ isEdit ? " Save" : "Add" }}</button>
