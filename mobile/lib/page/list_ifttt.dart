@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:mobile/api/areaService.dart';
 import 'package:mobile/api/model/area/ActionType.dart' as areaAction;
@@ -20,6 +22,7 @@ class list_ifttt extends StatelessWidget {
 
   list_ifttt(areaService apiSrc, {Key? key}) : super(key: key) {
     api = apiSrc;
+    log("BUILD LIST");
   }
 
   @override

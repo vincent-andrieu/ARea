@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/api/areaService.dart';
@@ -53,8 +55,11 @@ class edit_ifttt extends StatelessWidget {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                              api.deleteIfttt(area.id);
-                              Navigator.of(context).pushNamed('/List');
+                              api.deleteIfttt(args).then((value) => {
+                                if (value) {
+                                  Navigator.of(context).pushNamed('/List')
+                                }
+                              });
                             },
                             style: ElevatedButton.styleFrom(
                                 primary: color_list.primary,

@@ -84,7 +84,7 @@ class apiService {
     );
 
     if (result.statusCode == exitExpect) {
-      return jsonDecode(result.body);
+      return result.body;
     } else {
       throw "Unable to make our request to $srvUrl$route exit with status ${result.statusCode} error: ${result.body}";
     }
