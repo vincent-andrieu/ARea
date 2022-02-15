@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/api/areaService.dart';
-import 'package:mobile/api/model/area/Action.dart' as area;
-import 'package:mobile/api/model/area/Area.dart';
-import 'package:mobile/api/model/area/Parameter.dart';
-import 'package:mobile/api/model/area/ParameterType.dart';
-import 'package:mobile/api/model/area/Reaction.dart';
+import 'package:mobile/api/model/createAreaRequest.dart';
 import 'package:mobile/page/color_list.dart';
 import 'package:mobile/service/IService.dart';
-import 'package:mobile/tools/ActionReactionTools.dart';
 import 'package:mobile/tools/serviceListBuilder.dart';
 import 'package:mobile/widget/DynamicList.dart';
 
@@ -30,8 +25,8 @@ void callbackClose(BuildContext context) {
   Navigator.of(context).pop();
 }
 
-void callbackSaveIfttt(BuildContext context, areaService api, area.Action action, Reaction reaction, String token) {
-  api.createIfttt(Area("", token, action, reaction)).then((value) => {
+void callbackSaveIfttt(BuildContext context, createAreaRequest newArea, areaService api) {
+  api.createIfttt(newArea).then((value) => {
     if (value) {
       Navigator.of(context).pushNamed('/List')
     }
@@ -90,21 +85,18 @@ class create_ifttt extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          // TODO IMPLEMENT THIS
-                          area.Action actionBuild = area.Action(
-                              action.controllerSecond.text,
-                              [
-                                Parameter("", ParameterType.TEXT)
-                              ]
+                          callbackSaveIfttt(
+                              context,
+                              createAreaRequest(
+                                  "triggerkey",
+                                  "consequkey",
+                                  "triggerparams",
+                                  "consequparams",
+                                action.controllerSecond.text,
+                                reaction.controllerSecond.text,
+                              ),
+                              api
                           );
-                          Reaction reactionBuild = Reaction(
-                              reaction.controllerSecond.text,
-                              [
-                                Parameter("", ParameterType.TEXT)
-                              ]
-                          );
-
-                          callbackSaveIfttt(context, api, actionBuild, reactionBuild, api.token!.token);
 
                           // action.controllerFirst.text
                           // action.controllerSecond.text

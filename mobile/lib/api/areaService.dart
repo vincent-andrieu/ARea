@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:mobile/api/apiService.dart';
 import 'package:mobile/api/model/codeRequest.dart';
+import 'package:mobile/api/model/createAreaRequest.dart';
 import 'package:mobile/api/model/loginRequest.dart';
 import 'package:mobile/api/model/serviceFetch/configFecth.dart';
 import 'package:mobile/api/model/serviceFetch/serviceFetch.dart';
@@ -73,9 +74,9 @@ class areaService {
     }
   }
 
-  Future<bool> createIfttt(Area newArea) async {
+  Future<bool> createIfttt(createAreaRequest newArea) async {
     try {
-      dynamic _ = await api.makeRequestPost<Area>("/area/", _getToken(), newArea, 201);
+      dynamic _ = await api.makeRequestPost<createAreaRequest>("/area/", _getToken(), newArea, 201);
 
       // TODO CAN BE UPDATE IN LOCAL FOR SYSTEM OPTIMISATION
       return getListIfttt();
