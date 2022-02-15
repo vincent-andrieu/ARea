@@ -110,7 +110,7 @@ export class AReaEditModalComponent {
 
         if (!actionForm || actionForm.invalid || !actionForm.value)
             return [];
-        return (actionForm.value as Action).parameters;
+        return (actionForm.value as Action).parameters.filter((param) => this.form.contains(this.action.service + '-' + this.action.type + '-actionParam-' + param.name));
     }
     // Get reaction parameters
     public get reactionParameters(): Array<Parameter> {
@@ -118,7 +118,7 @@ export class AReaEditModalComponent {
 
         if (!reactionForm || reactionForm.invalid || !reactionForm.value)
             return [];
-        return (reactionForm.value as Reaction).parameters;
+        return (reactionForm.value as Reaction).parameters.filter((param) => this.form.contains(this.reaction.service + '-' + this.reaction.type + '-reactionParam-' + param.name));
     }
 
     // Services getters

@@ -11,6 +11,7 @@ import { MatCardModule } from "@angular/material/card";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
 import { MatDatepickerModule } from '@angular/material/datepicker';
 
@@ -44,6 +45,7 @@ import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from "@angular-mat
         MatProgressSpinnerModule,
         MatDialogModule,
         MatFormFieldModule,
+        MatInputModule,
         MatSelectModule,
         MatDatepickerModule
     ]
