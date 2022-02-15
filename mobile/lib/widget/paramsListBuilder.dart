@@ -66,14 +66,14 @@ class paramsListBuilder {
     return getValue(service.reaction, act);
   }
 
-  ITransfer textWidget(parameterFetch data) {
-    return textInputTransfer(data.name, data.label, data.type, "");
+  ITransfer textWidget(parameterFetch data, String defaultValue) {
+    return textInputTransfer(data.name, data.label, data.type, defaultValue);
   }
 
   List<Widget> getListToBuild() {
     configFetch conf = getConfig(isAction, actionTrigger);
     List<Widget> list = [];
-    Map<ParameterType,  ITransfer Function(parameterFetch)>  link = {
+    Map<ParameterType,  ITransfer Function(parameterFetch, String defaultValue)>  link = {
       ParameterType.DATETIME: textWidget,
       ParameterType.NUMBER: textWidget,
       ParameterType.TEXT: textWidget,
@@ -84,7 +84,7 @@ class paramsListBuilder {
     params.clear();
     for (var it in conf.parameters) {
       try {
-        ITransfer tmp = link[stringToEnum(it.type)]!(it);
+        ITransfer tmp = link[stringToEnum(it.type)]!(it, "");
 
         params.add(tmp);
         list.add(tmp.getWidget());
@@ -103,5 +103,17 @@ class paramsListBuilder {
       toRet[it.getKey()] = it.getValue();
     }
     return toRet;
+  }
+
+  void setParams(Map<String, String> map) {
+    params.clear();
+    map.forEach((key, value) {
+      parameterFetch tmp = parameterFetch();
+
+      tmp.name = key;
+      tmp.label = "";
+      tmp.type = "";
+      params.add(textWidget(tmp, value));
+    });
   }
 }

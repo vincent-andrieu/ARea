@@ -101,9 +101,9 @@ class areaService {
     }
   }
 
-  Future<bool> updateIfttt(String iftttId, Area editedObj) async {
+  Future<bool> updateIfttt(String iftttId, createAreaRequest editedObj) async {
     try {
-      dynamic _ = await api.makeRequestPut<Area>("/area/$iftttId", _getToken(), editedObj, 200);
+      dynamic _ = await api.makeRequestPut<createAreaRequest>("/area/$iftttId", _getToken(), editedObj, 200);
 
       // TODO CAN BE UPDATE IN LOCAL FOR SYSTEM OPTIMISATION
       return getListIfttt();
