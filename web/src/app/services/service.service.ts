@@ -25,7 +25,7 @@ export class ServiceService {
                     return of([] as Array<Action>);
                 }))
                 .subscribe((result) =>
-                    resolve(result)
+                    resolve(result.map((action) => new Action(action)))
                 );
         });
     }
@@ -38,7 +38,7 @@ export class ServiceService {
                     this._snackbarService.openError(err);
                     return of([] as Array<Reaction>);
                 }))
-                .subscribe((result) => resolve(result));
+                .subscribe((result) => resolve(result.map((reaction) => new Reaction(reaction))));
         });
     }
 }

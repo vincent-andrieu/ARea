@@ -23,7 +23,7 @@ export class AreaService {
                     reject(err);
                     return of([]);
                 }))
-                .subscribe((result) => resolve(result));
+                .subscribe((result) => resolve(result.map((value) => new ARea(value))));
         });
     }
 
@@ -37,7 +37,7 @@ export class AreaService {
                 }))
                 .subscribe((result) => {
                     if (result)
-                        resolve(result);
+                        resolve(new ARea(result));
                 });
         });
     }
@@ -52,7 +52,7 @@ export class AreaService {
                 }))
                 .subscribe((result) => {
                     if (result)
-                        resolve(result);
+                        resolve(new ARea(result));
                 });
         });
     }

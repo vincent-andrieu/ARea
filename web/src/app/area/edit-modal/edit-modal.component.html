@@ -8,8 +8,10 @@
                 <mat-label>Action service</mat-label>
                 <mat-select formControlName="actionService">
                     <mat-option *ngFor="let service of actionServices" [value]="service.name">
-                        <img [src]="service.iconSvgPath">
-                        <span>{{ service.label }}</span>
+                        <div fxLayout="row" fxLayoutAlign="start center" fxFlex>
+                            <img class="action-service-options-image" [src]="service.iconSvgPath">
+                            <span>{{ service.label }}</span>
+                        </div>
                     </mat-option>
                 </mat-select>
             </mat-form-field>
@@ -18,7 +20,7 @@
                 <!-- Condition -->
                 <mat-form-field>
                     <mat-label>Condition</mat-label>
-                    <mat-select [formControlName]="form.get('actionService')?.value + '-action'">
+                    <mat-select [formControl]="actionForm">
                         <mat-option *ngFor="let elem of serviceActions" [value]="elem">
                             {{ elem.label }}
                         </mat-option>
@@ -66,7 +68,7 @@
                 <!-- Action -->
                 <mat-form-field>
                     <mat-label>Action</mat-label>
-                    <mat-select [formControlName]="form.get('reactionService')?.value + '-reaction'">
+                    <mat-select [formControl]="reactionForm">
                         <mat-option *ngFor="let elem of serviceReactions" [value]="elem">
                             {{ elem.label }}
                         </mat-option>
