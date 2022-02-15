@@ -88,12 +88,10 @@ class create_ifttt extends StatelessWidget {
                           callbackSaveIfttt(
                               context,
                               createAreaRequest(
-                                  "triggerkey",
-                                  "consequkey",
-                                  "triggerparams",
-                                  "consequparams",
                                 action.controllerSecond.text,
+                                action.actionParameter.getParams(),
                                 reaction.controllerSecond.text,
+                                reaction.actionParameter.getParams(),
                               ),
                               api
                           );

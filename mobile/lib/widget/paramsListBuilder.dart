@@ -4,6 +4,7 @@ import 'package:mobile/api/model/area/ParameterType.dart';
 import 'package:mobile/api/model/serviceFetch/configFecth.dart';
 import 'package:mobile/api/model/serviceFetch/parameterFetch.dart';
 import 'package:mobile/api/model/serviceFetch/serviceFetch.dart';
+import 'package:mobile/tools/ITransfer.dart';
 import 'package:mobile/widget/input_custom.dart';
 
 class paramsListBuilder {
@@ -11,6 +12,7 @@ class paramsListBuilder {
   String actionTrigger = "";
   bool isAction;
   List<serviceFecth> list;
+  List<ITransfer> params = [];
 
   paramsListBuilder(this.list, String srv, this.actionTrigger, this.isAction) {
     try {
@@ -64,14 +66,14 @@ class paramsListBuilder {
     return getValue(service.reaction, act);
   }
 
-  Widget textWidget(parameterFetch data) {
-    return InputCustom(data.name, data.label, "");
+  ITransfer textWidget(parameterFetch data) {
+    return textInputTransfer(data.name, data.label, data.type, "");
   }
 
   List<Widget> getListToBuild() {
     configFetch conf = getConfig(isAction, actionTrigger);
     List<Widget> list = [];
-    Map<ParameterType,  Widget Function(parameterFetch)>  link = {
+    Map<ParameterType,  ITransfer Function(parameterFetch)>  link = {
       ParameterType.DATETIME: textWidget,
       ParameterType.NUMBER: textWidget,
       ParameterType.TEXT: textWidget,
@@ -79,14 +81,27 @@ class paramsListBuilder {
       ParameterType.URL: textWidget
     };
 
+    params.clear();
     for (var it in conf.parameters) {
       try {
-        list.add(link[stringToEnum(it.type)]!(it));
+        ITransfer tmp = link[stringToEnum(it.type)]!(it);
+
+        params.add(tmp);
+        list.add(tmp.getWidget());
         list.add(const Padding(padding: EdgeInsets.only(top: 10.0, bottom: 10.0)));
       } catch(_) {
         throw "Unknown parameter type";
       }
     }
     return list;
+  }
+
+  Map<String, String> getParams() {
+    Map<String, String> toRet = {};
+
+    for (var it in params) {
+      toRet[it.getKey()] = it.getValue();
+    }
+    return toRet;
   }
 }
