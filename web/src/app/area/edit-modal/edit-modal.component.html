@@ -8,17 +8,20 @@
                 <mat-label>Action service</mat-label>
                 <mat-select formControlName="actionService">
                     <mat-option *ngFor="let service of actionServices" [value]="service.name">
-                        <img [src]="service.iconSvgPath">
-                        <span>{{ service.label }}</span>
+                        <div fxLayout="row" fxLayoutAlign="start center" fxFlex>
+                            <img class="services-options-image" [src]="service.iconSvgPath">
+                            <span>{{ service.label }}</span>
+                        </div>
                     </mat-option>
                 </mat-select>
             </mat-form-field>
 
-            <div *ngIf="form.get('actionService')?.valid">
+            <div *ngIf="form.get('actionService')?.valid && form.contains(form.get('actionService')?.value + '-action')"
+                 fxLayout="column">
                 <!-- Condition -->
                 <mat-form-field>
                     <mat-label>Condition</mat-label>
-                    <mat-select [formControlName]="form.get('actionService')?.value + '-action'">
+                    <mat-select [formControl]="actionForm" [compareWith]="compareModels">
                         <mat-option *ngFor="let elem of serviceActions" [value]="elem">
                             {{ elem.label }}
                         </mat-option>
@@ -26,25 +29,38 @@
                 </mat-form-field>
 
                 <!-- Parameters -->
-                <mat-form-field *ngFor="let parameter of actionParameters">
-                    <mat-label>{{ parameter.label }}</mat-label>
-                    <ng-container *ngSwitch="parameter.type">
-                        <input *ngSwitchCase="eParamType.TEXT" matInput type="text"
+                <h2 fxFlexAlign="center">Parameters</h2>
+                <ng-container *ngFor="let parameter of actionParameters" [ngSwitch]="parameter.type">
+                    <mat-form-field *ngSwitchCase="eParamType.TEXT" fxFlex>
+                        <mat-label>{{ parameter.label }}</mat-label>
+                        <input matInput type="text"
                                [formControlName]="action.service + '-' + action.type + '-actionParam-' + parameter.name">
-                        <input *ngSwitchCase="eParamType.NUMBER" matInput type="number"
+                    </mat-form-field>
+                    <mat-form-field *ngSwitchCase="eParamType.NUMBER" fxFlex>
+                        <mat-label>{{ parameter.label }}</mat-label>
+                        <input matInput type="number"
                                [formControlName]="action.service + '-' + action.type + '-actionParam-' + parameter.name">
-                        <input *ngSwitchCase="eParamType.URL" matInput type="url"
+                    </mat-form-field>
+                    <mat-form-field *ngSwitchCase="eParamType.URL" fxFlex>
+                        <mat-label>{{ parameter.label }}</mat-label>
+                        <input matInput type="url"
                                [formControlName]="action.service + '-' + action.type + '-actionParam-' + parameter.name">
-                        <input *ngSwitchCase="eParamType.TIME" matInput type="text"
+                    </mat-form-field>
+                    <mat-form-field *ngSwitchCase="eParamType.TIME" fxFlex>
+                        <mat-label>{{ parameter.label }}</mat-label>
+                        <input matInput type="text"
                                [formControlName]="action.service + '-' + action.type + '-actionParam-' + parameter.name">
-                        <input *ngSwitchCase="eParamType.DATETIME" matInput [min]="dateNow()"
+                    </mat-form-field>
+                    <mat-form-field *ngSwitchCase="eParamType.DATETIME" fxFlex>
+                        <mat-label>{{ parameter.label }}</mat-label>
+                        <input matInput [min]="dateNow()"
                                [ngxMatDatetimePicker]="datePicker"
                                [formControlName]="action.service + '-' + action.type + '-actionParam-' + parameter.name">
                         <mat-datepicker-toggle matSuffix [for]="$any(datePicker)"></mat-datepicker-toggle>
                         <ngx-mat-datetime-picker #datePicker [showSeconds]="false">
                         </ngx-mat-datetime-picker>
-                    </ng-container>
-                </mat-form-field>
+                    </mat-form-field>
+                </ng-container>
             </div>
         </div>
 
@@ -56,17 +72,20 @@
                 <mat-label>Reaction service</mat-label>
                 <mat-select formControlName="reactionService">
                     <mat-option *ngFor="let service of reactionServices" [value]="service.name">
-                        <img [src]="service.iconSvgPath">
-                        <span>{{ service.label }}</span>
+                        <div fxLayout="row" fxLayoutAlign="start center" fxFlex>
+                            <img class="services-options-image" [src]="service.iconSvgPath">
+                            <span>{{ service.label }}</span>
+                        </div>
                     </mat-option>
                 </mat-select>
             </mat-form-field>
 
-            <div *ngIf="form.get('reactionService')?.valid">
-                <!-- Action -->
+            <div *ngIf="form.get('reactionService')?.valid && form.contains(form.get('reactionService')?.value + '-reaction')"
+                 fxLayout="column">
+                <!-- Consequence -->
                 <mat-form-field>
-                    <mat-label>Action</mat-label>
-                    <mat-select [formControlName]="form.get('reactionService')?.value + '-reaction'">
+                    <mat-label>Consequence</mat-label>
+                    <mat-select [formControl]="reactionForm" [compareWith]="compareModels">
                         <mat-option *ngFor="let elem of serviceReactions" [value]="elem">
                             {{ elem.label }}
                         </mat-option>
@@ -74,33 +93,47 @@
                 </mat-form-field>
 
                 <!-- Parameters -->
-                <mat-form-field *ngFor="let parameter of reactionParameters">
-                    <mat-label>{{ parameter.label }}</mat-label>
-                    <ng-container *ngSwitch="parameter.type">
-                        <input *ngSwitchCase="eParamType.TEXT" matInput type="text"
+                <h2 fxFlexAlign="center">Parameters</h2>
+                <ng-container *ngFor="let parameter of reactionParameters" [ngSwitch]="parameter.type">
+                    <mat-form-field *ngSwitchCase="eParamType.TEXT" fxFlex>
+                        <mat-label>{{ parameter.label }}</mat-label>
+                        <input matInput type="text"
                                [formControlName]="reaction.service + '-' + reaction.type + '-reactionParam-' + parameter.name">
-                        <input *ngSwitchCase="eParamType.NUMBER" matInput type="number"
+                    </mat-form-field>
+                    <mat-form-field *ngSwitchCase="eParamType.NUMBER" fxFlex>
+                        <mat-label>{{ parameter.label }}</mat-label>
+                        <input matInput type="number"
                                [formControlName]="reaction.service + '-' + reaction.type + '-reactionParam-' + parameter.name">
-                        <input *ngSwitchCase="eParamType.URL" matInput type="url"
+                    </mat-form-field>
+                    <mat-form-field *ngSwitchCase="eParamType.URL" fxFlex>
+                        <mat-label>{{ parameter.label }}</mat-label>
+                        <input matInput type="url"
                                [formControlName]="reaction.service + '-' + reaction.type + '-reactionParam-' + parameter.name">
-                        <input *ngSwitchCase="eParamType.TIME" matInput type="text"
+                    </mat-form-field>
+                    <mat-form-field *ngSwitchCase="eParamType.TIME" fxFlex>
+                        <mat-label>{{ parameter.label }}</mat-label>
+                        <input matInput type="text"
                                [formControlName]="reaction.service + '-' + reaction.type + '-reactionParam-' + parameter.name">
-
-                        <input *ngSwitchCase="eParamType.DATETIME" matInput [min]="dateNow()"
+                    </mat-form-field>
+                    <mat-form-field *ngSwitchCase="eParamType.DATETIME" fxFlex>
+                        <mat-label>{{ parameter.label }}</mat-label>
+                        <input matInput [min]="dateNow()"
                                [ngxMatDatetimePicker]="datePicker"
                                [formControlName]="reaction.service + '-' + reaction.type + '-reactionParam-' + parameter.name">
                         <mat-datepicker-toggle matSuffix [for]="$any(datePicker)"></mat-datepicker-toggle>
                         <ngx-mat-datetime-picker #datePicker [showSeconds]="false">
                         </ngx-mat-datetime-picker>
-                    </ng-container>
-                </mat-form-field>
+                    </mat-form-field>
+                </ng-container>
             </div>
         </div>
     </div>
 
-    <div mat-dialog-actions fxLayout="row" fxLayoutAlign="end">
-        <button mat-button mat-dialog-close type="button">Cancel</button>
-        <button *ngIf="isEdit" mat-button type="button" color="warn">{{ "Delete" }}</button>
-        <button mat-button type="submit">{{ isEdit ? "Save" : "Add" }}</button>
+    <div mat-dialog-actions fxLayout="row" [fxLayoutAlign]="isEdit ? 'space-between' : 'end'">
+        <button *ngIf="isEdit" mat-raised-button type="button" color="warn" (click)="deleteArea()">Delete</button>
+        <div>
+            <button mat-button mat-dialog-close type="button">Cancel</button>
+            <button mat-raised-button type="submit" color="primary">{{ isEdit ? " Save" : "Add" }}</button>
+        </div>
     </div>
 </form>

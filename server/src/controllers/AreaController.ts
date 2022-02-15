@@ -198,7 +198,7 @@ export default class AreaController {
             await AreaController._areaSchema.delete(areaId);
             await AreaController._userSchema.removeARea(userId, areaId);
 
-            return res.status(200).send(`Successfully deleted area ${areaId}`);
+            return res.sendStatus(204);
         } catch (error) {
             return res.status(500).send((error as Error).toString());
         }
