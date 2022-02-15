@@ -19,12 +19,12 @@ export class AreaWidgetComponent implements OnInit {
     public displayableAreaAction?: {
         title: string;
         subtitle: string;
-        svgPath: string;
+        svgPath?: string;
     };
     public displayableAreaReaction?: {
         title: string;
         subtitle: string;
-        svgPath: string;
+        svgPath?: string;
     };
 
     constructor(private _authService: AuthService) {}
@@ -107,7 +107,12 @@ export class AreaWidgetComponent implements OnInit {
         }
     }
 
-    private _getSvgPath(type: ServiceType): string {
-        return this._authService.apps.find((app) => app.name === type)?.redirect || '';
+    private _getSvgPath(type: ServiceType): string | undefined {
+        if (type === ServiceType.CRON)
+            return 'assets/icons/calendar.svg';
+        if (type === ServiceType.RSS)
+            return 'assets/icons/rss.svg';
+
+        return this._authService.apps.find((app) => app.name === type)?.iconSvgPath;
     }
 }
