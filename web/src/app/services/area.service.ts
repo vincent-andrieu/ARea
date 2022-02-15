@@ -29,7 +29,7 @@ export class AreaService {
 
     public add(area: ARea): Promise<ARea> {
         return new Promise<ARea>((resolve, reject) => {
-            this._httpClient.put<ARea>('/area/add', area)
+            this._httpClient.post<ARea>('/area', area)
                 .pipe(catchError((err: HttpErrorResponse) => {
                     this._snackbarService.openError(err);
                     reject(err);
@@ -44,7 +44,7 @@ export class AreaService {
 
     public edit(area: ARea): Promise<ARea> {
         return new Promise<ARea>((resolve, reject) => {
-            this._httpClient.post<ARea>('/area/edit', area)
+            this._httpClient.put<ARea>(`/area/${area._id?.toString()}`, area)
                 .pipe(catchError((err: HttpErrorResponse) => {
                     this._snackbarService.openError(err);
                     reject(err);
@@ -54,6 +54,17 @@ export class AreaService {
                     if (result)
                         resolve(new ARea(result));
                 });
+        });
+    }
+
+    public delete(area: ARea | string): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            this._httpClient.delete<ARea>(`/area/${typeof area === 'string' ? area : area._id?.toString()}`)
+                .pipe(catchError((err: HttpErrorResponse) => {
+                    this._snackbarService.openError(err);
+                    return of(reject(err));
+                }))
+                .subscribe(() => resolve());
         });
     }
 }

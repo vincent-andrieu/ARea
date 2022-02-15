@@ -123,58 +123,60 @@ export class AReaEditModalComponent {
 
     // Services getters
     private _getActionServices(): Array<ServiceData> {
-        return this.actions.map((action) => {
-            if (action.service === ServiceType.RSS)
-                return {
-                    iconSvgPath: 'assets/icons/rss.svg',
-                    label: action.label,
-                    name: action.service,
-                    redirect: ''
-                } as ServiceData;
-            if (action.service === ServiceType.CRON)
-                return {
-                    iconSvgPath: 'assets/icons/calendar.svg',
-                    label: action.label,
-                    name: action.service,
-                    redirect: ''
-                } as ServiceData;
+        return this.actions
+            .filter((action, index, self) => self.findIndex((value) => value.service === action.service) === index)
+            .map((action) => {
+                if (action.service === ServiceType.RSS)
+                    return {
+                        iconSvgPath: 'assets/icons/rss.svg',
+                        label: action.label,
+                        name: action.service,
+                        redirect: ''
+                    } as ServiceData;
+                if (action.service === ServiceType.CRON)
+                    return {
+                        iconSvgPath: 'assets/icons/calendar.svg',
+                        label: action.label,
+                        name: action.service,
+                        redirect: ''
+                    } as ServiceData;
 
-            const app = this._authService.apps.find((app) =>
-                app.name === action.service
-            );
+                const app = this._authService.apps.find((app) =>
+                    app.name === action.service
+                );
 
-            if (!app)
-                throw `Service ${action.service.toString()} app not found`;
-            app.label = action.label;
-            return app;
-        });
+                if (!app)
+                    throw `Service ${action.service.toString()} app not found`;
+                return app;
+            });
     }
     private _getReactionServices(): Array<ServiceData> {
-        return this.reactions.map((reaction) => {
-            if (reaction.service === ServiceType.RSS)
-                return {
-                    iconSvgPath: 'assets/icons/rss.svg',
-                    label: reaction.label,
-                    name: reaction.service,
-                    redirect: ''
-                } as ServiceData;
-            if (reaction.service === ServiceType.CRON)
-                return {
-                    iconSvgPath: 'assets/icons/calendar.svg',
-                    label: reaction.label,
-                    name: reaction.service,
-                    redirect: ''
-                } as ServiceData;
+        return this.reactions
+            .filter((reaction, index, self) => self.findIndex((value) => value.service === reaction.service) === index)
+            .map((reaction) => {
+                if (reaction.service === ServiceType.RSS)
+                    return {
+                        iconSvgPath: 'assets/icons/rss.svg',
+                        label: reaction.label,
+                        name: reaction.service,
+                        redirect: ''
+                    } as ServiceData;
+                if (reaction.service === ServiceType.CRON)
+                    return {
+                        iconSvgPath: 'assets/icons/calendar.svg',
+                        label: reaction.label,
+                        name: reaction.service,
+                        redirect: ''
+                    } as ServiceData;
 
-            const app = this._authService.apps.find((app) =>
-                app.name === reaction.service
-            );
+                const app = this._authService.apps.find((app) =>
+                    app.name === reaction.service
+                );
 
-            if (!app)
-                throw `Service ${reaction.service.toString()} app not found`;
-            app.label = reaction.label;
-            return app;
-        });
+                if (!app)
+                    throw `Service ${reaction.service.toString()} app not found`;
+                return app;
+            });
     }
 
     // Action updates
@@ -195,8 +197,8 @@ export class AReaEditModalComponent {
 
     // Reaction updates
     private _onReactionServiceUpdate(service: ServiceType): void {
-        const formControl = new FormControl(this.area?.consequence.reaction);
-        this.form.setControl(service + '-reaction ', formControl);
+        const formControl = new FormControl(this.area?.consequence.reaction || (this.serviceReactions.length === 1 ? this.serviceReactions[0] : undefined));
+        this.form.setControl(service + '-reaction', formControl);
 
         if (formControl.value)
             this._onReactionUpdate(formControl.value);
@@ -210,7 +212,7 @@ export class AReaEditModalComponent {
     }
 
     public async submit(): Promise<void> {
-        const area: ARea = Object.assign<ARea | undefined, ARea>(this.area, {
+        const area: ARea = new ARea(Object.assign(this.area || {}, {
             trigger: {
                 action: this.action._id as ObjectId,
                 inputs: this._getTriggerInputs()
@@ -219,7 +221,7 @@ export class AReaEditModalComponent {
                 reaction: this.reaction._id as ObjectId,
                 inputs: this._getConsequenceInputs()
             }
-        });
+        }));
 
         const result: ARea = await (!this.isEdit ? this._areaService.add(area) : this._areaService.edit(area));
 
@@ -250,5 +252,13 @@ export class AReaEditModalComponent {
                 result[param.name] = (result[param.name] as Date).getTime();
         });
         return result as unknown as ReactionConfig;
+    }
+
+    public async deleteArea(): Promise<void> {
+        if (!this.isEdit || !this.area)
+            throw "Not in edit mode";
+
+        await this._areaService.delete(this.area);
+        this._matDialogRef.close();
     }
 }

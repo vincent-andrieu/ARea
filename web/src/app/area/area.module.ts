@@ -4,6 +4,8 @@ import { FlexLayoutModule } from "@angular/flex-layout";
 import { RouterModule } from "@angular/router";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
+import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule } from "@angular-material-components/datetime-picker";
+
 import { MatRippleModule } from "@angular/material/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
@@ -19,7 +21,6 @@ import { AReaListComponent } from './list/list.component';
 import { AReaEditModalComponent } from './edit-modal/edit-modal.component';
 import { AReaSettingsComponent } from './settings/settings.component';
 import { AreaWidgetComponent } from './list/area-widget/area-widget.component';
-import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from "@angular-material-components/datetime-picker";
 
 @NgModule({
     declarations: [
@@ -37,6 +38,7 @@ import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from "@angular-mat
 
         NgxMatTimepickerModule,
         NgxMatDatetimePickerModule,
+        NgxMatNativeDateModule,
 
         MatRippleModule,
         MatButtonModule,
