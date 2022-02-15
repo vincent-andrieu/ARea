@@ -31,6 +31,7 @@ class areaService {
       this.token = registerResponse.fromJson(response);
       developer.log("updateServiceToken END");
       await fetchDataConfig();
+      await getListIfttt();
       return true;
     } catch (e) {
       developer.log("updateServiceToken  -> ${e.toString()}");
@@ -55,6 +56,7 @@ class areaService {
       token = registerResponse.fromJson(response);
       developer.log('tryConnexion: parse OK');
       await fetchDataConfig();
+      await getListIfttt();
       return true;
     } catch (e) {
       developer.log('tryConnexion: Server failed invalid response -> ' + e.toString());
@@ -67,6 +69,7 @@ class areaService {
       dynamic response = await api.makeRequestPost<loginRequest>("/auth/register", "", loginRequest(user, pass), 201);
       token = registerResponse.fromJson(response);
       await fetchDataConfig();
+      await getListIfttt();
       return true;
     } catch (e) {
       developer.log('createUserAndConnexion: Server failed invalid response -> ' + e.toString());
@@ -112,9 +115,12 @@ class areaService {
 
   Future<bool> getListIfttt() async {
     try {
-      dynamic list = api.makeRequestGetList<tokenRequest>("/area/list", _getToken(), 200);
-      // TODO exctract data Future<List<iftttResponse>>
-      token?.areas = list;
+      dynamic list = await api.makeRequestGet("/area/list", _getToken(), 200);
+
+      log(list.toString());
+      List<Area> fetchList = List.from(list).map((dynamic item) => Area.fromJson(item)).toList();
+
+      token?.areas = fetchList;
       return true;
     } catch (e) {
       developer.log('getListIfttt: Server failed invalid response -> ' + e.toString());

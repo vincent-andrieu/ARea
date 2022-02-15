@@ -10,7 +10,7 @@ class registerResponse {
   Map<String, bool> oauth = {};
 
   registerResponse.fromJson(dynamic json)
-      : areas = List.from(json['areas']),
+      : areas = [],
         username = json['username'],
         oauthLoginProvider = json['oauthLoginProvider'],
         oauthLoginProviderId = json['oauthLoginProviderId'],

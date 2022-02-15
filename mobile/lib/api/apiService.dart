@@ -89,24 +89,4 @@ class apiService {
       throw "Unable to make our request to $srvUrl$route exit with status ${result.statusCode} error: ${result.body}";
     }
   }
-
-  Future<List<dynamic>> makeRequestGetList<query>(String route, String token, int exitExpect) async {
-    Response result = await get(
-        Uri.parse(srvUrl + route),
-        headers: {
-          HttpHeaders.contentTypeHeader: 'application/json',
-          HttpHeaders.authorizationHeader: 'Bearer $token'
-        }
-    );
-
-    if (result.statusCode == exitExpect) {
-      dynamic body = jsonDecode(result.body);
-
-      List<dynamic> fetchList = body?.map((dynamic item) => jsonDecode(item)).toList();
-
-      return fetchList;
-    } else {
-      throw "Unable to make our request to $srvUrl$route exit with status ${result.statusCode} error: ${result.body}";
-    }
-  }
 }
