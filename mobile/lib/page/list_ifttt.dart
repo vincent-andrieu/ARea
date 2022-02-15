@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/api/areaService.dart';
-import 'package:mobile/api/model/area/ActionType.dart';
-import 'package:mobile/api/model/area/ReactionType.dart';
+import 'package:mobile/api/model/area/ActionType.dart' as areaAction;
+import 'package:mobile/api/model/area/ReactionType.dart' as areaReaction;
 import 'package:mobile/api/model/createAreaRequest.dart';
 import 'package:mobile/page/color_list.dart';
 import 'package:mobile/service/IService.dart';
@@ -94,8 +94,8 @@ class list_ifttt extends StatelessWidget {
   }
 
   Widget buildCard(String id, createAreaRequest ifttt, BuildContext context) {
-    IService actionName = getServiceActionName(ActionType.DATE);
-    IService reactionName = getServiceReactionName(ReactionType.DISCORD_MSG);
+    IService actionName = getServiceActionName(areaAction.stringToEnum(ifttt.trigger.typeData));
+    IService reactionName = getServiceReactionName(areaReaction.stringToEnum(ifttt.consequence.typeData));
 
     return Container(
       padding: const EdgeInsets.only(

@@ -3,7 +3,6 @@ import 'package:mobile/api/areaService.dart';
 import 'package:mobile/page/color_list.dart';
 import 'package:mobile/service/IService.dart';
 import 'package:mobile/service/discord.dart';
-import 'package:mobile/service/date.dart' as areaDate;
 import 'package:mobile/service/dropbox.dart';
 import 'package:mobile/service/github.dart';
 import 'package:mobile/service/linkedin.dart';
@@ -35,7 +34,6 @@ List<IService> getListService(Map<String, bool> oauth) {
     unsplash(getValue("unsplash", oauth)),
     dropbox(getValue("dropbox", oauth)),
     rss(getValue("rss", oauth)),
-    areaDate.date(getValue("rss", oauth)),
   ];
   return list;
 }

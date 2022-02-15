@@ -3,7 +3,6 @@ import 'package:mobile/api/areaService.dart';
 import 'package:mobile/enum/authentication_e.dart';
 import 'package:mobile/page/color_list.dart';
 import 'package:mobile/service/IService.dart';
-import 'package:mobile/service/date.dart' as areaDate;
 import 'package:mobile/service/discord.dart';
 import 'package:mobile/service/dropbox.dart';
 import 'package:mobile/service/github.dart';
@@ -60,7 +59,6 @@ class auth_page extends StatelessWidget {
     unsplash(false),
     dropbox(false),
     rss(false),
-    areaDate.date(false),
   ];
 
   auth_page(authentication_e typeSrc, areaService apiSrc, {Key? key}) : super(key: key) {
