@@ -3,13 +3,13 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/api/areaService.dart';
-import 'package:mobile/api/model/area/Action.dart' as areaLib;
-import 'package:mobile/api/model/area/Area.dart';
-import 'package:mobile/api/model/area/Parameter.dart';
-import 'package:mobile/api/model/area/ParameterType.dart';
-import 'package:mobile/api/model/area/Reaction.dart';
+import 'package:mobile/api/model/area/ActionType.dart' as areaAction;
+import 'package:mobile/api/model/area/ReactionType.dart' as areaReaction;
 import 'package:mobile/api/model/createAreaRequest.dart';
 import 'package:mobile/page/color_list.dart';
+import 'package:mobile/service/IService.dart';
+import 'package:mobile/tools/ActionReactionTools.dart';
+import 'package:mobile/tools/preBuildTools.dart';
 import 'package:mobile/tools/serviceListBuilder.dart';
 import 'package:mobile/widget/DynamicList.dart';
 import 'create_ifttt.dart';
@@ -34,13 +34,15 @@ class edit_ifttt extends StatelessWidget {
     createAreaRequest area = getArea(args);
 
 
-    DynamicList action = DynamicList(serviceListBuilder(api, true), true, "Service", "Action", api.listService);
-    DynamicList reaction = DynamicList(serviceListBuilder(api, true), false, "Service", "Reaction", api.listService);
+    IService actionName = getServiceActionName(areaAction.stringToEnum(area.trigger.typeData));
+    IService reactionName = getServiceReactionName(areaReaction.stringToEnum(area.consequence.typeData));
 
-    /*action.controllerSecond.text = area.trigger.typeData;
-    action.actionParameter.setParams(area.trigger.map);
-    reaction.controllerSecond.text = area.consequence.typeData;
-    reaction.actionParameter.setParams(area.consequence.map);*/
+    DynamicList action = DynamicList(serviceListBuilder(api, true), true, "Service", "Action", api.listService, preBuildTools(
+      actionName.getName(), area.trigger.typeData, area.trigger.map
+    ));
+    DynamicList reaction = DynamicList(serviceListBuilder(api, true), false, "Service", "Reaction", api.listService, preBuildTools(
+      reactionName.getName(), area.consequence.typeData, area.consequence.map
+    ));
 
     return Scaffold(
       body: Center(

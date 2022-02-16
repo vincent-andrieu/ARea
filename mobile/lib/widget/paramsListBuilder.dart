@@ -1,11 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
-import 'package:mobile/api/model/area/Parameter.dart';
 import 'package:mobile/api/model/area/ParameterType.dart';
 import 'package:mobile/api/model/serviceFetch/configFecth.dart';
 import 'package:mobile/api/model/serviceFetch/parameterFetch.dart';
 import 'package:mobile/api/model/serviceFetch/serviceFetch.dart';
 import 'package:mobile/tools/ITransfer.dart';
-import 'package:mobile/widget/input_custom.dart';
+import 'package:mobile/tools/preBuildTools.dart';
 
 class paramsListBuilder {
   serviceFecth service = serviceFecth();
@@ -14,7 +15,9 @@ class paramsListBuilder {
   List<serviceFecth> list;
   List<ITransfer> params = [];
 
-  paramsListBuilder(this.list, String srv, this.actionTrigger, this.isAction) {
+  preBuildTools? tools;
+
+  paramsListBuilder(this.list, String srv, this.actionTrigger, this.isAction, this.tools) {
     try {
       service = getFromType(list, srv);
     } catch(_) {
@@ -70,6 +73,16 @@ class paramsListBuilder {
     return textInputTransfer(data.name, data.label, data.type, defaultValue);
   }
 
+  String getValueInPreBuild(String type) {
+    for (var it in tools!.params.keys) {
+      log("$it == $type");
+      if (it == type) {
+        return tools!.params[it]!;
+      }
+    }
+    return "";
+  }
+
   List<Widget> getListToBuild() {
     configFetch conf = getConfig(isAction, actionTrigger);
     List<Widget> list = [];
@@ -84,7 +97,13 @@ class paramsListBuilder {
     params.clear();
     for (var it in conf.parameters) {
       try {
-        ITransfer tmp = link[stringToEnum(it.type)]!(it, "");
+        ITransfer tmp = ITransfer();
+
+        if (tools != null) {
+          tmp = link[stringToEnum(it.type)]!(it, getValueInPreBuild(it.name));
+        } else {
+          tmp = link[stringToEnum(it.type)]!(it, "");
+        }
 
         params.add(tmp);
         list.add(tmp.getWidget());
@@ -103,17 +122,5 @@ class paramsListBuilder {
       toRet[it.getKey()] = it.getValue();
     }
     return toRet;
-  }
-
-  void setParams(Map<String, String> map) {
-    params.clear();
-    map.forEach((key, value) {
-      parameterFetch tmp = parameterFetch();
-
-      tmp.name = key;
-      tmp.label = "";
-      tmp.type = "";
-      params.add(textWidget(tmp, value));
-    });
   }
 }

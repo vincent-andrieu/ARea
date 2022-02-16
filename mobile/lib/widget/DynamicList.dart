@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/api/model/serviceFetch/serviceFetch.dart';
 import 'package:mobile/page/color_list.dart';
 import 'package:mobile/service/IService.dart';
+import 'package:mobile/tools/preBuildTools.dart';
 import 'package:mobile/widget/paramsListBuilder.dart';
 
 class DynamicList {
@@ -16,9 +17,13 @@ class DynamicList {
   late paramsListBuilder actionParameter;
   late TestList widget;
 
-  DynamicList(this.service, this.isService, this.firstTitle, this.secondTitle, this.listService) {
-    actionParameter = paramsListBuilder(listService, controllerFirst.text, controllerSecond.text, isService);
-    widget = TestList(service, isService, firstTitle, secondTitle, controllerFirst, controllerSecond, actionParameter);
+  DynamicList(this.service, this.isService, this.firstTitle, this.secondTitle, this.listService, preBuildTools? tools) {
+    if (tools == null) {
+      actionParameter = paramsListBuilder(listService, controllerFirst.text, controllerSecond.text, isService, null);
+    } else {
+      actionParameter = paramsListBuilder(listService, tools.selectedFirst, tools.selectedSecond, isService, tools);
+    }
+    widget = TestList(service, isService, firstTitle, secondTitle, controllerFirst, controllerSecond, actionParameter, tools);
   }
 }
 
@@ -28,14 +33,16 @@ class TestList extends StatefulWidget {
   String firstTitle;
   String secondTitle;
 
+  preBuildTools? tools;
+
   final actionParameter;
   final controllerFirst;
   final controllerSecond;
 
-  TestList(this.service, this.isService, this.firstTitle, this.secondTitle, this.controllerFirst, this.controllerSecond, this.actionParameter, {Key? key}) : super(key: key);
+  TestList(this.service, this.isService, this.firstTitle, this.secondTitle, this.controllerFirst, this.controllerSecond, this.actionParameter, this.tools, {Key? key}) : super(key: key);
 
   @override
-  _TestListState createState() => _TestListState(service, isService, firstTitle, secondTitle, controllerFirst, controllerSecond, actionParameter);
+  _TestListState createState() => _TestListState(service, isService, firstTitle, secondTitle, controllerFirst, controllerSecond, actionParameter, tools);
 }
 
 class _TestListState extends State<TestList> {
@@ -54,8 +61,18 @@ class _TestListState extends State<TestList> {
   TextEditingController textChild;
   TextEditingController controllerSecond;
 
-  _TestListState(this.service, this.isService, this.firstTitle, this.secondTitle, this.textChild, this.controllerSecond, this.actionParameter) {
+  _TestListState(this.service, this.isService, this.firstTitle, this.secondTitle, this.textChild, this.controllerSecond, this.actionParameter, preBuildTools? tools) {
     list = getList();
+    if (tools != null) {
+      textChild.text = tools.selectedFirst;
+      controllerSecond.text = tools.selectedSecond;
+      if (isService) {
+        listChild = getChildListAction(textChild.text);
+      } else {
+        listChild = getChildListReaction(textChild.text);
+      }
+      actionParameter.setService(textChild.text, controllerSecond.text);
+    }
   }
 
   @override
