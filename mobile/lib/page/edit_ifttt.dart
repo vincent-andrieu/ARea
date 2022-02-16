@@ -93,7 +93,7 @@ class edit_ifttt extends StatelessWidget {
                                 ]
                             )
                         ),
-                        Container(
+                        SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
@@ -119,7 +119,7 @@ class edit_ifttt extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Container(
+                        SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
