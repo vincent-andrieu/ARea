@@ -1,7 +1,7 @@
 import passport from "passport";
 import passportDropbox from "passport-dropbox-oauth2";
 
-import { dropboxConfig } from "@config/dropboxConfig";
+import { Request } from "express";
 import { getStrObjectId } from "@classes/model.class";
 import User from "@classes/user.class";
 import { UserSchema } from "@schemas/user.schema";
@@ -10,10 +10,25 @@ import OAuthProvider from "../models/oAuthProvider.enum";
 
 const DropboxStrategy = passportDropbox.Strategy;
 
-const successfullyAuthentificated = async (accessToken: string, refreshToken: string, profile, done) => {
+const successfullyAuthentificated = async (req: Request, accessToken: string, refreshToken: string, profile, done) => {
     const userSchema = new UserSchema();
 
     console.log(profile);
+    if (req.user && req.user.data.user_id) {
+        const user: User = await userSchema.get(req.user.data.user_id);
+
+        if (!user.oauth)
+            user.oauth = {};
+        user.oauth.dropbox = {
+            accessToken: accessToken,
+            refreshToken: refreshToken
+        };
+        const userEdited = await userSchema.edit(user);
+        if (done)
+            return done(null, userEdited);
+        return userEdited;
+    }
+
     try {
         const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.DROPBOX, profile.id);
 
@@ -63,7 +78,7 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
     }
 };
 
-passport.use(new DropboxStrategy(
-    { apiVersion: "2", ...dropboxConfig },
+passport.use("dropbox-oauth2-web", new DropboxStrategy(
+    { apiVersion: "2", ...dropboxConfig, passReqToCallback: true },
     successfullyAuthentificated
 ));

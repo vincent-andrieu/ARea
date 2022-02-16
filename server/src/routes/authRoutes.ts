@@ -18,11 +18,13 @@ router.post("/register", AuthController.register);
 
 router.post("/disconnect/:service", authMiddleware, AuthController.disconnectService);
 
-router.get("/github", passport.authenticate("github", {
+router.get("/github", passport.authenticate("github-web", {
+    scope: ["user:email"]
+}));
     scope: ["user:email"]
 }));
 
-router.get("/github/redirect", passport.authenticate("github", {
+router.get("/github/redirect", passport.authenticate("github-web", {
     successRedirect: "/auth/redirect",
     failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));
@@ -63,16 +65,16 @@ router.get("/linkedin/redirect", passport.authenticate("linkedin", {
     failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));
 
-router.get("/dropbox", passport.authenticate("dropbox-oauth2"));
+router.get("/dropbox", passport.authenticate("dropbox-oauth2-web"));
 
-router.get("/dropbox/redirect", passport.authenticate("dropbox-oauth2", {
+router.get("/dropbox/redirect", passport.authenticate("dropbox-oauth2-web", {
     successRedirect: "/auth/redirect",
     failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));
 
-router.get("/discord", passport.authenticate("discord"));
+router.get("/discord", passport.authenticate("discord-web"));
 
-router.get("/discord/redirect", passport.authenticate("discord", {
+router.get("/discord/redirect", passport.authenticate("discord-web", {
     successRedirect: "/auth/redirect",
     failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));

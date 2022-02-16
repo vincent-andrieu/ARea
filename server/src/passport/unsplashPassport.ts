@@ -14,9 +14,24 @@ import unsplashService from "@services/unsplashService";
 const UnsplashStrategy = Unsplash.Strategy;
 
 // export async function unsplashPassport(profile): Promise<void> {
-async function successfullyAuthentificated(accessToken: string, refreshToken: string, profile, done) {
+async function successfullyAuthentificated(req: Request, accessToken: string, refreshToken: string, profile, done) {
 
     const userSchema = new UserSchema();
+
+    if (req.user && req.user.data.user_id) {
+        const user: User = await userSchema.get(req.user.data.user_id);
+
+        if (!user.oauth)
+            user.oauth = {};
+        user.oauth.unsplash = {
+            accessToken: accessToken,
+            refreshToken: refreshToken
+        };
+        const userEdited = await userSchema.edit(user);
+        if (done)
+            return done(null, userEdited);
+        return userEdited;
+    }
 
     try {
         const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.UNSPLASH, profile.username);
@@ -82,7 +97,7 @@ export async function UnsplashMobileStrategy(req: Request, res: Response) {
     try {
         const oauth = await unsplashService.getAccessToken(code);
         const userProfile = await unsplashService.getUserProfile(oauth.access_token);
-        const user = await successfullyAuthentificated(oauth.access_token, oauth.refresh_token, userProfile, undefined);
+        const user = await successfullyAuthentificated(req, oauth.access_token, oauth.refresh_token, userProfile, undefined);
 
         if (!user)
             throw "get empty user";
@@ -94,7 +109,7 @@ export async function UnsplashMobileStrategy(req: Request, res: Response) {
 }
 
 passport.use("unsplash-web", new UnsplashStrategy(
-    unsplashConfig,
+    {...unsplashConfig, passReqToCallback: true},
     successfullyAuthentificated
 ));
 

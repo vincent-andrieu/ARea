@@ -8,10 +8,23 @@ import { Strategy as NotionStrategy } from "../module/passport-notion";
 import { notionConfig } from "@config/notionConfig";
 import OAuthProvider from "../models/oAuthProvider.enum";
 
-const successfullyAuthentificated = async (_req, accessToken: string, _, oauthData, userNotion, done) => {
+const successfullyAuthentificated = async (req, accessToken: string, _, oauthData, userNotion, done) => {
     const userSchema = new UserSchema();
 
     console.log(userNotion);
+    if (req.user && req.user.data.user_id) {
+        const user: User = await userSchema.get(req.user.data.user_id);
+
+        if (!user.oauth)
+            user.oauth = {};
+        user.oauth.notion = {
+            accessToken: accessToken
+        };
+        const userEdited = await userSchema.edit(user);
+        if (done)
+            return done(null, userEdited);
+        return userEdited;
+    }
     try {
         const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.NOTION, userNotion.person.email);
 
