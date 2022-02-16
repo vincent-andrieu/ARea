@@ -12,7 +12,7 @@ import OAuthProvider from "../models/oAuthProvider.enum";
 const GithubStrategy = passportGithub2.Strategy;
 //TODO: do the setting part
 
-const successfullyAuthentificated = async (req: Request, accessToken: string, refreshToken: string, profile, done: CallableFunction | undefined) => {
+const successfullyAuthentificated = async (req: Request, accessToken: string, refreshToken: string, profile, done: (err?: Error | null, user?: User, info?: object) => void) => {
     const userSchema = new UserSchema();
 
     if (req.user && req.user.data.user_id) {
@@ -73,7 +73,7 @@ const successfullyAuthentificated = async (req: Request, accessToken: string, re
             done(null, await userSchema.edit(user));
         }
     } catch (error) {
-        done(error);
+        done(error as Error);
     }
 };
 
@@ -85,4 +85,3 @@ const githubStrategy = new GithubStrategy(
     successfullyAuthentificated
 );
 passport.use("github-web", githubStrategy);
-));

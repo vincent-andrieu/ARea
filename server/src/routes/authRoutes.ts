@@ -21,8 +21,6 @@ router.post("/disconnect/:service", authMiddleware, AuthController.disconnectSer
 router.get("/github", passport.authenticate("github-web", {
     scope: ["user:email"]
 }));
-    scope: ["user:email"]
-}));
 
 router.get("/github/redirect", passport.authenticate("github-web", {
     successRedirect: "/auth/redirect",
