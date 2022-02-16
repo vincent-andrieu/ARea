@@ -12,25 +12,26 @@ import OAuthProvider from "../models/oAuthProvider.enum";
 
 const TwitchStrategy = passportTwitch.Strategy;
 
-const successfullyAuthentificated = async (req: Request, accessToken: string, refreshToken: string, profile, done) => {
+const successfullyAuthentificated = async (req: Request, accessToken: string, refreshToken: string, profile, done?: (error: Error | null, user?: User) => void) => {
     const userSchema = new UserSchema();
 
-    if (req.user && req.user.data.user_id) {
-        const user: User = await userSchema.get(req.user.data.user_id);
-
-        if (!user.oauth)
-            user.oauth = {};
-        user.oauth.twitch = {
-            accessToken: accessToken,
-            refreshToken: refreshToken
-        };
-        const userEdited = await userSchema.edit(user);
-        if (done)
-            return done(null, userEdited);
-        return userEdited;
-    }
-    console.log(profile);
     try {
+        if (req.user?.data.user_id) {
+            console.log("userId:", req.user?.data.user_id);
+            const user: User = await userSchema.get(req.user.data.user_id);
+
+            if (!user.oauth)
+                user.oauth = {};
+            user.oauth.twitch = {
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            };
+            const userEdited = await userSchema.edit(user);
+            if (done)
+                return done(null, userEdited);
+            return userEdited;
+        }
+        console.log(profile);
         const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.TWITCH, profile.login);
 
         if (oldUser) {
@@ -80,10 +81,10 @@ const successfullyAuthentificated = async (req: Request, accessToken: string, re
             else
                 return userEdited;
         }
-    } catch (error: unknown) {
+    } catch (error) {
         console.log("twitchStrategy callback error: ", (error as Error).toString());
         if (done)
-            done(error, null);
+            done(error as Error);
     }
 };
 
@@ -95,7 +96,7 @@ export async function TwitchMobileStrategy(req: Request, res: Response) {
     try {
         const oauth = await TwitchService.getAccessToken(code);
         const userProfile = await TwitchService.getUserProfile(oauth.access_token);
-        const user = await successfullyAuthentificated(req, oauth.access_token, oauth.refresh_token, userProfile, undefined);
+        const user = await successfullyAuthentificated(req, oauth.access_token, oauth.refresh_token, userProfile);
 
         if (!user)
             throw "get empty user";
