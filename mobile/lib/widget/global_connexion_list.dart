@@ -10,17 +10,20 @@ class GlobalConnexionList extends StatefulWidget {
   List<IService> list;
   String urlSrv;
   areaService api;
-  GlobalConnexionList(this.urlSrv, this.list, this.api, {Key? key}) : super(key: key);
+  Future<bool> Function(IService service, String srv, areaService api) callback;
+
+  GlobalConnexionList(this.urlSrv, this.list, this.api, this.callback, {Key? key}) : super(key: key);
 
   @override
-  State<GlobalConnexionList> createState() => GlobalConnexionListState(urlSrv, list, api);
+  State<GlobalConnexionList> createState() => GlobalConnexionListState(urlSrv, list, api, callback);
 }
 
 class GlobalConnexionListState extends State<GlobalConnexionList> {
   List<IService> list = [];
   String urlSrv;
   areaService api;
-  GlobalConnexionListState(this.urlSrv, this.list, this.api);
+  Future<bool> Function(IService service, String srv, areaService api) callback;
+  GlobalConnexionListState(this.urlSrv, this.list, this.api, this.callback);
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +37,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
               if (list[0].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<bool> success = list[0].getToken(urlSrv, api);
+                Future<bool> success = callback(list[0], urlSrv, api);
                 success.then((value) => {
                   if (value) {
                     list[0].nowConnected(),
@@ -50,7 +53,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
               if (list[1].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<bool> success = list[1].getToken(urlSrv, api);
+                Future<bool> success = callback(list[1], urlSrv, api);
                 success.then((value) => {
                   if (value) {
                     list[1].nowConnected(),
@@ -66,7 +69,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
               if (list[2].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<bool> success = list[2].getToken(urlSrv, api);
+                Future<bool> success = callback(list[2], urlSrv, api);
                 success.then((value) => {
                   if (value) {
                     list[2].nowConnected(),
@@ -82,7 +85,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
               if (list[3].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<bool> success = list[3].getToken(urlSrv, api);
+                Future<bool> success = callback(list[3], urlSrv, api);
                 success.then((value) => {
                   if (value) {
                     list[3].nowConnected(),
@@ -98,7 +101,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
               if (list[4].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<bool> success = list[4].getToken(urlSrv, api);
+                Future<bool> success = callback(list[4], urlSrv, api);
                 success.then((value) => {
                   if (value) {
                     list[4].nowConnected(),
@@ -114,7 +117,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
               if (list[5].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<bool> success = list[5].getToken(urlSrv, api);
+                Future<bool> success = callback(list[5], urlSrv, api);
                 success.then((value) => {
                   if (value) {
                     list[5].nowConnected(),
@@ -130,7 +133,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
               if (list[6].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<bool> success = list[6].getToken(urlSrv, api);
+                Future<bool> success = callback(list[6], urlSrv, api);
                 success.then((value) => {
                   if (value) {
                     list[6].nowConnected(),
@@ -146,7 +149,7 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
               if (list[7].getConnexionState()) {
                 // TODO PROBABLY NOTHING
               } else {
-                Future<bool> success = list[7].getToken(urlSrv, api);
+                Future<bool> success = callback(list[7], urlSrv, api);
                 success.then((value) => {
                   if (value) {
                     list[7].nowConnected(),

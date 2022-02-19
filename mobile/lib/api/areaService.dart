@@ -22,6 +22,16 @@ class areaService {
     }
   }
 
+  Future<bool> addNewService(String token, String url) async {
+    try {
+      // TODO FILL BUT WAIT AURELIEN NEW ROUTE
+      return true;
+    } catch (e) {
+      developer.log("addNewService  -> ${e.toString()}");
+      return false;
+    }
+  }
+
   Future<bool> updateServiceToken(String token, String url) async {
     try {
       developer.log("updateServiceToken START");
