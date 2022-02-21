@@ -86,6 +86,14 @@ export class AuthService {
         const host = this._cookieService.get(environment.cookiesKey.serverHost);
 
         url = `${host}${host.endsWith('/') ? 'auth' : '/auth'}${url.startsWith('/') ? url : '/' + url}`;
+
+        const token = this._cookieService.get(environment.cookiesKey.jwt);
+
+        if (token && token.length > 0) {
+            if (!url.endsWith('/'))
+                url = url.concat('/');
+            url = url.concat('?token=', token);
+        }
         window.location.href = url;
     }
 

@@ -1,5 +1,5 @@
 import { env } from "process";
-import express, { Request, Response } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import passport from "passport";
 import "../passport/setupPassport";
 import authMiddleware from "../middlewares/checkJwt";
@@ -38,7 +38,11 @@ router.get("/twitter/redirect", passport.authenticate("twitter-web", {
 
 router.post("/twitter/redirect/mobile", TwitterMobileStrategy);
 
-router.get("/twitch", passport.authenticate("twitch-web"));
+router.get("/twitch", (req: Request, res: Response, next: NextFunction) =>
+    passport.authenticate("twitch-web", {
+        state: req.query.token as string | undefined
+    })(req, res, next)
+);
 
 router.get("/twitch/mobile", passport.authenticate("twitch-mobile"));
 
