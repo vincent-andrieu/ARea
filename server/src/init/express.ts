@@ -39,18 +39,20 @@ export function preinitExpress() {
         methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
         credentials: true // allow session cookie from browser to pass through
     }));
-    app.use((_, response, next) => {
-        //response.setHeader("Access-Control-Allow-Origin", "*");
-        next();
-    });
 
     app.use((request, _, next) => {
+        const logs: Array<string> = [];
+
+        if (request.headers.referer)
+            logs.push("\x1b[36m%s\x1b[0m",
+                request.headers.referer,
+                "=>");
         console.log(
-            "\x1b[36m%s\x1b[0m",
-            request.headers.referer,
-            "=>", "\x1b[33m" + request.method + "\x1b[0m",
+            ...logs,
+            "\x1b[33m" + request.method + "\x1b[0m",
             "\x1b[32m" + request.url + "\x1b[0m"
         );
+
         next();
     });
 
