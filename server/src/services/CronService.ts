@@ -154,23 +154,7 @@ export default class CronService {
                 // TODO:
                 break;
             case ReactionType.DROPBOX_UPLOAD:
-                switch (action.type) {
-                    case ActionType.UNSPLASH_POST: {
-                        const configUnsplash: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
-                        const configDropbox: DropboxUploadConfig = area.consequence.inputs as DropboxUploadConfig;
-                        const dropboxFilepath = (configDropbox.localFilepath ? configDropbox.localFilepath : configUnsplash.downloadPath);
-
-                        DropboxService.uploadFile(configUnsplash.downloadPath, dropboxFilepath);
-                        break;
-                    }
-                    default:
-                        console.log("todo upload file from parameter given");
-
-
-
-                }
-                // TODO: if this action the take this param as filepath, else if, else if
-                // and get method from this service to return filepath according to area
+                // DropboxService.rea_uploadFile(area, user);
 
                 break;
 
