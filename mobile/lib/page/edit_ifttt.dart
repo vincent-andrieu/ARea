@@ -45,6 +45,7 @@ class edit_ifttt extends StatelessWidget {
     ));
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Center(
         child: Container(
             padding: const EdgeInsets.all(20.0),

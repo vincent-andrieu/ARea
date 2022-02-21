@@ -12,6 +12,7 @@ class start_area extends StatelessWidget {
   Widget build(BuildContext context) {
     InputCustom input = InputCustom('IP address', 'Enter server IP address', 'http://10.0.2.2:8080');
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Center(
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,

@@ -76,6 +76,7 @@ class auth_page extends StatelessWidget {
     InputCustom user = InputCustom('Email', 'Enter your Email address', '');
     InputCustom pass = InputCustom('Password', 'Enter your password', '');
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

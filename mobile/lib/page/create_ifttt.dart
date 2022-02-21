@@ -47,6 +47,7 @@ class create_ifttt extends StatelessWidget {
     DynamicList reaction = DynamicList(serviceList, false, "Service", "Reaction", api.listService, null);
 
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Center(
         child: Container(
           padding: const EdgeInsets.all(20.0),
