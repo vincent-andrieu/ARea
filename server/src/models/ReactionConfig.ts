@@ -19,8 +19,8 @@ export interface GithubCreateIssueConfig {
     owner: string;
     repository: string;
     title: string;
-    body: string;
-    assignees: string[];
+    body?: string;
+    assignees?: string[];
 }
 
 export interface GithubCreatePullRequestConfig {
