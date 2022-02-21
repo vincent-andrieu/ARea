@@ -1,10 +1,13 @@
+/* eslint-disable indent */
 import { env } from "process";
 import { Octokit } from "octokit";
 // import User from "@classes/user.class";
 import ARea from "@classes/area.class";
-import { GithubResult } from "@models/ActionResult";
+import { GithubResult, UnsplashPostResult } from "@models/ActionResult";
 import { GithubIssueConfig, GithubPullReqConfig } from "@models/ActionConfig";
 import User from "@classes/user.class";
+import Action, { ActionType } from "@classes/action.class";
+import { GithubCreateIssueConfig, GithubCreatePullRequestConfig } from "@models/ReactionConfig";
 
 const pagination = 10;
 
@@ -79,6 +82,7 @@ export default class githubService {
         if (!githubService.isNewId(area, pullRequests.data[0].id))
             return false;
         githubService.areaSetInfos(area, repo, owner, pullRequests.data[0]);
+        console.log("pullRequest : ", pullRequests.data[0]);
 
         return true;
     }
@@ -107,24 +111,81 @@ export default class githubService {
         return true;
     }
 
-    /*
-    export async  CreateIssue(
-        repo: string,
-        owner: string,
-        title: string | number,
-        body: string | undefined,
-        assignee: string | null | undefined): Promise<boolean> {
 
-        const octokit = launchOctokit("<personnal access token here>");
+    private static async CreateIssue(user: User, config: GithubCreateIssueConfig): Promise<boolean> {
+        if (!user || !user.oauth || !user.oauth.github)
+            return false;
+        const octokit = githubService.launchOctokit(user.oauth.github.accessToken);
 
-        await octokit.rest.issues.create({
-            repo: repo,
-            owner: owner,
-            title: title,
-            body: body,
-            assignee: assignee
-        });
-        return false;
-    }*/
+        if (!octokit)
+            return false;
+
+        try {
+            await octokit.rest.issues.create({
+                repo: config.repository,
+                owner: config.owner,
+                title: config.title,
+                body: config.body,
+                assignees: config.assignees
+            });
+        } catch (error: unknown) {
+            const some_error = error as Error;
+
+            console.log(some_error);
+            return false;
+        }
+        return true;
+    }
+
+    rea_CreateIssue(area: ARea, user: User) {
+        const action: Action = area.trigger.action as Action;
+        const config = area.consequence.inputs as GithubCreateIssueConfig;
+
+        try {
+            switch (action.type) {
+                case ActionType.UNSPLASH_POST:
+                    const result = area.trigger.outputs as UnsplashPostResult;
+                    // config.body += result.lastPostId; // find something interesting to add to issue
+
+                    break;
+                default:
+                    console.log("todo: default action");
+
+            }
+            githubService.CreateIssue(user, config);
+        } catch (error: unknown) {
+            const some_error = error as Error;
+
+            console.log(some_error);
+            return;
+        }
+    }
+
+    public static async CreatePullRequest(user: User, config: GithubCreatePullRequestConfig): Promise<boolean> {
+        if (!user || !user.oauth || !user.oauth.github)
+            return false;
+        const octokit = githubService.launchOctokit(user.oauth.github.accessToken);
+
+        if (!octokit)
+            return false;
+
+        try {
+            await octokit.rest.pulls.create({
+                repo: config.repository,
+                owner: config.owner,
+                title: config.title,
+                body: config.body,
+                head: config.currentBranch,
+                base: config.pullingBranch,
+                maintainer_can_modify: config.maintainer_can_modify
+            });
+        } catch (error: unknown) {
+            const some_error = error as Error;
+
+            console.log(some_error);
+            return false;
+        }
+        return true;
+    }
 
 }

@@ -20,6 +20,17 @@ export interface GithubCreateIssueConfig {
     repository: string;
     title: string;
     body: string;
+    assignees: string[];
+}
+
+export interface GithubCreatePullRequestConfig {
+    owner: string;
+    repository: string;
+    title?: string;
+    body?: string;
+    currentBranch: string;
+    pullingBranch: string;
+    maintainer_can_modify?: boolean;
 }
 
 export interface NotionAddMessageConfig {
@@ -33,5 +44,5 @@ export interface DropboxUploadConfig {
 }
 
 export type ReactionConfig = LinkedinPostConfig | TwitterPostTweetConfig
-    | TwitterUpdatePictureConfig | DiscordPostMsgConfig | GithubCreateIssueConfig
+    | TwitterUpdatePictureConfig | DiscordPostMsgConfig | GithubCreateIssueConfig | GithubCreatePullRequestConfig
     | NotionAddMessageConfig | DropboxUploadConfig;

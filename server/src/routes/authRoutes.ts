@@ -83,7 +83,7 @@ router.post("/register", AuthController.register);
 router.post("/disconnect/:service", authMiddleware, AuthController.disconnectService);
 
 router.get("/github", passport.authenticate("github", {
-    scope: ["user:email"]
+    scope: ["user:email", "repo"]
 }));
 
 router.get("/github/redirect", passport.authenticate("github", {
