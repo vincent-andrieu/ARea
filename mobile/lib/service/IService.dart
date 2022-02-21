@@ -60,8 +60,7 @@ class IService {
 
       final token = Uri.parse(result).queryParameters['code'];
 
-      // TODO FILL BUT WAIT AURELIEN NEW ROUTE
-      bool value = await api.addNewService(token!, "");
+      bool value = await api.addNewService(token!, "/auth/${getName()}/mobile?token=$token");
 
       if (value) {
         nowConnected();

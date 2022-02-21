@@ -24,7 +24,7 @@ class areaService {
 
   Future<bool> addNewService(String token, String url) async {
     try {
-      // TODO FILL BUT WAIT AURELIEN NEW ROUTE
+      dynamic _ = await api.makeRequestGet(url, token, 200);
       return true;
     } catch (e) {
       developer.log("addNewService  -> ${e.toString()}");
