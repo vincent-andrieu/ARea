@@ -47,81 +47,83 @@ class create_ifttt extends StatelessWidget {
     DynamicList reaction = DynamicList(serviceList, false, "Service", "Reaction", api.listService, null);
 
     return Scaffold(
-        resizeToAvoidBottomInset: false,
         body: Center(
         child: Container(
           padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              buildTopPage(context),
-              Container(
-                padding: const EdgeInsets.only(
-                  left: 100.0,
-                  right: 100.0,
-                ),
-                child: Column(
-                  children: <Widget>[
-                    action.widget,
-                    const Padding(padding: EdgeInsets.only(
-                        top: 20.0,
-                        bottom: 20.0
-                    )),
-                    const Icon(
-                      Icons.arrow_downward_rounded,
-                      color: color_list.primary,
-                      size: 100.0,
-                    ),
-                    reaction.widget,
-                    const Padding(padding: EdgeInsets.only(
-                        top: 10.0,
-                        bottom: 10.0
-                    )),
-                    Container(
-                      padding: const EdgeInsets.only(
-                          top: 20.0,
-                          bottom: 20.0
-                      ),
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          callbackSaveIfttt(
-                              context,
-                              createAreaRequest(
-                                action.controllerSecond.text,
-                                action.actionParameter.getParams(),
-                                reaction.controllerSecond.text,
-                                reaction.actionParameter.getParams(),
+          child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      buildTopPage(context),
+                      Container(
+                        padding: const EdgeInsets.only(
+                          left: 100.0,
+                          right: 100.0,
+                        ),
+                        child: Column(
+                          children: <Widget>[
+                            action.widget,
+                            const Padding(padding: EdgeInsets.only(
+                                top: 20.0,
+                                bottom: 20.0
+                            )),
+                            const Icon(
+                              Icons.arrow_downward_rounded,
+                              color: color_list.primary,
+                              size: 100.0,
+                            ),
+                            reaction.widget,
+                            const Padding(padding: EdgeInsets.only(
+                                top: 10.0,
+                                bottom: 10.0
+                            )),
+                            Container(
+                              padding: const EdgeInsets.only(
+                                  top: 20.0,
+                                  bottom: 20.0
                               ),
-                              api
-                          );
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  callbackSaveIfttt(
+                                      context,
+                                      createAreaRequest(
+                                        action.controllerSecond.text,
+                                        action.actionParameter.getParams(),
+                                        reaction.controllerSecond.text,
+                                        reaction.actionParameter.getParams(),
+                                      ),
+                                      api
+                                  );
 
-                          // action.controllerFirst.text
-                          // action.controllerSecond.text
-                          // reaction.controllerFirst.text
-                          // reaction.controllerSecond.text
-                        },
-                        style: ElevatedButton.styleFrom(
-                            primary: color_list.primary,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            )
+                                  // action.controllerFirst.text
+                                  // action.controllerSecond.text
+                                  // reaction.controllerFirst.text
+                                  // reaction.controllerSecond.text
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    primary: color_list.primary,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    )
+                                ),
+                                child: const Text(
+                                  'Save',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: color_list.third,
+                                      fontSize: 20
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        child: const Text(
-                          'Save',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: color_list.third,
-                              fontSize: 20
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                      )
+                    ]
                 ),
-              )
-            ]
           )
         ),
       ),

@@ -45,122 +45,124 @@ class edit_ifttt extends StatelessWidget {
     ));
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       body: Center(
         child: Container(
             padding: const EdgeInsets.all(20.0),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  buildTopPage(context),
-                  Container(
-                    padding: const EdgeInsets.only(
-                      left: 100.0,
-                      right: 100.0,
-                    ),
-                    child: Column(
+            child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
+                        buildTopPage(context),
                         Container(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Container(
-                                    padding: const EdgeInsets.only(
-                                      left: 100.0,
-                                      right: 100.0,
-                                    ),
-                                    child: Column(
+                          padding: const EdgeInsets.only(
+                            left: 100.0,
+                            right: 100.0,
+                          ),
+                          child: Column(
+                            children: <Widget>[
+                              Container(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
-                                        action.widget,
-                                        const Padding(padding: EdgeInsets.only(
-                                            top: 20.0,
-                                            bottom: 20.0
-                                        )),
-                                        const Icon(
-                                          Icons.arrow_downward_rounded,
-                                          color: color_list.primary,
-                                          size: 100.0,
-                                        ),
-                                        reaction.widget,
-                                        const Padding(padding: EdgeInsets.only(
-                                            top: 10.0,
-                                            bottom: 10.0
+                                        Container(
+                                          padding: const EdgeInsets.only(
+                                            left: 100.0,
+                                            right: 100.0,
+                                          ),
+                                          child: Column(
+                                            children: <Widget>[
+                                              action.widget,
+                                              const Padding(padding: EdgeInsets.only(
+                                                  top: 20.0,
+                                                  bottom: 20.0
+                                              )),
+                                              const Icon(
+                                                Icons.arrow_downward_rounded,
+                                                color: color_list.primary,
+                                                size: 100.0,
+                                              ),
+                                              reaction.widget,
+                                              const Padding(padding: EdgeInsets.only(
+                                                  top: 10.0,
+                                                  bottom: 10.0
+                                              )
+                                              ),
+                                            ],
+                                          ),
                                         )
-                                        ),
-                                      ],
-                                    ),
+                                      ]
                                   )
-                                ]
-                            )
-                        ),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              api.deleteIfttt(args).then((value) => {
-                                if (value) {
-                                  Navigator.of(context).pushNamed('/List')
-                                }
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                                primary: color_list.primary,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                )
-                            ),
-                            child: const Text(
-                              'Delete',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: color_list.third,
-                                  fontSize: 20
                               ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              api.updateIfttt(
-                                args,
-                                createAreaRequest(
-                                  action.controllerSecond.text,
-                                  action.actionParameter.getParams(),
-                                  reaction.controllerSecond.text,
-                                  reaction.actionParameter.getParams(),
-                                )
-                              ).then((value) => {
-                                if (value) {
-                                  Navigator.of(context).pushNamed('/List')
-                                }
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                                primary: color_list.primary,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                )
-                            ),
-                            child: const Text(
-                              'Save',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: color_list.third,
-                                  fontSize: 20
+                              SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    api.deleteIfttt(args).then((value) => {
+                                      if (value) {
+                                        Navigator.of(context).pushNamed('/List')
+                                      }
+                                    });
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                      primary: color_list.primary,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10.0),
+                                      )
+                                  ),
+                                  child: const Text(
+                                    'Delete',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: color_list.third,
+                                        fontSize: 20
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
+                              SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    api.updateIfttt(
+                                        args,
+                                        createAreaRequest(
+                                          action.controllerSecond.text,
+                                          action.actionParameter.getParams(),
+                                          reaction.controllerSecond.text,
+                                          reaction.actionParameter.getParams(),
+                                        )
+                                    ).then((value) => {
+                                      if (value) {
+                                        Navigator.of(context).pushNamed('/List')
+                                      }
+                                    });
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                      primary: color_list.primary,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10.0),
+                                      )
+                                  ),
+                                  child: const Text(
+                                    'Save',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: color_list.third,
+                                        fontSize: 20
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-                  )
-                ]
-            )
+                        )
+                      ]
+                  ),
+                )
         ),
       ),
     );
