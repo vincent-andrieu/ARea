@@ -104,6 +104,7 @@ export default class githubService {
 
         if (!issues || !issues.data || !issues.data[0])
             return false;
+        console.log(issues.data[0])
         if (!githubService.isNewId(area, issues.data[0].id))
             return false;
         githubService.areaSetInfos(area, repo, owner, issues.data[0]);
@@ -137,7 +138,7 @@ export default class githubService {
         return true;
     }
 
-    rea_CreateIssue(area: ARea, user: User) {
+    public static async rea_CreateIssue(area: ARea, user: User) {
         const action: Action = area.trigger.action as Action;
         const config = area.consequence.inputs as GithubCreateIssueConfig;
 
@@ -161,7 +162,7 @@ export default class githubService {
         }
     }
 
-    public static async CreatePullRequest(user: User, config: GithubCreatePullRequestConfig): Promise<boolean> {
+    private static async CreatePullRequest(user: User, config: GithubCreatePullRequestConfig): Promise<boolean> {
         if (!user || !user.oauth || !user.oauth.github)
             return false;
         const octokit = githubService.launchOctokit(user.oauth.github.accessToken);
@@ -187,5 +188,31 @@ export default class githubService {
         }
         return true;
     }
+
+    public static async rea_CreatePullRequest(area: ARea, user: User) {
+        const action: Action = area.trigger.action as Action;
+        const config = area.consequence.inputs as GithubCreatePullRequestConfig;
+
+        try {
+            switch (action.type) {
+                case ActionType.UNSPLASH_POST:
+                    const result = area.trigger.outputs as UnsplashPostResult;
+                    // config.body += result.lastPostId; // find something interesting to add to issue
+
+                    break;
+                default:
+                    console.log("todo: default action");
+
+            }
+            githubService.CreatePullRequest(user, config);
+        } catch (error: unknown) {
+            const some_error = error as Error;
+
+            console.log(some_error);
+            return;
+        }
+    }
+
+
 
 }

@@ -17,6 +17,7 @@ import RSSService from "@services/RSSService";
 import { DropboxService } from "@services/DropboxService";
 import unsplashService from "@services/unsplashService";
 import TimeService from "@services/TimeService";
+import githubService from "./githubService";
 
 export default class CronService {
 
@@ -145,7 +146,10 @@ export default class CronService {
                 break;
             }
             case ReactionType.GITHUB_ISSUE:
-                // TODO:
+                // githubService.rea_CreateIssue(area, user);
+                break;
+            case ReactionType.GITHUB_PULL:
+                // githubService.rea_CreatePullRequest(area, user);
                 break;
             case ReactionType.NOTION_MSG:
                 // TODO:
