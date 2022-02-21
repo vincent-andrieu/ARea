@@ -10,83 +10,19 @@ import { UnsplashMobileStrategy } from "../passport/unsplashPassport";
 
 const router = express.Router();
 
-/**
- * @swagger
- *
- * /auth/login:
- *  post:
- *      summary: Login a user.
- *      consumes:
- *        - application/json
- *      parameters:
- *        - in: body
- *          name: body
- *          description: The user to login
- *          schema:
- *            type: object
- *            required:
- *              - username
- *              - password
- *            properties:
- *              username:
- *                  type: string
- *              password:
- *                  type: string
- *      responses:
- *         201:
- *          description: Created
- */
 router.post("/login", AuthController.login);
 
-/**
- * @swagger
- *
- * /auth/register:
- *  post:
- *      summary: Register a new user.
- *      consumes:
- *        - application/json
- *      parameters:
- *        - in: body
- *          name: body
- *          description: The user to register
- *          schema:
- *            type: object
- *            required:
- *              - username
- *              - password
- *            properties:
- *              username:
- *                 type: string
- *              password:
- *                  type: string
- *      responses:
- *         201:
- *          description: Created
- */
+router.get("/logout", AuthController.logout);
+
 router.post("/register", AuthController.register);
 
-/**
- * @swagger
- *
- * /auth/disconnect/:service:
- *  post:
- *      summary: Disconnect a user to a service.
- *      responses:
- *          200:
- *           description: Successfully disconnected
- *          404:
- *           description: Unknown service
- *          500:
- *           description: Internal Server Error
- */
 router.post("/disconnect/:service", authMiddleware, AuthController.disconnectService);
 
 router.get("/github", passport.authenticate("github", {
     scope: ["user:email", "repo"]
 }));
 
-router.get("/github/redirect", passport.authenticate("github", {
+router.get("/github/redirect", passport.authenticate("github-web", {
     successRedirect: "/auth/redirect",
     failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));
@@ -127,16 +63,16 @@ router.get("/linkedin/redirect", passport.authenticate("linkedin", {
     failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));
 
-router.get("/dropbox", passport.authenticate("dropbox-oauth2"));
+router.get("/dropbox", passport.authenticate("dropbox-oauth2-web"));
 
-router.get("/dropbox/redirect", passport.authenticate("dropbox-oauth2", {
+router.get("/dropbox/redirect", passport.authenticate("dropbox-oauth2-web", {
     successRedirect: "/auth/redirect",
     failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));
 
-router.get("/discord", passport.authenticate("discord"));
+router.get("/discord", passport.authenticate("discord-web"));
 
-router.get("/discord/redirect", passport.authenticate("discord", {
+router.get("/discord/redirect", passport.authenticate("discord-web", {
     successRedirect: "/auth/redirect",
     failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));

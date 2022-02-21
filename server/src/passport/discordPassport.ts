@@ -1,5 +1,6 @@
 import passport from "passport";
 
+import { Request, Response } from "express";
 import { Profile, VerifyCallback, Scope, Strategy as DiscordStrategy } from "@oauth-everything/passport-discord";
 import { discordConfig } from "@config/discordConfig";
 import User from "@classes/user.class";
@@ -8,10 +9,23 @@ import { getStrObjectId } from "@classes/model.class";
 import OAuthProvider from "../models/oAuthProvider.enum";
 import AuthController from "../controllers/AuthController";
 
-const successfullyAuthentificated = async (accessToken: string, refreshToken: string, profile: Profile, done: VerifyCallback) => {
+const successfullyAuthentificated = async (req: Request, accessToken: string, refreshToken: string, profile: Profile, done: VerifyCallback) => {
     const userSchema = new UserSchema();
 
     console.log(profile);
+    if (req.user && req.user.data.user_id) {
+        const user: User = await userSchema.get(req.user.data.user_id);
+        if (!user.oauth)
+            user.oauth = {};
+        user.oauth.discord = {
+            accessToken: accessToken,
+            refreshToken: refreshToken
+        };
+        const userEdited = await userSchema.edit(user);
+        if (done)
+            return done(null, userEdited);
+        return userEdited;
+    }
     try {
         const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.DISCORD, profile.displayName || "");
 
@@ -23,10 +37,12 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
             });
             // save user token
             oldUser.token = token;
-            if (oldUser.oauth?.discord) {
-                oldUser.oauth.discord.accessToken = accessToken;
-                oldUser.oauth.discord.refreshToken = refreshToken;
-            }
+            if (!oldUser.oauth)
+                oldUser.oauth = {};
+            oldUser.oauth.discord = {
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            };
             await userSchema.edit(oldUser);
             done(null, oldUser);
         } else {
@@ -56,10 +72,13 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
     }
 };
 
-passport.use(new DiscordStrategy({
+const discordStrategy = new DiscordStrategy({
     clientID: discordConfig.clientID || "",
     clientSecret: discordConfig.clientSecret || "",
     callbackURL: discordConfig.callbackURL || "",
-    scope: [Scope.IDENTIFY, Scope.EMAIL, Scope.GUILDS_JOIN]
+    scope: [Scope.IDENTIFY, Scope.EMAIL, Scope.GUILDS_JOIN],
+    passReqToCallback: true
 }, successfullyAuthentificated
-));
+);
+
+passport.use("discord-web", discordStrategy);

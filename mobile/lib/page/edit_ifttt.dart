@@ -1,7 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/api/areaService.dart';
-import 'package:mobile/api/model/area.dart';
+import 'package:mobile/api/model/area/Action.dart' as areaLib;
+import 'package:mobile/api/model/area/Area.dart';
+import 'package:mobile/api/model/area/Parameter.dart';
+import 'package:mobile/api/model/area/ParameterType.dart';
+import 'package:mobile/api/model/area/Reaction.dart';
+import 'package:mobile/api/model/createAreaRequest.dart';
 import 'package:mobile/page/color_list.dart';
 import 'create_ifttt.dart';
 
@@ -10,7 +17,7 @@ class edit_ifttt extends StatelessWidget {
 
   edit_ifttt(this.api, {Key? key}) : super(key: key);
 
-  Area getArea(String id) {
+  createAreaRequest getArea(String id) {
     for (var it in api.token!.areas) {
       if (it.id == id) {
         return it;
@@ -22,7 +29,7 @@ class edit_ifttt extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String args = ModalRoute.of(context)!.settings.arguments as String;
-    Area area = getArea(args);
+    createAreaRequest area = getArea(args);
 
     return Scaffold(
       body: Center(
@@ -48,8 +55,11 @@ class edit_ifttt extends StatelessWidget {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                              api.deleteIfttt(area.id);
-                              Navigator.of(context).pushNamed('/List');
+                              api.deleteIfttt(args).then((value) => {
+                                if (value) {
+                                  Navigator.of(context).pushNamed('/List')
+                                }
+                              });
                             },
                             style: ElevatedButton.styleFrom(
                                 primary: color_list.primary,
@@ -75,8 +85,21 @@ class edit_ifttt extends StatelessWidget {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                              // TODO EDIT
-                              api.updateIfttt(area.id, Area(area.id, area.action.label, area.reaction.label));
+                              // TODO FILL THIS WHEN PAGE WAS BUILD
+                              areaLib.Action actionBuild = areaLib.Action(
+                                  "",
+                                  [
+                                    Parameter("", ParameterType.TEXT)
+                                  ]
+                              );
+                              Reaction reactionBuild = Reaction(
+                                  "",
+                                  [
+                                    Parameter("", ParameterType.TEXT)
+                                  ]
+                              );
+
+                              api.updateIfttt(area.id, Area(area.id, api.token!.token, actionBuild, reactionBuild));
                               Navigator.of(context).pushNamed('/List');
                             },
                             style: ElevatedButton.styleFrom(

@@ -25,6 +25,7 @@ class twitter extends IService {
   List<String> getReaction() {
     return [
       'Make a tweet',
+      'Change Banner',
       'Update profile image',
       'None'
     ];
@@ -32,6 +33,6 @@ class twitter extends IService {
 
   @override
   String getUrl() {
-    return "/auth/twitter";
+    return "/auth/twitter/mobile";
   }
 }

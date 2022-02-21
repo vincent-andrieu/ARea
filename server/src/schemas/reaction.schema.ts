@@ -8,6 +8,7 @@ const reactionSchema = new mongoose.Schema({
     type: { type: String, enum: ReactionType, required: true },
     parameters: [{
         name: { type: String, required: true },
+        label: { type: String, required: true },
         type: { type: String, required: true }
     }],
     service: { type: String, enum: ServiceType }
@@ -27,6 +28,6 @@ export class ReactionSchema extends ASchema<Reaction> {
         });
         if (!result || result.length == 0)
             throw "getByType: action not found";
-        return result[0];
+        return new this._ctor(result[0].toObject<Reaction>());
     }
 }

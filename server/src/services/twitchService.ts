@@ -41,7 +41,7 @@ export class TwitchService {
         } catch (error) {
             const some_error = error as Error;
 
-            console.log(some_error);
+            console.log(some_error.toString());
             return false;
         }
         return true;

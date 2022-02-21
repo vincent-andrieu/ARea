@@ -2,6 +2,7 @@ import express from "express";
 import passport from "passport";
 import cookieSession from "cookie-session";
 import cors from "cors";
+import { env } from "process";
 
 import { serverConfig } from "@config/serverConfig";
 import appRoutes from "../routes/appRoutes";
@@ -33,9 +34,13 @@ export function preinitExpress() {
     app.use(passport.session());
     app.use(express.json());
 
-    app.use(cors());
+    app.use(cors({
+        origin: env.CLIENT_HOST, // allow to server to accept request from different origin
+        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+        credentials: true // allow session cookie from browser to pass through
+    }));
     app.use((_, response, next) => {
-        response.setHeader("Access-Control-Allow-Origin", "*");
+        //response.setHeader("Access-Control-Allow-Origin", "*");
         next();
     });
 

@@ -8,6 +8,7 @@ export enum ParameterType {
 }
 
 export interface Parameter {
-    name: string,
+    name: string, // field name in input object
+    label: string, // label to display
     type: ParameterType
 }

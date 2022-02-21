@@ -1,7 +1,7 @@
 import express from "express";
 import moment from "moment";
 import swaggerUi from "swagger-ui-express";
-import docs from "../docs";
+import docs from "../__docs__";
 import { servicesList } from "@config/serverConfig";
 
 import authMiddleware from "../middlewares/checkJwt";
@@ -21,17 +21,7 @@ router.get("/about.json", (req, res) => {
     res.json(aboutJson);
 });
 
-/**
- * @swagger
- *
- * /:
- *  get:
- *      summary: Api homepage.
- *      responses:
- *          200:
- *              description: Api is working correctly
- */
-router.get("/", (req, res) => {
+router.get("/", authMiddleware, (_, res) => {
     res.status(204).send();
 });
 

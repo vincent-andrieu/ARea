@@ -1,5 +1,4 @@
 /* eslint-disable indent */
-import { PopulateOptions } from "mongoose";
 import cron from "node-cron";
 
 import { AReaSchema } from "@schemas/area.schema";
@@ -8,7 +7,7 @@ import ARea from "@classes/area.class";
 import Reaction, { ReactionType } from "@classes/reaction.class";
 import Action, { ActionType } from "@classes/action.class";
 
-import { DateTimeConfg, TwitchStreamConfig, UnsplashPostConfig } from "models/ActionConfig";
+import { TwitchStreamConfig, UnsplashPostConfig } from "models/ActionConfig";
 import { DiscordPostMsgConfig, DropboxUploadConfig } from "models/ReactionConfig";
 
 import DiscordService from "@services/DiscordService";
@@ -22,7 +21,7 @@ import githubService from "./githubService";
 export default class CronService {
 
     private static _areSchema: AReaSchema = new AReaSchema();
-    private static _cron: any = undefined;
+    private static _cron?: cron.ScheduledTask = undefined;
 
     public static setup = (cronTime = "* * * * *") => {
         CronService._cron = cron.schedule(cronTime, this.execute, { scheduled: false });
@@ -38,11 +37,11 @@ export default class CronService {
     };
 
     public static start = () => {
-        this._cron.start();
+        this._cron?.start();
     };
 
     public static stop = () => {
-        this._cron.stop();
+        this._cron?.stop();
     };
 
     public static execute = async () => {

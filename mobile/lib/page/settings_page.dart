@@ -7,11 +7,36 @@ import 'package:mobile/service/dropbox.dart';
 import 'package:mobile/service/github.dart';
 import 'package:mobile/service/linkedin.dart';
 import 'package:mobile/service/notion.dart';
+import 'package:mobile/service/rss.dart';
 import 'package:mobile/service/twitch.dart';
 import 'package:mobile/service/twitter.dart';
 import 'package:mobile/service/unsplash.dart';
 import 'package:mobile/widget/global_connexion_list.dart';
 import 'create_ifttt.dart';
+
+bool getValue(String key, Map<String, bool> oauth) {
+  bool? value = oauth[key];
+
+  if (value == null) {
+    return false;
+  }
+  return value;
+}
+
+List<IService> getListService(Map<String, bool> oauth) {
+  List<IService> list = [
+    github(getValue("github", oauth)),
+    twitch(getValue("twitch", oauth)),
+    twitter(getValue("twitter", oauth)),
+    discord(getValue("discord", oauth)),
+    linkedin(getValue("linkedin", oauth)),
+    notion(getValue("notion", oauth)),
+    unsplash(getValue("unsplash", oauth)),
+    dropbox(getValue("dropbox", oauth)),
+    rss(getValue("rss", oauth)),
+  ];
+  return list;
+}
 
 void callbackLogout(BuildContext context, areaService api) {
   api.token = null;
@@ -19,20 +44,11 @@ void callbackLogout(BuildContext context, areaService api) {
 }
 
 class settings_page extends StatelessWidget {
-  late areaService api;
-  List<IService> serviceList = [
-    github(false),      // TODO EDIT
-    twitch(false),      // TODO EDIT
-    twitter(false),     // TODO EDIT
-    discord(false),     // TODO EDIT
-    linkedin(false),    // TODO EDIT
-    notion(false),      // TODO EDIT
-    unsplash(false),    // TODO EDIT
-    dropbox(false),     // TODO EDIT
-  ];
+  areaService api;
+  late List<IService> serviceList;
 
-  settings_page(areaService apiSrc, {Key? key}) : super(key: key) {
-    api = apiSrc;
+  settings_page(this.api, {Key? key}) : super(key: key) {
+    serviceList = getListService(api.token!.oauth);
   }
 
   @override

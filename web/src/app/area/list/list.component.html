@@ -5,8 +5,9 @@
 <div class="page-background" fxLayout="column" fxLayoutAlign="space-around center" fxFill>
     <p class="title">AReas list</p>
 
-    <div fxLayout="row wrap">
-        <app-area-widget *ngFor="let area of areas" [area]="area" (click)="openEditModal(area)"></app-area-widget>
+    <div fxLayout="row wrap" fxLayoutAlign="center">
+        <app-area-widget class="area-widget" *ngFor="let area of areas" [area]="area" (click)="openEditModal(area)">
+        </app-area-widget>
         <h2 *ngIf="areas.length === 0 && !isLoading">No area</h2>
         <mat-progress-spinner *ngIf="isLoading" mode="indeterminate" color="primary">
         </mat-progress-spinner>

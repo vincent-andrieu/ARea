@@ -1,17 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/api/areaService.dart';
+import 'package:mobile/api/model/createAreaRequest.dart';
 import 'package:mobile/page/color_list.dart';
 import 'package:mobile/service/IService.dart';
-import 'package:mobile/service/discord.dart';
-import 'package:mobile/service/dropbox.dart';
-import 'package:mobile/service/github.dart';
-import 'package:mobile/service/linkedin.dart';
-import 'package:mobile/service/notion.dart';
-import 'package:mobile/service/twitch.dart';
-import 'package:mobile/service/twitter.dart';
-import 'package:mobile/service/unsplash.dart';
-import 'package:mobile/widget/updatedList.dart';
-import 'package:mobile/api/model/area.dart';
+import 'package:mobile/tools/serviceListBuilder.dart';
+import 'package:mobile/widget/DynamicList.dart';
 
 void buildRedirection(String action, String reaction, BuildContext context) {
   String route = '/Create\${$action|$reaction}';
@@ -32,8 +25,8 @@ void callbackClose(BuildContext context) {
   Navigator.of(context).pop();
 }
 
-void callbackSaveIfttt(BuildContext context, areaService api, String actionLabel, String reactionLabel) {
-  api.createIfttt(Area("", actionLabel, reactionLabel)).then((value) => {
+void callbackSaveIfttt(BuildContext context, createAreaRequest newArea, areaService api) {
+  api.createIfttt(newArea).then((value) => {
     if (value) {
       Navigator.of(context).pushNamed('/List')
     }
@@ -42,34 +35,16 @@ void callbackSaveIfttt(BuildContext context, areaService api, String actionLabel
 
 class create_ifttt extends StatelessWidget {
   late areaService api;
-  List<IService> serviceList = [
-    github(false),
-    twitch(false),
-    twitter(false),
-    discord(false),
-    linkedin(false),
-    notion(false),
-    unsplash(false),
-    dropbox(false),
-  ];
-  late IService serviceAction;
-  late IService serviceReaction;
+  late List<IService> serviceList;
 
-  create_ifttt(this.api, this.serviceAction, this.serviceReaction, {Key? key}) : super(key: key);
+  create_ifttt(this.api, {Key? key}) : super(key: key) {
+    serviceList = serviceListBuilder(api, true);
+  }
 
   @override
   Widget build(BuildContext context) {
-    updatedList service = updatedList("Service", getBuildList(serviceList, (IService it) => it.getName()), serviceAction.getName(), (String selected) {
-      buildRedirection(selected, serviceReaction.getName(), context);
-    });
-    updatedList condition = updatedList("Condition", serviceAction.getAction(), 'None', null);
-    updatedList parameter = updatedList("Parameter", serviceAction.getParams(), 'None', null);
-
-    updatedList toService = updatedList("Service", getBuildList(serviceList, (IService it) => it.getName()), serviceReaction.getName(), (String selected) {
-      buildRedirection(serviceAction.getName(), selected, context);
-    });
-    updatedList toAction = updatedList("Action", serviceReaction.getReaction(), 'None', null);
-    updatedList toParameter = updatedList("Parameter", serviceReaction.getParams(), 'None', null);
+    DynamicList action = DynamicList(serviceList, true, "Service", "Action", api.listService);
+    DynamicList reaction = DynamicList(serviceList, false, "Service", "Reaction", api.listService);
 
     return Scaffold(
         body: Center(
@@ -87,17 +62,7 @@ class create_ifttt extends StatelessWidget {
                 ),
                 child: Column(
                   children: <Widget>[
-                    service.list,
-                    const Padding(padding: EdgeInsets.only(
-                        top: 10.0,
-                        bottom: 10.0
-                    )),
-                    condition.list,
-                    const Padding(padding: EdgeInsets.only(
-                        top: 10.0,
-                        bottom: 10.0
-                    )),
-                    parameter.list,
+                    action.widget,
                     const Padding(padding: EdgeInsets.only(
                         top: 20.0,
                         bottom: 20.0
@@ -107,21 +72,7 @@ class create_ifttt extends StatelessWidget {
                       color: color_list.primary,
                       size: 100.0,
                     ),
-                    const Padding(padding: EdgeInsets.only(
-                        top: 20.0,
-                        bottom: 20.0
-                    )),
-                    toService.list,
-                    const Padding(padding: EdgeInsets.only(
-                        top: 10.0,
-                        bottom: 10.0
-                    )),
-                    toAction.list,
-                    const Padding(padding: EdgeInsets.only(
-                        top: 10.0,
-                        bottom: 10.0
-                    )),
-                    toParameter.list,
+                    reaction.widget,
                     const Padding(padding: EdgeInsets.only(
                         top: 10.0,
                         bottom: 10.0
@@ -134,7 +85,21 @@ class create_ifttt extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          callbackSaveIfttt(context, api, condition.list.dropdownValue, toAction.list.dropdownValue);
+                          callbackSaveIfttt(
+                              context,
+                              createAreaRequest(
+                                action.controllerSecond.text,
+                                action.actionParameter.getParams(),
+                                reaction.controllerSecond.text,
+                                reaction.actionParameter.getParams(),
+                              ),
+                              api
+                          );
+
+                          // action.controllerFirst.text
+                          // action.controllerSecond.text
+                          // reaction.controllerFirst.text
+                          // reaction.controllerSecond.text
                         },
                         style: ElevatedButton.styleFrom(
                             primary: color_list.primary,

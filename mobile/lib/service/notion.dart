@@ -28,6 +28,6 @@ class notion extends IService {
 
   @override
   String getUrl() {
-    return "/auth/notion";
+    return "/auth/notion/mobile";
   }
 }

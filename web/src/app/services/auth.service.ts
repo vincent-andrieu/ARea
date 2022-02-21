@@ -4,14 +4,15 @@ import { Router } from "@angular/router";
 import { catchError, firstValueFrom, of } from "rxjs";
 import { CookieService } from "ngx-cookie";
 
-import User from "@classes/user.class";
 import { environment } from "@environment";
+import User from "@classes/user.class";
+import { ServiceType } from "@classes/model/ServiceType";
 import { SnackbarService } from "./snackbar.service";
 
 export interface ServiceData {
     iconSvgPath: string;
     label: string;
-    name: string;
+    name: ServiceType;
     redirect: string;
 }
 
@@ -21,14 +22,14 @@ export interface ServiceData {
 export class AuthService {
 
     public readonly apps: ReadonlyArray<ServiceData> = [
-        { iconSvgPath: 'assets/icons/github.svg', label: 'GitHub', name: 'github', redirect: '/github' },
-        { iconSvgPath: 'assets/icons/twitch.svg', label: 'Twitch', name: 'twitch', redirect: '/twitch' },
-        { iconSvgPath: 'assets/icons/twitter.svg', label: 'Twitter', name: 'twitter', redirect: '/twitter' },
-        { iconSvgPath: 'assets/icons/dropbox.svg', label: 'Dropbox', name: 'dropbox', redirect: '/dropbox' },
-        { iconSvgPath: 'assets/icons/discord.svg', label: 'Discord', name: 'discord', redirect: '/discord' },
-        { iconSvgPath: 'assets/icons/linkedin.svg', label: 'Linkedin', name: 'linkedin', redirect: '/linkedin' },
-        { iconSvgPath: 'assets/icons/notion.svg', label: 'Notion', name: 'notion', redirect: '/notion' },
-        { iconSvgPath: 'assets/icons/unsplash.svg', label: 'Unsplash', name: 'unsplash', redirect: '/unsplash' }
+        { iconSvgPath: 'assets/icons/github.svg', label: 'GitHub', name: ServiceType.GITHUB, redirect: '/github' },
+        { iconSvgPath: 'assets/icons/twitch.svg', label: 'Twitch', name: ServiceType.TWITCH, redirect: '/twitch' },
+        { iconSvgPath: 'assets/icons/twitter.svg', label: 'Twitter', name: ServiceType.TWITTER, redirect: '/twitter' },
+        { iconSvgPath: 'assets/icons/dropbox.svg', label: 'Dropbox', name: ServiceType.DROPBOX, redirect: '/dropbox' },
+        { iconSvgPath: 'assets/icons/discord.svg', label: 'Discord', name: ServiceType.DISCORD, redirect: '/discord' },
+        { iconSvgPath: 'assets/icons/linkedin.svg', label: 'Linkedin', name: ServiceType.LINKEDIN, redirect: '/linkedin' },
+        { iconSvgPath: 'assets/icons/notion.svg', label: 'Notion', name: ServiceType.NOTION, redirect: '/notion' },
+        { iconSvgPath: 'assets/icons/unsplash.svg', label: 'Unsplash', name: ServiceType.UNSPLASH, redirect: '/unsplash' }
     ];
 
     public user?: User;
@@ -88,13 +89,16 @@ export class AuthService {
         window.location.href = url;
     }
 
-    public async disconnectFromService(name: string): Promise<void> {
-        return await firstValueFrom(this._httpClient.post<void>(`/auth/disconnect/${name}`, {}))
+    public disconnectFromService(name: string): Promise<void> {
+        return firstValueFrom(this._httpClient.post<void>(`/auth/disconnect/${name}`, {}))
             .catch((err) => this._snackbarService.openError(err));
     }
 
     public logout(): void {
         this._cookieService.remove(environment.cookiesKey.jwt);
-        this._router.navigateByUrl("/login");
+
+        const host = this._cookieService.get(environment.cookiesKey.serverHost);
+
+        window.location.href = `${host}${host.endsWith('/') ? 'auth' : '/auth'}/logout`;
     }
 }

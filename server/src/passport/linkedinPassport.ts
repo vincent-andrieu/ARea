@@ -1,6 +1,7 @@
 import passport from "passport";
 import passportLinkedin from "passport-linkedin-oauth2";
 
+import { Request } from "express";
 import { linkedinConfig } from "@config/linkedinConfig";
 import { getStrObjectId } from "@classes/model.class";
 import User from "@classes/user.class";
@@ -10,10 +11,24 @@ import AuthController from "../controllers/AuthController";
 
 const LinkedinStrategy = passportLinkedin.Strategy;
 
-const successfullyAuthentificated = async (accessToken: string, refreshToken: string, profile, done: CallableFunction) => {
+const successfullyAuthentificated = async (req: Request, accessToken: string, refreshToken: string, profile, done: CallableFunction) => {
     const userSchema = new UserSchema();
 
     console.log(profile);
+    if (req.user && req.user.data.user_id) {
+        const user: User = await userSchema.get(req.user.data.user_id);
+
+        if (!user.oauth)
+            user.oauth = {};
+        user.oauth.linkedin = {
+            accessToken: accessToken,
+            refreshToken: refreshToken
+        };
+        const userEdited = await userSchema.edit(user);
+        if (done)
+            return done(null, userEdited);
+        return userEdited;
+    }
     try {
         const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.LINKEDIN, profile.id);
 
@@ -27,10 +42,12 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
             oldUser.oauthLoginProvider = OAuthProvider.LINKEDIN;
             oldUser.oauthLoginProviderId = profile.id;
             oldUser.token = token;
-            if (oldUser.oauth?.linkedin) {
-                oldUser.oauth.linkedin.accessToken = accessToken;
-                oldUser.oauth.linkedin.refreshToken = refreshToken;
-            }
+            if (!oldUser.oauth)
+                oldUser.oauth = {};
+            oldUser.oauth.linkedin = {
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            };
             await userSchema.edit(oldUser);
             done(null, oldUser);
         } else {
@@ -64,6 +81,7 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
 passport.use(new LinkedinStrategy(
     {
         ...linkedinConfig,
-        scope: ["r_emailaddress", "r_liteprofile"]
+        scope: ["r_emailaddress", "r_liteprofile"],
+        passReqToCallback: true
     }, successfullyAuthentificated
 ));

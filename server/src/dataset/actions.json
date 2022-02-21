@@ -1,95 +1,116 @@
 [
-  {
-    "type": "CRON",
-    "parameters": [
-      {
-        "name": "Cron schedule expression",
-        "type": "TIME"
-      }
-    ],
-    "service": "CRON"
-  },
-  {
-    "type": "DATETIME",
-    "parameters": [
-      {
-        "name": "Timestamp",
-        "type": "DATETIME"
-      }
-    ],
-    "service": "CRON"
-  },
-  {
-    "type": "TWITCH_STREAM",
-    "parameters": [
-      {
-        "name": "username",
-        "type": "TEXT"
-      }
-    ],
-    "service": "TWITCH"
-  },
-  {
-    "type": "TWITTER_MSG",
-    "parameters": [
-      {
-        "name": "username",
-        "type": "TEXT"
-      }
-    ],
-    "service": "TWITTER"
-  },
-  {
-    "type": "RSS_ENTRY",
-    "parameters": [
-      {
-        "name": "url",
-        "type": "URL"
-      }
-    ],
-    "service": "RSS"
-  },
-  {
-    "type": "GITHUB_ISSUE",
-    "parameters": [
-      {
-        "name": "Owner",
-        "type": "TEXT"
-      },
-      {
-        "name": "Respository",
-        "type": "TEXT"
-      }
-    ],
-    "service": "GITHUB"
-  },
-  {
-    "type": "GITHUB_PULL_REQ",
-    "parameters": [
-      {
-        "name": "Owner",
-        "type": "TEXT"
-      },
-      {
-        "name": "Respository",
-        "type": "TEXT"
-      }
-    ],
-    "service": "GITHUB"
-  },
-  {
-    "type": "DISCORD_MSG",
-    "parameters": [
-      {
-        "name": "Channel Id",
-        "type": "TEXT"
-      }
-    ],
-    "service": "DISCORD"
-  },
-  {
-    "type": "UNSPLASH_POST",
-    "parameters": [],
-    "service": "UNSPLASH"
-  }
+    {
+        "type": "CRON",
+        "parameters": [
+            {
+                "name": "time",
+                "label": "Cron schedule expression",
+                "type": "TIME"
+            }
+        ],
+        "service": "CRON"
+    },
+    {
+        "type": "DATETIME",
+        "parameters": [
+            {
+                "name": "time",
+                "label": "Timestamp",
+                "type": "DATETIME"
+            }
+        ],
+        "service": "CRON"
+    },
+    {
+        "type": "TWITCH_STREAM",
+        "parameters": [
+            {
+                "name": "username",
+                "label": "Username",
+                "type": "TEXT"
+            }
+        ],
+        "service": "TWITCH"
+    },
+    {
+        "type": "TWITTER_MSG",
+        "parameters": [
+            {
+                "name": "username",
+                "label": "Username",
+                "type": "TEXT"
+            }
+        ],
+        "service": "TWITTER"
+    },
+    {
+        "type": "RSS_ENTRY",
+        "parameters": [
+            {
+                "name": "url",
+                "label": "URL",
+                "type": "URL"
+            }
+        ],
+        "service": "RSS"
+    },
+    {
+        "type": "GITHUB_ISSUE",
+        "parameters": [
+            {
+                "name": "owner",
+                "label": "Owner",
+                "type": "TEXT"
+            },
+            {
+                "name": "repository",
+                "label": "Repository",
+                "type": "TEXT"
+            }
+        ],
+        "service": "GITHUB"
+    },
+    {
+        "type": "GITHUB_PULL_REQ",
+        "parameters": [
+            {
+                "name": "owner",
+                "label": "Owner",
+                "type": "TEXT"
+            },
+            {
+                "name": "repository",
+                "label": "Repository",
+                "type": "TEXT"
+            }
+        ],
+        "service": "GITHUB"
+    },
+    {
+        "type": "DISCORD_MSG",
+        "parameters": [
+            {
+                "name": "channelId",
+                "label": "Channel Id",
+                "type": "TEXT"
+            }
+        ],
+        "service": "DISCORD"
+    },
+    {
+        "type": "UNSPLASH_POST",
+        "parameters": [
+            {
+                "name": "username",
+                "label": "Username",
+                "type": "TEXT"
+            },
+            {
+                "name": "downloadPath",
+                "label": "Download Path",
+                "type": "TEXT"
+            }
+        ],
+        "service": "UNSPLASH"
+    }
 ]

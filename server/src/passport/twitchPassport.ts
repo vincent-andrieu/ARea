@@ -12,11 +12,26 @@ import OAuthProvider from "../models/oAuthProvider.enum";
 
 const TwitchStrategy = passportTwitch.Strategy;
 
-const successfullyAuthentificated = async (accessToken: string, refreshToken: string, profile, done) => {
+const successfullyAuthentificated = async (req: Request, accessToken: string, refreshToken: string, profile, done?: (error: Error | null, user?: User) => void) => {
     const userSchema = new UserSchema();
 
-    console.log(profile);
     try {
+        if (req.user?.data.user_id) {
+            console.log("userId:", req.user?.data.user_id);
+            const user: User = await userSchema.get(req.user.data.user_id);
+
+            if (!user.oauth)
+                user.oauth = {};
+            user.oauth.twitch = {
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            };
+            const userEdited = await userSchema.edit(user);
+            if (done)
+                return done(null, userEdited);
+            return userEdited;
+        }
+        console.log(profile);
         const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.TWITCH, profile.login);
 
         if (oldUser) {
@@ -29,10 +44,12 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
             oldUser.oauthLoginProvider = OAuthProvider.TWITCH;
             oldUser.oauthLoginProviderId = profile.login;
             oldUser.token = token;
-            if (oldUser.oauth?.twitch) {
-                oldUser.oauth.twitch.accessToken = accessToken;
-                oldUser.oauth.twitch.refreshToken = refreshToken;
-            }
+            if (!oldUser.oauth)
+                oldUser.oauth = {};
+            oldUser.oauth.twitch = {
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            };
             const user = await userSchema.edit(oldUser);
             if (done)
                 done(null, user);
@@ -64,10 +81,10 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
             else
                 return userEdited;
         }
-    } catch (error: unknown) {
+    } catch (error) {
         console.log("twitchStrategy callback error: ", (error as Error).toString());
         if (done)
-            done(error, null);
+            done(error as Error);
     }
 };
 
@@ -79,7 +96,7 @@ export async function TwitchMobileStrategy(req: Request, res: Response) {
     try {
         const oauth = await TwitchService.getAccessToken(code);
         const userProfile = await TwitchService.getUserProfile(oauth.access_token);
-        const user = await successfullyAuthentificated(oauth.access_token, oauth.refresh_token, userProfile, undefined);
+        const user = await successfullyAuthentificated(req, oauth.access_token, oauth.refresh_token, userProfile);
 
         if (!user)
             throw "get empty user";
@@ -91,7 +108,7 @@ export async function TwitchMobileStrategy(req: Request, res: Response) {
 }
 
 passport.use("twitch-web", new TwitchStrategy(
-    { ...twitchConfig, scope: "user_read" },
+    { ...twitchConfig, scope: "user_read", passReqToCallback: true },
     successfullyAuthentificated
 ));
 

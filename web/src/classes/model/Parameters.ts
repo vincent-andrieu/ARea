@@ -7,6 +7,7 @@ export enum ParameterType {
 }
 
 export interface Parameter {
-    name: string,
-    type: ParameterType
+    label: string;
+    name: string;
+    type: ParameterType;
 }

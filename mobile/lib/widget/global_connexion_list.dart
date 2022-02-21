@@ -10,11 +10,7 @@ class GlobalConnexionList extends StatefulWidget {
   List<IService> list;
   String urlSrv;
   areaService api;
-  GlobalConnexionList(this.urlSrv, this.list, this.api, {Key? key}) : super(key: key) {
-    if (list.length != 8) {
-      throw Exception("Invalid input size: " + list.length.toString());
-    }
-  }
+  GlobalConnexionList(this.urlSrv, this.list, this.api, {Key? key}) : super(key: key);
 
   @override
   State<GlobalConnexionList> createState() => GlobalConnexionListState(urlSrv, list, api);

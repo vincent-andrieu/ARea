@@ -41,7 +41,7 @@ export abstract class ASchema<T extends Model> {
         const id: string = getStrObjectId(model);
 
         if (!id || id.length === 0)
-            throw "undefined id";
+            throw "Undefined id";
         try {
             let query = this._model.findById(id);
 
@@ -59,19 +59,15 @@ export abstract class ASchema<T extends Model> {
         }
     }
 
-    public async find(model: any, populate?: PopulateParam): Promise<T[]> {
-        let query = this._model.find(model);
+    public async find(model?: any, populate?: PopulateParam): Promise<T[]> {
+        let query = model ? this._model.find(model) : this._model.find();
 
         if (populate)
             query = query.populate(populate);
-        return await query.exec() as unknown as T[];
+        return (await query.exec()).map((value) => new this._ctor(value.toObject<T>()));
     }
 
-    public async delete(model: T): Promise<void> {
-        await this._model.deleteOne({ _id: model._id });
-    }
-
-    public async deleteById(id: string | ObjectId) {
-        return await this._model.deleteOne({ _id: id });
+    public async delete(model: T | ObjectId | string): Promise<void> {
+        await this._model.deleteOne({ _id: getStrObjectId(model) });
     }
 }

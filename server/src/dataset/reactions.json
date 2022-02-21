@@ -4,6 +4,7 @@
     "parameters": [
       {
         "name": "message",
+        "label": "Message",
         "type": "TEXT"
       }
     ],
@@ -13,7 +14,8 @@
     "type": "TWITTER_PP",
     "parameters": [
       {
-        "name": "url",
+        "name": "nothing",
+        "label": "URL",
         "type": "URL"
       }
     ],
@@ -24,6 +26,12 @@
     "parameters": [
       {
         "name": "message",
+        "label": "Message",
+        "type": "TEXT"
+      },
+      {
+        "name": "channelId",
+        "label": "Channel Id",
         "type": "TEXT"
       }
     ],
@@ -34,18 +42,22 @@
     "parameters": [
       {
         "name": "owner",
+        "label": "Owner",
         "type": "TEXT"
       },
       {
         "name": "repository",
+        "label": "Repository",
         "type": "TEXT"
       },
       {
         "name": "title",
+        "label": "Title",
         "type": "TEXT"
       },
       {
         "name": "body",
+        "label": "Body",
         "type": "TEXT"
       }
     ],
@@ -56,10 +68,12 @@
     "parameters": [
       {
         "name": "message",
+        "label": "Message",
         "type": "TEXT"
       },
       {
-        "name": "Page URL",
+        "name": "urlPage",
+        "label": "Page URL",
         "type": "URL"
       }
     ],
@@ -69,11 +83,13 @@
     "type": "DROPBOX_UPLOAD",
     "parameters": [
       {
-        "name": "File Content",
+        "name": "localFilepath",
+        "label": "File Content",
         "type": "TEXT"
       },
       {
-        "name": "File name",
+        "name": "remoteFilepath",
+        "label": "File name",
         "type": "TEXT"
       }
     ],
