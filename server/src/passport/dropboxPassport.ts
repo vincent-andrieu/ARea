@@ -8,29 +8,34 @@ import User from "@classes/user.class";
 import { UserSchema } from "@schemas/user.schema";
 import AuthController from "@controllers/AuthController";
 import OAuthProvider from "@models/oAuthProvider.enum";
+import { decodeJwt } from "../middlewares/checkJwt";
 
 const DropboxStrategy = passportDropbox.Strategy;
 
 const successfullyAuthentificated = async (req: Request, accessToken: string, refreshToken: string, profile, done) => {
     const userSchema = new UserSchema();
 
-    console.log(profile);
-    if (req.user && req.user.data.user_id) {
-        const user: User = await userSchema.get(req.user.data.user_id);
-
-        if (!user.oauth)
-            user.oauth = {};
-        user.oauth.dropbox = {
-            accessToken: accessToken,
-            refreshToken: refreshToken
-        };
-        const userEdited = await userSchema.edit(user);
-        if (done)
-            return done(null, userEdited);
-        return userEdited;
-    }
-
     try {
+        if (!req.user && typeof req.query.state === "string")
+            req.user = decodeJwt(req.query.state as string);
+
+        const userId: string | undefined = req.user?.data.user_id;
+
+        if (userId) {
+            const user: User = await userSchema.get(userId);
+
+            if (!user.oauth)
+                user.oauth = {};
+            user.oauth.dropbox = {
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            };
+            const userEdited = await userSchema.edit(user);
+            if (done)
+                return done(null, userEdited);
+            return userEdited;
+        }
+
         const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.DROPBOX, profile.id);
 
         if (oldUser) {
