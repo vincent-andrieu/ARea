@@ -7,6 +7,7 @@ import 'package:mobile/api/model/loginRequest.dart';
 import 'package:mobile/api/model/serviceFetch/configFecth.dart';
 import 'package:mobile/api/model/serviceFetch/serviceFetch.dart';
 import 'dart:developer' as developer;
+import 'model/empty.dart';
 import 'model/registerResponse.dart';
 
 class areaService {
@@ -20,10 +21,32 @@ class areaService {
     }
   }
 
+  Future<bool> updateUser() async {
+    try {
+      dynamic response = await api.makeRequestGet("/user", _getToken(), 200);
+
+      token = registerResponse.fromJson(response);
+      return true;
+    } catch (e) {
+      developer.log("updateUser  -> ${e.toString()}");
+      return false;
+    }
+  }
+
+  Future<bool> disconnectService(String url) async {
+    try {
+      dynamic _ = await api.makeRequestPost<empty>(url, _getToken(), empty(), 204);
+      return await updateUser();
+    } catch (e) {
+      developer.log("disconnectService  -> ${e.toString()}");
+      return false;
+    }
+  }
+
   Future<bool> addNewService(String token, String url) async {
     try {
       dynamic _ = await api.makeRequestGet(url, token, 200);
-      return true;
+      return await updateUser();
     } catch (e) {
       developer.log("addNewService  -> ${e.toString()}");
       return false;

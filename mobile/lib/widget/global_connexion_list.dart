@@ -11,13 +11,14 @@ class GlobalConnexionList extends StatefulWidget {
   String urlSrv;
   areaService api;
   Future<bool> Function(IService service, String srv, areaService api) callback;
+  Future<bool> Function(IService service, String srv, areaService api) callbackAlreadyConnected;
   void Function() onSuccess;
   void Function() onFailed;
 
-  GlobalConnexionList(this.urlSrv, this.list, this.api, this.callback, this.onSuccess, this.onFailed, {Key? key}) : super(key: key);
+  GlobalConnexionList(this.urlSrv, this.list, this.api, this.callback, this.callbackAlreadyConnected, this.onSuccess, this.onFailed, {Key? key}) : super(key: key);
 
   @override
-  State<GlobalConnexionList> createState() => GlobalConnexionListState(urlSrv, list, api, callback, onSuccess, onFailed);
+  State<GlobalConnexionList> createState() => GlobalConnexionListState(urlSrv, list, api, callback, callbackAlreadyConnected, onSuccess, onFailed);
 }
 
 class GlobalConnexionListState extends State<GlobalConnexionList> {
@@ -25,9 +26,10 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
   String urlSrv;
   areaService api;
   Future<bool> Function(IService service, String srv, areaService api) callback;
+  Future<bool> Function(IService service, String srv, areaService api) callbackAlreadyConnected;
   void Function() onSuccess;
   void Function() onFailed;
-  GlobalConnexionListState(this.urlSrv, this.list, this.api, this.callback, this.onSuccess, this.onFailed);
+  GlobalConnexionListState(this.urlSrv, this.list, this.api, this.callback, this.callbackAlreadyConnected, this.onSuccess, this.onFailed);
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,10 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
           children: <Widget>[
             connexion_with_button(context, (list[0].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[0].getName(), list[0].getIcon(), () {
               if (list[0].getConnexionState()) {
-                // TODO PROBABLY NOTHING
+                Future<bool> resp = callbackAlreadyConnected(list[0], urlSrv, api);
+                resp.then((value) => {
+                  Navigator.of(context).pushNamed(ModalRoute.of(context)!.settings.name.toString())
+                });
               } else {
                 Future<bool> success = callback(list[0], urlSrv, api);
                 success.then((value) => {
@@ -54,7 +59,10 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
             const Padding(padding: EdgeInsets.all(5.0)),
             connexion_with_button(context, (list[1].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[1].getName(), list[1].getIcon(), () {
               if (list[1].getConnexionState()) {
-                // TODO PROBABLY NOTHING
+                Future<bool> resp = callbackAlreadyConnected(list[1], urlSrv, api);
+                resp.then((value) => {
+                  Navigator.of(context).pushNamed(ModalRoute.of(context)!.settings.name.toString())
+                });
               } else {
                 Future<bool> success = callback(list[1], urlSrv, api);
                 success.then((value) => {
@@ -69,7 +77,10 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
             const Padding(padding: EdgeInsets.all(5.0)),
             connexion_with_button(context, (list[2].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[2].getName(), list[2].getIcon(), () {
               if (list[2].getConnexionState()) {
-                // TODO PROBABLY NOTHING
+                Future<bool> resp = callbackAlreadyConnected(list[2], urlSrv, api);
+                resp.then((value) => {
+                  Navigator.of(context).pushNamed(ModalRoute.of(context)!.settings.name.toString())
+                });
               } else {
                 Future<bool> success = callback(list[2], urlSrv, api);
                 success.then((value) => {
@@ -84,7 +95,10 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
             const Padding(padding: EdgeInsets.all(5.0)),
             connexion_with_button(context, (list[3].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[3].getName(), list[3].getIcon(), () {
               if (list[3].getConnexionState()) {
-                // TODO PROBABLY NOTHING
+                Future<bool> resp = callbackAlreadyConnected(list[3], urlSrv, api);
+                resp.then((value) => {
+                  Navigator.of(context).pushNamed(ModalRoute.of(context)!.settings.name.toString())
+                });
               } else {
                 Future<bool> success = callback(list[3], urlSrv, api);
                 success.then((value) => {
@@ -99,7 +113,10 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
             const Padding(padding: EdgeInsets.all(5.0)),
             connexion_with_button(context, (list[4].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[4].getName(), list[4].getIcon(), () {
               if (list[4].getConnexionState()) {
-                // TODO PROBABLY NOTHING
+                Future<bool> resp = callbackAlreadyConnected(list[4], urlSrv, api);
+                resp.then((value) => {
+                  Navigator.of(context).pushNamed(ModalRoute.of(context)!.settings.name.toString())
+                });
               } else {
                 Future<bool> success = callback(list[4], urlSrv, api);
                 success.then((value) => {
@@ -114,7 +131,10 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
             const Padding(padding: EdgeInsets.all(5.0)),
             connexion_with_button(context, (list[5].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[5].getName(), list[5].getIcon(), () {
               if (list[5].getConnexionState()) {
-                // TODO PROBABLY NOTHING
+                Future<bool> resp = callbackAlreadyConnected(list[5], urlSrv, api);
+                resp.then((value) => {
+                  Navigator.of(context).pushNamed(ModalRoute.of(context)!.settings.name.toString())
+                });
               } else {
                 Future<bool> success = callback(list[5], urlSrv, api);
                 success.then((value) => {
@@ -129,7 +149,10 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
             const Padding(padding: EdgeInsets.all(5.0)),
             connexion_with_button(context, (list[6].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[6].getName(), list[6].getIcon(), () {
               if (list[6].getConnexionState()) {
-                // TODO PROBABLY NOTHING
+                Future<bool> resp = callbackAlreadyConnected(list[6], urlSrv, api);
+                resp.then((value) => {
+                  Navigator.of(context).pushNamed(ModalRoute.of(context)!.settings.name.toString())
+                });
               } else {
                 Future<bool> success = callback(list[6], urlSrv, api);
                 success.then((value) => {
@@ -144,7 +167,10 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
             const Padding(padding: EdgeInsets.all(5.0)),
             connexion_with_button(context, (list[7].getConnexionState()) ? "connecté avec " : "se connecter avec ", list[7].getName(), list[7].getIcon(), () {
               if (list[7].getConnexionState()) {
-                // TODO PROBABLY NOTHING
+                Future<bool> resp = callbackAlreadyConnected(list[7], urlSrv, api);
+                resp.then((value) => {
+                  Navigator.of(context).pushNamed(ModalRoute.of(context)!.settings.name.toString())
+                });
               } else {
                 Future<bool> success = callback(list[7], urlSrv, api);
                 success.then((value) => {

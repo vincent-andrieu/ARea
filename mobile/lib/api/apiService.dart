@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:http/http.dart';
 import 'dart:developer' as developer;
 
+import 'package:mobile/api/model/empty.dart';
+
 class apiService {
   String srvUrl = "";
 
@@ -50,6 +52,9 @@ class apiService {
 
     if (result.statusCode == exitExpect) {
       developer.log(result.body);
+      if (result.body.isEmpty) {
+        return empty();
+      }
       return jsonDecode(result.body);
     } else {
       throw "Unable to make our request to $srvUrl$route exit with status ${result.statusCode} error: ${result.body}";

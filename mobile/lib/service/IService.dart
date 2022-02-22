@@ -72,7 +72,25 @@ class IService {
     }
   }
 
+  Future<bool> disconnectService(String srv, areaService api) async {
+    try {
+      bool value = await api.disconnectService("/auth/disconnect/${getName()}");
+
+      if (value) {
+        connected = false;
+      }
+      return value;
+    } catch(e) {
+      log(e.toString());
+      return false;
+    }
+  }
+
   void nowConnected() {
     connected = true;
+  }
+
+  Future<bool> none() async {
+    return true;
   }
 }

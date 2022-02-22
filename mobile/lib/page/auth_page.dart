@@ -203,9 +203,11 @@ class auth_page extends StatelessWidget {
     return GlobalConnexionList(api.api.srvUrl, serviceList, api, (IService service, String srv, areaService api) {
         return service.getToken(srv, api);
       },
+      (IService service, String srv, areaService api) {
+        return service.none();
+      },
       () {
         Navigator.of(context).pushNamed('/List');
-      },
-      () {});
+      }, () {});
   }
 }
