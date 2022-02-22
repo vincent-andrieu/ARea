@@ -109,20 +109,22 @@ class create_ifttt extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(10.0),
                                     )
                                 ),
-                                child: const Text(
+                                child: const FittedBox(
+                                  fit: BoxFit.fitWidth,
+                                  child: Text(
                                   'Save',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: color_list.third,
-                                      fontSize: 20
+                                      color: color_list.third
                                   ),
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                      )
-                    ]
+                          ),
+                        ],
+                      ),
+                    )
+                  ]
                 ),
           )
         ),

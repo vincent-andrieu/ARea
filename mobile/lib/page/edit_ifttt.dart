@@ -33,137 +33,149 @@ class edit_ifttt extends StatelessWidget {
     String args = ModalRoute.of(context)!.settings.arguments as String;
     createAreaRequest area = getArea(args);
 
+    IService actionName =
+        getServiceActionName(areaAction.stringToEnum(area.trigger.typeData));
+    IService reactionName = getServiceReactionName(
+        areaReaction.stringToEnum(area.consequence.typeData));
 
-    IService actionName = getServiceActionName(areaAction.stringToEnum(area.trigger.typeData));
-    IService reactionName = getServiceReactionName(areaReaction.stringToEnum(area.consequence.typeData));
-
-    DynamicList action = DynamicList(serviceListBuilder(api, true), true, "Service", "Action", api.listService, preBuildTools(
-      actionName.getName(), area.trigger.typeData, area.trigger.map
-    ));
-    DynamicList reaction = DynamicList(serviceListBuilder(api, true), false, "Service", "Reaction", api.listService, preBuildTools(
-      reactionName.getName(), area.consequence.typeData, area.consequence.map
-    ));
+    DynamicList action = DynamicList(
+        serviceListBuilder(api, true),
+        true,
+        "Service",
+        "Action",
+        api.listService,
+        preBuildTools(
+            actionName.getName(), area.trigger.typeData, area.trigger.map));
+    DynamicList reaction = DynamicList(
+        serviceListBuilder(api, true),
+        false,
+        "Service",
+        "Reaction",
+        api.listService,
+        preBuildTools(reactionName.getName(), area.consequence.typeData,
+            area.consequence.map));
 
     return Scaffold(
       body: Center(
         child: Container(
             padding: const EdgeInsets.all(20.0),
             child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        buildTopPage(context),
-                        Container(
-                          padding: const EdgeInsets.only(
-                            left: 100.0,
-                            right: 100.0,
-                          ),
-                          child: Column(
-                            children: <Widget>[
-                              Container(
-                                  padding: const EdgeInsets.all(20.0),
-                                  child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Container(
-                                          padding: const EdgeInsets.only(
-                                            left: 100.0,
-                                            right: 100.0,
+              scrollDirection: Axis.vertical,
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    buildTopPage(context),
+                    Container(
+                      padding: const EdgeInsets.only(
+                        left: 100.0,
+                        right: 100.0,
+                      ),
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Container(
+                                      padding: const EdgeInsets.only(
+                                        left: 100.0,
+                                        right: 100.0,
+                                      ),
+                                      child: Column(
+                                        children: <Widget>[
+                                          action.widget,
+                                          const Padding(
+                                              padding: EdgeInsets.only(
+                                                  top: 20.0, bottom: 20.0)),
+                                          const Icon(
+                                            Icons.arrow_downward_rounded,
+                                            color: color_list.primary,
+                                            size: 100.0,
                                           ),
-                                          child: Column(
-                                            children: <Widget>[
-                                              action.widget,
-                                              const Padding(padding: EdgeInsets.only(
-                                                  top: 20.0,
-                                                  bottom: 20.0
-                                              )),
-                                              const Icon(
-                                                Icons.arrow_downward_rounded,
-                                                color: color_list.primary,
-                                                size: 100.0,
-                                              ),
-                                              reaction.widget,
-                                              const Padding(padding: EdgeInsets.only(
-                                                  top: 10.0,
-                                                  bottom: 10.0
-                                              )
-                                              ),
-                                            ],
-                                          ),
-                                        )
-                                      ]
-                                  )
-                              ),
-                              SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    api.deleteIfttt(args).then((value) => {
-                                      if (value) {
-                                        Navigator.of(context).pushNamed('/List')
-                                      }
+                                          reaction.widget,
+                                          const Padding(
+                                              padding: EdgeInsets.only(
+                                                  top: 10.0, bottom: 10.0)),
+                                        ],
+                                      ),
+                                    )
+                                  ])),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                api.deleteIfttt(args).then((value) => {
+                                      if (value)
+                                        {
+                                          Navigator.of(context)
+                                              .pushNamed('/List')
+                                        }
                                     });
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                      primary: color_list.fifth,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10.0),
-                                      )
-                                  ),
-                                  child: const Text(
-                                    'Delete',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: color_list.third,
-                                        fontSize: 20
-                                    ),
-                                  ),
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  primary: color_list.fifth,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  )),
+                              child: const FittedBox(
+                                fit: BoxFit.fitWidth,
+                                child: Text(
+                                  'Delete',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: color_list.third,
+                                      fontSize: 20),
                                 ),
                               ),
-                              SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    api.updateIfttt(
+                            ),
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                api
+                                    .updateIfttt(
                                         args,
                                         createAreaRequest(
                                           action.controllerSecond.text,
                                           action.actionParameter.getParams(),
                                           reaction.controllerSecond.text,
                                           reaction.actionParameter.getParams(),
-                                        )
-                                    ).then((value) => {
-                                      if (value) {
-                                        Navigator.of(context).pushNamed('/List')
-                                      }
-                                    });
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                      primary: color_list.primary,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10.0),
-                                      )
-                                  ),
-                                  child: const Text(
-                                    'Save',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: color_list.third,
-                                        fontSize: 20
-                                    ),
-                                  ),
+                                        ))
+                                    .then((value) => {
+                                          if (value)
+                                            {
+                                              Navigator.of(context)
+                                                  .pushNamed('/List')
+                                            }
+                                        });
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  primary: color_list.primary,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  )),
+                              child: const FittedBox(
+                                fit: BoxFit.fitWidth,
+                                child: Text(
+                                  'Save',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: color_list.third,
+                                      fontSize: 20),
                                 ),
                               ),
-                            ],
+                            ),
                           ),
-                        )
-                      ]
-                  ),
-                )
-        ),
+                        ],
+                      ),
+                    )
+                  ]),
+            )),
       ),
     );
   }
@@ -181,18 +193,14 @@ class edit_ifttt extends StatelessWidget {
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: color_list.fourth,
-                        fontSize: 50
-                    ),
+                        fontSize: 50),
                     textAlign: TextAlign.center,
                   ),
                 ),
                 Positioned(
                   right: 8,
                   child: IconButton(
-                    icon: const Icon(
-                        Icons.close,
-                        size: 40.0
-                    ),
+                    icon: const Icon(Icons.close, size: 40.0),
                     tooltip: 'Close page',
                     onPressed: () {
                       callbackClose(context);
@@ -202,11 +210,10 @@ class edit_ifttt extends StatelessWidget {
               ],
             ),
           )
-        ]
-    );
+        ]);
   }
 
-  /*Widget buildEditing(BuildContext context, createAreaRequest area) {
+/*Widget buildEditing(BuildContext context, createAreaRequest area) {
     DynamicList action = DynamicList(serviceListBuilder(api, true), true, "Service", "Action", api.listService);
     DynamicList reaction = DynamicList(serviceListBuilder(api, true), false, "Service", "Reaction", api.listService);
 

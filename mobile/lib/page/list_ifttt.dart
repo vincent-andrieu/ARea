@@ -28,55 +28,52 @@ class list_ifttt extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Center(
+      resizeToAvoidBottomInset: false,
+      body: Center(
         child: Container(
           padding: const EdgeInsets.all(20.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Column(
-                children: [
-                  buildTopPage(context),
-                  Text(
-                    'Welcome ${api.token!.username}',
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: color_list.fourth,
-                        fontSize: 20
-                    )
-                  )
-                ],
-              ),
-              buildListDisplay(context),
-              FractionallySizedBox(
-                widthFactor: 0.4,
-                child: ElevatedButton(
-                  onPressed: () {
-                    callbackNew(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                      primary: color_list.primary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      )
-                  ),
-                  child: Container(
-                    padding: const EdgeInsets.all(20.0),
-                    child: const Text(
-                      'New',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: color_list.third,
-                        fontSize: 20
-                      ),
-                    ),
-                  )
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Column(
+                  children: [
+                    buildTopPage(context),
+                    FittedBox(
+                        fit: BoxFit.fitWidth,
+                        child: Text('Welcome ${api.token!.username}',
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: color_list.fourth,)))
+                  ],
                 ),
-              ),
-            ]
-          ),
+                buildListDisplay(context),
+                FractionallySizedBox(
+                  widthFactor: 0.4,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        callbackNew(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                          primary: color_list.primary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          )),
+                      child: Container(
+                        padding: const EdgeInsets.all(20.0),
+                        child: const FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: Text(
+                            'New',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: color_list.third
+                            ),
+                          ),
+                        ),
+                      )),
+                ),
+              ]),
         ),
       ),
     );
@@ -97,26 +94,24 @@ class list_ifttt extends StatelessWidget {
     List<Widget> toDisplay = extractWidgetList(context);
     return Flexible(
         child: FractionallySizedBox(
-          heightFactor: 0.9,
-          widthFactor: 0.9,
-          child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Column(
-                children: toDisplay,
-              )
-          ),
-        )
-    );
+      heightFactor: 0.9,
+      widthFactor: 0.9,
+      child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Column(
+            children: toDisplay,
+          )),
+    ));
   }
 
   Widget buildCard(String id, createAreaRequest ifttt, BuildContext context) {
-    IService actionName = getServiceActionName(areaAction.stringToEnum(ifttt.trigger.typeData));
-    IService reactionName = getServiceReactionName(areaReaction.stringToEnum(ifttt.consequence.typeData));
+    IService actionName =
+        getServiceActionName(areaAction.stringToEnum(ifttt.trigger.typeData));
+    IService reactionName = getServiceReactionName(
+        areaReaction.stringToEnum(ifttt.consequence.typeData));
 
     return Container(
-      padding: const EdgeInsets.only(
-          bottom: 20.0
-      ),
+      padding: const EdgeInsets.only(bottom: 20.0),
       child: InkWell(
         onTap: () {
           Navigator.pushNamed(context, '/area', arguments: id);
@@ -126,21 +121,29 @@ class list_ifttt extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                buildSubCard(actionName.getName(), "Number: ${ifttt.trigger.map.length}", actionName.getIcon(), context),
+                buildSubCard(
+                    actionName.getName(),
+                    "Number: ${ifttt.trigger.map.length}",
+                    actionName.getIcon(),
+                    context),
                 const Icon(
                   Icons.arrow_forward_outlined,
                   color: color_list.primary,
                   size: 50.0,
                 ),
-                buildSubCard(reactionName.getName(), "Number: ${ifttt.consequence.map.length}", reactionName.getIcon(), context)
+                buildSubCard(
+                    reactionName.getName(),
+                    "Number: ${ifttt.consequence.map.length}",
+                    reactionName.getIcon(),
+                    context)
               ],
-            )
-        ),
+            )),
       ),
     );
   }
 
-  Widget buildSubCard(String title, String params, String asset, BuildContext context) {
+  Widget buildSubCard(
+      String title, String params, String asset, BuildContext context) {
     return Flexible(
       child: FractionallySizedBox(
         widthFactor: 0.9,
@@ -150,28 +153,23 @@ class list_ifttt extends StatelessWidget {
             Text(
               title,
               style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                color: color_list.fourth,
-                fontSize: 40
-              ),
+                  fontWeight: FontWeight.bold,
+                  color: color_list.fourth,
+                  fontSize: 40),
             ),
             Text(
               params,
               style: const TextStyle(
-                fontWeight: FontWeight.normal,
-                color: color_list.fourth,
-                fontSize: 20
-              ),
+                  fontWeight: FontWeight.normal,
+                  color: color_list.fourth,
+                  fontSize: 20),
             ),
             Container(
               height: 50,
               width: 50,
               decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(asset),
-                  fit: BoxFit.fill
-                )
-              ),
+                  image: DecorationImage(
+                      image: AssetImage(asset), fit: BoxFit.fill)),
             ),
           ],
         ),
@@ -181,39 +179,36 @@ class list_ifttt extends StatelessWidget {
 
   Widget buildTopPage(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Expanded(
-          child: Stack(
-            children: [
-              const Center(
-                child: Text(
-                  'List of Areas',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: color_list.fourth,
-                    fontSize: 50
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Expanded(
+            child: Stack(
+              children: [
+                const Center(
+                  child: FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Text(
+                      'List of Areas',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: color_list.fourth,),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                  textAlign: TextAlign.center,
                 ),
-              ),
-              Positioned(
-                right: 8,
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.settings,
-                    size: 40.0
+                Positioned(
+                  right: 8,
+                  child: IconButton(
+                    icon: const Icon(Icons.settings, size: 40.0),
+                    tooltip: 'Going back',
+                    onPressed: () {
+                      callbackParams(context);
+                    },
                   ),
-                  tooltip: 'Going back',
-                  onPressed: () {
-                    callbackParams(context);
-                  },
                 ),
-              ),
-            ],
-          ),
-        )
-      ]
-    );
+              ],
+            ),
+          )
+        ]);
   }
 }
