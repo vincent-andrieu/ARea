@@ -43,8 +43,9 @@ class list_ifttt extends StatelessWidget {
                         fit: BoxFit.fitWidth,
                         child: Text('Welcome ${api.token!.username}',
                             style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: color_list.fourth,)))
+                              fontWeight: FontWeight.bold,
+                              color: color_list.fourth,
+                            )))
                   ],
                 ),
                 buildListDisplay(context),
@@ -67,8 +68,7 @@ class list_ifttt extends StatelessWidget {
                             'New',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: color_list.third
-                            ),
+                                color: color_list.third),
                           ),
                         ),
                       )),
@@ -179,6 +179,7 @@ class list_ifttt extends StatelessWidget {
 
   Widget buildTopPage(BuildContext context) {
     return Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Expanded(
@@ -191,7 +192,8 @@ class list_ifttt extends StatelessWidget {
                       'List of Areas',
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: color_list.fourth,),
+                          color: color_list.fourth,
+                          fontSize: 40.0),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -199,7 +201,7 @@ class list_ifttt extends StatelessWidget {
                 Positioned(
                   right: 8,
                   child: IconButton(
-                    icon: const Icon(Icons.settings, size: 40.0),
+                    icon: const Icon(Icons.settings),
                     tooltip: 'Going back',
                     onPressed: () {
                       callbackParams(context);
