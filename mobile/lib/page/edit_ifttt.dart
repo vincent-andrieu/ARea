@@ -108,7 +108,7 @@ class edit_ifttt extends StatelessWidget {
                                     });
                                   },
                                   style: ElevatedButton.styleFrom(
-                                      primary: color_list.primary,
+                                      primary: color_list.fifth,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10.0),
                                       )
