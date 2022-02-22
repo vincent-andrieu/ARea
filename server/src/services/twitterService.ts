@@ -217,7 +217,6 @@ export class TwitterService {
     }
 
     public static async rea_UpdateBanner(area: ARea, user: User) {
-        const client: TwitterApi = TwitterService.getClient(user);
         const action: Action = area.trigger.action as Action;
         let imagePath: string | null = null;
 
@@ -252,7 +251,6 @@ export class TwitterService {
     }
 
     public static async rea_UpdatePP(area: ARea, user: User) {
-        const client: TwitterApi = TwitterService.getClient(user);
         const action: Action = area.trigger.action as Action;
         let imagePath: string | null = null;
 

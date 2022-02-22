@@ -1,17 +1,21 @@
+/* eslint-disable indent */
 import { env } from "process";
 import { Dropbox } from "dropbox";
 import { readFile } from "fs";
+import ARea from "@classes/area.class";
+import { DropboxUploadConfig } from "@models/ReactionConfig";
+import Action, { ActionType } from "@classes/action.class";
+import { UnsplashPostConfig } from "@models/ActionConfig";
+import User from "@classes/user.class";
 
 // import User from "../classes/user.class";
 
-const token = "";
-
 export class DropboxService {
-    static uploadFile(/* user: User, */filepath: string, dropboxFilepath: string) {
+    static uploadFile(user: User, filepath: string, dropboxFilepath: string) {
 
-        if (!env.DROPBOX_API_KEY || !env.DROPBOX_API_SECRET_KEY /* || !user.oauth.dropbox */)
+        if (!env.DROPBOX_API_KEY || !env.DROPBOX_API_SECRET_KEY || !user || !user.oauth || !user.oauth.dropbox)
             return;
-        const client = new Dropbox({ clientId: env.DROPBOX_API_KEY, clientSecret: env.DROPBOX_API_SECRET_KEY, accessToken: token /* user.oauth.dropbox?.secretToken */ });
+        const client = new Dropbox({ clientId: env.DROPBOX_API_KEY, clientSecret: env.DROPBOX_API_SECRET_KEY, accessToken: user.oauth.dropbox?.accessToken });
 
         readFile(filepath, "utf-8", (err, contents) => {
             if (err)
@@ -31,11 +35,29 @@ export class DropboxService {
         });
     }
 
-    static listFolders(/* user: User, */path = "") {
+    public static rea_uploadFile(area: ARea, user: User) {
+        const action: Action = area.trigger.action as Action;
+        const config = area.consequence.inputs as DropboxUploadConfig;
 
-        if (!env.DROPBOX_API_KEY || !env.DROPBOX_API_SECRET_KEY /* || !user.oauth.dropbox */)
+        switch (action.type) {
+            case ActionType.UNSPLASH_POST: {
+                const configUnsplash: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
+                const configDropbox: DropboxUploadConfig = area.consequence.inputs as DropboxUploadConfig;
+                const dropboxFilepath = (configDropbox.localFilepath ? configDropbox.localFilepath : configUnsplash.downloadPath);
+
+                DropboxService.uploadFile(user, configUnsplash.downloadPath, dropboxFilepath);
+                break;
+            }
+            default:
+                console.log("todo upload file from parameter given");
+        }
+    }
+
+    static listFolders(user: User, path = "") {
+
+        if (!env.DROPBOX_API_KEY || !env.DROPBOX_API_SECRET_KEY || !user || !user.oauth || !user.oauth.dropbox)
             return;
-        const client = new Dropbox({ clientId: env.DROPBOX_API_KEY, clientSecret: env.DROPBOX_API_SECRET_KEY, accessToken: token /* user.oauth.dropbox?.secretToken */ });
+        const client = new Dropbox({ clientId: env.DROPBOX_API_KEY, clientSecret: env.DROPBOX_API_SECRET_KEY, accessToken: user.oauth.dropbox?.accessToken });
 
         client.filesListFolder({ path: path })
             .then(function (response) {

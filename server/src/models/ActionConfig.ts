@@ -26,11 +26,13 @@ export interface DiscordMessageConfig {
 export interface GithubIssueConfig {
     owner: string;
     repository: string;
+    lastId: number;
 }
 
 export interface GithubPullReqConfig {
     owner: string;
     repository: string;
+    lastId: number;
 }
 
 export interface UnsplashPostConfig {

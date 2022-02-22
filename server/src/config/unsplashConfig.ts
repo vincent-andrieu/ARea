@@ -8,7 +8,8 @@ const UNSPLASH_CALLBACK_MOBILE = env.UNSPLASH_CALLBACK_MOBILE;
 export const unsplashConfig = {
     clientID: UNSPLASH_CONSUMER_KEY,
     clientSecret: UNSPLASH_CONSUMER_SECRET,
-    callbackURL: UNSPLASH_CALLBACK_URL
+    callbackURL: UNSPLASH_CALLBACK_URL,
+    passRequestToCallback: true
 };
 
 export const unsplasConfigMobile = {
