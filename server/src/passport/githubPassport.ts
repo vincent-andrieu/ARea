@@ -1,5 +1,6 @@
 import passport from "passport";
 import passportGithub2 from "passport-github2";
+import { Response, Request } from "express";
 
 import { githubConfig } from "@config/githubConfig";
 import { getStrObjectId } from "@classes/model.class";
@@ -7,14 +8,35 @@ import User from "@classes/user.class";
 import { UserSchema } from "@schemas/user.schema";
 import AuthController from "../controllers/AuthController";
 import OAuthProvider from "../models/oAuthProvider.enum";
+import { decodeJwt } from "../middlewares/checkJwt";
 
 const GithubStrategy = passportGithub2.Strategy;
 //TODO: do the setting part
 
-const successfullyAuthentificated = async (accessToken: string, refreshToken: string, profile, done: CallableFunction) => {
+const successfullyAuthentificated = async (req: Request, accessToken: string, refreshToken: string, profile, done?: (err?: Error | null, user?: User, info?: object) => void) => {
     const userSchema = new UserSchema();
 
     try {
+        if (!req.user && typeof req.query.state === "string")
+            req.user = decodeJwt(req.query.state as string);
+
+        const userId: string | undefined = req.user?.data.user_id;
+
+        if (userId) {
+            const user: User = await userSchema.get(userId);
+
+            if (!user.oauth)
+                user.oauth = {};
+            user.oauth.github = {
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            };
+            const userEdited = await userSchema.edit(user);
+            if (done)
+                return done(null, userEdited);
+            return userEdited;
+        }
+
         const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.GITHUB, profile.username);
 
         if (oldUser) {
@@ -33,6 +55,11 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
                 accessToken: accessToken,
                 refreshToken: refreshToken
             };
+            const user = await userSchema.edit(oldUser);
+            if (done)
+                done(null, user);
+            else
+                return user;
         } else {
             console.log("Create new user");
 
@@ -54,14 +81,23 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
                 username: profile.username
             });
             user.token = token;
-            done(null, await userSchema.edit(user));
+            const userEdited = await userSchema.edit(user);
+            if (done)
+                done(null, userEdited);
+            else
+                return user;
         }
     } catch (error) {
-        done(error);
+        if (done)
+            done(error as Error);
     }
 };
 
-passport.use(new GithubStrategy(
-    githubConfig,
+const githubStrategy = new GithubStrategy(
+    {
+        ...githubConfig,
+        passReqToCallback: true
+    },
     successfullyAuthentificated
-));
+);
+passport.use("github-web", githubStrategy);

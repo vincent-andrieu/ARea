@@ -16,6 +16,7 @@ import RSSService from "@services/RSSService";
 import { DropboxService } from "@services/DropboxService";
 import unsplashService from "@services/unsplashService";
 import TimeService from "@services/TimeService";
+import githubService from "./githubService";
 
 export default class CronService {
 
@@ -54,7 +55,7 @@ export default class CronService {
             try {
                 await this.executeAction(area);
             } catch (error) {
-                console.log(`Unable to execute action: ${area._id}: ${error}`);
+                console.log(`Unable to execute action: area id: ${area._id}: ${error}`);
             }
         });
     };
@@ -144,29 +145,16 @@ export default class CronService {
                 break;
             }
             case ReactionType.GITHUB_ISSUE:
-                // TODO:
+                // githubService.rea_CreateIssue(area, user);
+                break;
+            case ReactionType.GITHUB_PULL:
+                // githubService.rea_CreatePullRequest(area, user);
                 break;
             case ReactionType.NOTION_MSG:
                 // TODO:
                 break;
             case ReactionType.DROPBOX_UPLOAD:
-                switch (action.type) {
-                    case ActionType.UNSPLASH_POST: {
-                        const configUnsplash: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
-                        const configDropbox: DropboxUploadConfig = area.consequence.inputs as DropboxUploadConfig;
-                        const dropboxFilepath = (configDropbox.localFilepath ? configDropbox.localFilepath : configUnsplash.downloadPath);
-
-                        DropboxService.uploadFile(configUnsplash.downloadPath, dropboxFilepath);
-                        break;
-                    }
-                    default:
-                        console.log("todo upload file from parameter given");
-
-
-
-                }
-                // TODO: if this action the take this param as filepath, else if, else if
-                // and get method from this service to return filepath according to area
+                // DropboxService.rea_uploadFile(area, user);
 
                 break;
 
