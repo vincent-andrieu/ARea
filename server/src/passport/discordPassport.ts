@@ -1,39 +1,47 @@
 import passport from "passport";
 
-import { Request, Response } from "express";
+import { Request } from "express";
+
 import { Profile, VerifyCallback, Scope, Strategy as DiscordStrategy } from "@oauth-everything/passport-discord";
 import { discordConfig } from "@config/discordConfig";
 import User from "@classes/user.class";
 import { UserSchema } from "@schemas/user.schema";
 import { getStrObjectId } from "@classes/model.class";
 import OAuthProvider from "../models/oAuthProvider.enum";
+import { decodeJwt } from "../middlewares/checkJwt";
 import AuthController from "../controllers/AuthController";
 
 const successfullyAuthentificated = async (req: Request, accessToken: string, refreshToken: string, profile: Profile, done: VerifyCallback) => {
     const userSchema = new UserSchema();
 
-    console.log(profile);
-    if (req.user && req.user.data.user_id) {
-        const user: User = await userSchema.get(req.user.data.user_id);
-        if (!user.oauth)
-            user.oauth = {};
-        user.oauth.discord = {
-            accessToken: accessToken,
-            refreshToken: refreshToken
-        };
-        const userEdited = await userSchema.edit(user);
-        if (done)
-            return done(null, userEdited);
-        return userEdited;
-    }
     try {
-        const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.DISCORD, profile.displayName || "");
+        if (!req.user && typeof req.query.state === "string")
+            req.user = decodeJwt(req.query.state as string);
+
+        const userId: string | undefined = req.user?.data.user_id;
+
+        if (userId) {
+            const user: User = await userSchema.get(userId);
+
+            if (!user.oauth)
+                user.oauth = {};
+            user.oauth.discord = {
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            };
+            const userEdited = await userSchema.edit(user);
+            if (done)
+                return done(null, userEdited);
+            return userEdited;
+        }
+
+        const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.DISCORD, profile.username || "");
 
         if (oldUser) {
             console.log("User already exist");
             const token = AuthController.signToken({
                 user_id: getStrObjectId(oldUser),
-                username: profile.displayName
+                username: profile.username || getStrObjectId(oldUser)
             });
             // save user token
             oldUser.token = token;
@@ -51,7 +59,7 @@ const successfullyAuthentificated = async (req: Request, accessToken: string, re
             const user = await userSchema.add(new User({
                 username: profile.displayName || "",
                 oauthLoginProvider: OAuthProvider.DISCORD,
-                oauthLoginProviderId: profile.displayName,
+                oauthLoginProviderId: profile.username,
                 oauth: {
                     discord: {
                         accessToken: accessToken,
@@ -61,7 +69,7 @@ const successfullyAuthentificated = async (req: Request, accessToken: string, re
             }));
             const token = AuthController.signToken({
                 user_id: getStrObjectId(user),
-                username: profile.username
+                username: profile.username || getStrObjectId(user)
             });
             user.token = token;
             await userSchema.edit(user);

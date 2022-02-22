@@ -8,29 +8,35 @@ import User from "@classes/user.class";
 import { UserSchema } from "@schemas/user.schema";
 import AuthController from "../controllers/AuthController";
 import OAuthProvider from "../models/oAuthProvider.enum";
+import { decodeJwt } from "../middlewares/checkJwt";
 
 const GithubStrategy = passportGithub2.Strategy;
 //TODO: do the setting part
 
-const successfullyAuthentificated = async (req: Request, accessToken: string, refreshToken: string, profile, done: (err?: Error | null, user?: User, info?: object) => void) => {
+const successfullyAuthentificated = async (req: Request, accessToken: string, refreshToken: string, profile, done?: (err?: Error | null, user?: User, info?: object) => void) => {
     const userSchema = new UserSchema();
 
-    if (req.user && req.user.data.user_id) {
-        const user: User = await userSchema.get(req.user.data.user_id);
-
-        if (!user.oauth)
-            user.oauth = {};
-        user.oauth.github = {
-            accessToken: accessToken,
-            refreshToken: refreshToken
-        };
-        const userEdited = await userSchema.edit(user);
-        if (done)
-            return done(null, userEdited);
-        return userEdited;
-    }
-
     try {
+        if (!req.user && typeof req.query.state === "string")
+            req.user = decodeJwt(req.query.state as string);
+
+        const userId: string | undefined = req.user?.data.user_id;
+
+        if (userId) {
+            const user: User = await userSchema.get(userId);
+
+            if (!user.oauth)
+                user.oauth = {};
+            user.oauth.github = {
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            };
+            const userEdited = await userSchema.edit(user);
+            if (done)
+                return done(null, userEdited);
+            return userEdited;
+        }
+
         const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.GITHUB, profile.username);
 
         if (oldUser) {
@@ -49,6 +55,11 @@ const successfullyAuthentificated = async (req: Request, accessToken: string, re
                 accessToken: accessToken,
                 refreshToken: refreshToken
             };
+            const user = await userSchema.edit(oldUser);
+            if (done)
+                done(null, user);
+            else
+                return user;
         } else {
             console.log("Create new user");
 
@@ -70,10 +81,15 @@ const successfullyAuthentificated = async (req: Request, accessToken: string, re
                 username: profile.username
             });
             user.token = token;
-            done(null, await userSchema.edit(user));
+            const userEdited = await userSchema.edit(user);
+            if (done)
+                done(null, userEdited);
+            else
+                return user;
         }
     } catch (error) {
-        done(error as Error);
+        if (done)
+            done(error as Error);
     }
 };
 

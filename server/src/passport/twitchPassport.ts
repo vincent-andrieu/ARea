@@ -7,8 +7,9 @@ import User from "@classes/user.class";
 import { getStrObjectId } from "@classes/model.class";
 import { UserSchema } from "@schemas/user.schema";
 import AuthController from "@controllers/AuthController";
-import { TwitchService } from "../services/twitchService";
-import OAuthProvider from "../models/oAuthProvider.enum";
+import { TwitchService } from "@services/twitchService";
+import OAuthProvider from "@models/oAuthProvider.enum";
+import { decodeJwt } from "../middlewares/checkJwt";
 
 const TwitchStrategy = passportTwitch.Strategy;
 
@@ -16,9 +17,13 @@ const successfullyAuthentificated = async (req: Request, accessToken: string, re
     const userSchema = new UserSchema();
 
     try {
-        if (req.user?.data.user_id) {
-            console.log("userId:", req.user?.data.user_id);
-            const user: User = await userSchema.get(req.user.data.user_id);
+        if (!req.user && typeof req.query.state === "string")
+            req.user = decodeJwt(req.query.state as string);
+
+        const userId: string | undefined = req.user?.data.user_id;
+
+        if (userId) {
+            const user: User = await userSchema.get(userId);
 
             if (!user.oauth)
                 user.oauth = {};
@@ -31,7 +36,7 @@ const successfullyAuthentificated = async (req: Request, accessToken: string, re
                 return done(null, userEdited);
             return userEdited;
         }
-        console.log(profile);
+
         const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.TWITCH, profile.login);
 
         if (oldUser) {

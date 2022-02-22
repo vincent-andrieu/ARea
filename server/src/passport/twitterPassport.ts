@@ -8,17 +8,34 @@ import { UserSchema } from "@schemas/user.schema";
 import AuthController from "../controllers/AuthController";
 import { twitterConfig, twitterConfigMobile } from "@config/twitterConfig";
 import OAuthProvider from "../models/oAuthProvider.enum";
+import { decodeJwt } from "../middlewares/checkJwt";
 import { TwitterService } from "../services/twitterService";
 
 const TwitterStrategy = passportTwitter.Strategy;
 
-const successfullyAuthentificated = async (accessToken: string, tokenSecret: string, profile: Profile, done: ((error: unknown, user?: User) => void) | undefined) => {
+const successfullyAuthentificated = async (req: Request, accessToken: string, tokenSecret: string, profile: Profile, done: ((error: unknown, user?: User) => void) | undefined) => {
     const userSchema = new UserSchema();
-    // console.log("accessToken : ", accessToken); TODO: remove after use of the variable
-    // console.log("secretToken : ", secretToken); TODO: remove after use of the variable
 
-    console.log(profile);
     try {
+        if (!req.user && typeof req.query.state === "string")
+            req.user = decodeJwt(req.query.state as string);
+        const userId: string | undefined = req.user?.data.user_id;
+
+        if (userId) {
+            const user: User = await userSchema.get(userId);
+
+            if (!user.oauth)
+                user.oauth = {};
+            user.oauth.twitter = {
+                accessToken: accessToken,
+                secretToken: tokenSecret
+            };
+            const userEdited = await userSchema.edit(user);
+            if (done)
+                return done(null, userEdited);
+            return userEdited;
+        }
+
         const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.TWITTER, profile.username);
 
         if (oldUser) {
@@ -81,7 +98,7 @@ export const TwitterMobileStrategy = async (req: Request, res: Response) => {
     try {
         const oauth = await TwitterService.getAccessToken(oauth_token, oauth_verifier);
         const userProfile = await TwitterService.GetProfileInfo(oauth.oauth_token, oauth.oauth_token_secret);
-        const user = await successfullyAuthentificated(oauth.oauth_token, oauth.oauth_token_secret, userProfile as Profile, undefined);
+        const user = await successfullyAuthentificated(req, oauth.oauth_token, oauth.oauth_token_secret, userProfile as Profile, undefined);
 
         if (!user)
             throw "get empty user";
@@ -93,7 +110,7 @@ export const TwitterMobileStrategy = async (req: Request, res: Response) => {
 };
 
 passport.use("twitter-web", new TwitterStrategy(
-    twitterConfig,
+    {...twitterConfig, passReqToCallback: true},
     successfullyAuthentificated
 ));
 
