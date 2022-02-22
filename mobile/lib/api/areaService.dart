@@ -7,9 +7,7 @@ import 'package:mobile/api/model/loginRequest.dart';
 import 'package:mobile/api/model/serviceFetch/configFecth.dart';
 import 'package:mobile/api/model/serviceFetch/serviceFetch.dart';
 import 'dart:developer' as developer;
-import 'model/area/Area.dart';
 import 'model/registerResponse.dart';
-import 'model/tokenRequest.dart';
 
 class areaService {
   late apiService api;
@@ -33,6 +31,7 @@ class areaService {
   }
 
   Future<bool> updateServiceToken(String token, String url) async {
+    logout();
     try {
       developer.log("updateServiceToken START");
       dynamic response = await api.makeRequestPost<codeRequest>(url, "", codeRequest(token), 200);
@@ -59,6 +58,7 @@ class areaService {
   }
 
   Future<bool> tryConnexion(String user, String pass) async {
+    logout();
     try {
       developer.log('tryConnexion: Start');
       dynamic response = await api.makeRequestPost<loginRequest>("/auth/login", "", loginRequest(user, pass), 200);
@@ -75,6 +75,7 @@ class areaService {
   }
 
   Future<bool> createUserAndConnexion(String user, String pass) async {
+    logout();
     try {
       dynamic response = await api.makeRequestPost<loginRequest>("/auth/register", "", loginRequest(user, pass), 201);
       token = registerResponse.fromJson(response);
@@ -141,6 +142,7 @@ class areaService {
   }
 
   Future<bool> fetchDataConfig() async {
+    listService.clear();
     try {
       dynamic service = await api.makeRequestGet("/service/list", _getToken(), 200);
       dynamic action = await api.makeRequestGet("/service/action", _getToken(), 200);
@@ -183,5 +185,10 @@ class areaService {
 
   String _getToken() {
     return token!.token;
+  }
+
+  void logout() {
+    token = null;
+    listService.clear();
   }
 }
