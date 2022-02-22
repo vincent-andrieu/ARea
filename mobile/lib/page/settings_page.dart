@@ -39,7 +39,7 @@ List<IService> getListService(Map<String, bool> oauth) {
 }
 
 void callbackLogout(BuildContext context, areaService api) {
-  api.token = null;
+  api.logout();
   Navigator.of(context).pushNamed('/SignIn');
 }
 
