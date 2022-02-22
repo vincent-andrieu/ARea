@@ -1,20 +1,42 @@
 import passport from "passport";
 import passportLinkedin from "passport-linkedin-oauth2";
 
+import { Request } from "express";
 import { linkedinConfig } from "@config/linkedinConfig";
 import { getStrObjectId } from "@classes/model.class";
 import User from "@classes/user.class";
 import { UserSchema } from "@schemas/user.schema";
 import OAuthProvider from "../models/oAuthProvider.enum";
+import { decodeJwt } from "../middlewares/checkJwt";
 import AuthController from "../controllers/AuthController";
 
 const LinkedinStrategy = passportLinkedin.Strategy;
 
-const successfullyAuthentificated = async (accessToken: string, refreshToken: string, profile, done: CallableFunction) => {
+const successfullyAuthentificated = async (req: Request, accessToken: string, refreshToken: string, profile, done: CallableFunction) => {
     const userSchema = new UserSchema();
 
     console.log(profile);
     try {
+        if (!req.user && typeof req.query.state === "string")
+            req.user = decodeJwt(req.query.state as string);
+
+        const userId: string | undefined = req.user?.data.user_id;
+
+        if (userId) {
+            const user: User = await userSchema.get(userId);
+
+            if (!user.oauth)
+                user.oauth = {};
+            user.oauth.linkedin = {
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            };
+            const userEdited = await userSchema.edit(user);
+            if (done)
+                return done(null, userEdited);
+            return userEdited;
+        }
+
         const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.LINKEDIN, profile.id);
 
         if (oldUser) {
@@ -66,6 +88,7 @@ const successfullyAuthentificated = async (accessToken: string, refreshToken: st
 passport.use(new LinkedinStrategy(
     {
         ...linkedinConfig,
-        scope: ["r_emailaddress", "r_liteprofile"]
+        scope: ["r_emailaddress", "r_liteprofile"],
+        passReqToCallback: true
     }, successfullyAuthentificated
 ));

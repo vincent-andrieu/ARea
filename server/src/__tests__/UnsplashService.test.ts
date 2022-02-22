@@ -9,7 +9,7 @@ import OAuthProvider from "../models/oAuthProvider.enum";
 
 import { TwitterService } from "../services/twitterService";
 import unsplashService from "../services/unsplashService";
-import { TwitterTweetConfig } from "../models/ActionConfig";
+import { TwitterTweetConfig, UnsplashPostConfig } from "../models/ActionConfig";
 import Action, { ActionType } from "../classes/action.class";
 import { TwitchStreamResult, UnsplashPostResult } from "../models/ActionResult";
 import { TwitterPostTweetConfig } from "../models/ReactionConfig";
@@ -37,27 +37,28 @@ beforeAll(async () => {
 
 /** TESTS */
 
-describe("TwitterService", () => {
-    it("Check if user has tweeted", async () => {
+describe("UnsplashService", () => {
+    it("Fetch a random picture", async () => {
         // TODO: try to make it work with or without database
 
-
-        const config: TwitterTweetConfig = { username: "aypierre" };
-        const actionType: ActionType = ActionType.TWITTER_MSG;
-        const action: Action = { type: actionType, parameters: [], service: ServiceType.TWITTER };
-        const twitchStreamResult: TwitchStreamResult = {
-            Username: "",
-            StreamTitle: "",
-            StreamGame: "",
-            StreamLanguage: "",
-            StreamThumbnailUrl: "",
-            StreamViewers: 0
+        const config: UnsplashPostConfig = { username: "useless for this action", downloadPath: "./src/__tests__/testUnsplashPost" };
+        const actionType: ActionType = ActionType.UNSPLASH_RANDOM_POST;
+        const action: Action = { type: actionType, parameters: [], service: ServiceType.UNSPLASH };
+        const unsplashPostResult: UnsplashPostResult = {
+            username: "",
+            downloadPath: "",
+            name: "",
+            lastname: "",
+            lastPostId: "",
+            created_at: "",
+            description: "",
+            likes: 0
         };
         const twitterConfig: TwitterPostTweetConfig = { message: "" };
         const reaction: Reaction = { type: ReactionType.TWITTER_MSG, parameters: [], service: ServiceType.TWITTER };
-        const my_area: ARea = { trigger: { inputs: config, action: action, outputs: twitchStreamResult }, consequence: { inputs: twitterConfig, reaction: reaction } };
+        const my_area: ARea = { trigger: { inputs: config, action: action, outputs: unsplashPostResult }, consequence: { inputs: twitterConfig, reaction: reaction } };
 
-        expect(await unsplashService.DownloadRandomPost(my_area, "./src/__tests__/testUnsplashPost")).toBe(true);
+        expect(await unsplashService.DownloadRandomPost(my_area, config.downloadPath)).toBe(true);
 
         const result: UnsplashPostResult = my_area.trigger.outputs as UnsplashPostResult;
 
@@ -65,7 +66,7 @@ describe("TwitterService", () => {
         expect(result.created_at === "").toBeFalsy;
         expect(result.description === "").toBeFalsy;
         // expect(result.downloadPath === "").toBeFalsy;
-        expect(result.likes === 0).toBeFalsy;
         expect(result.name === "").toBeFalsy;
+        expect(result.likes === 0).toBeFalsy;
     });
 });

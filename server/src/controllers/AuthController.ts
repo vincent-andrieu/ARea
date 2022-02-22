@@ -88,13 +88,11 @@ export default class AuthController {
             const user = await AuthController._userSchema.add(new User({
                 username: username,
                 password: encryptedPassword,
-                token: "",
-                oauthLoginProvider: OAuthProvider.LOCAL,
-                oauth: {}
+                oauthLoginProvider: OAuthProvider.LOCAL
             }));
 
             // Create token
-            const token: string = AuthController.signToken({
+            const token: string = AuthController.signToken(<JwtData>{
                 user_id: getStrObjectId(user),
                 username
             });

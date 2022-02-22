@@ -8,17 +8,37 @@ import { getStrObjectId } from "@classes/model.class";
 import { UserSchema } from "@schemas/user.schema";
 import AuthController from "@controllers/AuthController";
 import OAuthProvider from "@models/oAuthProvider.enum";
+import { decodeJwt } from "../middlewares/checkJwt";
 import { Request, Response } from "express";
 import unsplashService from "@services/unsplashService";
 
 const UnsplashStrategy = Unsplash.Strategy;
 
 // export async function unsplashPassport(profile): Promise<void> {
-async function successfullyAuthentificated(accessToken: string, refreshToken: string, profile, done) {
+async function successfullyAuthentificated(req: Request, accessToken: string, refreshToken: string, profile, done) {
 
     const userSchema = new UserSchema();
 
     try {
+        if (!req.user && typeof req.query.state === "string")
+            req.user = decodeJwt(req.query.state as string);
+
+        const userId: string | undefined = req.user?.data.user_id;
+
+        if (userId) {
+            const user: User = await userSchema.get(userId);
+
+            if (!user.oauth)
+                user.oauth = {};
+            user.oauth.unsplash = {
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            };
+            const userEdited = await userSchema.edit(user);
+            if (done)
+                return done(null, userEdited);
+            return userEdited;
+        }
         const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.UNSPLASH, profile.username);
 
         if (oldUser) {
@@ -82,7 +102,7 @@ export async function UnsplashMobileStrategy(req: Request, res: Response) {
     try {
         const oauth = await unsplashService.getAccessToken(code);
         const userProfile = await unsplashService.getUserProfile(oauth.access_token);
-        const user = await successfullyAuthentificated(oauth.access_token, oauth.refresh_token, userProfile, undefined);
+        const user = await successfullyAuthentificated(req, oauth.access_token, oauth.refresh_token, userProfile, undefined);
 
         if (!user)
             throw "get empty user";
@@ -94,7 +114,7 @@ export async function UnsplashMobileStrategy(req: Request, res: Response) {
 }
 
 passport.use("unsplash-web", new UnsplashStrategy(
-    unsplashConfig,
+    {...unsplashConfig, passReqToCallback: true},
     successfullyAuthentificated
 ));
 
