@@ -72,6 +72,14 @@ class settings_page extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
+              Text(
+                  'Welcome ${api.token!.username}',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: color_list.fourth,
+                      fontSize: 20
+                  )
+              ),
               GlobalConnexionList(api.api.srvUrl, serviceList, api, (IService service, String srv, areaService api) {
                   return service.addUserService(srv, api);
                 },

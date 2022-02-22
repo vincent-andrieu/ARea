@@ -36,7 +36,19 @@ class list_ifttt extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              buildTopPage(context),
+              Column(
+                children: [
+                  buildTopPage(context),
+                  Text(
+                    'Welcome ${api.token!.username}',
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: color_list.fourth,
+                        fontSize: 20
+                    )
+                  )
+                ],
+              ),
               buildListDisplay(context),
               FractionallySizedBox(
                 widthFactor: 0.4,
