@@ -126,13 +126,13 @@ class list_ifttt extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                buildSubCard(actionName.getName(), "Nombre: ${ifttt.trigger.map.length}", actionName.getIcon(), context),
+                buildSubCard(actionName.getName(), "Number: ${ifttt.trigger.map.length}", actionName.getIcon(), context),
                 const Icon(
                   Icons.arrow_forward_outlined,
                   color: color_list.primary,
                   size: 50.0,
                 ),
-                buildSubCard(reactionName.getName(), "Nombre: ${ifttt.consequence.map.length}", reactionName.getIcon(), context)
+                buildSubCard(reactionName.getName(), "Number: ${ifttt.consequence.map.length}", reactionName.getIcon(), context)
               ],
             )
         ),
@@ -188,7 +188,7 @@ class list_ifttt extends StatelessWidget {
             children: [
               const Center(
                 child: Text(
-                  'Liste des Areas',
+                  'List of Areas',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: color_list.fourth,
@@ -204,7 +204,7 @@ class list_ifttt extends StatelessWidget {
                     Icons.settings,
                     size: 40.0
                   ),
-                  tooltip: 'Retour arrière',
+                  tooltip: 'Going back',
                   onPressed: () {
                     callbackParams(context);
                   },
