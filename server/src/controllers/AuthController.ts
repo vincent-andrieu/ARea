@@ -61,7 +61,7 @@ export default class AuthController {
     }
 
     public static async logout(req: Request, res: Response) {
-        req.logout();
+        req.session = null;
         res.redirect(`${env.CLIENT_HOST}/login`);
     }
 
