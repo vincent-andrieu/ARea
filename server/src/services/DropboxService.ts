@@ -53,11 +53,11 @@ export class DropboxService {
         }
     }
 
-    static listFolders(/* user: User, */path = "") {
+    static listFolders(user: User, path = "") {
 
-        if (!env.DROPBOX_API_KEY || !env.DROPBOX_API_SECRET_KEY /* || !user.oauth.dropbox */)
+        if (!env.DROPBOX_API_KEY || !env.DROPBOX_API_SECRET_KEY || !user || !user.oauth || !user.oauth.dropbox)
             return;
-        const client = new Dropbox({ clientId: env.DROPBOX_API_KEY, clientSecret: env.DROPBOX_API_SECRET_KEY, accessToken: token /* user.oauth.dropbox?.secretToken */ });
+        const client = new Dropbox({ clientId: env.DROPBOX_API_KEY, clientSecret: env.DROPBOX_API_SECRET_KEY, accessToken: user.oauth.dropbox?.accessToken });
 
         client.filesListFolder({ path: path })
             .then(function (response) {
