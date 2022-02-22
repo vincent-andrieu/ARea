@@ -117,4 +117,13 @@ export class UserSchema extends ASchema<User> {
         return result;
     }
 
+    public async getUserByAReaId(area: ARea | ObjectId | string): Promise<User> {
+        const areaId: string = getStrObjectId(area);
+        const result = await this._model.findOne({ areas: areaId }).exec();
+
+        if (!result)
+            throw "User with area ID not found: " + areaId.toString();
+        return new User(result.toObject<User>());
+    }
+
 }
