@@ -11,11 +11,13 @@ class GlobalConnexionList extends StatefulWidget {
   String urlSrv;
   areaService api;
   Future<bool> Function(IService service, String srv, areaService api) callback;
+  void Function() onSuccess;
+  void Function() onFailed;
 
-  GlobalConnexionList(this.urlSrv, this.list, this.api, this.callback, {Key? key}) : super(key: key);
+  GlobalConnexionList(this.urlSrv, this.list, this.api, this.callback, this.onSuccess, this.onFailed, {Key? key}) : super(key: key);
 
   @override
-  State<GlobalConnexionList> createState() => GlobalConnexionListState(urlSrv, list, api, callback);
+  State<GlobalConnexionList> createState() => GlobalConnexionListState(urlSrv, list, api, callback, onSuccess, onFailed);
 }
 
 class GlobalConnexionListState extends State<GlobalConnexionList> {
@@ -23,7 +25,9 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
   String urlSrv;
   areaService api;
   Future<bool> Function(IService service, String srv, areaService api) callback;
-  GlobalConnexionListState(this.urlSrv, this.list, this.api, this.callback);
+  void Function() onSuccess;
+  void Function() onFailed;
+  GlobalConnexionListState(this.urlSrv, this.list, this.api, this.callback, this.onSuccess, this.onFailed);
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +44,9 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
                 Future<bool> success = callback(list[0], urlSrv, api);
                 success.then((value) => {
                   if (value) {
-                    list[0].nowConnected(),
-                    Navigator.of(context).pushNamed('/List')
+                    onSuccess()
                   } else {
-                    // TODO FAILED TO CONNECT WITH THIS SERVICE
+                    onFailed()
                   }
                 });
               }
@@ -56,10 +59,9 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
                 Future<bool> success = callback(list[1], urlSrv, api);
                 success.then((value) => {
                   if (value) {
-                    list[1].nowConnected(),
-                    Navigator.of(context).pushNamed('/List')
+                    onSuccess()
                   } else {
-                    // TODO FAILED TO CONNECT WITH THIS SERVICE
+                    onFailed()
                   }
                 });
               }
@@ -72,10 +74,9 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
                 Future<bool> success = callback(list[2], urlSrv, api);
                 success.then((value) => {
                   if (value) {
-                    list[2].nowConnected(),
-                    Navigator.of(context).pushNamed('/List')
+                    onSuccess()
                   } else {
-                    // TODO FAILED TO CONNECT WITH THIS SERVICE
+                    onFailed()
                   }
                 });
               }
@@ -88,10 +89,9 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
                 Future<bool> success = callback(list[3], urlSrv, api);
                 success.then((value) => {
                   if (value) {
-                    list[3].nowConnected(),
-                    Navigator.of(context).pushNamed('/List')
+                    onSuccess()
                   } else {
-                    // TODO FAILED TO CONNECT WITH THIS SERVICE
+                    onFailed()
                   }
                 });
               }
@@ -104,10 +104,9 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
                 Future<bool> success = callback(list[4], urlSrv, api);
                 success.then((value) => {
                   if (value) {
-                    list[4].nowConnected(),
-                    Navigator.of(context).pushNamed('/List')
+                    onSuccess()
                   } else {
-                    // TODO FAILED TO CONNECT WITH THIS SERVICE
+                    onFailed()
                   }
                 });
               }
@@ -120,10 +119,9 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
                 Future<bool> success = callback(list[5], urlSrv, api);
                 success.then((value) => {
                   if (value) {
-                    list[5].nowConnected(),
-                    Navigator.of(context).pushNamed('/List')
+                    onSuccess()
                   } else {
-                    // TODO FAILED TO CONNECT WITH THIS SERVICE
+                    onFailed()
                   }
                 });
               }
@@ -136,10 +134,9 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
                 Future<bool> success = callback(list[6], urlSrv, api);
                 success.then((value) => {
                   if (value) {
-                    list[6].nowConnected(),
-                    Navigator.of(context).pushNamed('/List')
+                    onSuccess()
                   } else {
-                    // TODO FAILED TO CONNECT WITH THIS SERVICE
+                    onFailed()
                   }
                 });
               }
@@ -152,10 +149,9 @@ class GlobalConnexionListState extends State<GlobalConnexionList> {
                 Future<bool> success = callback(list[7], urlSrv, api);
                 success.then((value) => {
                   if (value) {
-                    list[7].nowConnected(),
-                    Navigator.of(context).pushNamed('/List')
+                    onSuccess()
                   } else {
-                    // TODO FAILED TO CONNECT WITH THIS SERVICE
+                    onFailed()
                   }
                 });
               }

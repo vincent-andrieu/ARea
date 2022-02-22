@@ -73,8 +73,12 @@ class settings_page extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               GlobalConnexionList(api.api.srvUrl, serviceList, api, (IService service, String srv, areaService api) {
-                return service.addUserService(srv, api);
-              }),
+                  return service.addUserService(srv, api);
+                },
+                () {
+                  Navigator.of(context).pushNamed('/Settings');
+                },
+                () {}),
               FractionallySizedBox(
                 widthFactor: 0.4,
                 child: ElevatedButton(
