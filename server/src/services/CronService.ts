@@ -157,7 +157,7 @@ export default class CronService {
                 // githubService.rea_CreatePullRequest(area, user);
                 break;
             case ReactionType.NOTION_MSG:
-                notionService.appendBlockToPage(area, user);
+                notionService.rea_appendTextToPage(area, user);
                 break;
             case ReactionType.DROPBOX_UPLOAD:
                 // DropboxService.rea_uploadFile(area, user);
