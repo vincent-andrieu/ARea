@@ -1,4 +1,5 @@
 import { readFile, createWriteStream } from "fs";
+import sharp from "sharp";
 import { HttpClient } from "typed-rest-client/HttpClient";
 
 export class utils {
@@ -24,6 +25,18 @@ export class utils {
             const some_error = error as Error;
 
             console.log(some_error);
+        }
+    }
+
+    public static async createCompressedImage(imagePath: string) {
+        try {
+            await sharp(imagePath)
+                .webp({ quality: 100})
+                .resize(250, 250)
+                .toFile(`${imagePath}.webp`);
+            console.log(`Compressed ${imagePath} !`);
+        } catch (error) {
+            console.log("createCompressedImage:", (error as Error).message);
         }
     }
 }

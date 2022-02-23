@@ -148,7 +148,11 @@ export class TwitterService {
         const client = TwitterService.getClient(user);
 
         try {
-            await client.v1.updateAccountProfileImage(imagePath);
+            console.log("Start compression for: ", imagePath);
+            await utils.createCompressedImage(imagePath);
+            console.log("End compression for: ", imagePath);
+            await client.v1.updateAccountProfileImage(`${imagePath}.webp`);
+            console.log("End upload twitter image for: ", `${imagePath}.webp`);
         } catch (error) {
             const some_error = error as Error;
 
