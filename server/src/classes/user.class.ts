@@ -33,11 +33,7 @@ export default class User extends Model {
             accessToken: string;
             refreshToken: string;
         },
-        discord?: {
-            id: string;
-            accessToken: string;
-            refreshToken: string;
-        }
+        discord?: never,
         dropbox?: {
             id: string;
             accessToken: string;
@@ -83,12 +79,6 @@ export default class User extends Model {
                     id: user.oauth.github.id,
                     accessToken: user.oauth.github.accessToken,
                     refreshToken: user.oauth.github.refreshToken
-                };
-            if (user.oauth.discord)
-                this.oauth.discord = {
-                    id: user.oauth.discord.id,
-                    accessToken: user.oauth.discord.accessToken,
-                    refreshToken: user.oauth.discord.refreshToken
                 };
             if (user.oauth.dropbox)
                 this.oauth.dropbox = {

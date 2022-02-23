@@ -7,6 +7,7 @@ import AuthController from "../controllers/AuthController";
 import { TwitchMobileStrategy } from "../passport/twitchPassport";
 import { TwitterMobileStrategy } from "../passport/twitterPassport";
 import { UnsplashMobileStrategy } from "../passport/unsplashPassport";
+import { discordBotConfig } from "@config/discordConfig";
 
 const router = express.Router();
 
@@ -93,16 +94,12 @@ router.get("/dropbox/redirect", passport.authenticate("dropbox-oauth2-web", {
     failureRedirect: `${env.CLIENT_HOST}/login/failure`
 }));
 
-router.get("/discord", (req: Request, res: Response, next: NextFunction) =>
-    passport.authenticate("discord-web", {
-        state: req.query.token as string | undefined
-    })(req, res, next)
-);
+router.get("/discord", (_: Request, res: Response) => {
+    if (!env.DISCORD_CLIENT_ID || !env.DISCORD_CALLBACK_PERMISSION)
+        return res.status(500).send("Invalid discord callback");
 
-router.get("/discord/redirect", passport.authenticate("discord-web", {
-    successRedirect: "/auth/redirect",
-    failureRedirect: `${env.CLIENT_HOST}/login/failure`
-}));
+    res.redirect(discordBotConfig.redirectUrl);
+});
 
 router.get("/unsplash", (req: Request, res: Response, next: NextFunction) =>
     passport.authenticate("unsplash-web", {
