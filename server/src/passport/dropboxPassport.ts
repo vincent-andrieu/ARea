@@ -41,8 +41,8 @@ async function successfullyAuthentificated(req: Request, accessToken: string, re
             return userEdited;
         }
 
-        if (!providerUser && (profile.username || profile.displayName || profile.id))
-            providerUser = await userSchema.findByUsername(profile.username || profile.displayName || profile.id);
+        if (!providerUser && (profile._json.email || profile.username || profile.displayName || profile.id))
+            providerUser = await userSchema.findByUsername(profile._json.email || profile.username || profile.displayName || profile.id);
 
         if (providerUser) {
             console.log("User already exist");
@@ -66,7 +66,7 @@ async function successfullyAuthentificated(req: Request, accessToken: string, re
             console.log("Create new user");
 
             const user = await userSchema.add(new User({
-                username: profile.username || profile.displayName || profile.id,
+                username: profile._json.email || profile.username || profile.displayName || profile.id,
                 oauth: {
                     dropbox: {
                         id: profile.id,

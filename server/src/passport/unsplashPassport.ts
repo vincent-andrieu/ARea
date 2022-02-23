@@ -1,4 +1,4 @@
-import passport, { Profile } from "passport";
+import passport from "passport";
 import Unsplash from "unsplash-passport";
 
 import { unsplasConfigMobile, unsplashConfig } from "@config/unsplashConfig";
@@ -42,8 +42,8 @@ async function successfullyAuthentificated(req: Request, accessToken: string, re
             return userEdited;
         }
 
-        if (!providerUser && (profile.username || profile.displayName || profile.id))
-            providerUser = await userSchema.findByUsername(profile.username || profile.displayName || profile.id);
+        if (!providerUser && (profile.email || profile.username || profile._json.name || profile.id))
+            providerUser = await userSchema.findByUsername(profile.email || profile.username || profile._json.name || profile.id);
 
         if (providerUser) {
             console.log("User already exist");
@@ -68,7 +68,7 @@ async function successfullyAuthentificated(req: Request, accessToken: string, re
             console.log("Create new user");
 
             const user = await userSchema.add(new User({
-                username: profile.username || profile.displayName || profile.id,
+                username: profile.email || profile.username || profile._json.name || profile.id,
                 oauth: {
                     unsplash: {
                         id: profile.id,
