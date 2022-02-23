@@ -19,6 +19,7 @@ import unsplashService from "@services/unsplashService";
 import TimeService from "@services/TimeService";
 import { UserSchema } from "@schemas/user.schema";
 import notionService from "./notionService";
+import { DropboxService } from "./DropboxService";
 
 export default class CronService {
 
@@ -109,7 +110,6 @@ export default class CronService {
             }
             case ActionType.UNSPLASH_POST: {
                 const config: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
-                DropboxService.rea_uploadFile(area, user);
 
                 if (await unsplashService.downloadIfNewPost(area, config.username, config.downloadPath))
                     CronService.triggerReaction(area, user);
