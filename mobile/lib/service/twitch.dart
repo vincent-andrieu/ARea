@@ -5,10 +5,7 @@ class twitch extends IService {
 
   @override
   List<String> getAction() {
-    return [
-      'New stream started',
-      'None'
-    ];
+    return ['New stream started', 'None'];
   }
 
   @override

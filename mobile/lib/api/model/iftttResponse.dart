@@ -1,3 +1,1 @@
-class iftttResponse {
-
-}
+class iftttResponse {}

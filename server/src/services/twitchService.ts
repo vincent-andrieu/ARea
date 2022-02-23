@@ -4,8 +4,12 @@ import { ClientCredentialsAuthProvider } from "@twurple/auth";
 import ARea from "../classes/area.class";
 import { TwitchStreamResult } from "models/ActionResult";
 import axios from "axios";
+import { AReaSchema } from "@schemas/area.schema";
 
 export class TwitchService {
+
+    private static _areaSchema = new AReaSchema();
+
     private static getClient(): ApiClient {
         const clientId = env.TWITCH_CLIENT_ID;
         const clientSecret = env.TWITCH_CLIENT_SECRET;
@@ -16,8 +20,8 @@ export class TwitchService {
         return new ApiClient({ authProvider });
     }
 
-    private static areaSetStreamInfos(area: ARea, stream: HelixStream) {
-        const result: TwitchStreamResult = area.trigger.outputs as TwitchStreamResult;
+    private static async areaSetStreamInfos(area: ARea, stream: HelixStream) {
+        const result: TwitchStreamResult = area.trigger.outputs as TwitchStreamResult || {};
 
         result.StreamGame = stream.gameName;
         result.StreamTitle = stream.title;
@@ -25,6 +29,8 @@ export class TwitchService {
         result.StreamLanguage = stream.language;
         result.StreamThumbnailUrl = stream.thumbnailUrl;
         result.StreamViewers = stream.viewers;
+        area.trigger.outputs = result;
+        await TwitchService._areaSchema.edit(area);
     }
 
     public static async IsStreamLive(area: ARea, userName: string): Promise<boolean> {
@@ -35,9 +41,16 @@ export class TwitchService {
             if (!user)
                 return false;
             const stream = await user.getStream();
-            if (stream === null)
+            if (stream === null) {
+                delete area.trigger.outputs;
+                await TwitchService._areaSchema.edit(area);
                 return false;
-            this.areaSetStreamInfos(area, stream);
+            }
+            await this.areaSetStreamInfos(area, stream);
+            if (area.trigger.outputs && (area.trigger.outputs as TwitchStreamResult).StreamGame) {
+                console.log("Stream already launch.");
+                return false;
+            }
         } catch (error) {
             const some_error = error as Error;
 

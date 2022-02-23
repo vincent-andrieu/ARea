@@ -4,11 +4,14 @@ import ARea from "@classes/area.class";
 import { ASchema } from "./abstract.schema";
 import Action, { ActionType } from "@classes/action.class";
 import { ActionSchema } from "./action.schema";
+import { ObjectId } from "@classes/model.class";
+import Model from "@classes/model.class";
 
 const areaSchema = new mongoose.Schema({
     trigger: {
         action: { type: mongoose.Schema.Types.ObjectId, ref: "Action", required: true },
-        inputs: { type: mongoose.Schema.Types.Mixed, required: true }
+        inputs: { type: mongoose.Schema.Types.Mixed, required: true },
+        outputs: { type: mongoose.Schema.Types.Mixed }
     },
     consequence: {
         inputs: { type: mongoose.Schema.Types.Mixed, required: true },
@@ -46,6 +49,19 @@ export class AReaSchema extends ASchema<ARea> {
             }
         ]);
         return result;
+    }
+
+    public async getPopulate(model: string | ObjectId | Model): Promise<ARea> {
+        return this.get(model, [
+            {
+                path: "trigger",
+                populate: "action" as unknown as PopulateOptions
+            },
+            {
+                path: "consequence",
+                populate: "reaction" as unknown as PopulateOptions
+            }
+        ]);
     }
 
 }

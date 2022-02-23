@@ -7,7 +7,8 @@ class InputCustom extends StatefulWidget {
   String hint = "";
   late TextEditingController controller;
 
-  InputCustom(String descSrc, String hintSrc, String defaultText, {Key? key}) : super(key: key) {
+  InputCustom(String descSrc, String hintSrc, String defaultText, {Key? key})
+      : super(key: key) {
     desc = descSrc;
     hint = hintSrc;
     controller = TextEditingController(text: defaultText);
@@ -22,7 +23,8 @@ class InputCustomState extends State<InputCustom> {
   String hint = "";
   late final controller;
 
-  InputCustomState(String descSrc, String hintSrc, TextEditingController controllerSrc) {
+  InputCustomState(
+      String descSrc, String hintSrc, TextEditingController controllerSrc) {
     desc = descSrc;
     hint = hintSrc;
     controller = controllerSrc;
@@ -31,24 +33,18 @@ class InputCustomState extends State<InputCustom> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(
-          left: 40.0,
-          right: 40.0
-      ),
       width: double.infinity,
       child: TextField(
         controller: controller,
         decoration: InputDecoration(
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0)
-            ),
+            border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
             hintText: hint,
             labelText: desc,
             labelStyle: const TextStyle(
               fontWeight: FontWeight.bold,
               color: color_list.fourth,
-            )
-        ),
+            )),
       ),
     );
   }

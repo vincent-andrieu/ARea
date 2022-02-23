@@ -1,10 +1,12 @@
 import { ActionType } from "@classes/action.class";
 import ARea from "@classes/area.class";
+import User from "@classes/user.class";
 import { AReaSchema } from "@schemas/area.schema";
 import { Client, Message, TextChannel } from "discord.js";
 import { discordBotConfig } from "@config/discordConfig";
 import { DiscordMessageConfig } from "../models/ActionConfig";
 import CronService from "./CronService";
+import { UserSchema } from "@schemas/user.schema";
 
 interface ChannelListenerItem {
     channelId: string,
@@ -16,6 +18,7 @@ export default class DiscordService {
     static client: Client = new Client;
     static channelListenerList: ChannelListenerItem[] = [];
     static areaSchema: AReaSchema = new AReaSchema;
+    static userSchema: UserSchema = new UserSchema;
 
     static async connect(): Promise<void> {
         await DiscordService.client.login(discordBotConfig.discord_bot_token);
@@ -56,9 +59,13 @@ export default class DiscordService {
      * @param message string
      */
     static async sendMessage(channelId: string, message: string): Promise<void> {
-        const channel = await DiscordService.client.channels.fetch(channelId) as TextChannel;
+        try {
+            const channel = await DiscordService.client.channels.fetch(channelId) as TextChannel;
 
-        channel?.send(message);
+            channel?.send(message);
+        } catch (err) {
+            console.error("Discord.sendMessage: fail to fetch channel or to send message.");
+        }
     }
 
     /**
@@ -73,10 +80,11 @@ export default class DiscordService {
                 });
                 if (result != undefined) {
                     // fetch action-reaction
-                    const area: ARea = await this.areaSchema.get(result.areaId);
+                    const area: ARea = await this.areaSchema.getPopulate(result.areaId);
 
+                    const user: User = await this.userSchema.getUserByAReaId(area);
                     // TRIGGER REACTION
-                    CronService.triggerReaction(area);
+                    CronService.triggerReaction(area, user);
                 }
             } catch (err) {
                 console.error(`DiscordService catchMessages: ${err}`);

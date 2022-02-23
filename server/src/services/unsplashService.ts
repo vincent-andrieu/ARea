@@ -9,24 +9,28 @@ import { UnsplashPostResult } from "@models/ActionResult";
 import { utils } from "./utils";
 import { unsplashConfig } from "@config/unsplashConfig";
 import axios from "axios";
-import OAuthProvider from "@models/oAuthProvider.enum";
+import { AReaSchema } from "@schemas/area.schema";
 
 export default class unsplashService {
 
     static lastPostId: string | undefined;
+    private static _areaSchema = new AReaSchema();
 
     private static IsNewPost(area: ARea, postId: string): boolean {
         const last: UnsplashPostResult = area.trigger.outputs as UnsplashPostResult;
+
+        if (!last)
+            return false;
         if (last.lastPostId == postId)
             return false;
-        last.lastPostId = postId;
         return true;
     }
 
-    private static setDownloadInfos(area: ARea, downloadPath: string, post: Full | Random) {
-        const result: UnsplashPostResult = area.trigger.outputs as UnsplashPostResult;
+    private static async setDownloadInfos(area: ARea, downloadPath: string, post: Full | Random) {
+        const result: UnsplashPostResult = area.trigger.outputs as UnsplashPostResult || {};
 
         result.downloadPath = downloadPath;
+        result.lastPostId = post.id;
         result.created_at = post.created_at;
         result.name = post.user.first_name;
         if (post.user.last_name)
@@ -34,6 +38,8 @@ export default class unsplashService {
         if (post.description)
             result.description = post.description;
         result.likes = post.likes;
+        area.trigger.outputs = result;
+        await unsplashService._areaSchema.edit(area);
     }
 
     static async downloadIfNewPost(area: ARea, username: string, downloadPath: string): Promise<boolean> {
@@ -48,16 +54,27 @@ export default class unsplashService {
 
             if (!pics || !pics.response?.results[0].id)
                 return false;
-            if (!unsplashService.IsNewPost(area, pics.response?.results[0].id))
-                return false;
             const pic = await unsplash.photos.get({ photoId: pics.response?.results[0].id });
             if (!pic.response?.links.download)
                 return false;
+            //ONLY LOG FOR DEBUG
+            pics.response?.results.map((elem) => {
+                console.log("Fetch image:");
+                console.log(elem.id);
+                console.log(elem.urls.raw);
+            });
+            if (!unsplashService.IsNewPost(area, pics.response?.results[0].id)) {
+                console.log("Not a new post");
+                await this.setDownloadInfos(area, downloadPath, pic.response);
+                return false;
+            }
+            console.log("It's a new post: ", pic.response?.links.download);
+            console.log("Downloaded at: ", downloadPath);
             const dlPic = await unsplash.photos.trackDownload({ downloadLocation: pic.response?.links.download });
             if (!dlPic.response?.url)
                 return false;
             await utils.DownloadUrl(dlPic.response?.url, downloadPath);
-            this.setDownloadInfos(area, downloadPath, pic.response);
+            await this.setDownloadInfos(area, downloadPath, pic.response);
         } catch (error) {
             const some_error = error as Error;
 

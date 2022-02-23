@@ -5,10 +5,7 @@ class twitter extends IService {
 
   @override
   List<String> getAction() {
-    return [
-      'On new tweet',
-      'None'
-    ];
+    return ['On new tweet', 'None'];
   }
 
   @override
@@ -23,12 +20,7 @@ class twitter extends IService {
 
   @override
   List<String> getReaction() {
-    return [
-      'Make a tweet',
-      'Change Banner',
-      'Update profile image',
-      'None'
-    ];
+    return ['Make a tweet', 'Change Banner', 'Update profile image', 'None'];
   }
 
   @override

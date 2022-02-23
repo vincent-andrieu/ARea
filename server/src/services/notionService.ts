@@ -1,59 +1,45 @@
+import ARea from "@classes/area.class";
+import User from "@classes/user.class";
+
+import { NotionAddMessageConfig } from "@models/ReactionConfig";
+
 import { Client } from "@notionhq/client";
+import { makeConsoleLogger } from "@notionhq/client/build/src/logging";
 
-const getBlockChildrenList = async (notionToken, blockId) => {
-    try {
-        const notion = new Client({ auth: notionToken });
-        console.log("HEllo");
-        const response = await notion.blocks.children.list({
-            block_id: blockId
-        });
-        console.log("World");
-        console.log(JSON.stringify(response));
-    } catch (error) {
-        const some_error = error as Error;
+const notionBlockIdRexexp = /([a-z0-9]+)$/;
 
-        console.log(some_error);
-    }
-};
+export default class NotionService {
 
-const appendBlockToPage = async (notionToken, blockId, textObject) => {
+    public static getBlockIdFromPageUrl(pageUrl: string): string | null {
+        const resultRegexp = notionBlockIdRexexp.exec(pageUrl);
+        if (!resultRegexp || !resultRegexp[0])
+            return null;
 
-    try {
-        const notion = new Client({ auth: notionToken });
-        const response = await notion.blocks.children.append({
-            block_id: blockId,
-            children: [textObject]
-        });
-
-        console.log(response);
-    } catch (error) {
-        const some_error = error as Error;
-
-        console.log(some_error);
+        return resultRegexp[0];
     }
 
-};
+    public static async appendBlockToPage(area: ARea, user: User) {
 
-// const textObject = {
-//     object: "block",
-//     type: "paragraph",
-//     paragraph: {
-//         text: [
-//             {
-//                 type: "text",
-//                 text: {
-//                     content: "New Github Issue",
-//                     link: {
-//                         type: "url",
-//                         url: "https://twitter.com/NotionAPI"
-//                     }
-//                 }
-//             }
-//         ]
-//     }
-// };
+        try {
+            const config = area.consequence.inputs as NotionAddMessageConfig;
 
-export = {
-    appendBlockToPage,
-    getBlockChildrenList
+            if (!user || !user.oauth || !user.oauth || !user.oauth.notion || !user.oauth.notion.accessToken)
+                return;
+            if (!config)
+                return;
+            const blockId: string | null = NotionService.getBlockIdFromPageUrl(config.urlPage);
+            if (!blockId)
+                return;
+            const notion = new Client({ auth: user.oauth.notion.accessToken });
+            /* const response =  */await notion.blocks.children.append({
+                block_id: blockId,
+                children: [{ paragraph: { text: [{ text: { content: config.message } }] } }]
+            });
+
+        } catch (error) {
+            const some_error = error as Error;
+
+            console.log(some_error);
+        }
+    }
 }
