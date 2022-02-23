@@ -5,10 +5,7 @@ class rss extends IService {
 
   @override
   List<String> getAction() {
-    return [
-      'Rss entry',
-      'None'
-    ];
+    return ['Rss entry', 'None'];
   }
 
   @override
@@ -23,9 +20,7 @@ class rss extends IService {
 
   @override
   List<String> getReaction() {
-    return [
-      'None'
-    ];
+    return ['None'];
   }
 
   @override

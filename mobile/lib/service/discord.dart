@@ -5,10 +5,7 @@ class discord extends IService {
 
   @override
   List<String> getAction() {
-    return [
-      'New message on group',
-      'None'
-    ];
+    return ['New message on group', 'None'];
   }
 
   @override
@@ -23,10 +20,7 @@ class discord extends IService {
 
   @override
   List<String> getReaction() {
-    return [
-      'Send message',
-      'None'
-    ];
+    return ['Send message', 'None'];
   }
 
   @override

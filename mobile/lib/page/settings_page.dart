@@ -54,11 +54,9 @@ class settings_page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Center(
-        child: Container(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
+      resizeToAvoidBottomInset: false,
+      body: Center(
+        child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -68,58 +66,48 @@ class settings_page extends StatelessWidget {
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: color_list.fourth,
-                    fontSize: 20
-                ),
+                    fontSize: 20),
                 textAlign: TextAlign.center,
               ),
-              Text(
-                  'Welcome ${api.token!.username}',
+              Text('Welcome ${api.token!.username}',
                   style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: color_list.fourth,
-                      fontSize: 20
-                  )
-              ),
-              GlobalConnexionList(api.api.srvUrl, serviceList, api, (IService service, String srv, areaService api) {
-                  return service.addUserService(srv, api);
-                },
-                (IService service, String srv, areaService api) {
-                  return service.disconnectService(srv, api);
-                },
-                () {
-                  Navigator.of(context).pushNamed('/Settings');
-                }, () {}),
+                      fontSize: 20)),
+              GlobalConnexionList(api.api.srvUrl, serviceList, api,
+                  (IService service, String srv, areaService api) {
+                return service.addUserService(srv, api);
+              }, (IService service, String srv, areaService api) {
+                return service.disconnectService(srv, api);
+              }, () {
+                Navigator.of(context).pushNamed('/Settings');
+              }, () {}),
               FractionallySizedBox(
                 widthFactor: 0.4,
                 child: ElevatedButton(
-                  onPressed: () {
-                    callbackLogout(context, api);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: color_list.fifth,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    )
-                  ),
-                  child: Container(
-                    padding: const EdgeInsets.all(20.0),
-                    child: const Text(
-                      'Logout',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: color_list.third,
-                          fontSize: 20
-                      ),
-                    ),
-                  )
-                ),
+                    onPressed: () {
+                      callbackLogout(context, api);
+                    },
+                    style: ElevatedButton.styleFrom(
+                        primary: color_list.fifth,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        )),
+                    child: Container(
+                        padding: const EdgeInsets.all(20.0),
+                        child: const FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: Text(
+                            'Logout',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: color_list.third,
+                                fontSize: 20),
+                          ),
+                        ))),
               ),
-              const Padding(
-                  padding: EdgeInsets.only(top: 20.0)
-              ),
-            ]
-          ),
-        ),
+              const Padding(padding: EdgeInsets.only(top: 20.0)),
+            ]),
       ),
     );
   }
@@ -134,10 +122,7 @@ class settings_page extends StatelessWidget {
                 Positioned(
                   left: 8,
                   child: IconButton(
-                    icon: const Icon(
-                        Icons.arrow_back,
-                        size: 40.0
-                    ),
+                    icon: const Icon(Icons.arrow_back, size: 40.0),
                     tooltip: 'Retour arrière',
                     onPressed: () {
                       callbackClose(context);
@@ -150,15 +135,13 @@ class settings_page extends StatelessWidget {
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: color_list.fourth,
-                        fontSize: 50
-                    ),
+                        fontSize: 50),
                     textAlign: TextAlign.center,
                   ),
                 ),
               ],
             ),
           )
-        ]
-    );
+        ]);
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/api/model/serviceFetch/serviceFetch.dart';
@@ -17,13 +19,17 @@ class DynamicList {
   late paramsListBuilder actionParameter;
   late TestList widget;
 
-  DynamicList(this.service, this.isService, this.firstTitle, this.secondTitle, this.listService, preBuildTools? tools) {
+  DynamicList(this.service, this.isService, this.firstTitle, this.secondTitle,
+      this.listService, preBuildTools? tools) {
     if (tools == null) {
-      actionParameter = paramsListBuilder(listService, controllerFirst.text, controllerSecond.text, isService, null);
+      actionParameter = paramsListBuilder(listService, controllerFirst.text,
+          controllerSecond.text, isService, null);
     } else {
-      actionParameter = paramsListBuilder(listService, tools.selectedFirst, tools.selectedSecond, isService, tools);
+      actionParameter = paramsListBuilder(listService, tools.selectedFirst,
+          tools.selectedSecond, isService, tools);
     }
-    widget = TestList(service, isService, firstTitle, secondTitle, controllerFirst, controllerSecond, actionParameter, tools);
+    widget = TestList(service, isService, firstTitle, secondTitle,
+        controllerFirst, controllerSecond, actionParameter, tools);
   }
 }
 
@@ -39,10 +45,21 @@ class TestList extends StatefulWidget {
   final controllerFirst;
   final controllerSecond;
 
-  TestList(this.service, this.isService, this.firstTitle, this.secondTitle, this.controllerFirst, this.controllerSecond, this.actionParameter, this.tools, {Key? key}) : super(key: key);
+  TestList(
+      this.service,
+      this.isService,
+      this.firstTitle,
+      this.secondTitle,
+      this.controllerFirst,
+      this.controllerSecond,
+      this.actionParameter,
+      this.tools,
+      {Key? key})
+      : super(key: key);
 
   @override
-  _TestListState createState() => _TestListState(service, isService, firstTitle, secondTitle, controllerFirst, controllerSecond, actionParameter, tools);
+  _TestListState createState() => _TestListState(service, isService, firstTitle,
+      secondTitle, controllerFirst, controllerSecond, actionParameter, tools);
 }
 
 class _TestListState extends State<TestList> {
@@ -56,12 +73,19 @@ class _TestListState extends State<TestList> {
   String firstTitle = "";
   String secondTitle = "";
 
-
   paramsListBuilder actionParameter;
   TextEditingController textChild;
   TextEditingController controllerSecond;
 
-  _TestListState(this.service, this.isService, this.firstTitle, this.secondTitle, this.textChild, this.controllerSecond, this.actionParameter, preBuildTools? tools) {
+  _TestListState(
+      this.service,
+      this.isService,
+      this.firstTitle,
+      this.secondTitle,
+      this.textChild,
+      this.controllerSecond,
+      this.actionParameter,
+      preBuildTools? tools) {
     list = getList();
     if (tools != null) {
       textChild.text = tools.selectedFirst;
@@ -80,15 +104,9 @@ class _TestListState extends State<TestList> {
     return Column(
       children: [
         listBuilder(),
-        const Padding(padding: EdgeInsets.only(
-            top: 10.0,
-            bottom: 10.0
-        )),
+        const Padding(padding: EdgeInsets.only(top: 10.0, bottom: 10.0)),
         listBuilderChild(),
-        const Padding(padding: EdgeInsets.only(
-            top: 10.0,
-            bottom: 10.0
-        )),
+        const Padding(padding: EdgeInsets.only(top: 10.0, bottom: 10.0)),
         actionParameter.build(context)
       ],
     );
@@ -97,11 +115,7 @@ class _TestListState extends State<TestList> {
   Widget listBuilder() {
     return Container(
         padding: const EdgeInsets.only(
-            left: 40.0,
-            right: 40.0,
-            top: 10.0,
-            bottom: 10.0
-        ),
+            left: 10.0, right: 10.0, top: 10.0, bottom: 10.0),
         width: double.infinity,
         decoration: BoxDecoration(
           color: color_list.third,
@@ -113,14 +127,16 @@ class _TestListState extends State<TestList> {
         ),
         child: Column(
           children: <Widget>[
-            Text(
-              firstTitle,
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: color_list.fourth,
-                  fontSize: 30
+            FittedBox(
+              fit: BoxFit.fitWidth,
+              child: Text(
+                firstTitle,
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: color_list.fourth,
+                    fontSize: 30),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
             ),
             DropdownButton<String>(
               isExpanded: true,
@@ -140,29 +156,27 @@ class _TestListState extends State<TestList> {
                   } else {
                     listChild = getChildListReaction(textChild.text);
                   }
-                  actionParameter.setService(textChild.text, controllerSecond.text);
+                  actionParameter.setService(
+                      textChild.text, controllerSecond.text);
                 });
               },
               items: list.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
+                    value: value,
+                    child: FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Text(value),
+                    ));
               }).toList(),
             )
           ],
-        )
-    );
+        ));
   }
 
   Widget listBuilderChild() {
     return Container(
         padding: const EdgeInsets.only(
-            left: 40.0,
-            right: 40.0,
-            top: 10.0,
-            bottom: 10.0
-        ),
+            left: 10.0, right: 10.0, top: 10.0, bottom: 10.0),
         width: double.infinity,
         decoration: BoxDecoration(
           color: color_list.third,
@@ -174,14 +188,16 @@ class _TestListState extends State<TestList> {
         ),
         child: Column(
           children: <Widget>[
-            Text(
-              secondTitle,
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: color_list.fourth,
-                  fontSize: 30
+            FittedBox(
+              fit: BoxFit.fitWidth,
+              child: Text(
+                secondTitle,
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: color_list.fourth,
+                    fontSize: 30),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
             ),
             DropdownButton<String>(
               isExpanded: true,
@@ -195,19 +211,21 @@ class _TestListState extends State<TestList> {
               onChanged: (String? newValue) {
                 setState(() {
                   controllerSecond.text = newValue!;
-                  actionParameter.setService(textChild.text, controllerSecond.text);
+                  actionParameter.setService(
+                      textChild.text, controllerSecond.text);
                 });
               },
               items: listChild.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
+                    value: value,
+                    child: FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Text(value),
+                    ));
               }).toList(),
             )
           ],
-        )
-    );
+        ));
   }
 
   List<String> getChildListAction(String serviceName) {
@@ -230,9 +248,17 @@ class _TestListState extends State<TestList> {
 
   List<String> getList() {
     List<String> list = [];
+    bool haveAct = false;
 
     for (var it in service) {
-      list.add(it.getName());
+      if (isService) {
+        haveAct = getChildListAction(it.getName()).length != 1 || it.getName() == "None";
+      } else {
+        haveAct = getChildListReaction(it.getName()).length != 1 || it.getName() == "None";
+      }
+      if (it.getConnexionState() && haveAct) {
+        list.add(it.getName());
+      }
     }
     return list;
   }

@@ -40,9 +40,7 @@ class subtype {
   Map<String, dynamic> toJson() {
     return {
       subkey1: map,
-      subkey2: {
-        typeKey: typeData
-      },
+      subkey2: {typeKey: typeData},
     };
   }
 }
@@ -52,20 +50,20 @@ class createAreaRequest {
   late subtype trigger;
   late subtype consequence;
 
-  createAreaRequest(String triggerKey, Map<String, String> triggerData, String consequKey, Map<String, String> consequData) {
+  createAreaRequest(String triggerKey, Map<String, String> triggerData,
+      String consequKey, Map<String, String> consequData) {
     trigger = subtype("inputs", "action", triggerData, "type", triggerKey);
-    consequence = subtype("inputs", "reaction", consequData, "type", consequKey);
+    consequence =
+        subtype("inputs", "reaction", consequData, "type", consequKey);
   }
 
   createAreaRequest.fromJson(dynamic json)
       : id = json['_id'],
         trigger = subtype.fromJson(json['trigger'], "inputs", "action", "type"),
-        consequence = subtype.fromJson(json['consequence'], "inputs", "reaction", "type");
+        consequence =
+            subtype.fromJson(json['consequence'], "inputs", "reaction", "type");
 
   Map<String, dynamic> toJson() {
-    return {
-      'trigger': trigger.toJson(),
-      'consequence': consequence.toJson()
-    };
+    return {'trigger': trigger.toJson(), 'consequence': consequence.toJson()};
   }
 }

@@ -4,6 +4,8 @@ import ARea from "@classes/area.class";
 import { ASchema } from "./abstract.schema";
 import Action, { ActionType } from "@classes/action.class";
 import { ActionSchema } from "./action.schema";
+import { ObjectId } from "@classes/model.class";
+import Model from "@classes/model.class";
 
 const areaSchema = new mongoose.Schema({
     trigger: {
@@ -47,6 +49,19 @@ export class AReaSchema extends ASchema<ARea> {
             }
         ]);
         return result;
+    }
+
+    public async getPopulate(model: string | ObjectId | Model): Promise<ARea> {
+        return this.get(model, [
+            {
+                path: "trigger",
+                populate: "action" as unknown as PopulateOptions
+            },
+            {
+                path: "consequence",
+                populate: "reaction" as unknown as PopulateOptions
+            }
+        ]);
     }
 
 }

@@ -5,11 +5,7 @@ class cron extends IService {
 
   @override
   List<String> getAction() {
-    return [
-      'Date',
-      'Date time',
-      'None'
-    ];
+    return ['Date', 'Date time', 'None'];
   }
 
   @override
@@ -24,9 +20,7 @@ class cron extends IService {
 
   @override
   List<String> getReaction() {
-    return [
-      'None'
-    ];
+    return ['None'];
   }
 
   @override

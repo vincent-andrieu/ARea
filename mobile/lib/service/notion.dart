@@ -20,10 +20,7 @@ class notion extends IService {
 
   @override
   List<String> getReaction() {
-    return [
-      'Update Notion Database',
-      'None'
-    ];
+    return ['Update Notion Database', 'None'];
   }
 
   @override
