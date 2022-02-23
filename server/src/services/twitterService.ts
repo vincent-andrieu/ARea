@@ -124,7 +124,7 @@ export class TwitterService {
         const client = TwitterService.getClient(user);
 
         try {
-            client.v2.tweet(tweet);
+            await client.v2.tweet(tweet);
         } catch (error) {
             const some_error = error as Error;
 
@@ -136,7 +136,7 @@ export class TwitterService {
         const client = TwitterService.getClient(user);
 
         try {
-            client.v1.updateAccountProfileBanner(imagePath);
+            await client.v1.updateAccountProfileBanner(imagePath);
         } catch (error) {
             const some_error = error as Error;
 
@@ -148,7 +148,7 @@ export class TwitterService {
         const client = TwitterService.getClient(user);
 
         try {
-            client.v1.updateAccountProfileImage(imagePath);
+            await client.v1.updateAccountProfileImage(imagePath);
         } catch (error) {
             const some_error = error as Error;
 
