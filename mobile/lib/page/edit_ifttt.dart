@@ -68,42 +68,26 @@ class edit_ifttt extends StatelessWidget {
                     buildTopPage(context),
                     Container(
                       padding: const EdgeInsets.only(
-                        left: 100.0,
-                        right: 100.0,
+                        left: 10.0,
+                        right: 10.0,
                       ),
                       child: Column(
                         children: <Widget>[
-                          Container(
-                              padding: const EdgeInsets.all(20.0),
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Container(
-                                      padding: const EdgeInsets.only(
-                                        left: 100.0,
-                                        right: 100.0,
-                                      ),
-                                      child: Column(
-                                        children: <Widget>[
-                                          action.widget,
-                                          const Padding(
-                                              padding: EdgeInsets.only(
-                                                  top: 20.0, bottom: 20.0)),
-                                          const Icon(
-                                            Icons.arrow_downward_rounded,
-                                            color: color_list.primary,
-                                            size: 100.0,
-                                          ),
-                                          reaction.widget,
-                                          const Padding(
-                                              padding: EdgeInsets.only(
-                                                  top: 10.0, bottom: 10.0)),
-                                        ],
-                                      ),
-                                    )
-                                  ])),
+                          action.widget,
+                          const Padding(padding: EdgeInsets.only(
+                              top: 10.0,
+                              bottom: 10.0
+                          )),
+                          const Icon(
+                            Icons.arrow_downward_rounded,
+                            color: color_list.primary,
+                            size: 100.0,
+                          ),
+                          reaction.widget,
+                          const Padding(padding: EdgeInsets.only(
+                              top: 10.0,
+                              bottom: 10.0
+                          )),
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(

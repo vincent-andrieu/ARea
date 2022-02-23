@@ -59,15 +59,15 @@ class create_ifttt extends StatelessWidget {
                       buildTopPage(context),
                       Container(
                         padding: const EdgeInsets.only(
-                          left: 70.0,
-                          right: 70.0,
+                          left: 10.0,
+                          right: 10.0,
                         ),
                         child: Column(
                           children: <Widget>[
                             action.widget,
                             const Padding(padding: EdgeInsets.only(
-                                top: 20.0,
-                                bottom: 20.0
+                                top: 10.0,
+                                bottom: 10.0
                             )),
                             const Icon(
                               Icons.arrow_downward_rounded,

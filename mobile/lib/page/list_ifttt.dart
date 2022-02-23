@@ -150,19 +150,25 @@ class list_ifttt extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              title,
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: color_list.fourth,
-                  fontSize: 40),
+            FittedBox(
+              fit: BoxFit.fitWidth,
+              child: Text(
+                title,
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: color_list.fourth,
+                    fontSize: 40),
+              ),
             ),
-            Text(
-              params,
-              style: const TextStyle(
-                  fontWeight: FontWeight.normal,
-                  color: color_list.fourth,
-                  fontSize: 20),
+            FittedBox(
+              fit: BoxFit.fitWidth,
+              child: Text(
+                params,
+                style: const TextStyle(
+                    fontWeight: FontWeight.normal,
+                    color: color_list.fourth,
+                    fontSize: 20),
+              ),
             ),
             Container(
               height: 50,
