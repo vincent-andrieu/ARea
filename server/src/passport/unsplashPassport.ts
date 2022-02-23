@@ -96,6 +96,7 @@ async function successfullyAuthentificated(req: Request, accessToken: string, re
 export async function UnsplashMobileStrategy(req: Request, res: Response) {
     const { code } = req.body;
 
+    req.query.state = req.body.token;
     if (!code)
         return res.status(400).send("Missing 'code' attribut");
     try {

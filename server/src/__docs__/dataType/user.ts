@@ -37,8 +37,8 @@ export const user = {
                     },
                     discord: {
                         type: "boolean",
-                        description: "Is the user's discord account connected",
-                        example: true
+                        description: "Will always be false",
+                        example: false
                     },
                     dropbox: {
                         type: "boolean",

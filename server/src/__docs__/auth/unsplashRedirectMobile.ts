@@ -15,6 +15,11 @@ export const unsplashRedirectMobile = {
                                 type: "string",
                                 description: "The oauth2 code provided by unsplash",
                                 example: "upFBgFkZH_DepX8oT9gzm4v1XRCyRHV8jbFGewVzdwT"
+                            },
+                            token: {
+                                type: "string",
+                                description: "ARea token if the user is login",
+                                example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
                             }
                         }
                     }

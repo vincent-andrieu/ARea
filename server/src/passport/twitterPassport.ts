@@ -93,6 +93,7 @@ const successfullyAuthentificated = async (req: Request, accessToken: string, to
 export const TwitterMobileStrategy = async (req: Request, res: Response) => {
     const { oauth_token, oauth_verifier } = req.body;
 
+    req.query.state = req.body.token;
     if (!oauth_token || !oauth_verifier)
         return res.status(400).send("Missing 'code' attribut");
     try {
