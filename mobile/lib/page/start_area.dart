@@ -28,14 +28,14 @@ class start_area extends StatelessWidget {
                       fontSize: 50),
                   textAlign: TextAlign.center,
                 ),
-                Column(
-                  children: <Widget>[
-                    input,
-                    Container(
-                      padding: const EdgeInsets.only(
-                          top: 10.0, left: 40.0, right: 40.0),
-                      width: double.infinity,
-                      child: ElevatedButton(
+                Container(
+                  padding:
+                      const EdgeInsets.only(top: 10.0, left: 40.0, right: 40.0),
+                  width: double.infinity,
+                  child: Column(
+                    children: <Widget>[
+                      input,
+                      ElevatedButton(
                         onPressed: () {
                           api.initConnexion(input.controller.text);
                           api.api.ping().then((value) => {
@@ -62,8 +62,8 @@ class start_area extends StatelessWidget {
                           ),
                         ),
                       ),
-                    )
-                  ],
+                    ],
+                  ),
                 ),
                 const Text(
                   'Welcome',

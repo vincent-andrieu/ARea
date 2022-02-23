@@ -97,8 +97,8 @@ class _TestListState extends State<TestList> {
   Widget listBuilder() {
     return Container(
         padding: const EdgeInsets.only(
-            left: 40.0,
-            right: 40.0,
+            left: 10.0,
+            right: 10.0,
             top: 10.0,
             bottom: 10.0
         ),
@@ -113,14 +113,17 @@ class _TestListState extends State<TestList> {
         ),
         child: Column(
           children: <Widget>[
-            Text(
-              firstTitle,
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: color_list.fourth,
-                  fontSize: 30
+            FittedBox(
+              fit: BoxFit.fitWidth,
+              child: Text(
+                firstTitle,
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: color_list.fourth,
+                    fontSize: 30
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
             ),
             DropdownButton<String>(
               isExpanded: true,
@@ -146,7 +149,10 @@ class _TestListState extends State<TestList> {
               items: list.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
-                  child: Text(value),
+                  child: FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Text(value),
+                  )
                 );
               }).toList(),
             )
@@ -158,8 +164,8 @@ class _TestListState extends State<TestList> {
   Widget listBuilderChild() {
     return Container(
         padding: const EdgeInsets.only(
-            left: 40.0,
-            right: 40.0,
+            left: 10.0,
+            right: 10.0,
             top: 10.0,
             bottom: 10.0
         ),
@@ -174,7 +180,9 @@ class _TestListState extends State<TestList> {
         ),
         child: Column(
           children: <Widget>[
-            Text(
+          FittedBox(
+            fit: BoxFit.fitWidth,
+            child: Text(
               secondTitle,
               style: const TextStyle(
                   fontWeight: FontWeight.bold,
@@ -183,6 +191,7 @@ class _TestListState extends State<TestList> {
               ),
               textAlign: TextAlign.center,
             ),
+          ),
             DropdownButton<String>(
               isExpanded: true,
               value: controllerSecond.text,
@@ -201,7 +210,10 @@ class _TestListState extends State<TestList> {
               items: listChild.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
-                  child: Text(value),
+                  child: FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Text(value),
+                  )
                 );
               }).toList(),
             )

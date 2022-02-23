@@ -59,8 +59,8 @@ class create_ifttt extends StatelessWidget {
                       buildTopPage(context),
                       Container(
                         padding: const EdgeInsets.only(
-                          left: 100.0,
-                          right: 100.0,
+                          left: 70.0,
+                          right: 70.0,
                         ),
                         child: Column(
                           children: <Widget>[

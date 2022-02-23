@@ -31,10 +31,6 @@ class InputCustomState extends State<InputCustom> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(
-          left: 40.0,
-          right: 40.0
-      ),
       width: double.infinity,
       child: TextField(
         controller: controller,
