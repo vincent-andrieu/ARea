@@ -3,13 +3,12 @@ import 'package:mobile/service/IService.dart';
 
 class loaded extends IService {
   serviceFecth data;
+
   loaded(bool src, this.data) : super(src);
 
   @override
   List<String> getAction() {
-    List<String> list = [
-      'None'
-    ];
+    List<String> list = ['None'];
 
     for (var it in data.action) {
       list.add(it.type);
@@ -29,9 +28,7 @@ class loaded extends IService {
 
   @override
   List<String> getReaction() {
-    List<String> list = [
-      'None'
-    ];
+    List<String> list = ['None'];
 
     for (var it in data.reaction) {
       list.add(it.type);
