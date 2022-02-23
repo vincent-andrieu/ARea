@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/widget/areaDatePicker.dart';
 import 'package:mobile/widget/areaTimePicker.dart';
 import 'package:mobile/widget/input_custom.dart';
 
@@ -98,6 +99,30 @@ class urlInputTransfer extends ITransfer {
   urlInputTransfer(
       this.key, String descSrc, String hintSrc, String defaultText) {
     data = InputCustom(descSrc, hintSrc, defaultText, TextInputType.url);
+  }
+
+  @override
+  String getKey() {
+    return key;
+  }
+
+  @override
+  String getValue() {
+    return data.controller.text;
+  }
+
+  @override
+  Widget getWidget() {
+    return data;
+  }
+}
+
+class datePickerInputTransfer extends ITransfer {
+  late areaDatePicker data;
+  String key;
+
+  datePickerInputTransfer(this.key, String descSrc, String hintSrc, String defaultText) {
+    data = areaDatePicker(descSrc, hintSrc, defaultText);
   }
 
   @override

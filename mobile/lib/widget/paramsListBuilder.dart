@@ -83,6 +83,10 @@ class paramsListBuilder {
     return timePickerInputTransfer(data.name, data.label, data.type, defaultValue);
   }
 
+  ITransfer datePickerWidget(parameterFetch data, String defaultValue) {
+    return datePickerInputTransfer(data.name, data.label, data.type, defaultValue);
+  }
+
   String getValueInPreBuild(String type) {
     for (var it in tools!.params.keys) {
       log("$it == $type");
@@ -98,7 +102,7 @@ class paramsListBuilder {
     List<Widget> list = [];
     Map<ParameterType, ITransfer Function(parameterFetch, String defaultValue)>
         link = {
-      ParameterType.DATETIME: timePickerWidget,
+      ParameterType.DATETIME: datePickerWidget,
       ParameterType.NUMBER: numberWidget,
       ParameterType.TEXT: textWidget,
       ParameterType.TIME: timePickerWidget,
