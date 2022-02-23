@@ -99,6 +99,24 @@ export class UserSchema extends ASchema<User> {
         return new User(result.toObject<User>());
     }
 
+    public async getUserList(): Promise<User[]> {
+        const result = this.find(undefined, {
+            path: "areas",
+            populate: [
+                {
+                    path: "trigger",
+                    populate: "action" as unknown as PopulateOptions
+                },
+                {
+                    path: "consequence",
+                    populate: "reaction" as unknown as PopulateOptions
+                }
+            ]
+        });
+
+        return result;
+    }
+
     public async getAreaList(userId: ObjectId | string): Promise<User> {
         const result = this.get(userId, {
             path: "areas",
@@ -115,6 +133,15 @@ export class UserSchema extends ASchema<User> {
         }, "areas");
 
         return result;
+    }
+
+    public async getUserByAReaId(area: ARea | ObjectId | string): Promise<User> {
+        const areaId: string = getStrObjectId(area);
+        const result = await this._model.findOne({ areas: areaId }).exec();
+
+        if (!result)
+            throw "User with area ID not found: " + areaId.toString();
+        return new User(result.toObject<User>());
     }
 
 }

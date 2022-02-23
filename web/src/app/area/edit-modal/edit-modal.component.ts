@@ -39,7 +39,7 @@ export class AReaEditModalComponent {
         private _serviceService: ServiceService
     ) {
         this._serviceService.getAction().then((result) => {
-            this.actions = result;
+            this.actions = result.filter((action) => this._authService.user?.oauth && (this._authService.user.oauth as any)[action.service.toLowerCase()]);
             this.actionServices = this._getActionServices();
 
             const actionServiceForm = this.form.get('actionService');
@@ -49,7 +49,7 @@ export class AReaEditModalComponent {
             actionServiceForm?.valueChanges.subscribe((value: ServiceType) => this._onActionServiceUpdate(value));
         });
         this._serviceService.getReaction().then((result) => {
-            this.reactions = result;
+            this.reactions = result.filter((action) => this._authService.user?.oauth && (this._authService.user.oauth as any)[action.service.toLowerCase()]);
             this.reactionServices = this._getReactionServices();
 
             const reactionServiceForm = this.form.get('reactionService');

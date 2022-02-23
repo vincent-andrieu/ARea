@@ -1,10 +1,12 @@
 import { AReaSchema } from "../schemas/area.schema";
-import ARea from "../classes/area.class";
+import ARea from "@classes/area.class";
+import User from "@classes/user.class";
 import { DateTimeConfig, TimeConfig } from "../models/ActionConfig";
 import cron from "node-cron";
 import CronService from "./CronService";
 import { ObjectId } from "@classes/model.class";
 import { ActionType } from "@classes/action.class";
+import { UserSchema } from "@schemas/user.schema";
 
 interface TaskItem {
     task: cron.ScheduledTask;
@@ -14,27 +16,30 @@ interface TaskItem {
 export default class TimeService {
 
     private static _areaSchema: AReaSchema = new AReaSchema;
+    private static _userSchema: UserSchema = new UserSchema;
     private static _tasks: TaskItem[] = [];
 
     static initCronActions = async () => {
         try {
             const list: ARea[] = await this._areaSchema.fetchByAction(ActionType.CRON);
 
-            list.forEach(el => {
-                this.registerCron(el);
+            list.forEach(async (el: ARea) => {
+                const user: User = await this._userSchema.getUserByAReaId(el);
+
+                this.registerCron(el, user);
             });
-        } catch (err: any) {
-            console.error("TimeService::initCronActions ", err.message);
+        } catch (err) {
+            console.error("TimeService::initCronActions ", (err as Error).message);
         }
     };
 
-    static registerCron = (area: ARea): boolean => {
+    static registerCron = (area: ARea, user: User): boolean => {
         try {
             const schedule: string | undefined = (area.trigger.inputs as TimeConfig)?.time;
 
             if (schedule == undefined || cron.validate(schedule) == false || area._id == undefined)
                 return false;
-            const job: cron.ScheduledTask = cron.schedule(schedule, () => CronService.triggerReaction(area), {
+            const job: cron.ScheduledTask = cron.schedule(schedule, () => CronService.triggerReaction(area, user), {
                 timezone: "Europe/Paris"
             });
             this._tasks.push({ task: job, areaId: area._id as ObjectId });

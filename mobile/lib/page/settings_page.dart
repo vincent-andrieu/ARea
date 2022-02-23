@@ -64,7 +64,7 @@ class settings_page extends StatelessWidget {
             children: <Widget>[
               buildTopPage(context),
               const Text(
-                'Connection aux services',
+                'Connected to services',
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: color_list.fourth,

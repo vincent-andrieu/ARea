@@ -86,10 +86,14 @@ export default class AreaController {
                 const area: ARea = new ARea(await AreaController._areaSchema.add(areaBody));
                 if (!area._id)
                     throw "Undefined area id";
-                AreaController._userSchema.addARea(userId, area._id);
+                await AreaController._userSchema.addARea(userId, area._id);
 
-                if (areaBody.trigger.action.type == ActionType.CRON)
-                    TimeService.registerCron(area); // start cron job
+                if (areaBody.trigger.action.type == ActionType.CRON) {
+                    const user = await AreaController._userSchema.get(userId);
+                    if (!user)
+                        return res.status(400).send("Failed to get user");
+                    TimeService.registerCron(area, user); // start cron job
+                }
                 res.status(201).json({ _id: area._id, ...areaBody });
             } catch (error) {
                 console.error("AreaController::create ", (error as Error).toString());
@@ -168,7 +172,7 @@ export default class AreaController {
             });
             if ((areaUpdate.trigger.action as Action)?.type == ActionType.CRON
                 && (area.trigger.action as Action)?.type != ActionType.CRON)
-                TimeService.registerCron(area); // start cron job
+                TimeService.registerCron(area, user); // start cron job
             res.status(200).json({
                 _id: areaUpdate._id,
                 ...areaBody

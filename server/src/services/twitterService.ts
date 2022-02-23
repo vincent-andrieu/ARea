@@ -4,8 +4,10 @@ import { env } from "process";
 import TwitterApi, { SendTweetV2Params, TweetV2, UserV2Result } from "twitter-api-v2";
 import User from "../classes/user.class";
 import ARea from "../classes/area.class";
+import { AReaSchema } from "@schemas/area.schema";
 import { TwitchStreamResult, TwitterTweetResult, UnsplashPostResult } from "@models/ActionResult";
-import { TwitchStreamConfig, TwitterTweetConfig } from "models/ActionConfig";
+import { TwitchStreamConfig, TwitterTweetConfig } from "@models/ActionConfig";
+import { TwitterPostTweetConfig } from "@models/ReactionConfig";
 import Action, { ActionType } from "@classes/action.class";
 import { utils } from "./utils";
 import { twitterConfig } from "@config/twitterConfig";
@@ -19,12 +21,15 @@ import axios from "axios";
 
 export class TwitterService {
 
+    private static _areaSchema = new AReaSchema();
+
     private static IsNewPost(area: ARea, postId: string): boolean {
         const last: TwitterTweetResult = area.trigger.outputs as TwitterTweetResult;
 
+        if (!last)
+            return false;
         if (last.lastTweetId == postId)
             return false;
-        last.lastTweetId = postId;
         return true;
     }
 
@@ -52,10 +57,11 @@ export class TwitterService {
         });
     }
 
-    private static setTweetInfos(area: ARea, tweet: TweetV2) {
-        const result: TwitterTweetResult = area.trigger.outputs as TwitterTweetResult;
+    private static async setTweetInfos(area: ARea, tweet: TweetV2) {
+        const result: TwitterTweetResult = area.trigger.outputs as TwitterTweetResult || {};
 
         result.text = tweet.text;
+        result.lastTweetId = tweet.id;
         if (tweet.lang)
             result.lang = tweet.lang;
         if (tweet.geo && tweet.geo?.coordinates) {
@@ -72,6 +78,8 @@ export class TwitterService {
             result.reply_count = tweet.public_metrics?.reply_count;
         if (tweet.public_metrics?.retweet_count)
             result.retweet_count = tweet.public_metrics?.retweet_count;
+        area.trigger.outputs = result;
+        await TwitterService._areaSchema.edit(area);
     }
 
     public static async GetUserLastTweet(user: User, area: ARea, username: string): Promise<boolean> {
@@ -92,15 +100,12 @@ export class TwitterService {
             for await (const tweet of userTimeline) {
                 if (tweet.referenced_tweets && tweet.referenced_tweets["type"] != "tweeted")
                     continue;
-
-                if (!TwitterService.IsNewPost(area, tweet.id))
+                if (!TwitterService.IsNewPost(area, tweet.id)) {
+                    await this.setTweetInfos(area, tweet);
                     return false;
-
-                this.setTweetInfos(area, tweet);
-
-                const inputs = area.trigger.inputs as TwitterTweetResult;
-
-                inputs.lastTweetId = tweet.id;
+                }
+                console.log("A new tweet is detected !", tweet);
+                await this.setTweetInfos(area, tweet);
                 break;
             }
         } catch (error: unknown) {
@@ -119,7 +124,7 @@ export class TwitterService {
         const client = TwitterService.getClient(user);
 
         try {
-            client.v2.tweet(tweet);
+            await client.v2.tweet(tweet);
         } catch (error) {
             const some_error = error as Error;
 
@@ -131,7 +136,7 @@ export class TwitterService {
         const client = TwitterService.getClient(user);
 
         try {
-            client.v1.updateAccountProfileBanner(imagePath);
+            await client.v1.updateAccountProfileBanner(imagePath);
         } catch (error) {
             const some_error = error as Error;
 
@@ -143,7 +148,7 @@ export class TwitterService {
         const client = TwitterService.getClient(user);
 
         try {
-            client.v1.updateAccountProfileImage(imagePath);
+            await client.v1.updateAccountProfileImage(imagePath);
         } catch (error) {
             const some_error = error as Error;
 
@@ -156,6 +161,12 @@ export class TwitterService {
         const text = "there is a stream by " + stream.Username + " its named " + stream.StreamTitle;
 
         return { text: text };
+    }
+
+    private static async rea_TweetTweet(area: ARea, client: TwitterApi): Promise<SendTweetV2Params> {
+        const text: TwitterPostTweetConfig = area.consequence.inputs as TwitterPostTweetConfig;
+
+        return { text: text.message};
     }
 
     private static async rea_TweetUnsplashPost(area: ARea, client: TwitterApi): Promise<SendTweetV2Params> {
@@ -186,7 +197,7 @@ export class TwitterService {
                     tweet = await TwitterService.rea_TweetTwitchStream(area, client);
                     break;
                 default:
-                    console.log("todo upload file from parameter given");
+                    tweet = await TwitterService.rea_TweetTweet(area, client);
 
             }
         } catch (error: unknown) {

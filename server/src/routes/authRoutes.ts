@@ -120,7 +120,10 @@ router.get("/unsplash/redirect", passport.authenticate("unsplash-web", {
 router.post("/unsplash/redirect/mobile", UnsplashMobileStrategy);
 
 router.get("/redirect", (request: Request, response: Response) => {
-    response.redirect(`${env.CLIENT_HOST}/areas?token=${request.user?.data.token}`);
+    if (request.user?.data.token)
+        response.redirect(`${env.CLIENT_HOST}/areas?token=${request.user.data.token}`);
+    else
+        response.redirect(`${env.CLIENT_HOST}/areas`);
 });
 
 export default router;
