@@ -20,6 +20,7 @@ import unsplashService from "@services/unsplashService";
 import TimeService from "@services/TimeService";
 import githubService from "./githubService";
 import { UserSchema } from "@schemas/user.schema";
+import notionService from "./notionService";
 
 export default class CronService {
 
@@ -158,7 +159,7 @@ export default class CronService {
                 // githubService.rea_CreatePullRequest(area, user);
                 break;
             case ReactionType.NOTION_MSG:
-                // TODO:
+                notionService.appendBlockToPage(area, user);
                 break;
             case ReactionType.DROPBOX_UPLOAD:
                 // DropboxService.rea_uploadFile(area, user);
