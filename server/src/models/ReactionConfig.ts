@@ -36,7 +36,6 @@ export interface GithubCreatePullRequestConfig {
 export interface NotionAddMessageConfig {
     message: string;
     urlPage: string;
-    blockId: string | string;
 }
 
 export interface DropboxUploadConfig {

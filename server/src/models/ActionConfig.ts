@@ -40,7 +40,8 @@ export interface UnsplashPostConfig {
 
 export type ActionConfig = DateTimeConfig
     | TimeConfig
-    | TwitchStreamConfig | TwitterTweetConfig
+    | TwitchStreamConfig
+    | TwitterTweetConfig
     | RSSConfig
     | DiscordMessageConfig
     | GithubIssueConfig | GithubPullReqConfig
