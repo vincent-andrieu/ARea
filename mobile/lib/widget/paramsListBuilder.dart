@@ -17,18 +17,18 @@ class paramsListBuilder {
 
   preBuildTools? tools;
 
-  paramsListBuilder(this.list, String srv, this.actionTrigger, this.isAction, this.tools) {
+  paramsListBuilder(
+      this.list, String srv, this.actionTrigger, this.isAction, this.tools) {
     try {
       service = getFromType(list, srv);
-    } catch(_) {
-    }
+    } catch (_) {}
   }
 
   void setService(String srv, String act) {
     actionTrigger = act;
     try {
       service = getFromType(list, srv);
-    } catch(_) {
+    } catch (_) {
       service = serviceFecth();
     }
   }
@@ -38,18 +38,16 @@ class paramsListBuilder {
 
     try {
       list = getListToBuild();
-    } catch(_) {
-    }
+    } catch (_) {}
 
     return Container(
-        child: Center(
+      child: Center(
           child: SizedBox(
-            height: 150,
-            child: ListView(
-              children: list,
-            ),
-          )
-      ),
+        height: 150,
+        child: ListView(
+          children: list,
+        ),
+      )),
     );
   }
 
@@ -86,7 +84,8 @@ class paramsListBuilder {
   List<Widget> getListToBuild() {
     configFetch conf = getConfig(isAction, actionTrigger);
     List<Widget> list = [];
-    Map<ParameterType,  ITransfer Function(parameterFetch, String defaultValue)>  link = {
+    Map<ParameterType, ITransfer Function(parameterFetch, String defaultValue)>
+        link = {
       ParameterType.DATETIME: textWidget,
       ParameterType.NUMBER: textWidget,
       ParameterType.TEXT: textWidget,
@@ -107,8 +106,9 @@ class paramsListBuilder {
 
         params.add(tmp);
         list.add(tmp.getWidget());
-        list.add(const Padding(padding: EdgeInsets.only(top: 10.0, bottom: 10.0)));
-      } catch(_) {
+        list.add(
+            const Padding(padding: EdgeInsets.only(top: 10.0, bottom: 10.0)));
+      } catch (_) {
         throw "Unknown parameter type";
       }
     }

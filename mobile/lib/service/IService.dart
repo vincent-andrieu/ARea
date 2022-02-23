@@ -5,6 +5,7 @@ import 'package:mobile/api/areaService.dart';
 
 class IService {
   bool connected;
+
   IService(this.connected);
 
   String getName() {
@@ -37,17 +38,19 @@ class IService {
 
   Future<bool> getToken(String srv, areaService api) async {
     try {
-      final result = await FlutterWebAuth.authenticate(url: srv + getUrl(), callbackUrlScheme: "area");
+      final result = await FlutterWebAuth.authenticate(
+          url: srv + getUrl(), callbackUrlScheme: "area");
 
       final token = Uri.parse(result).queryParameters['code'];
 
-      bool value = await api.updateServiceToken(token!, "/auth/${getName()}/redirect/mobile");
+      bool value = await api.updateServiceToken(
+          token!, "/auth/${getName()}/redirect/mobile");
 
       if (value) {
         nowConnected();
       }
       return value;
-    } catch(e) {
+    } catch (e) {
       log(e.toString());
       return false;
     }
@@ -55,18 +58,19 @@ class IService {
 
   Future<bool> addUserService(String srv, areaService api) async {
     try {
-
-      final result = await FlutterWebAuth.authenticate(url: srv + getUrl(), callbackUrlScheme: "area");
+      final result = await FlutterWebAuth.authenticate(
+          url: srv + getUrl(), callbackUrlScheme: "area");
 
       final token = Uri.parse(result).queryParameters['code'];
 
-      bool value = await api.addNewService(token!, "/auth/${getName()}/mobile?token=$token");
+      bool value = await api.addNewService(
+          token!, "/auth/${getName()}/mobile?token=$token");
 
       if (value) {
         nowConnected();
       }
       return value;
-    } catch(e) {
+    } catch (e) {
       log(e.toString());
       return false;
     }
@@ -80,7 +84,7 @@ class IService {
         connected = false;
       }
       return value;
-    } catch(e) {
+    } catch (e) {
       log(e.toString());
       return false;
     }

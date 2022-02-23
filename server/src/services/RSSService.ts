@@ -33,16 +33,20 @@ export default class RSSService {
     // }
 
     static async evalAction(area: ARea): Promise<boolean> {
-        const config = area.trigger.inputs as RSSConfig;
+        try {
+            const config = area.trigger.inputs as RSSConfig;
+            const response = await axios.get(config.url);
 
-        const response = await axios.get(config.url);
-        const body: string = response.data;
-        const hash: string = await bcrypt.hash(body, 42);
+            const body: string = response.data;
+            const hash: string = body.substring(0, 1024) + body.length.toString();
 
-        if (config.prevHash != hash) {
-            (area.trigger.inputs as RSSConfig).prevHash = hash;
-            this.areaSchema.edit(area);
-            return true;
+            if (config.prevHash != hash) {
+                (area.trigger.inputs as RSSConfig).prevHash = hash;
+                this.areaSchema.edit(area);
+                return true;
+            }
+        } catch (err) {
+            console.error("RSSService.evalAction: an error occured => ", err);
         }
         return false;
     }

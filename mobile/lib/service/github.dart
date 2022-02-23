@@ -5,11 +5,7 @@ class github extends IService {
 
   @override
   List<String> getAction() {
-    return [
-      'New Issue',
-      'New Pull Request',
-      'None'
-    ];
+    return ['New Issue', 'New Pull Request', 'None'];
   }
 
   @override
@@ -24,10 +20,7 @@ class github extends IService {
 
   @override
   List<String> getReaction() {
-    return [
-      'Create new Issue',
-      'None'
-    ];
+    return ['Create new Issue', 'None'];
   }
 
   @override

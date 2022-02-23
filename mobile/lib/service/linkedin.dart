@@ -20,10 +20,7 @@ class linkedin extends IService {
 
   @override
   List<String> getReaction() {
-    return [
-      'Publish post',
-      'None'
-    ];
+    return ['Publish post', 'None'];
   }
 
   @override

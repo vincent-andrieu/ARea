@@ -59,9 +59,13 @@ export default class DiscordService {
      * @param message string
      */
     static async sendMessage(channelId: string, message: string): Promise<void> {
-        const channel = await DiscordService.client.channels.fetch(channelId) as TextChannel;
+        try {
+            const channel = await DiscordService.client.channels.fetch(channelId) as TextChannel;
 
-        channel?.send(message);
+            channel?.send(message);
+        } catch (err) {
+            console.error("Discord.sendMessage: fail to fetch channel or to send message.");
+        }
     }
 
     /**
@@ -76,7 +80,7 @@ export default class DiscordService {
                 });
                 if (result != undefined) {
                     // fetch action-reaction
-                    const area: ARea = await this.areaSchema.get(result.areaId);
+                    const area: ARea = await this.areaSchema.getPopulate(result.areaId);
 
                     const user: User = await this.userSchema.getUserByAReaId(area);
                     // TRIGGER REACTION
