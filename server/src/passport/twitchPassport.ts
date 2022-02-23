@@ -97,6 +97,7 @@ const successfullyAuthentificated = async (req: Request, accessToken: string, re
 export async function TwitchMobileStrategy(req: Request, res: Response) {
     const code = req.body.code;
 
+    req.query.state = req.body.token;
     if (!code)
         return res.status(400).send("Missing 'code' attribut");
     try {
