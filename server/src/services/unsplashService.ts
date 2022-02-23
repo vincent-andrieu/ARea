@@ -1,6 +1,7 @@
 import { env } from "process";
 
 import nodeFetch from "node-fetch";
+import axios from "axios";
 import { createApi } from "unsplash-js";
 import { Full, Random } from "unsplash-js/dist/methods/photos/types";
 
@@ -8,8 +9,8 @@ import ARea from "@classes/area.class";
 import { UnsplashPostResult } from "@models/ActionResult";
 import { utils } from "./utils";
 import { unsplashConfig } from "@config/unsplashConfig";
-import axios from "axios";
 import { AReaSchema } from "@schemas/area.schema";
+import OAuthProvider from "@models/oAuthProvider.enum";
 
 export default class unsplashService {
 
