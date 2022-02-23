@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
+import { CookieService } from "ngx-cookie";
 
 import { AuthService, ServiceData } from "@services/auth.service";
+import { environment } from "@environment";
 
 @Component({
     selector: 'app-login',
@@ -18,6 +20,7 @@ export class LoginComponent {
 
     constructor(
         private _router: Router,
+        private _cookieService: CookieService,
         private _authService: AuthService
     ) {}
 
@@ -35,7 +38,9 @@ export class LoginComponent {
             .finally(() => this.isLoading = false);
     }
 
-    public redirectToAppAuth(redirectRoute: string): void {
+    public async redirectToAppAuth(redirectRoute: string): Promise<void> {
+        if (this._cookieService.hasKey(environment.cookiesKey.jwt))
+            await this._authService.logout();
         this._authService.loginToService(redirectRoute);
     }
 

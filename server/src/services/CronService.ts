@@ -8,15 +8,13 @@ import Reaction, { ReactionType } from "@classes/reaction.class";
 import Action, { ActionType } from "@classes/action.class";
 
 import { TwitchStreamConfig, UnsplashPostConfig } from "models/ActionConfig";
-import { DiscordPostMsgConfig, DropboxUploadConfig } from "models/ReactionConfig";
+import { DiscordPostMsgConfig } from "models/ReactionConfig";
 
 import DiscordService from "@services/DiscordService";
 import { TwitchService } from "@services/twitchService";
 import RSSService from "@services/RSSService";
-import { DropboxService } from "@services/DropboxService";
 import unsplashService from "@services/unsplashService";
 import TimeService from "@services/TimeService";
-import githubService from "./githubService";
 
 export default class CronService {
 
@@ -104,14 +102,14 @@ export default class CronService {
             case ActionType.UNSPLASH_POST: {
                 const config: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
 
-                if (await unsplashService.DownloadIfNewPost(area, config.username, config.downloadPath))
+                if (await unsplashService.downloadIfNewPost(area, config.username, config.downloadPath))
                     CronService.triggerReaction(area);
                 break;
             }
             case ActionType.UNSPLASH_RANDOM_POST: {
                 const config: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
 
-                if (await unsplashService.DownloadRandomPost(area, config.downloadPath))
+                if (await unsplashService.downloadRandomPost(area, config.downloadPath))
                     CronService.triggerReaction(area);
                 break;
             }

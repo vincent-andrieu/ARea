@@ -36,7 +36,7 @@ beforeAll(async () => {
 
 describe("githubService", () => {
     it("Get pull requests for a specific repository", async () => {
-        const my_user: User = new User({ username: "ye", oauthLoginProvider: OAuthProvider.GITHUB, token: "", oauth: { github: { accessToken: "", refreshToken: "" } } });
+        const my_user: User = new User({ username: "ye", token: "", oauth: { github: { id: "", accessToken: "", refreshToken: "" } } });
 
         const config: GithubPullReqConfig = { owner: "octokit", repository: "octokit.js", lastId: 0 };
         const actionType: ActionType = ActionType.GITHUB_PULL_REQ;

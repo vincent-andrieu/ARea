@@ -1,6 +1,6 @@
+import { Request } from "express";
 import passport from "passport";
 import passportGithub2 from "passport-github2";
-import { Response, Request } from "express";
 
 import { githubConfig } from "@config/githubConfig";
 import { getStrObjectId } from "@classes/model.class";
@@ -13,85 +13,83 @@ import { decodeJwt } from "../middlewares/checkJwt";
 const GithubStrategy = passportGithub2.Strategy;
 //TODO: do the setting part
 
-const successfullyAuthentificated = async (req: Request, accessToken: string, refreshToken: string, profile, done?: (err?: Error | null, user?: User, info?: object) => void) => {
+async function successfullyAuthentificated(req: Request, accessToken: string, refreshToken: string, profile: Profile, done?: (err?: Error | null, user?: User, info?: object) => void): Promise<User | undefined> {
     const userSchema = new UserSchema();
 
+    console.log("GitHub:", profile);
     try {
-        if (!req.user && typeof req.query.state === "string")
+        if (typeof req.query.state === "string")
             req.user = decodeJwt(req.query.state as string);
 
         const userId: string | undefined = req.user?.data.user_id;
+        let providerUser = await userSchema.findByOAuthProviderId(OAuthProvider.GITHUB, profile.id);
 
         if (userId) {
+            if (providerUser && userId !== getStrObjectId(providerUser))
+                throw "Service user already connected to another user";
             const user: User = await userSchema.get(userId);
 
             if (!user.oauth)
                 user.oauth = {};
             user.oauth.github = {
+                id: profile.id,
                 accessToken: accessToken,
                 refreshToken: refreshToken
             };
             const userEdited = await userSchema.edit(user);
             if (done)
-                return done(null, userEdited);
+                done(null, userEdited);
             return userEdited;
         }
 
-        const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.GITHUB, profile.username);
+        if (!providerUser && (profile._json.email || profile.username || profile._json.login || profile.displayName || profile.id))
+            providerUser = await userSchema.findByUsername(profile._json.email || profile.username || profile._json.login || profile.displayName || profile.id);
 
-        if (oldUser) {
+        if (providerUser) {
             console.log("User already exist");
-            const token = AuthController.signToken({
-                user_id: getStrObjectId(oldUser),
-                username: profile.username
+
+            providerUser.token = AuthController.signToken({
+                user_id: getStrObjectId(providerUser)
             });
-            // save user token
-            oldUser.oauthLoginProvider = OAuthProvider.GITHUB;
-            oldUser.oauthLoginProviderId = profile.username;
-            oldUser.token = token;
-            if (!oldUser.oauth)
-                oldUser.oauth = {};
-            oldUser.oauth.github = {
+            if (!providerUser.oauth)
+                providerUser.oauth = {};
+            providerUser.oauth.github = {
+                id: profile.id,
                 accessToken: accessToken,
                 refreshToken: refreshToken
             };
-            const user = await userSchema.edit(oldUser);
+            const user = await userSchema.edit(providerUser);
             if (done)
                 done(null, user);
-            else
-                return user;
+            return user;
         } else {
             console.log("Create new user");
 
             const user = await userSchema.add(new User({
-                username: profile.username,
-                oauthLoginProvider: OAuthProvider.GITHUB,
-                oauthLoginProviderId: profile.username,
+                username: profile._json.email || profile.username || profile._json.login || profile.displayName || profile.id,
                 oauth: {
                     github: {
+                        id: profile.id,
                         accessToken: accessToken,
                         refreshToken: refreshToken
                     }
                 }
             }));
-            console.log(user);
 
-            const token = AuthController.signToken({
-                user_id: getStrObjectId(user),
-                username: profile.username
+            user.token = AuthController.signToken({
+                user_id: getStrObjectId(user)
             });
-            user.token = token;
             const userEdited = await userSchema.edit(user);
             if (done)
                 done(null, userEdited);
-            else
-                return user;
+            return userEdited;
         }
     } catch (error) {
         if (done)
             done(error as Error);
+        return undefined;
     }
-};
+}
 
 const githubStrategy = new GithubStrategy(
     {

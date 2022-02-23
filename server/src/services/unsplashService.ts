@@ -9,6 +9,7 @@ import { UnsplashPostResult } from "@models/ActionResult";
 import { utils } from "./utils";
 import { unsplashConfig } from "@config/unsplashConfig";
 import axios from "axios";
+import OAuthProvider from "@models/oAuthProvider.enum";
 
 export default class unsplashService {
 
@@ -35,7 +36,7 @@ export default class unsplashService {
         result.likes = post.likes;
     }
 
-    static async DownloadIfNewPost(area: ARea, username: string, downloadPath: string): Promise<boolean> {
+    static async downloadIfNewPost(area: ARea, username: string, downloadPath: string): Promise<boolean> {
         try {
             if (!env.UNSPLASH_API_KEY || !nodeFetch)
                 return false;
@@ -66,7 +67,7 @@ export default class unsplashService {
         return true;
     }
 
-    public static async DownloadRandomPost(area: ARea, downloadPath: string): Promise<boolean> {
+    public static async downloadRandomPost(area: ARea, downloadPath: string): Promise<boolean> {
         if (!env.UNSPLASH_API_KEY || !nodeFetch)
             return false;
         try {
@@ -123,7 +124,7 @@ export default class unsplashService {
         }
     }
 
-    public static async getUserProfile(accessToken: string) {
+    public static async getUserProfile(accessToken: string): Promise<Profile> {
 
         try {
             const res = await axios.get("https://api.unsplash.com/me", {
@@ -132,23 +133,21 @@ export default class unsplashService {
                 }
             });
             const parsedData = res.data;
-            const profile = {
-                provider: "unsplash",
+            const profile: Profile = {
+                provider: OAuthProvider.UNSPLASH,
                 name: {
-                    firstName: parsedData.first_name,
-                    lastName: parsedData.last_name
+                    givenName: parsedData.first_name,
+                    familyName: parsedData.last_name
                 },
                 id: parsedData.uid,
                 username: parsedData.username,
-                email: parsedData.email,
-                _raw: JSON.stringify(parsedData),
-                _json: parsedData
+                displayName: parsedData.username || parsedData.uid,
+                email: parsedData.email
 
             };
             return profile;
         } catch (error) {
-            console.log("[TWITCH] getUserProfile: ", (error as Error).toString());
-            return;
+            throw "[TWITCH] getUserProfile: " + (error as Error).toString();
         }
     }
 }

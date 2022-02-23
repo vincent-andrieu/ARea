@@ -36,7 +36,6 @@ export default (req: Request, res: Response, next: NextFunction) => {
 
 export interface JwtData {
     user_id: string;
-    username: string;
     token?: string;
 }
 
