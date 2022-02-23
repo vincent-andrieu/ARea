@@ -24,7 +24,7 @@ class textInputTransfer extends ITransfer {
 
   textInputTransfer(
       this.key, String descSrc, String hintSrc, String defaultText) {
-    data = InputCustom(descSrc, hintSrc, defaultText, null);
+    data = InputCustom(descSrc, hintSrc, defaultText, false, null);
   }
 
   @override
@@ -49,7 +49,7 @@ class numberInputTransfer extends ITransfer {
 
   numberInputTransfer(
       this.key, String descSrc, String hintSrc, String defaultText) {
-    data = InputCustom(descSrc, hintSrc, defaultText, TextInputType.number);
+    data = InputCustom(descSrc, hintSrc, defaultText, false, TextInputType.number);
   }
 
   @override
@@ -98,7 +98,7 @@ class urlInputTransfer extends ITransfer {
 
   urlInputTransfer(
       this.key, String descSrc, String hintSrc, String defaultText) {
-    data = InputCustom(descSrc, hintSrc, defaultText, TextInputType.url);
+    data = InputCustom(descSrc, hintSrc, defaultText, false, TextInputType.url);
   }
 
   @override
