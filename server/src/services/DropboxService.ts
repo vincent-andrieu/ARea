@@ -44,7 +44,7 @@ export class DropboxService {
                 const configUnsplash: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
                 const dropboxFilepath = (configDropbox.localFilepath ? configDropbox.localFilepath : configUnsplash.downloadPath);
 
-                DropboxService.uploadFile(user, "/tmp/" + configUnsplash.downloadPath + ".webp", dropboxFilepath + ".webp");
+                DropboxService.uploadFile(user, "/tmp/" + configUnsplash.downloadPath + ".webp", "/" + dropboxFilepath + ".webp");
                 break;
             }
             default:

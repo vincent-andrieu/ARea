@@ -84,12 +84,12 @@
     "parameters": [
       {
         "name": "localFilepath",
-        "label": "File Content",
+        "label": "Local File name (ex: filename)",
         "type": "TEXT"
       },
       {
         "name": "remoteFilepath",
-        "label": "File name",
+        "label": "Dropbox File name (ex: filename)",
         "type": "TEXT"
       }
     ],
