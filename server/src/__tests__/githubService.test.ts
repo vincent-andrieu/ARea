@@ -38,7 +38,7 @@ describe("githubService", () => {
     it("Get pull requests for a specific repository", async () => {
         const my_user: User = new User({ username: "ye", oauthLoginProvider: OAuthProvider.GITHUB, token: "", oauth: { github: { accessToken: "", refreshToken: "" } } });
 
-        const config: GithubPullReqConfig = { owner: "octokit", repository: "octokit.js", lastId: 0 };
+        const config: GithubPullReqConfig = { owner: "octokit", repository: "octokit.js" };
         const actionType: ActionType = ActionType.GITHUB_PULL_REQ;
         const action: Action = { type: actionType, parameters: [], service: ServiceType.GITHUB };
         const pullReqResult: GithubResult = {
@@ -55,7 +55,8 @@ describe("githubService", () => {
             userUrl: "",
             body: "",
             created_at: "",
-            labels: []
+            labels: [],
+            lastId: 0
         };
         const twitterConfig: TwitterPostTweetConfig = { message: "" };
         const reaction: Reaction = { type: ReactionType.TWITTER_MSG, parameters: [], service: ServiceType.TWITTER };

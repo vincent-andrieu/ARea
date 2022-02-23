@@ -26,13 +26,11 @@ export interface DiscordMessageConfig {
 export interface GithubIssueConfig {
     owner: string;
     repository: string;
-    lastId: number;
 }
 
 export interface GithubPullReqConfig {
     owner: string;
     repository: string;
-    lastId: number;
 }
 
 export interface UnsplashPostConfig {
@@ -40,6 +38,10 @@ export interface UnsplashPostConfig {
     downloadPath: string;
 }
 
-export type ActionConfig = DateTimeConfig | TimeConfig
-    | TwitchStreamConfig | TwitterTweetConfig | RSSConfig
-    | DiscordMessageConfig | GithubIssueConfig | GithubPullReqConfig | UnsplashPostConfig;
+export type ActionConfig = DateTimeConfig
+    | TimeConfig
+    | TwitchStreamConfig | TwitterTweetConfig
+    | RSSConfig
+    | DiscordMessageConfig
+    | GithubIssueConfig | GithubPullReqConfig
+    | UnsplashPostConfig;

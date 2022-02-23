@@ -36,6 +36,7 @@ export interface GithubCreatePullRequestConfig {
 export interface NotionAddMessageConfig {
     message: string;
     urlPage: string;
+    blockId: string | string;
 }
 
 export interface DropboxUploadConfig {
@@ -44,5 +45,6 @@ export interface DropboxUploadConfig {
 }
 
 export type ReactionConfig = LinkedinPostConfig | TwitterPostTweetConfig
-    | TwitterUpdatePictureConfig | DiscordPostMsgConfig | GithubCreateIssueConfig | GithubCreatePullRequestConfig
+    | TwitterUpdatePictureConfig | DiscordPostMsgConfig
+    | GithubCreateIssueConfig | GithubCreatePullRequestConfig
     | NotionAddMessageConfig | DropboxUploadConfig;

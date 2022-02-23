@@ -54,6 +54,7 @@ export interface GithubResult {
     body: string;
     created_at: string;
     labels: string[];
+    lastId: number;
 }
 
 export interface UnsplashPostResult {
