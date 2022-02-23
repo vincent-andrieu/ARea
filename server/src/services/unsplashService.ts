@@ -73,7 +73,7 @@ export default class unsplashService {
             const dlPic = await unsplash.photos.trackDownload({ downloadLocation: pic.response?.links.download });
             if (!dlPic.response?.url)
                 return false;
-            await utils.DownloadUrl(dlPic.response?.url, downloadPath);
+            await utils.DownloadUrl(dlPic.response?.url, downloadPath, true);
             await this.setDownloadInfos(area, downloadPath, pic.response);
         } catch (error) {
             const some_error = error as Error;
@@ -104,7 +104,7 @@ export default class unsplashService {
             const dlPic = await unsplash.photos.trackDownload({ downloadLocation: pic.response?.links.download });
             if (!dlPic.response?.url)
                 return false;
-            await utils.DownloadUrl(dlPic.response?.url, downloadPath);
+            await utils.DownloadUrl(dlPic.response?.url, downloadPath, true);
             this.setDownloadInfos(area, downloadPath, pic.response);
         } catch (error) {
             const some_error = error as Error;

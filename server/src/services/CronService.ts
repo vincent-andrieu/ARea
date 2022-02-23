@@ -110,6 +110,7 @@ export default class CronService {
             }
             case ActionType.UNSPLASH_POST: {
                 const config: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
+                DropboxService.rea_uploadFile(area, user);
 
                 if (await unsplashService.DownloadIfNewPost(area, config.username, config.downloadPath))
                     CronService.triggerReaction(area, user);
@@ -161,8 +162,7 @@ export default class CronService {
                 // TODO:
                 break;
             case ReactionType.DROPBOX_UPLOAD:
-                // DropboxService.rea_uploadFile(area, user);
-
+                DropboxService.rea_uploadFile(area, user);
                 break;
 
             default:

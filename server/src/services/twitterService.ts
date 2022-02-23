@@ -170,7 +170,7 @@ export class TwitterService {
     private static async rea_TweetTweet(area: ARea, client: TwitterApi): Promise<SendTweetV2Params> {
         const text: TwitterPostTweetConfig = area.consequence.inputs as TwitterPostTweetConfig;
 
-        return { text: text.message};
+        return { text: text.message };
     }
 
     private static async rea_TweetUnsplashPost(area: ARea, client: TwitterApi): Promise<SendTweetV2Params> {
@@ -225,7 +225,7 @@ export class TwitterService {
 
     private static async rea_TwitchStream(area: ARea): Promise<string> {
         const stream: TwitchStreamResult = area.trigger.outputs as TwitchStreamResult;
-        const filepath = "/tmp/" + stream.StreamTitle;
+        const filepath = stream.StreamTitle;
 
         utils.DownloadUrl(stream.StreamThumbnailUrl, filepath);
         return filepath;

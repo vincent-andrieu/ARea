@@ -3,10 +3,11 @@ import sharp from "sharp";
 import { HttpClient } from "typed-rest-client/HttpClient";
 
 export class utils {
-    public static async DownloadUrl(url: string, filepath: string) {
+    public static async DownloadUrl(url: string, filepath: string, convert = false) {
         try {
             const client = new HttpClient("clientTest");
             const response = await client.get(url);
+            filepath = `/tmp/${filepath}`;
             const file: NodeJS.WritableStream = createWriteStream(filepath);
 
             if (response.message.statusCode !== 200) {
@@ -18,6 +19,8 @@ export class utils {
                 file.on("error", (err) => reject(err));
                 const stream = response.message.pipe(file);
                 stream.on("close", () => {
+                    if (convert)
+                        this.convertImage(filepath);
                     resolve(filepath);
                 });
             });
@@ -31,8 +34,18 @@ export class utils {
     public static async createCompressedImage(imagePath: string) {
         try {
             await sharp(imagePath)
-                .webp({ quality: 100})
+                .webp({ quality: 100 })
                 .resize(250, 250)
+                .toFile(`${imagePath}.webp`);
+            console.log(`Compressed ${imagePath} !`);
+        } catch (error) {
+            console.log("createCompressedImage:", (error as Error).message);
+        }
+    }
+
+    public static async convertImage(imagePath: string) {
+        try {
+            await sharp(imagePath)
                 .toFile(`${imagePath}.webp`);
             console.log(`Compressed ${imagePath} !`);
         } catch (error) {
