@@ -205,7 +205,7 @@ class list_ifttt extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  right: 8,
+                  right: 0,
                   child: IconButton(
                     icon: const Icon(Icons.settings),
                     tooltip: 'Going back',

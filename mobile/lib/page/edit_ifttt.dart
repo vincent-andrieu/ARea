@@ -74,20 +74,18 @@ class edit_ifttt extends StatelessWidget {
                       child: Column(
                         children: <Widget>[
                           action.widget,
-                          const Padding(padding: EdgeInsets.only(
-                              top: 10.0,
-                              bottom: 10.0
-                          )),
+                          const Padding(
+                              padding:
+                                  EdgeInsets.only(top: 10.0, bottom: 10.0)),
                           const Icon(
                             Icons.arrow_downward_rounded,
                             color: color_list.primary,
                             size: 100.0,
                           ),
                           reaction.widget,
-                          const Padding(padding: EdgeInsets.only(
-                              top: 10.0,
-                              bottom: 10.0
-                          )),
+                          const Padding(
+                              padding:
+                                  EdgeInsets.only(top: 10.0, bottom: 10.0)),
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
@@ -171,26 +169,32 @@ class edit_ifttt extends StatelessWidget {
           Expanded(
             child: Stack(
               children: [
-                const Center(
-                  child: Text(
-                    'Edit IFTTT',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: color_list.fourth,
-                        fontSize: 50),
-                    textAlign: TextAlign.center,
+                const FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Center(
+                    child: Text(
+                      'Edit IFTTT',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: color_list.fourth,
+                          fontSize: 40),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
-                Positioned(
-                  right: 8,
-                  child: IconButton(
-                    icon: const Icon(Icons.close, size: 40.0),
-                    tooltip: 'Close page',
-                    onPressed: () {
-                      callbackClose(context);
-                    },
+                FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Positioned(
+                    right: 0,
+                    child: IconButton(
+                      icon: const Icon(Icons.close),
+                      tooltip: 'Close page',
+                      onPressed: () {
+                        callbackClose(context);
+                      },
+                    ),
                   ),
-                ),
+                )
               ],
             ),
           )
