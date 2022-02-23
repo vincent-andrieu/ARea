@@ -169,9 +169,9 @@ class edit_ifttt extends StatelessWidget {
           Expanded(
             child: Stack(
               children: [
-                const FittedBox(
-                  fit: BoxFit.fitWidth,
-                  child: Center(
+                const Center(
+                  child: FittedBox(
+                    fit: BoxFit.fitWidth,
                     child: Text(
                       'Edit IFTTT',
                       style: TextStyle(
@@ -182,12 +182,14 @@ class edit_ifttt extends StatelessWidget {
                     ),
                   ),
                 ),
-                FittedBox(
-                  fit: BoxFit.fitWidth,
-                  child: Positioned(
-                    right: 0,
+                Positioned(
+                  right: 0,
+                  child: FittedBox(
+                    fit: BoxFit.fitWidth,
                     child: IconButton(
-                      icon: const Icon(Icons.close),
+                      icon: const Icon(
+                        Icons.close,
+                      ),
                       tooltip: 'Close page',
                       onPressed: () {
                         callbackClose(context);

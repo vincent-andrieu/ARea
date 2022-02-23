@@ -13,8 +13,10 @@ Map<String, WidgetBuilder> buildRouteApp() {
 
   Map<String, WidgetBuilder> route = {
     '/': (BuildContext context) => start_area(api),
-    '/SignIn': (BuildContext context) => auth_page(authentication_e.SIGN_IN, api),
-    '/SignUp': (BuildContext context) => auth_page(authentication_e.SIGN_UP, api),
+    '/SignIn': (BuildContext context) =>
+        auth_page(authentication_e.SIGN_IN, api),
+    '/SignUp': (BuildContext context) =>
+        auth_page(authentication_e.SIGN_UP, api),
     '/Settings': (BuildContext context) => settings_page(api),
     '/List': (BuildContext context) => list_ifttt(api),
     '/Create': (BuildContext context) => create_ifttt(api),
@@ -32,8 +34,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      routes: buildRouteApp()
-    );
+        debugShowCheckedModeBanner: false, routes: buildRouteApp());
   }
 }
