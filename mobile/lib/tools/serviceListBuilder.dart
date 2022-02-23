@@ -8,17 +8,20 @@ import 'package:mobile/service/undefined.dart';
 List<IService> serviceListBuilder(areaService api, bool addNone) {
   List<IService> services = [];
 
+  log("${api.token?.oauth}");
   for (var it in api.listService) {
-    bool? tmp = api.token?.oauth[it.label];
+    bool? tmp = api.token?.oauth[it.label.toLowerCase()];
+
+    log("${it.label} -> $tmp");
 
     if (tmp == null) {
-      services.add(loaded(false, it));
+      services.add(loaded(true, it));
     } else {
       services.add(loaded(tmp, it));
     }
   }
   if (addNone) {
-    services.add(undefined(false));
+    services.add(undefined(true));
   }
   return services;
 }

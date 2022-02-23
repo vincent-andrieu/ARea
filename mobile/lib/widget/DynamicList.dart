@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/api/model/serviceFetch/serviceFetch.dart';
@@ -246,9 +248,17 @@ class _TestListState extends State<TestList> {
 
   List<String> getList() {
     List<String> list = [];
+    bool haveAct = false;
 
     for (var it in service) {
-      list.add(it.getName());
+      if (isService) {
+        haveAct = getChildListAction(it.getName()).length != 1 || it.getName() == "None";
+      } else {
+        haveAct = getChildListReaction(it.getName()).length != 1 || it.getName() == "None";
+      }
+      if (it.getConnexionState() && haveAct) {
+        list.add(it.getName());
+      }
     }
     return list;
   }
