@@ -5,6 +5,7 @@ import { CookieService } from "ngx-cookie";
 
 import { AuthService, ServiceData } from "@services/auth.service";
 import { environment } from "@environment";
+import { ServiceType } from "@classes/model/ServiceType";
 
 @Component({
     selector: 'app-login',
@@ -25,7 +26,7 @@ export class LoginComponent {
     ) {}
 
     public get appsLoginButton(): ReadonlyArray<ServiceData> {
-        return this._authService.apps;
+        return this._authService.apps.filter((app) => app.name !== ServiceType.DISCORD);
     }
 
     public submitForm(): void {

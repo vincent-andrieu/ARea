@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
+import { ServiceType } from "@classes/model/ServiceType";
 
 import { AuthService, ServiceData } from "@services/auth.service";
 
@@ -22,7 +23,7 @@ export class RegisterComponent {
     ) {}
 
     public get appsLoginButton(): ReadonlyArray<ServiceData> {
-        return this._authService.apps;
+        return this._authService.apps.filter((app) => app.name !== ServiceType.DISCORD);
     }
 
     public submitForm(): void {
