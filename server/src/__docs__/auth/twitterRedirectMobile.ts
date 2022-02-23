@@ -20,6 +20,11 @@ export const twitterRedirectMobile = {
                                 type: "string",
                                 description: "The oauth oauth_verifier provided by twitter",
                                 example: "lKzRR7qEjPFp9PADI2ruqCCWXf7QXPc3"
+                            },
+                            token: {
+                                type: "string",
+                                description: "ARea token if the user is login",
+                                example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
                             }
                         }
                     }

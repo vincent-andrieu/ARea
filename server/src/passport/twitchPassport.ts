@@ -13,90 +13,92 @@ import { decodeJwt } from "../middlewares/checkJwt";
 
 const TwitchStrategy = passportTwitch.Strategy;
 
-const successfullyAuthentificated = async (req: Request, accessToken: string, refreshToken: string, profile, done?: (error: Error | null, user?: User) => void) => {
+const successfullyAuthentificated = async (req: Request, accessToken: string, refreshToken: string, profile: Profile, done?: (error: Error | null, user?: User) => void): Promise<User | undefined> => {
     const userSchema = new UserSchema();
 
+    console.log("Twitch:", profile);
     try {
-        if (!req.user && typeof req.query.state === "string")
+        if (typeof req.query.state === "string")
             req.user = decodeJwt(req.query.state as string);
 
         const userId: string | undefined = req.user?.data.user_id;
+        let providerUser = await userSchema.findByOAuthProviderId(OAuthProvider.TWITCH, profile.id);
 
         if (userId) {
+            if (providerUser && userId !== getStrObjectId(providerUser))
+                throw "Service user already connected to another user";
             const user: User = await userSchema.get(userId);
 
             if (!user.oauth)
                 user.oauth = {};
             user.oauth.twitch = {
+                id: profile.id,
                 accessToken: accessToken,
                 refreshToken: refreshToken
             };
             const userEdited = await userSchema.edit(user);
             if (done)
-                return done(null, userEdited);
+                done(null, userEdited);
             return userEdited;
         }
 
-        const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.TWITCH, profile.login);
+        if (!providerUser && (profile.email || profile.login || profile.display_name))
+            providerUser = await userSchema.findByUsername(profile.email || profile.login || profile.display_name);
 
-        if (oldUser) {
+        if (providerUser) {
             console.log("User already exist");
             const token = AuthController.signToken({
-                user_id: getStrObjectId(oldUser),
-                username: profile.login
+                user_id: getStrObjectId(providerUser)
             });
 
-            oldUser.oauthLoginProvider = OAuthProvider.TWITCH;
-            oldUser.oauthLoginProviderId = profile.login;
-            oldUser.token = token;
-            if (!oldUser.oauth)
-                oldUser.oauth = {};
-            oldUser.oauth.twitch = {
+            providerUser.token = token;
+            if (!providerUser.oauth)
+                providerUser.oauth = {};
+            providerUser.oauth.twitch = {
+                id: profile.id,
                 accessToken: accessToken,
                 refreshToken: refreshToken
             };
-            const user = await userSchema.edit(oldUser);
+
+            const user = await userSchema.edit(providerUser);
             if (done)
                 done(null, user);
-            else
-                return user;
+            return user;
         } else {
             console.log("Create new user");
 
             const user = await userSchema.add(new User({
-                username: profile.login,
-                oauthLoginProvider: OAuthProvider.TWITCH,
-                oauthLoginProviderId: profile.login,
+                username: profile.email || profile.login || profile.display_name,
                 oauth: {
                     twitch: {
+                        id: profile.id,
                         accessToken: accessToken,
                         refreshToken: refreshToken
                     }
                 }
             }));
 
-            const token = AuthController.signToken({
-                user_id: getStrObjectId(user),
-                username: profile.login
+            user.token = AuthController.signToken({
+                user_id: getStrObjectId(user)
             });
-            user.token = token;
             const userEdited = await userSchema.edit(user);
             if (done)
                 done(null, userEdited);
-            else
-                return userEdited;
+            return userEdited;
         }
     } catch (error) {
         console.log("twitchStrategy callback error: ", (error as Error).toString());
         if (done)
             done(error as Error);
+        return undefined;
     }
 };
 
 export async function TwitchMobileStrategy(req: Request, res: Response) {
     const code = req.body.code;
 
-    if (code == undefined)
+    req.query.state = req.body.token;
+    if (!code)
         return res.status(400).send("Missing 'code' attribut");
     try {
         const oauth = await TwitchService.getAccessToken(code);

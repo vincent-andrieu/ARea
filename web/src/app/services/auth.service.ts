@@ -98,8 +98,14 @@ export class AuthService {
     }
 
     public disconnectFromService(name: string): Promise<void> {
-        return firstValueFrom(this._httpClient.post<void>(`/auth/disconnect/${name}`, {}))
-            .catch((err) => this._snackbarService.openError(err));
+        return new Promise<void>((resolve, reject) => {
+            this._httpClient.post<void>(`/auth/disconnect/${name.toLowerCase()}`, undefined)
+                .pipe(catchError((err) => {
+                    this._snackbarService.openError(err);
+                    return of(reject(err));
+                }))
+                .subscribe(() => resolve());
+        });
     }
 
     public logout(): void {

@@ -1,21 +1,12 @@
 export const user = {
     User: {
         type: "object",
-        required: ["username", "oauthLoginProvider"],
+        required: ["username"],
         properties: {
             username: {
                 type: "string",
                 description: "The username of the account",
                 example: "bob"
-            },
-            oauthLoginProvider: {
-                type: "object",
-                $ref: "#/components/schemas/OauthLoginProvider"
-            },
-            oauthLoginProviderId: {
-                type: "string",
-                description: "The id of the oauth acount",
-                example: "03914313431"
             },
             token: {
                 type: "string",
@@ -46,8 +37,8 @@ export const user = {
                     },
                     discord: {
                         type: "boolean",
-                        description: "Is the user's discord account connected",
-                        example: true
+                        description: "Will always be false",
+                        example: false
                     },
                     dropbox: {
                         type: "boolean",

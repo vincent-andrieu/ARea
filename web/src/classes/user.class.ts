@@ -1,11 +1,8 @@
 import Model, { ObjectId } from "./model.class";
 import ARea from "./area.class";
-import OAuthProvider from "./model/oAuthProvider.enum";
 
 export default class User extends Model {
     username: string;
-    oauthLoginProvider: OAuthProvider = OAuthProvider.LOCAL;
-    oauthLoginProviderId?: string;
     token?: string;
     areas?: Array<ARea> | Array<ObjectId> = [];
     oauth?: {
@@ -23,9 +20,6 @@ export default class User extends Model {
         super(user);
 
         this.username = user.username || "";
-        if (user.oauthLoginProvider)
-            this.oauthLoginProvider = user.oauthLoginProvider;
-        this.oauthLoginProviderId = user.oauthLoginProviderId;
         this.token = user.token;
 
         if (user.areas && Array.isArray(user.areas) && user.areas.length > 0)

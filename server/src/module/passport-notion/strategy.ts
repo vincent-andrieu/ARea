@@ -2,6 +2,8 @@ import https from "https";
 import { URL } from "url";
 import { Strategy as PassportStrategy } from "passport-strategy";
 import type { GetUserResponse } from "@notionhq/client/build/src/api-endpoints";
+import { Request } from "express";
+import User from "@classes/user.class";
 
 export type NotionPersonUser = Extract<GetUserResponse, { type: "person" }>
 
@@ -26,12 +28,12 @@ export interface NotionStrategyOptions {
 
 export interface NotionVerifyCallback {
     (
-        req: unknown, // req,
+        req: Request, // req,
         accessToken: string, // oauthData.access_token,
-        _unknown: undefined, // ? undefined,
+        _unknown: unknown, // ? undefined,
         oauthData: NotionOAuthToken, // ? Notion OAuth response?
         userProfileData: GetUserResponse, // ? get /v1/users/me response?
-        callback: (err: Error | undefined, user: any, info: unknown) => void
+        callback: (err: Error | undefined, user?: User, info?: unknown) => void
     ): void
 }
 
@@ -70,11 +72,10 @@ export default class Strategy extends PassportStrategy {
     }
 
     async authenticate(
-        //req: Parameters<PassportStrategy["authenticate"]>[0],
-        req: any,
+        req: Request,
         options: Parameters<PassportStrategy["authenticate"]>[1]
     ) {
-        options = options || {};
+        const authOptions = { ...this._options, ...options };
         if (req.query && req.query.code)
             try {
                 const oauthData = await this.getOAuthAccessToken(req.query.code as string);
@@ -89,7 +90,7 @@ export default class Strategy extends PassportStrategy {
                     oauthData.owner.user,
                     (err, user, info) => {
                         if (err) return this.error(err);
-                        if (!user) return this.fail(info as any /* ??? */);
+                        if (!user) return this.fail(info);
                         this.success(user);
                     }
                 );
@@ -99,10 +100,10 @@ export default class Strategy extends PassportStrategy {
         else {
             const authUrl = new URL(this._authorizationURL);
             authUrl.searchParams.set("client_id", this._clientID);
-            authUrl.searchParams.set("redirect_uri", this._options.callbackURL);
+            authUrl.searchParams.set("redirect_uri", authOptions.callbackURL);
             authUrl.searchParams.set("response_type", "code");
-            if (this._options?.state)
-                authUrl.searchParams.set("state", this._options.state);
+            if (authOptions.state)
+                authUrl.searchParams.set("state", authOptions.state);
             const location = authUrl.toString();
             this.redirect(location);
         }

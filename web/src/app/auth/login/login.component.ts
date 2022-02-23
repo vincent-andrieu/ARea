@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
+import { CookieService } from "ngx-cookie";
 
 import { AuthService, ServiceData } from "@services/auth.service";
+import { environment } from "@environment";
+import { ServiceType } from "@classes/model/ServiceType";
 
 @Component({
     selector: 'app-login',
@@ -18,11 +21,12 @@ export class LoginComponent {
 
     constructor(
         private _router: Router,
+        private _cookieService: CookieService,
         private _authService: AuthService
     ) {}
 
     public get appsLoginButton(): ReadonlyArray<ServiceData> {
-        return this._authService.apps;
+        return this._authService.apps.filter((app) => app.name !== ServiceType.DISCORD);
     }
 
     public submitForm(): void {
@@ -35,7 +39,9 @@ export class LoginComponent {
             .finally(() => this.isLoading = false);
     }
 
-    public redirectToAppAuth(redirectRoute: string): void {
+    public async redirectToAppAuth(redirectRoute: string): Promise<void> {
+        if (this._cookieService.hasKey(environment.cookiesKey.jwt))
+            await this._authService.logout();
         this._authService.loginToService(redirectRoute);
     }
 

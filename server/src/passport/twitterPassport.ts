@@ -16,69 +16,68 @@ const TwitterStrategy = passportTwitter.Strategy;
 const successfullyAuthentificated = async (req: Request, accessToken: string, tokenSecret: string, profile: Profile, done: ((error: unknown, user?: User) => void) | undefined) => {
     const userSchema = new UserSchema();
 
+    console.log("Twitter:", profile);
     try {
-        if (!req.user && typeof req.query.state === "string")
+        if (typeof req.query.state === "string")
             req.user = decodeJwt(req.query.state as string);
         const userId: string | undefined = req.user?.data.user_id;
+        let providerUser = await userSchema.findByOAuthProviderId(OAuthProvider.TWITTER, profile.id);
 
         if (userId) {
+            if (providerUser && userId !== getStrObjectId(providerUser))
+                throw "Service user already connected to another user";
             const user: User = await userSchema.get(userId);
 
             if (!user.oauth)
                 user.oauth = {};
             user.oauth.twitter = {
+                id: profile.id,
                 accessToken: accessToken,
                 secretToken: tokenSecret
             };
             const userEdited = await userSchema.edit(user);
             if (done)
-                return done(null, userEdited);
+                done(null, userEdited);
             return userEdited;
         }
 
-        const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.TWITTER, profile.username);
+        if (!providerUser && (profile.username || profile.displayName || profile.id))
+            providerUser = await userSchema.findByUsername(profile.username || profile.displayName || profile.id);
 
-        if (oldUser) {
+        if (providerUser) {
             console.log("User already exist");
-            const token = AuthController.signToken({
-                user_id: getStrObjectId(oldUser),
-                username: profile.username
+            providerUser.token = AuthController.signToken({
+                user_id: getStrObjectId(providerUser)
             });
 
-            oldUser.oauthLoginProvider = OAuthProvider.TWITTER;
-            oldUser.oauthLoginProviderId = profile.username;
-            oldUser.token = token;
-            if (!oldUser.oauth)
-                oldUser.oauth = {};
-            oldUser.oauth.twitter = {
+            if (!providerUser.oauth)
+                providerUser.oauth = {};
+            providerUser.oauth.twitter = {
+                id: profile.id,
                 accessToken: accessToken,
                 secretToken: tokenSecret
             };
-            const userEdited = await userSchema.edit(oldUser);
+            const userEdited = await userSchema.edit(providerUser);
             if (done)
                 done(null, userEdited);
-            else
-                return userEdited;
+            return userEdited;
         } else {
             console.log("Create new user");
 
             const user = await userSchema.add(new User({
-                username: profile.username,
-                oauthLoginProvider: OAuthProvider.TWITTER,
-                oauthLoginProviderId: profile.username,
+                username: profile.username || profile.displayName || profile.id,
                 oauth: {
                     twitter: {
+                        id: profile.id,
                         accessToken: accessToken,
                         secretToken: tokenSecret
                     }
                 }
             }));
 
-            const token = AuthController.signToken({
-                user_id: getStrObjectId(user),
-                username: profile.username
+            user.token = AuthController.signToken({
+                user_id: getStrObjectId(user)
             });
-            user.token = token;
             const userEdited = await userSchema.edit(user);
             if (done)
                 done(null, userEdited);
@@ -87,12 +86,14 @@ const successfullyAuthentificated = async (req: Request, accessToken: string, to
     } catch (error) {
         if (done)
             done(error, undefined);
+        return undefined;
     }
 };
 
 export const TwitterMobileStrategy = async (req: Request, res: Response) => {
     const { oauth_token, oauth_verifier } = req.body;
 
+    req.query.state = req.body.token;
     if (!oauth_token || !oauth_verifier)
         return res.status(400).send("Missing 'code' attribut");
     try {

@@ -9,17 +9,16 @@ import Reaction, { ReactionType } from "@classes/reaction.class";
 import Action, { ActionType } from "@classes/action.class";
 
 import { TwitchStreamConfig, UnsplashPostConfig } from "models/ActionConfig";
-import { DiscordPostMsgConfig, DropboxUploadConfig } from "models/ReactionConfig";
+import { DiscordPostMsgConfig } from "models/ReactionConfig";
 
 import { TwitterService } from "@services/twitterService";
 import DiscordService from "@services/DiscordService";
 import { TwitchService } from "@services/twitchService";
 import RSSService from "@services/RSSService";
-import { DropboxService } from "@services/DropboxService";
 import unsplashService from "@services/unsplashService";
 import TimeService from "@services/TimeService";
-import githubService from "./githubService";
 import { UserSchema } from "@schemas/user.schema";
+import notionService from "./notionService";
 
 export default class CronService {
 
@@ -112,14 +111,14 @@ export default class CronService {
                 const config: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
                 DropboxService.rea_uploadFile(area, user);
 
-                if (await unsplashService.DownloadIfNewPost(area, config.username, config.downloadPath))
+                if (await unsplashService.downloadIfNewPost(area, config.username, config.downloadPath))
                     CronService.triggerReaction(area, user);
                 break;
             }
             case ActionType.UNSPLASH_RANDOM_POST: {
                 const config: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
 
-                if (await unsplashService.DownloadRandomPost(area, config.downloadPath))
+                if (await unsplashService.downloadRandomPost(area, config.downloadPath))
                     CronService.triggerReaction(area, user);
                 break;
             }
@@ -159,7 +158,7 @@ export default class CronService {
                 // githubService.rea_CreatePullRequest(area, user);
                 break;
             case ReactionType.NOTION_MSG:
-                // TODO:
+                notionService.rea_appendTextToPage(area, user);
                 break;
             case ReactionType.DROPBOX_UPLOAD:
                 DropboxService.rea_uploadFile(area, user);
