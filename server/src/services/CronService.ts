@@ -8,7 +8,7 @@ import User from "@classes/user.class";
 import Reaction, { ReactionType } from "@classes/reaction.class";
 import Action, { ActionType } from "@classes/action.class";
 
-import { TwitchStreamConfig, UnsplashPostConfig } from "models/ActionConfig";
+import { GithubIssueConfig, TwitchStreamConfig, UnsplashPostConfig } from "models/ActionConfig";
 import { DiscordPostMsgConfig } from "models/ReactionConfig";
 
 import { TwitterService } from "@services/twitterService";
@@ -98,11 +98,17 @@ export default class CronService {
                 break;
             }
             case ActionType.GITHUB_ISSUE: {
-                // TODO:
+                const githubConfig = area.trigger.inputs as GithubIssueConfig;
+
+                if (await githubService.getIfNewIssue(area, user, githubConfig.repository, githubConfig.owner))
+                    CronService.triggerReaction(area, user);
                 break;
             }
             case ActionType.GITHUB_PULL_REQ: {
-                // TODO:
+                const githubConfig = area.trigger.inputs as GithubIssueConfig;
+
+                if (await githubService.getIfNewPullRequest(area, user, githubConfig.repository, githubConfig.owner))
+                    CronService.triggerReaction(area, user);
                 break;
             }
             case ActionType.DISCORD_MSG: {

@@ -8,11 +8,13 @@ import { GithubIssueConfig, GithubPullReqConfig } from "@models/ActionConfig";
 import User from "@classes/user.class";
 import Action, { ActionType } from "@classes/action.class";
 import { GithubCreateIssueConfig, GithubCreatePullRequestConfig } from "@models/ReactionConfig";
+import { AReaSchema } from "@schemas/area.schema";
 
 const pagination = 10;
 
 export default class githubService {
 
+    private static _areaSchema = new AReaSchema();
 
     private static launchOctokit(personnalAccessToken: string): Octokit | null {
 
@@ -35,13 +37,13 @@ export default class githubService {
             return false;
         if (last.lastId === id)
             return false;
-        last.lastId = id;
         return true;
     }
 
-    private static areaSetInfos(area: ARea, repo: string, owner: string, pr) {
-        const result: GithubResult = area.trigger.outputs as GithubResult;
+    private static async areaSetInfos(area: ARea, repo: string, owner: string, pr) {
+        const result: GithubResult = area.trigger.outputs as GithubResult || {};
 
+        result.lastId = pr.id;
         result.owner = owner;
         result.repository = repo;
         result.url = pr.url;
@@ -55,10 +57,13 @@ export default class githubService {
         result.userUrl = pr.user.html_url;
         result.body = pr.body;
         result.created_at = pr.created_at;
-        if (!Array.isArray(pr.labels) || !Array.isArray(result.labels))
-            return;
-        for (const label of pr.labels)
-            result.labels.push(label.name);
+        if (Array.isArray(pr.labels)) {
+            result.labels = [];
+            for (const label of pr.labels)
+                result.labels.push(label.name);
+        }
+        area.trigger.outputs = result;
+        await githubService._areaSchema.edit(area);
     }
 
 
@@ -79,9 +84,11 @@ export default class githubService {
 
         if (!pullRequests || !pullRequests.data[0])
             return false;
-        if (!githubService.isNewId(area, pullRequests.data[0].id))
+        if (!githubService.isNewId(area, pullRequests.data[0].id)) {
+            await this.areaSetInfos(area, repo, owner, pullRequests.data[0]);
             return false;
-        githubService.areaSetInfos(area, repo, owner, pullRequests.data[0]);
+        }
+        await this.areaSetInfos(area, repo, owner, pullRequests.data[0]);
         console.log("pullRequest : ", pullRequests.data[0]);
 
         return true;
@@ -104,10 +111,12 @@ export default class githubService {
 
         if (!issues || !issues.data || !issues.data[0])
             return false;
-        console.log(issues.data[0])
-        if (!githubService.isNewId(area, issues.data[0].id))
+        console.log(issues.data[0]);
+        if (!githubService.isNewId(area, issues.data[0].id)) {
+            await this.areaSetInfos(area, repo, owner, issues.data[0]);
             return false;
-        githubService.areaSetInfos(area, repo, owner, issues.data[0]);
+        }
+        await githubService.areaSetInfos(area, repo, owner, issues.data[0]);
 
         return true;
     }
