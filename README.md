@@ -209,4 +209,13 @@ There are also several endpoints used to register or login the user on the appli
 
 ## Web app
 
+![start](/doc/web_start-page.png)
+![login](/doc/web_login-page.png)
+![register](/doc/web_register_page.png)
+![home](/doc/web_home_page.png)
+![settings](/doc/web_settings_page.png)
+![create](/doc/web_create_page.png)
+![create](/doc/web_create_page_2.png)
+![edit](/doc/web_edit_page.png)
+
 ## Mobile app
