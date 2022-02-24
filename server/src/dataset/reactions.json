@@ -22,6 +22,17 @@
     "service": "TWITTER"
   },
   {
+    "type": "TWITTER_BANNER",
+    "parameters": [
+      {
+        "name": "noting",
+        "label": "URL",
+        "type": "URL"
+      }
+    ],
+    "service": "TWITTER"
+  },
+  {
     "type": "DISCORD_MSG",
     "parameters": [
       {
@@ -84,12 +95,12 @@
     "parameters": [
       {
         "name": "localFilepath",
-        "label": "File Content",
+        "label": "Local File name (ex: filename)",
         "type": "TEXT"
       },
       {
         "name": "remoteFilepath",
-        "label": "File name",
+        "label": "Dropbox File name (ex: filename)",
         "type": "TEXT"
       }
     ],

@@ -1,5 +1,7 @@
 # !/bin/bash
 
+# Deprecated !!!!!
+
 docker exec -it b-yep-500-ren-5-1-yearendproject-aurelienjoncour_database_1 /bin/sh -c '
     mongoimport --db area-db --collection actions \
             --authenticationDatabase admin --username root --password root_password \

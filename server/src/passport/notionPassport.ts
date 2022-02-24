@@ -8,74 +8,85 @@ import { Strategy as NotionStrategy } from "../module/passport-notion";
 import { notionConfig } from "@config/notionConfig";
 import OAuthProvider from "../models/oAuthProvider.enum";
 import { decodeJwt } from "../middlewares/checkJwt";
+import { NotionOAuthToken } from "module/passport-notion/strategy";
+import { GetUserResponse } from "@notionhq/client/build/src/api-endpoints";
+import { Request } from "express";
 
-const successfullyAuthentificated = async (req, accessToken: string, _, oauthData, userNotion, done) => {
+const successfullyAuthentificated = async (req: Request, accessToken: string, _: unknown, oauthData: NotionOAuthToken, profile: GetUserResponse, done?: (err: Error | undefined, user?: User, info?: unknown) => void): Promise<User | undefined> => {
     const userSchema = new UserSchema();
 
-    console.log(userNotion);
+    console.log("Notion:", profile);
     try {
-        if (!req.user && typeof req.query.state === "string")
+        if (profile.type !== "person")
+            throw "Invalid Notion user: " + profile.type;
+        if (typeof req.query.state === "string")
             req.user = decodeJwt(req.query.state as string);
 
         const userId: string | undefined = req.user?.data.user_id;
+        let providerUser: User | undefined = await userSchema.findByOAuthProviderId(OAuthProvider.NOTION, profile.id);
 
         if (userId) {
+            if (providerUser && userId !== getStrObjectId(providerUser))
+                throw "Service user already connected to another user";
             const user: User = await userSchema.get(userId);
 
             if (!user.oauth)
                 user.oauth = {};
             user.oauth.notion = {
+                id: profile.id,
                 accessToken: accessToken
             };
             const userEdited = await userSchema.edit(user);
             if (done)
-                return done(null, userEdited);
+                done(undefined, userEdited);
             return userEdited;
         }
 
-        const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.NOTION, userNotion.person.email);
+        if (!providerUser && (profile.person.email || profile.name || profile.id))
+            providerUser = await userSchema.findByUsername(profile.person.email || profile.name || profile.id);
 
-        if (oldUser) {
+        if (providerUser) {
             console.log("User already exist");
-            const token = AuthController.signToken({
-                user_id: getStrObjectId(oldUser),
-                username: userNotion.person.email
+            providerUser.token = AuthController.signToken({
+                user_id: getStrObjectId(providerUser)
             });
 
-            oldUser.oauthLoginProvider = OAuthProvider.NOTION;
-            oldUser.oauthLoginProviderId = userNotion.person.email;
-            oldUser.token = token;
-            if (!oldUser.oauth)
-                oldUser.oauth = {};
-            oldUser.oauth.notion = {
+            if (!providerUser.oauth)
+                providerUser.oauth = {};
+            providerUser.oauth.notion = {
+                id: profile.id,
                 accessToken: accessToken
             };
 
-            done(null, await userSchema.edit(oldUser));
+            const user = await userSchema.edit(providerUser);
+            if (done)
+                done(undefined, user);
+            return user;
         } else {
             console.log("Create new user");
 
             const user = await userSchema.add(new User({
-                username: userNotion.person.email,
-                oauthLoginProvider: OAuthProvider.NOTION,
-                oauthLoginProviderId: userNotion.person.email,
+                username: profile.person.email || profile.name || profile.id,
                 oauth: {
                     notion: {
+                        id: profile.id,
                         accessToken: accessToken
                     }
                 }
             }));
 
-            const token = AuthController.signToken({
-                user_id: getStrObjectId(user),
-                username: userNotion.person.email
+            user.token = AuthController.signToken({
+                user_id: getStrObjectId(user)
             });
-            user.token = token;
             await userSchema.edit(user);
-            done(null, user);
+            if (done)
+                done(undefined, user);
+            return user;
         }
     } catch (error) {
-        done(error, null);
+        if (done)
+            done(error as Error);
+        return undefined;
     }
 };
 

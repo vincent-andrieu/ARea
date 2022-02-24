@@ -12,77 +12,84 @@ import { decodeJwt } from "../middlewares/checkJwt";
 
 const DropboxStrategy = passportDropbox.Strategy;
 
-const successfullyAuthentificated = async (req: Request, accessToken: string, refreshToken: string, profile, done) => {
+async function successfullyAuthentificated(req: Request, accessToken: string, refreshToken: string, profile: Profile, done?: (err?: Error | null, user?: User, info?: object) => void): Promise<User | undefined> {
     const userSchema = new UserSchema();
 
+    console.log("Dropbox:", profile);
     try {
-        if (!req.user && typeof req.query.state === "string")
+        if (typeof req.query.state === "string")
             req.user = decodeJwt(req.query.state as string);
 
         const userId: string | undefined = req.user?.data.user_id;
+        let providerUser = await userSchema.findByOAuthProviderId(OAuthProvider.DROPBOX, profile.id);
 
         if (userId) {
+            if (providerUser && userId !== getStrObjectId(providerUser))
+                throw "Service user already connected to another user";
             const user: User = await userSchema.get(userId);
 
             if (!user.oauth)
                 user.oauth = {};
             user.oauth.dropbox = {
+                id: profile.id,
                 accessToken: accessToken,
                 refreshToken: refreshToken
             };
             const userEdited = await userSchema.edit(user);
             if (done)
-                return done(null, userEdited);
+                done(null, userEdited);
             return userEdited;
         }
 
-        const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.DROPBOX, profile.id);
+        if (!providerUser && (profile._json.email || profile.username || profile.displayName || profile.id))
+            providerUser = await userSchema.findByUsername(profile._json.email || profile.username || profile.displayName || profile.id);
 
-        if (oldUser) {
+        if (providerUser) {
             console.log("User already exist");
-            const token = AuthController.signToken({
-                user_id: getStrObjectId(oldUser),
-                username: profile.id
+            providerUser.token = AuthController.signToken({
+                user_id: getStrObjectId(providerUser)
             });
 
-            oldUser.oauthLoginProvider = OAuthProvider.DROPBOX;
-            oldUser.oauthLoginProviderId = profile.id;
-            oldUser.token = token;
-            if (!oldUser.oauth)
-                oldUser.oauth = {};
-            oldUser.oauth.dropbox = {
+            if (!providerUser.oauth)
+                providerUser.oauth = {};
+            providerUser.oauth.dropbox = {
+                id: profile.id,
                 accessToken: accessToken,
                 refreshToken: refreshToken
             };
 
-            done(null, await userSchema.edit(oldUser));
+            const user = await userSchema.edit(providerUser);
+            if (done)
+                done(null, user);
+            return user;
         } else {
             console.log("Create new user");
 
             const user = await userSchema.add(new User({
-                username: profile.id,
-                oauthLoginProvider: OAuthProvider.DROPBOX,
-                oauthLoginProviderId: profile.id,
+                username: profile._json.email || profile.username || profile.displayName || profile.id,
                 oauth: {
                     dropbox: {
+                        id: profile.id,
                         accessToken: accessToken,
                         refreshToken: refreshToken
                     }
                 }
             }));
 
-            const token = AuthController.signToken({
-                user_id: getStrObjectId(user),
-                username: profile.login
+            user.token = AuthController.signToken({
+                user_id: getStrObjectId(user)
             });
-            user.token = token;
-            done(null, await userSchema.edit(user));
+            if (done)
+                done(null, await userSchema.edit(user));
+            return user;
         }
 
     } catch (error) {
-        done(error, null);
+        if (done)
+            done(error as Error);
+        return undefined;
     }
-};
+}
 
 passport.use("dropbox-oauth2-web", new DropboxStrategy(
     { apiVersion: "2", ...dropboxConfig, passReqToCallback: true },

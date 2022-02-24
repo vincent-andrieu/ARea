@@ -1,11 +1,8 @@
 import Model, { ObjectId } from "./model.class";
 import ARea from "./area.class";
-import OAuthProvider from "../models/oAuthProvider.enum";
 
 export interface IRawUser {
     username: string;
-    oauthLoginProvider: OAuthProvider;
-    oauthLoginProviderId?: string;
     token?: string;
     areas?: Array<ARea> | Array<ObjectId>;
     oauth?: {
@@ -23,41 +20,43 @@ export interface IRawUser {
 export default class User extends Model {
     username: string;
     password?: string;
-    oauthLoginProvider: OAuthProvider = OAuthProvider.LOCAL;
-    oauthLoginProviderId?: string;
     token?: string;
     areas?: Array<ARea> | Array<ObjectId> = [];
     oauth?: {
         twitter?: {
-            accessToken: string
-            secretToken: string
+            id: string;
+            accessToken: string;
+            secretToken: string;
         },
         github?: {
-            accessToken: string
-            refreshToken: string
+            id: string;
+            accessToken: string;
+            refreshToken: string;
         },
-        discord?: {
-            accessToken: string
-            refreshToken: string
-        }
+        discord?: never,
         dropbox?: {
-            accessToken: string
-            refreshToken: string
+            id: string;
+            accessToken: string;
+            refreshToken: string;
         },
         notion?: {
-            accessToken: string
+            id: string;
+            accessToken: string;
         },
         twitch?: {
-            accessToken: string
-            refreshToken: string
+            id: string;
+            accessToken: string;
+            refreshToken: string;
         },
         linkedin?: {
-            accessToken: string
-            refreshToken: string
+            id: string;
+            accessToken: string;
+            refreshToken: string;
         },
         unsplash?: {
-            accessToken: string
-            refreshToken: string
+            id: string;
+            accessToken: string;
+            refreshToken: string;
         }
     };
 
@@ -66,48 +65,47 @@ export default class User extends Model {
 
         this.username = user.username || "";
         this.password = user.password;
-        if (user.oauthLoginProvider)
-            this.oauthLoginProvider = user.oauthLoginProvider;
-        this.oauthLoginProviderId = user.oauthLoginProviderId;
         this.token = user.token;
         this.oauth = {};
         if (user.oauth) {
             if (user.oauth.twitter)
                 this.oauth.twitter = {
+                    id: user.oauth.twitter.id,
                     accessToken: user.oauth.twitter.accessToken,
                     secretToken: user.oauth.twitter.secretToken
                 };
             if (user.oauth.github)
                 this.oauth.github = {
+                    id: user.oauth.github.id,
                     accessToken: user.oauth.github.accessToken,
                     refreshToken: user.oauth.github.refreshToken
                 };
-            if (user.oauth.discord)
-                this.oauth.discord = {
-                    accessToken: user.oauth.discord.accessToken,
-                    refreshToken: user.oauth.discord.refreshToken
-                };
             if (user.oauth.dropbox)
                 this.oauth.dropbox = {
+                    id: user.oauth.dropbox.id,
                     accessToken: user.oauth.dropbox.accessToken,
                     refreshToken: user.oauth.dropbox.refreshToken
                 };
             if (user.oauth.notion)
                 this.oauth.notion = {
+                    id: user.oauth.notion.id,
                     accessToken: user.oauth.notion.accessToken
                 };
             if (user.oauth.twitch)
                 this.oauth.twitch = {
+                    id: user.oauth.twitch.id,
                     accessToken: user.oauth.twitch.accessToken,
                     refreshToken: user.oauth.twitch.refreshToken
                 };
             if (user.oauth.linkedin)
                 this.oauth.linkedin = {
+                    id: user.oauth.linkedin.id,
                     accessToken: user.oauth.linkedin.accessToken,
                     refreshToken: user.oauth.linkedin.refreshToken
                 };
             if (user.oauth.unsplash)
                 this.oauth.unsplash = {
+                    id: user.oauth.unsplash.id,
                     accessToken: user.oauth.unsplash.accessToken,
                     refreshToken: user.oauth.unsplash.refreshToken
                 };
@@ -127,8 +125,6 @@ export default class User extends Model {
     public toRaw(): IRawUser {
         return {
             username: this.username,
-            oauthLoginProvider: this.oauthLoginProvider,
-            oauthLoginProviderId: this.oauthLoginProviderId,
             token: this.token,
             areas: this.areas,
             oauth: {

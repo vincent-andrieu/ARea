@@ -15,6 +15,11 @@ export const twitchRedirectMobile = {
                                 type: "string",
                                 description: "The oauth2 code provided by twitch",
                                 example: "1k1xh2axqn4bjq1f6vy6vv4jpt1vez"
+                            },
+                            token: {
+                                type: "string",
+                                description: "ARea token if the user is login",
+                                example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
                             }
                         }
                     }

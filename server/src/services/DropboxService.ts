@@ -17,7 +17,7 @@ export class DropboxService {
             return;
         const client = new Dropbox({ clientId: env.DROPBOX_API_KEY, clientSecret: env.DROPBOX_API_SECRET_KEY, accessToken: user.oauth.dropbox?.accessToken });
 
-        readFile(filepath, "utf-8", (err, contents) => {
+        readFile(filepath, (err, contents) => {
             if (err)
                 console.log("Error: ", err);
 
@@ -37,15 +37,14 @@ export class DropboxService {
 
     public static rea_uploadFile(area: ARea, user: User) {
         const action: Action = area.trigger.action as Action;
-        const config = area.consequence.inputs as DropboxUploadConfig;
+        const configDropbox: DropboxUploadConfig = area.consequence.inputs as DropboxUploadConfig;
 
         switch (action.type) {
             case ActionType.UNSPLASH_POST: {
                 const configUnsplash: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
-                const configDropbox: DropboxUploadConfig = area.consequence.inputs as DropboxUploadConfig;
                 const dropboxFilepath = (configDropbox.localFilepath ? configDropbox.localFilepath : configUnsplash.downloadPath);
 
-                DropboxService.uploadFile(user, configUnsplash.downloadPath, dropboxFilepath);
+                DropboxService.uploadFile(user, "/tmp/" + configUnsplash.downloadPath + ".webp", "/" + dropboxFilepath + ".webp");
                 break;
             }
             default:

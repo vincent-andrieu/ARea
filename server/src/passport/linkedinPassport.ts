@@ -1,5 +1,5 @@
 import passport from "passport";
-import passportLinkedin from "passport-linkedin-oauth2";
+import passportLinkedin, { Profile } from "passport-linkedin-oauth2";
 
 import { Request } from "express";
 import { linkedinConfig } from "@config/linkedinConfig";
@@ -12,78 +12,84 @@ import AuthController from "../controllers/AuthController";
 
 const LinkedinStrategy = passportLinkedin.Strategy;
 
-const successfullyAuthentificated = async (req: Request, accessToken: string, refreshToken: string, profile, done: CallableFunction) => {
+async function successfullyAuthentificated(req: Request, accessToken: string, refreshToken: string, profile: Profile, done?: (error: Error | null, user?: User) => void): Promise<User | undefined> {
     const userSchema = new UserSchema();
 
-    console.log(profile);
+    console.log("Linkedin:", profile);
     try {
-        if (!req.user && typeof req.query.state === "string")
+        if (typeof req.query.state === "string")
             req.user = decodeJwt(req.query.state as string);
 
         const userId: string | undefined = req.user?.data.user_id;
+        let providerUser = await userSchema.findByOAuthProviderId(OAuthProvider.LINKEDIN, profile.id);
 
         if (userId) {
+            if (providerUser && userId !== getStrObjectId(providerUser))
+                throw "Service user already connected to another user";
             const user: User = await userSchema.get(userId);
 
             if (!user.oauth)
                 user.oauth = {};
             user.oauth.linkedin = {
+                id: profile.id,
                 accessToken: accessToken,
                 refreshToken: refreshToken
             };
             const userEdited = await userSchema.edit(user);
             if (done)
-                return done(null, userEdited);
+                done(null, userEdited);
             return userEdited;
         }
 
-        const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.LINKEDIN, profile.id);
+        if (!providerUser && (profile._json.emails ? profile._json.emails[0]?.value : profile.displayName))
+            providerUser = await userSchema.findByUsername(profile._json.emails ? profile._json.emails[0]?.value : profile.displayName);
 
-        if (oldUser) {
+        if (providerUser) {
             console.log("User already exist");
-            const token = AuthController.signToken({
-                user_id: getStrObjectId(oldUser),
-                username: profile.displayName
+            providerUser.token = AuthController.signToken({
+                user_id: getStrObjectId(providerUser)
             });
 
-            oldUser.oauthLoginProvider = OAuthProvider.LINKEDIN;
-            oldUser.oauthLoginProviderId = profile.id;
-            oldUser.token = token;
-            if (!oldUser.oauth)
-                oldUser.oauth = {};
-            oldUser.oauth.linkedin = {
+            if (!providerUser.oauth)
+                providerUser.oauth = {};
+            providerUser.oauth.linkedin = {
+                id: profile.id,
                 accessToken: accessToken,
                 refreshToken: refreshToken
             };
-            await userSchema.edit(oldUser);
-            done(null, oldUser);
+
+            const user = await userSchema.edit(providerUser);
+            if (done)
+                done(null, providerUser);
+            return user;
         } else {
             console.log("Create new user");
 
             const user = await userSchema.add(new User({
-                username: profile.displayName,
-                oauthLoginProvider: OAuthProvider.LINKEDIN,
-                oauthLoginProviderId: profile.id,
+                username: profile._json.emails ? profile._json.emails[0]?.value : profile.displayName,
                 oauth: {
                     linkedin: {
+                        id: profile.id,
                         accessToken: accessToken,
                         refreshToken: refreshToken
                     }
                 }
             }));
 
-            const token = AuthController.signToken({
-                user_id: getStrObjectId(user),
-                username: profile.displayName
+            user.token = AuthController.signToken({
+                user_id: getStrObjectId(user)
             });
-            user.token = token;
             await userSchema.edit(user);
-            done(null, user);
+            if (done)
+                done(null, user);
+            return user;
         }
     } catch (error) {
-        done(error, null);
+        if (done)
+            done(error as Error);
+        return undefined;
     }
-};
+}
 
 passport.use(new LinkedinStrategy(
     {

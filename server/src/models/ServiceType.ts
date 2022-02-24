@@ -8,5 +8,6 @@ export enum ServiceType {
     DISCORD = "DISCORD",
     GITHUB = "GITHUB",
     NOTION = "NOTION",
-    DROPBOX = "DROPBOX"
+    DROPBOX = "DROPBOX",
+    LINKEDIN = "LINKEDIN"
 }

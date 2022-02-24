@@ -29,9 +29,9 @@ export default class githubService {
     }
 
     private static isNewId(area: ARea, id: number): boolean {
-        const last: GithubPullReqConfig = area.trigger.inputs as GithubPullReqConfig;
+        const last: GithubResult = area.trigger.outputs as GithubResult;
 
-        if (!last)
+        if (!last || !last.lastId)
             return false;
         if (last.lastId === id)
             return false;

@@ -1,7 +1,6 @@
 import passport from "passport";
 import Unsplash from "unsplash-passport";
 
-
 import { unsplasConfigMobile, unsplashConfig } from "@config/unsplashConfig";
 import User from "@classes/user.class";
 import { getStrObjectId } from "@classes/model.class";
@@ -14,95 +13,96 @@ import unsplashService from "@services/unsplashService";
 
 const UnsplashStrategy = Unsplash.Strategy;
 
-// export async function unsplashPassport(profile): Promise<void> {
-async function successfullyAuthentificated(req: Request, accessToken: string, refreshToken: string, profile, done) {
-
+async function successfullyAuthentificated(req: Request, accessToken: string, refreshToken: string, profile: Profile, done?: (error: Error | null, user?: User) => void): Promise<User | undefined> {
     const userSchema = new UserSchema();
 
+    console.log("Unsplash:", profile);
     try {
-        if (!req.user && typeof req.query.state === "string")
-            req.user = decodeJwt(req.query.state as string);
+        if (typeof req.query.state === "string")
+            req.user = decodeJwt(req.query.state);
 
         const userId: string | undefined = req.user?.data.user_id;
+        let providerUser = await userSchema.findByOAuthProviderId(OAuthProvider.UNSPLASH, profile.id);
 
         if (userId) {
+            if (providerUser && userId !== getStrObjectId(providerUser))
+                throw "Service user already connected to another user";
             const user: User = await userSchema.get(userId);
 
             if (!user.oauth)
                 user.oauth = {};
             user.oauth.unsplash = {
+                id: profile.id,
                 accessToken: accessToken,
                 refreshToken: refreshToken
             };
             const userEdited = await userSchema.edit(user);
             if (done)
-                return done(null, userEdited);
+                done(null, userEdited);
             return userEdited;
         }
-        const oldUser = await userSchema.findByOAuthProviderId(OAuthProvider.UNSPLASH, profile.username);
 
-        if (oldUser) {
+        if (!providerUser && (profile.email || profile.username || profile._json.name || profile.id))
+            providerUser = await userSchema.findByUsername(profile.email || profile.username || profile._json.name || profile.id);
+
+        if (providerUser) {
             console.log("User already exist");
 
             const token = AuthController.signToken({
-                user_id: getStrObjectId(oldUser),
-                username: profile.displayName
+                user_id: getStrObjectId(providerUser)
             });
-            oldUser.oauthLoginProvider = OAuthProvider.UNSPLASH;
-            oldUser.oauthLoginProviderId = profile.displayName;
-            oldUser.token = token;
-            if (!oldUser.oauth)
-                oldUser.oauth = {};
-            oldUser.oauth.unsplash = {
+            providerUser.token = token;
+            if (!providerUser.oauth)
+                providerUser.oauth = {};
+            providerUser.oauth.unsplash = {
+                id: profile.id,
                 accessToken: accessToken,
                 refreshToken: refreshToken
             };
-            const userEdited = await userSchema.edit(oldUser);
+            const userEdited = await userSchema.edit(providerUser);
 
             if (done)
                 done(null, userEdited);
-            else
-                return userEdited;
+            return userEdited;
         } else {
             console.log("Create new user");
 
             const user = await userSchema.add(new User({
-                username: profile.username,
-                oauthLoginProvider: OAuthProvider.UNSPLASH,
-                oauthLoginProviderId: profile.username,
+                username: profile.email || profile.username || profile._json.name || profile.id,
                 oauth: {
                     unsplash: {
+                        id: profile.id,
                         accessToken: accessToken,
                         refreshToken: refreshToken
                     }
                 }
             }));
             const token = AuthController.signToken({
-                user_id: getStrObjectId(user),
-                username: profile.username
+                user_id: getStrObjectId(user)
             });
             user.token = token;
             const userEdited = await userSchema.edit(user);
             if (done)
                 done(null, userEdited);
-            else
-                return userEdited;
+            return userEdited;
         }
     } catch (error) {
         if (done)
-            done(error, undefined);
+            done(error as Error);
+        return undefined;
     }
 }
 
 export async function UnsplashMobileStrategy(req: Request, res: Response) {
     const { code } = req.body;
 
+    req.query.state = req.body.token;
     if (!code)
         return res.status(400).send("Missing 'code' attribut");
     try {
         const oauth = await unsplashService.getAccessToken(code);
         const userProfile = await unsplashService.getUserProfile(oauth.access_token);
-        const user = await successfullyAuthentificated(req, oauth.access_token, oauth.refresh_token, userProfile, undefined);
+        const user = await successfullyAuthentificated(req, oauth.access_token, oauth.refresh_token, userProfile);
 
         if (!user)
             throw "get empty user";

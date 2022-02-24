@@ -44,5 +44,6 @@ export interface DropboxUploadConfig {
 }
 
 export type ReactionConfig = LinkedinPostConfig | TwitterPostTweetConfig
-    | TwitterUpdatePictureConfig | DiscordPostMsgConfig | GithubCreateIssueConfig | GithubCreatePullRequestConfig
+    | TwitterUpdatePictureConfig | DiscordPostMsgConfig
+    | GithubCreateIssueConfig | GithubCreatePullRequestConfig
     | NotionAddMessageConfig | DropboxUploadConfig;

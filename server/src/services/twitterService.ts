@@ -4,8 +4,10 @@ import { env } from "process";
 import TwitterApi, { SendTweetV2Params, TweetV2, UserV2Result } from "twitter-api-v2";
 import User from "../classes/user.class";
 import ARea from "../classes/area.class";
+import { AReaSchema } from "@schemas/area.schema";
 import { TwitchStreamResult, TwitterTweetResult, UnsplashPostResult } from "@models/ActionResult";
-import { TwitchStreamConfig, TwitterTweetConfig } from "models/ActionConfig";
+import { TwitchStreamConfig, TwitterTweetConfig } from "@models/ActionConfig";
+import { TwitterPostTweetConfig } from "@models/ReactionConfig";
 import Action, { ActionType } from "@classes/action.class";
 import { utils } from "./utils";
 import { twitterConfig } from "@config/twitterConfig";
@@ -19,12 +21,15 @@ import axios from "axios";
 
 export class TwitterService {
 
+    private static _areaSchema = new AReaSchema();
+
     private static IsNewPost(area: ARea, postId: string): boolean {
         const last: TwitterTweetResult = area.trigger.outputs as TwitterTweetResult;
 
+        if (!last)
+            return false;
         if (last.lastTweetId == postId)
             return false;
-        last.lastTweetId = postId;
         return true;
     }
 
@@ -52,10 +57,11 @@ export class TwitterService {
         });
     }
 
-    private static setTweetInfos(area: ARea, tweet: TweetV2) {
-        const result: TwitterTweetResult = area.trigger.outputs as TwitterTweetResult;
+    private static async setTweetInfos(area: ARea, tweet: TweetV2) {
+        const result: TwitterTweetResult = area.trigger.outputs as TwitterTweetResult || {};
 
         result.text = tweet.text;
+        result.lastTweetId = tweet.id;
         if (tweet.lang)
             result.lang = tweet.lang;
         if (tweet.geo && tweet.geo?.coordinates) {
@@ -72,6 +78,8 @@ export class TwitterService {
             result.reply_count = tweet.public_metrics?.reply_count;
         if (tweet.public_metrics?.retweet_count)
             result.retweet_count = tweet.public_metrics?.retweet_count;
+        area.trigger.outputs = result;
+        await TwitterService._areaSchema.edit(area);
     }
 
     public static async GetUserLastTweet(user: User, area: ARea, username: string): Promise<boolean> {
@@ -92,15 +100,12 @@ export class TwitterService {
             for await (const tweet of userTimeline) {
                 if (tweet.referenced_tweets && tweet.referenced_tweets["type"] != "tweeted")
                     continue;
-
-                if (!TwitterService.IsNewPost(area, tweet.id))
+                if (!TwitterService.IsNewPost(area, tweet.id)) {
+                    await this.setTweetInfos(area, tweet);
                     return false;
-
-                this.setTweetInfos(area, tweet);
-
-                const inputs = area.trigger.inputs as TwitterTweetResult;
-
-                inputs.lastTweetId = tweet.id;
+                }
+                console.log("A new tweet is detected !", tweet);
+                await this.setTweetInfos(area, tweet);
                 break;
             }
         } catch (error: unknown) {
@@ -119,7 +124,7 @@ export class TwitterService {
         const client = TwitterService.getClient(user);
 
         try {
-            client.v2.tweet(tweet);
+            await client.v2.tweet(tweet);
         } catch (error) {
             const some_error = error as Error;
 
@@ -131,7 +136,11 @@ export class TwitterService {
         const client = TwitterService.getClient(user);
 
         try {
-            client.v1.updateAccountProfileBanner(imagePath);
+            console.log("Start compression for: ", imagePath);
+            await utils.createCompressedImage(imagePath, 1500, 500);
+            console.log("End compression for: ", imagePath);
+            await client.v1.updateAccountProfileBanner(`/tmp/${imagePath}.webp`);
+            console.log("End upload twitter image for: ", `/tmp/${imagePath}.webp`);
         } catch (error) {
             const some_error = error as Error;
 
@@ -143,7 +152,11 @@ export class TwitterService {
         const client = TwitterService.getClient(user);
 
         try {
-            client.v1.updateAccountProfileImage(imagePath);
+            console.log("Start compression for: ", imagePath);
+            await utils.createCompressedImage(imagePath);
+            console.log("End compression for: ", imagePath);
+            await client.v1.updateAccountProfileImage(`/tmp/${imagePath}.webp`);
+            console.log("End upload twitter image for: ", `/tmp/${imagePath}.webp`);
         } catch (error) {
             const some_error = error as Error;
 
@@ -158,12 +171,15 @@ export class TwitterService {
         return { text: text };
     }
 
+    private static async rea_TweetTweet(area: ARea, client: TwitterApi): Promise<SendTweetV2Params> {
+        const text: TwitterPostTweetConfig = area.consequence.inputs as TwitterPostTweetConfig;
+
+        return { text: text.message };
+    }
+
     private static async rea_TweetUnsplashPost(area: ARea, client: TwitterApi): Promise<SendTweetV2Params> {
         const post: UnsplashPostResult = area.trigger.outputs as UnsplashPostResult;
-        const mediaIds = await Promise.all([
-            // https://github.com/PLhery/node-twitter-api-v2/blob/f4b468171907b28d6a2924b0c03b05d05a5b13d5/test/media-upload.test.ts
-            client.v1.uploadMedia(post.downloadPath)
-        ]);
+        const mediaIds = await Promise.all([client.v1.uploadMedia(post.downloadPath)]);
         const text = post.username + " just posted a new picture on splash !";
         const tweet: SendTweetV2Params = { text: text, media: { media_ids: mediaIds } };
 
@@ -186,7 +202,7 @@ export class TwitterService {
                     tweet = await TwitterService.rea_TweetTwitchStream(area, client);
                     break;
                 default:
-                    console.log("todo upload file from parameter given");
+                    tweet = await TwitterService.rea_TweetTweet(area, client);
 
             }
         } catch (error: unknown) {
@@ -210,7 +226,7 @@ export class TwitterService {
 
     private static async rea_TwitchStream(area: ARea): Promise<string> {
         const stream: TwitchStreamResult = area.trigger.outputs as TwitchStreamResult;
-        const filepath = "/tmp/" + stream.StreamTitle;
+        const filepath = stream.StreamTitle;
 
         utils.DownloadUrl(stream.StreamThumbnailUrl, filepath);
         return filepath;

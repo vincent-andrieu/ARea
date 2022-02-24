@@ -2,7 +2,6 @@ import express from "express";
 import passport from "passport";
 import cookieSession from "cookie-session";
 import cors from "cors";
-import { env } from "process";
 
 import { serverConfig } from "@config/serverConfig";
 import appRoutes from "../routes/appRoutes";
@@ -16,7 +15,6 @@ import "../passport/twitterPassport";
 import "../passport/twitchPassport";
 import "../passport/notionPassport";
 import "../passport/linkedinPassport";
-import "../passport/discordPassport";
 import "../passport/unsplashPassport";
 import "../passport/dropboxPassport";
 
@@ -35,7 +33,6 @@ export function preinitExpress() {
     app.use(express.json());
 
     app.use(cors({
-        origin: env.CLIENT_HOST, // allow to server to accept request from different origin
         methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
         credentials: true // allow session cookie from browser to pass through
     }));

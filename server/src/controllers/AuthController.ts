@@ -8,7 +8,6 @@ import { serverConfig } from "@config/serverConfig";
 import { getStrObjectId } from "@classes/model.class";
 import { UserSchema } from "@schemas/user.schema";
 import { JwtData } from "../middlewares/checkJwt";
-import OAuthProvider from "@models/oAuthProvider.enum";
 import { ServiceType } from "@models/ServiceType";
 import User from "@classes/user.class";
 
@@ -31,22 +30,18 @@ export default class AuthController {
         try {
             const username: string = req.body.username?.toLowerCase();
             const password: string = req.body.password;
-            let user: User;
 
             if (!(username && password))
                 return res.status(400).send("All input is required");
 
-            try {
-                user = await AuthController._userSchema.findByUsername(username);
-            } catch (err) {
+            const user: User | undefined = await AuthController._userSchema.findByUsername(username);
+            if (!user)
                 return res.status(400).json({ "message": "Invalid Credentials" });
-            }
 
-            if (user?.password && (await bcrypt.compare(password, user.password))) {
+            if (user.password && (await bcrypt.compare(password, user.password))) {
                 // Create token
                 const token = AuthController.signToken({
-                    user_id: getStrObjectId(user),
-                    username
+                    user_id: getStrObjectId(user)
                 });
                 // save user token
                 user.token = token;
@@ -61,7 +56,7 @@ export default class AuthController {
     }
 
     public static async logout(req: Request, res: Response) {
-        req.logout();
+        req.session = null;
         res.redirect(`${env.CLIENT_HOST}/login`);
     }
 
@@ -74,21 +69,16 @@ export default class AuthController {
                 return res.status(400).send("All input are required");
             // check if user already exist
             // Validate if user exist in our database
-            let oldUser: User | null = null;
-            try {
-                oldUser = await AuthController._userSchema.findByUsername(username);
-            } catch (err) {
-                oldUser = null;
-            }
-            if (oldUser != null)
+            const oldUser: User | undefined = await AuthController._userSchema.findByUsername(username);
+
+            if (oldUser)
                 return res.status(409).send("User Already Exist. Please Login");
             const encryptedPassword = await bcrypt.hash(password, 10);
 
             // Create user in our database
             const user = await AuthController._userSchema.add(new User({
                 username: username,
-                password: encryptedPassword,
-                oauthLoginProvider: OAuthProvider.LOCAL
+                password: encryptedPassword
             }));
 
             // Create token
