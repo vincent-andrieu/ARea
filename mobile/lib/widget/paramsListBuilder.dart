@@ -71,6 +71,22 @@ class paramsListBuilder {
     return textInputTransfer(data.name, data.label, data.type, defaultValue);
   }
 
+  ITransfer numberWidget(parameterFetch data, String defaultValue) {
+    return numberInputTransfer(data.name, data.label, data.type, defaultValue);
+  }
+
+  ITransfer urlWidget(parameterFetch data, String defaultValue) {
+    return urlInputTransfer(data.name, data.label, data.type, defaultValue);
+  }
+
+  ITransfer timePickerWidget(parameterFetch data, String defaultValue) {
+    return timePickerInputTransfer(data.name, data.label, data.type, defaultValue);
+  }
+
+  ITransfer datePickerWidget(parameterFetch data, String defaultValue) {
+    return datePickerInputTransfer(data.name, data.label, data.type, defaultValue);
+  }
+
   String getValueInPreBuild(String type) {
     for (var it in tools!.params.keys) {
       log("$it == $type");
@@ -86,15 +102,16 @@ class paramsListBuilder {
     List<Widget> list = [];
     Map<ParameterType, ITransfer Function(parameterFetch, String defaultValue)>
         link = {
-      ParameterType.DATETIME: textWidget,
-      ParameterType.NUMBER: textWidget,
+      ParameterType.DATETIME: datePickerWidget,
+      ParameterType.NUMBER: numberWidget,
       ParameterType.TEXT: textWidget,
-      ParameterType.TIME: textWidget,
-      ParameterType.URL: textWidget
+      ParameterType.TIME: timePickerWidget,
+      ParameterType.URL: urlWidget
     };
 
     params.clear();
     for (var it in conf.parameters) {
+      log(it.type);
       try {
         ITransfer tmp = ITransfer();
 

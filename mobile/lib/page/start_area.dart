@@ -11,7 +11,7 @@ class start_area extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     InputCustom input = InputCustom(
-        'IP address', 'Enter server IP address', 'http://192.168.43.16:8080');
+        'IP address', 'Enter server IP address', 'http://192.168.43.16:8080', false, null);
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Center(

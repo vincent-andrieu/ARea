@@ -3,38 +3,37 @@ import 'package:flutter/material.dart';
 import 'package:mobile/page/color_list.dart';
 
 class InputCustom extends StatefulWidget {
-  String desc = "";
-  String hint = "";
+  String desc;
+  String hint;
+  bool isPassword;
+  TextInputType? type;
   late TextEditingController controller;
 
-  InputCustom(String descSrc, String hintSrc, String defaultText, {Key? key})
+  InputCustom(this.desc, this.hint, String defaultText, this.isPassword, this.type, {Key? key})
       : super(key: key) {
-    desc = descSrc;
-    hint = hintSrc;
     controller = TextEditingController(text: defaultText);
   }
 
   @override
-  State<InputCustom> createState() => InputCustomState(desc, hint, controller);
+  State<InputCustom> createState() => InputCustomState(desc, hint, controller, isPassword, type);
 }
 
 class InputCustomState extends State<InputCustom> {
-  String desc = "";
-  String hint = "";
-  late final controller;
+  String desc;
+  String hint;
+  TextInputType? type;
+  bool isPassword;
+  final controller;
 
-  InputCustomState(
-      String descSrc, String hintSrc, TextEditingController controllerSrc) {
-    desc = descSrc;
-    hint = hintSrc;
-    controller = controllerSrc;
-  }
+  InputCustomState(this.desc, this.hint, this.controller, this.isPassword, this.type);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
       child: TextField(
+        obscureText: isPassword,
+        keyboardType: type,
         controller: controller,
         decoration: InputDecoration(
             border:

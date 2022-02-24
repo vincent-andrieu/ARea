@@ -133,7 +133,7 @@ export class TwitterService {
 
         try {
             console.log("Start compression for: ", imagePath);
-            await utils.createCompressedImage(imagePath, 1500, 500);
+            await Utils.createCompressedImage(imagePath, 1500, 500);
             console.log("End compression for: ", imagePath);
             await client.v1.updateAccountProfileBanner(`/tmp/${imagePath}.webp`);
             console.log("End upload twitter image for: ", `/tmp/${imagePath}.webp`);
