@@ -12,7 +12,8 @@ import 'model/registerResponse.dart';
 
 class areaService {
   late apiService api;
-  registerResponse? token;
+  registerResponse? user;
+  String? _token;
   List<serviceFecth> listService = [];
 
   areaService(String url) {
@@ -25,7 +26,8 @@ class areaService {
     try {
       dynamic response = await api.makeRequestGet("/user", _getToken(), 200);
 
-      token = registerResponse.fromJson(response);
+      user = registerResponse.fromJson(response);
+      _token = user?.token;
       return true;
     } catch (e) {
       developer.log("updateUser  -> ${e.toString()}");
@@ -58,12 +60,14 @@ class areaService {
     logout();
     try {
       developer.log("updateServiceToken START");
-      dynamic response = await api.makeRequestPost<codeRequest>(
-          url, "", codeRequest(token), 200);
+      this._token = token;
+    //   dynamic response = await api.makeRequestPost<codeRequest>(
+    //       url, "", codeRequest(token), 200);
 
       developer.log("updateServiceToken fromJson");
-      this.token = registerResponse.fromJson(response);
+    //   this.token = registerResponse.fromJson(response);
       developer.log("updateServiceToken END");
+      await updateUser();
       await fetchDataConfig();
       await getListIfttt();
       return true;
@@ -89,7 +93,8 @@ class areaService {
       dynamic response = await api.makeRequestPost<loginRequest>(
           "/auth/login", "", loginRequest(user, pass), 200);
       developer.log('tryConnexion: request OK');
-      token = registerResponse.fromJson(response);
+      this.user = registerResponse.fromJson(response);
+      _token = this.user?.token;
       developer.log('tryConnexion: parse OK');
       await fetchDataConfig();
       await getListIfttt();
@@ -106,7 +111,8 @@ class areaService {
     try {
       dynamic response = await api.makeRequestPost<loginRequest>(
           "/auth/register", "", loginRequest(user, pass), 201);
-      token = registerResponse.fromJson(response);
+      this.user = registerResponse.fromJson(response);
+      _token = this.user?.token;
       await fetchDataConfig();
       await getListIfttt();
       return true;
@@ -167,7 +173,7 @@ class areaService {
       log(list.toString());
       log("getListIfttt -> REQUEST OK");
 
-      token?.areas = List.from(list)
+      user?.areas = List.from(list)
           .map((dynamic item) => createAreaRequest.fromJson(item))
           .toList();
 
@@ -232,11 +238,11 @@ class areaService {
   }
 
   String _getToken() {
-    return token!.token;
+    return _token!;
   }
 
   void logout() {
-    token = null;
+    _token = null;
     listService.clear();
   }
 }

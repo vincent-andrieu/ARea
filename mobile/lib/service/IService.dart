@@ -41,7 +41,7 @@ class IService {
       final result = await FlutterWebAuth.authenticate(
           url: srv + getUrl(), callbackUrlScheme: "area");
 
-      final token = Uri.parse(result).queryParameters['code'];
+      final token = Uri.parse(result).queryParameters['token'];
 
       bool value = await api.updateServiceToken(
           token!, "/auth/${getName()}/redirect/mobile");
@@ -59,17 +59,17 @@ class IService {
   Future<bool> addUserService(String srv, areaService api) async {
     try {
       final result = await FlutterWebAuth.authenticate(
-          url: srv + getUrl(), callbackUrlScheme: "area");
+          url: srv + getUrl() + "&token=${api.user!.token}", callbackUrlScheme: "area");
 
-      final token = Uri.parse(result).queryParameters['code'];
+      final token = Uri.parse(result).queryParameters['token'];
 
-      bool value = await api.addNewService(
-          token!, "/auth/${getName()}/mobile?token=$token");
+    //   bool value = await api.addNewService(
+    //       token!, "/auth/${getName()}/mobile");
 
-      if (value) {
+      if (token != null) {
         nowConnected();
       }
-      return value;
+      return true;
     } catch (e) {
       log(e.toString());
       return false;

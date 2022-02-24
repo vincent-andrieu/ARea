@@ -20,7 +20,7 @@ class edit_ifttt extends StatelessWidget {
   edit_ifttt(this.api, {Key? key}) : super(key: key);
 
   createAreaRequest getArea(String id) {
-    for (var it in api.token!.areas) {
+    for (var it in api.user!.areas) {
       if (it.id == id) {
         return it;
       }
