@@ -179,7 +179,7 @@ export class TwitterService {
             // https://github.com/PLhery/node-twitter-api-v2/blob/f4b468171907b28d6a2924b0c03b05d05a5b13d5/test/media-upload.test.ts
             client.v1.uploadMedia(post.downloadPath)
         ]);
-        const text = post.username + " just posted a new picture on splash !";
+        const text = post.username + " just posted a new picture on unsplash !";
         const tweet: SendTweetV2Params = { text: text, media: { media_ids: mediaIds } };
 
         return tweet;

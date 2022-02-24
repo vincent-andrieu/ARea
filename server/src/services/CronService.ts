@@ -20,6 +20,7 @@ import TimeService from "@services/TimeService";
 import { UserSchema } from "@schemas/user.schema";
 import notionService from "./notionService";
 import { DropboxService } from "./DropboxService";
+import githubService from "./githubService";
 
 export default class CronService {
 
@@ -152,7 +153,7 @@ export default class CronService {
                 break;
             }
             case ReactionType.GITHUB_ISSUE:
-                // githubService.rea_CreateIssue(area, user);
+                githubService.rea_CreateIssue(area, user);
                 break;
             case ReactionType.GITHUB_PULL:
                 // githubService.rea_CreatePullRequest(area, user);
