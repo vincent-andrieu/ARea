@@ -24,21 +24,20 @@ router.post("/register", AuthController.register);
 
 router.post("/disconnect/:service", authMiddleware, AuthController.disconnectService);
 
-router.get("/github", (req: Request, res: Response, next: NextFunction) => {
+router.get("/twitch", (req: Request, res: Response, next: NextFunction) => {
     if (!req.query.referer)
         req.query.referer = req.headers.referer;
-    return passport.authenticate("github", {
-        scope: ["user:email", "repo"],
+    return passport.authenticate("twitch", {
         state: JSON.stringify(req.query || {})
     })(req, res, next);
 });
 
-router.get("/github/redirect", (req: Request, res: Response, next: NextFunction) => {
+router.get("/twitch/redirect", (req: Request, res: Response, next: NextFunction) => {
     const state = getStateFromRequest(req);
 
     if (!state.mobile && !state.referer)
-        throw "Undefined referer";
-    return passport.authenticate("github", {
+        return res.status(400).send("Undefined referer");
+    return passport.authenticate("twitch", {
         successRedirect: Utils.getServerHost() + (state.mobile ? "/auth/redirect/mobile" : ("/auth/redirect/web" + (state.referer ? `?referer=${state.referer}` : ""))),
         failureRedirect: state.mobile ? env.MOBILE_REDIRECT : `${Utils.getClientHost(state.referer as string)}/login/failure`
     })(req, res, next);
@@ -56,27 +55,47 @@ router.get("/twitter/redirect", (req: Request, res: Response, next: NextFunction
     const state = getStateFromRequest(req);
 
     if (!state.mobile && !state.referer)
-        throw "Undefined referer";
+        return res.status(400).send("Undefined referer");
     return passport.authenticate("twitter", {
         successRedirect: Utils.getServerHost() + (state.mobile ? "/auth/redirect/mobile" : ("/auth/redirect/web" + (state.referer ? `?referer=${state.referer}` : ""))),
         failureRedirect: state.mobile ? env.MOBILE_REDIRECT : `${Utils.getClientHost(state.referer as string)}/login/failure`
     })(req, res, next);
 });
 
-router.get("/twitch", (req: Request, res: Response, next: NextFunction) => {
+router.get("/unsplash", (req: Request, res: Response, next: NextFunction) => {
     if (!req.query.referer)
         req.query.referer = req.headers.referer;
-    return passport.authenticate("twitch", {
+    return passport.authenticate("unsplash", {
         state: JSON.stringify(req.query || {})
     })(req, res, next);
 });
 
-router.get("/twitch/redirect", (req: Request, res: Response, next: NextFunction) => {
+router.get("/unsplash/redirect", (req: Request, res: Response, next: NextFunction) => {
     const state = getStateFromRequest(req);
 
     if (!state.mobile && !state.referer)
-        throw "Undefined referer";
-    return passport.authenticate("twitch", {
+        return res.status(400).send("Undefined referer");
+    return passport.authenticate("unsplash", {
+        successRedirect: Utils.getServerHost() + (state.mobile ? "/auth/redirect/mobile" : ("/auth/redirect/web" + (state.referer ? `?referer=${state.referer}` : ""))),
+        failureRedirect: state.mobile ? env.MOBILE_REDIRECT : `${Utils.getClientHost(state.referer as string)}/login/failure`
+    })(req, res, next);
+});
+
+router.get("/github", (req: Request, res: Response, next: NextFunction) => {
+    if (!req.query.referer)
+        req.query.referer = req.headers.referer;
+    return passport.authenticate("github", {
+        scope: ["user:email", "repo"],
+        state: JSON.stringify(req.query || {})
+    })(req, res, next);
+});
+
+router.get("/github/redirect", (req: Request, res: Response, next: NextFunction) => {
+    const state = getStateFromRequest(req);
+
+    if (!state.mobile && !state.referer)
+        return res.status(400).send("Undefined referer");
+    return passport.authenticate("github", {
         successRedirect: Utils.getServerHost() + (state.mobile ? "/auth/redirect/mobile" : ("/auth/redirect/web" + (state.referer ? `?referer=${state.referer}` : ""))),
         failureRedirect: state.mobile ? env.MOBILE_REDIRECT : `${Utils.getClientHost(state.referer as string)}/login/failure`
     })(req, res, next);
@@ -94,27 +113,8 @@ router.get("/notion/redirect", (req: Request, res: Response, next: NextFunction)
     const state = getStateFromRequest(req);
 
     if (!state.mobile && !state.referer)
-        throw "Undefined referer";
+        return res.status(400).send("Undefined referer");
     return passport.authenticate("notion", {
-        successRedirect: Utils.getServerHost() + (state.mobile ? "/auth/redirect/mobile" : ("/auth/redirect/web" + (state.referer ? `?referer=${state.referer}` : ""))),
-        failureRedirect: state.mobile ? env.MOBILE_REDIRECT : `${Utils.getClientHost(state.referer as string)}/login/failure`
-    })(req, res, next);
-});
-
-router.get("/linkedin", (req: Request, res: Response, next: NextFunction) => {
-    if (!req.query.referer)
-        req.query.referer = req.headers.referer;
-    return passport.authenticate("linkedin", {
-        state: JSON.stringify(req.query || {})
-    })(req, res, next);
-});
-
-router.get("/linkedin/redirect", (req: Request, res: Response, next: NextFunction) => {
-    const state = getStateFromRequest(req);
-
-    if (!state.mobile && !state.referer)
-        throw "Undefined referer";
-    return passport.authenticate("linkedin", {
         successRedirect: Utils.getServerHost() + (state.mobile ? "/auth/redirect/mobile" : ("/auth/redirect/web" + (state.referer ? `?referer=${state.referer}` : ""))),
         failureRedirect: state.mobile ? env.MOBILE_REDIRECT : `${Utils.getClientHost(state.referer as string)}/login/failure`
     })(req, res, next);
@@ -132,8 +132,27 @@ router.get("/dropbox/redirect", (req: Request, res: Response, next: NextFunction
     const state = getStateFromRequest(req);
 
     if (!state.mobile && !state.referer)
-        throw "Undefined referer";
+        return res.status(400).send("Undefined referer");
     return passport.authenticate("dropbox", {
+        successRedirect: Utils.getServerHost() + (state.mobile ? "/auth/redirect/mobile" : ("/auth/redirect/web" + (state.referer ? `?referer=${state.referer}` : ""))),
+        failureRedirect: state.mobile ? env.MOBILE_REDIRECT : `${Utils.getClientHost(state.referer as string)}/login/failure`
+    })(req, res, next);
+});
+
+router.get("/linkedin", (req: Request, res: Response, next: NextFunction) => {
+    if (!req.query.referer)
+        req.query.referer = req.headers.referer;
+    return passport.authenticate("linkedin", {
+        state: JSON.stringify(req.query || {})
+    })(req, res, next);
+});
+
+router.get("/linkedin/redirect", (req: Request, res: Response, next: NextFunction) => {
+    const state = getStateFromRequest(req);
+
+    if (!state.mobile && !state.referer)
+        return res.status(400).send("Undefined referer");
+    return passport.authenticate("linkedin", {
         successRedirect: Utils.getServerHost() + (state.mobile ? "/auth/redirect/mobile" : ("/auth/redirect/web" + (state.referer ? `?referer=${state.referer}` : ""))),
         failureRedirect: state.mobile ? env.MOBILE_REDIRECT : `${Utils.getClientHost(state.referer as string)}/login/failure`
     })(req, res, next);
@@ -146,25 +165,6 @@ router.get("/discord", (_: Request, res: Response) => {
     res.redirect(discordBotConfig.redirectUrl);
 });
 
-router.get("/unsplash", (req: Request, res: Response, next: NextFunction) => {
-    if (!req.query.referer)
-        req.query.referer = req.headers.referer;
-    return passport.authenticate("unsplash", {
-        state: JSON.stringify(req.query || {})
-    })(req, res, next);
-});
-
-router.get("/unsplash/redirect", (req: Request, res: Response, next: NextFunction) => {
-    const state = getStateFromRequest(req);
-
-    if (!state.mobile && !state.referer)
-        throw "Undefined referer";
-    return passport.authenticate("unsplash", {
-        successRedirect: Utils.getServerHost() + (state.mobile ? "/auth/redirect/mobile" : ("/auth/redirect/web" + (state.referer ? `?referer=${state.referer}` : ""))),
-        failureRedirect: state.mobile ? env.MOBILE_REDIRECT : `${Utils.getClientHost(state.referer as string)}/login/failure`
-    })(req, res, next);
-});
-
 router.get("/redirect/web", (request: Request, response: Response) => {
     if (request.user?.data.token)
         response.redirect(`${Utils.getClientHost(request.query.referer as string | undefined || request)}/areas?token=${request.user.data.token}`);
@@ -172,7 +172,6 @@ router.get("/redirect/web", (request: Request, response: Response) => {
         response.redirect(`${Utils.getClientHost(request.query.referer as string | undefined || request)}/areas`);
 });
 router.get("/redirect/mobile", (request: Request, response: Response) => {
-    console.log("Redirect URI:", `${env.MOBILE_REDIRECT}?token=${request.user?.data.token}`);
     if (request.user?.data.token)
         response.redirect(`${env.MOBILE_REDIRECT}?token=${request.user.data.token}`);
     else
