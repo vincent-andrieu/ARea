@@ -136,7 +136,11 @@ export class TwitterService {
         const client = TwitterService.getClient(user);
 
         try {
-            await client.v1.updateAccountProfileBanner(imagePath);
+            console.log("Start compression for: ", imagePath);
+            await utils.createCompressedImage(imagePath, 1500, 500);
+            console.log("End compression for: ", imagePath);
+            await client.v1.updateAccountProfileBanner(`/tmp/${imagePath}.webp`);
+            console.log("End upload twitter image for: ", `/tmp/${imagePath}.webp`);
         } catch (error) {
             const some_error = error as Error;
 
@@ -151,8 +155,8 @@ export class TwitterService {
             console.log("Start compression for: ", imagePath);
             await utils.createCompressedImage(imagePath);
             console.log("End compression for: ", imagePath);
-            await client.v1.updateAccountProfileImage(`${imagePath}.webp`);
-            console.log("End upload twitter image for: ", `${imagePath}.webp`);
+            await client.v1.updateAccountProfileImage(`/tmp/${imagePath}.webp`);
+            console.log("End upload twitter image for: ", `/tmp/${imagePath}.webp`);
         } catch (error) {
             const some_error = error as Error;
 
@@ -175,10 +179,7 @@ export class TwitterService {
 
     private static async rea_TweetUnsplashPost(area: ARea, client: TwitterApi): Promise<SendTweetV2Params> {
         const post: UnsplashPostResult = area.trigger.outputs as UnsplashPostResult;
-        const mediaIds = await Promise.all([
-            // https://github.com/PLhery/node-twitter-api-v2/blob/f4b468171907b28d6a2924b0c03b05d05a5b13d5/test/media-upload.test.ts
-            client.v1.uploadMedia(post.downloadPath)
-        ]);
+        const mediaIds = await Promise.all([client.v1.uploadMedia(post.downloadPath)]);
         const text = post.username + " just posted a new picture on splash !";
         const tweet: SendTweetV2Params = { text: text, media: { media_ids: mediaIds } };
 
