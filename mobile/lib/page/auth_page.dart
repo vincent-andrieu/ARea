@@ -79,8 +79,8 @@ class auth_page extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    InputCustom user = InputCustom('Email', 'Enter your Email address', '');
-    InputCustom pass = InputCustom('Password', 'Enter your password', '');
+    InputCustom user = InputCustom('Email', 'Enter your Email address', '', false, null);
+    InputCustom pass = InputCustom('Password', 'Enter your password', '', true, null);
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Center(

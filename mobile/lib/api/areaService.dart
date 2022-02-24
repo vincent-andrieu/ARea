@@ -6,6 +6,7 @@ import 'package:mobile/api/model/createAreaRequest.dart';
 import 'package:mobile/api/model/loginRequest.dart';
 import 'package:mobile/api/model/serviceFetch/configFecth.dart';
 import 'package:mobile/api/model/serviceFetch/serviceFetch.dart';
+import 'package:mobile/api/model/tokenAndVerifier.dart';
 import 'dart:developer' as developer;
 import 'model/empty.dart';
 import 'model/registerResponse.dart';
@@ -44,18 +45,53 @@ class areaService {
     }
   }
 
-  Future<bool> addNewService(String token, String url) async {
+  /*Future<bool> addNewService(String token, String url) async {
     try {
+      log("addNewService  -> START");
       dynamic _ = await api.makeRequestGet(url, token, 200);
-      return await updateUser();
+      log("addNewService  -> MIDDLE");
+      bool tmp = await updateUser();
+      log("addNewService  -> END");
+      return tmp;
     } catch (e) {
       developer.log("addNewService  -> ${e.toString()}");
       return false;
     }
   }
 
+  Future<bool> addNewServiceTokenAndVerifier(String token, String verifier, String url) async {
+    try {
+      log("addNewService  -> START");
+      dynamic _ = await api.makeRequestGet(url, token, 200);
+      log("addNewService  -> MIDDLE");
+      bool tmp = await updateUser();
+      log("addNewService  -> END");
+      return tmp;
+    } catch (e) {
+      developer.log("addNewService  -> ${e.toString()}");
+      return false;
+    }
+  }*/
+
+  Future<bool> updateServiceTokenAndVerifier(String token, String verifier, String url) async {
+    try {
+      developer.log("updateServiceToken START");
+      dynamic response = await api.makeRequestPost<tokenAndVerifier>(
+          url, "", tokenAndVerifier(token, verifier), 200);
+
+      developer.log("updateServiceToken fromJson");
+      this.token = registerResponse.fromJson(response);
+      developer.log("updateServiceToken END");
+      await fetchDataConfig();
+      await getListIfttt();
+      return true;
+    } catch (e) {
+      developer.log("updateServiceToken  -> ${e.toString()}");
+      return false;
+    }
+  }
+
   Future<bool> updateServiceToken(String token, String url) async {
-    logout();
     try {
       developer.log("updateServiceToken START");
       dynamic response = await api.makeRequestPost<codeRequest>(
