@@ -1,8 +1,16 @@
-import { readFile, createWriteStream } from "fs";
+import { createWriteStream } from "fs";
+import { env } from "process";
+import { Request } from "express";
+import ip from "ip";
 import sharp from "sharp";
 import { HttpClient } from "typed-rest-client/HttpClient";
 
-export class utils {
+export enum EEnvType {
+    PROD = "PROD",
+    DEV = "DEV"
+}
+
+export class Utils {
     public static async DownloadUrl(url: string, filepath: string, convert = false) {
         try {
             const client = new HttpClient("clientTest");
@@ -51,5 +59,37 @@ export class utils {
         } catch (error) {
             console.log("createCompressedImage:", (error as Error).message);
         }
+    }
+
+    public static getClientHost(req: Request | string): string {
+        if (typeof req === "string")
+            return req.endsWith("/") ? req.slice(0, -1) : req;
+
+        if (!req.headers.referer)
+            throw "Fail to get client host";
+        return req.headers.referer.endsWith("/") ? req.headers.referer.slice(0, -1) : req.headers.referer;
+    }
+    public static getServerHost(): string {
+        const envType: EEnvType = env.ENV_TYPE as EEnvType;
+
+        if (envType === EEnvType.PROD)
+            return `http://${ip.address()}:${env.SERVER_PORT}`;
+        else if (envType === EEnvType.DEV)
+            return `http://localhost:${env.SERVER_PORT}`;
+        else
+            throw "Invalid env type: " + envType;
+    }
+    public static getServerProxyHost(): string {
+        if (!Number(env.SERVER_PROXY))
+            console.warn("Proxy not activated !");
+
+        const envType: EEnvType = env.ENV_TYPE as EEnvType;
+
+        if (envType === EEnvType.PROD)
+            return `https://${ip.address()}:${env.SERVER_PROXY_PORT}`;
+        else if (envType === EEnvType.DEV)
+            return `https://localhost:${env.SERVER_PROXY_PORT}`;
+        else
+            throw "Invalid env type: " + envType;
     }
 }

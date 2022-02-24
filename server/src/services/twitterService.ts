@@ -1,17 +1,13 @@
-/* eslint-disable indent */
 import { env } from "process";
 
-import TwitterApi, { SendTweetV2Params, TweetV2, UserV2Result } from "twitter-api-v2";
+import TwitterApi, { SendTweetV2Params, TweetV2 } from "twitter-api-v2";
 import User from "../classes/user.class";
 import ARea from "../classes/area.class";
 import { AReaSchema } from "@schemas/area.schema";
 import { TwitchStreamResult, TwitterTweetResult, UnsplashPostResult } from "@models/ActionResult";
-import { TwitchStreamConfig, TwitterTweetConfig } from "@models/ActionConfig";
 import { TwitterPostTweetConfig } from "@models/ReactionConfig";
 import Action, { ActionType } from "@classes/action.class";
-import { utils } from "./utils";
-import { twitterConfig } from "@config/twitterConfig";
-import axios from "axios";
+import { Utils } from "./utils";
 
 // doc :
 // https://www.npmjs.com/package/twitter-v2
@@ -149,7 +145,7 @@ export class TwitterService {
 
         try {
             console.log("Start compression for: ", imagePath);
-            await utils.createCompressedImage(imagePath);
+            await Utils.createCompressedImage(imagePath);
             console.log("End compression for: ", imagePath);
             await client.v1.updateAccountProfileImage(`${imagePath}.webp`);
             console.log("End upload twitter image for: ", `${imagePath}.webp`);
@@ -193,15 +189,15 @@ export class TwitterService {
         try {
 
             switch (action.type) {
-                case ActionType.UNSPLASH_POST:
-                    tweet = await TwitterService.rea_TweetUnsplashPost(area, client);
-                    console.log("action was unsplash post");
-                    break;
-                case ActionType.TWITCH_STREAM:
-                    tweet = await TwitterService.rea_TweetTwitchStream(area, client);
-                    break;
-                default:
-                    tweet = await TwitterService.rea_TweetTweet(area, client);
+            case ActionType.UNSPLASH_POST:
+                tweet = await TwitterService.rea_TweetUnsplashPost(area, client);
+                console.log("action was unsplash post");
+                break;
+            case ActionType.TWITCH_STREAM:
+                tweet = await TwitterService.rea_TweetTwitchStream(area, client);
+                break;
+            default:
+                tweet = await TwitterService.rea_TweetTweet(area, client);
 
             }
         } catch (error: unknown) {
@@ -227,7 +223,7 @@ export class TwitterService {
         const stream: TwitchStreamResult = area.trigger.outputs as TwitchStreamResult;
         const filepath = stream.StreamTitle;
 
-        utils.DownloadUrl(stream.StreamThumbnailUrl, filepath);
+        Utils.DownloadUrl(stream.StreamThumbnailUrl, filepath);
         return filepath;
     }
 
@@ -238,17 +234,17 @@ export class TwitterService {
         try {
 
             switch (action.type) {
-                case ActionType.UNSPLASH_POST:
-                    imagePath = await TwitterService.rea_UnsplashPost(area);
-                    break;
-                case ActionType.UNSPLASH_RANDOM_POST:
-                    imagePath = await TwitterService.rea_UnsplashPost(area);
-                    break;
-                case ActionType.TWITCH_STREAM:
-                    imagePath = await TwitterService.rea_TwitchStream(area);
-                    break;
-                default:
-                    console.log("todo: default action");
+            case ActionType.UNSPLASH_POST:
+                imagePath = await TwitterService.rea_UnsplashPost(area);
+                break;
+            case ActionType.UNSPLASH_RANDOM_POST:
+                imagePath = await TwitterService.rea_UnsplashPost(area);
+                break;
+            case ActionType.TWITCH_STREAM:
+                imagePath = await TwitterService.rea_TwitchStream(area);
+                break;
+            default:
+                console.log("todo: default action");
 
             }
         } catch (error: unknown) {
@@ -271,17 +267,17 @@ export class TwitterService {
 
         try {
             switch (action.type) {
-                case ActionType.UNSPLASH_POST:
-                    imagePath = await TwitterService.rea_UnsplashPost(area);
-                    break;
-                case ActionType.UNSPLASH_RANDOM_POST:
-                    imagePath = await TwitterService.rea_UnsplashPost(area);
-                    break;
-                case ActionType.TWITCH_STREAM:
-                    imagePath = await TwitterService.rea_TwitchStream(area);
-                    break;
-                default:
-                    console.log("todo: default action");
+            case ActionType.UNSPLASH_POST:
+                imagePath = await TwitterService.rea_UnsplashPost(area);
+                break;
+            case ActionType.UNSPLASH_RANDOM_POST:
+                imagePath = await TwitterService.rea_UnsplashPost(area);
+                break;
+            case ActionType.TWITCH_STREAM:
+                imagePath = await TwitterService.rea_TwitchStream(area);
+                break;
+            default:
+                console.log("todo: default action");
 
             }
         } catch (error: unknown) {
@@ -324,42 +320,5 @@ export class TwitterService {
         profile._raw = JSON.stringify(json);
         profile._json = json;
         return profile;
-    }
-
-    public static async GetProfileInfo(accessToken: string, secretToken: string): Promise<object> {
-        const client = TwitterService.getClientAfterAuth(accessToken, secretToken);
-
-        const userProfile = await client.v1.verifyCredentials({
-            include_entities: true,
-            skip_status: false,
-            include_email: false
-        });
-        const profile = TwitterService.parseProfileUser(userProfile);
-        return profile;
-    }
-
-    public static async getAccessToken(oauthToken: string, oauthVerifier): Promise<any> {
-        const twitterConsumerKey = twitterConfig.consumerKey;
-
-        const url = "https://api.twitter.com/oauth/access_token";
-        const params = new URLSearchParams();
-        params.append("oauth_consumer_key", twitterConsumerKey);
-        params.append("oauth_token", oauthToken);
-        params.append("oauth_verifier", oauthVerifier);
-
-        try {
-            const response = await axios.post(`${url}?${params}`);
-            const responseParams = new URLSearchParams(response.data);
-
-            return {
-                oauth_token: responseParams.get("oauth_token"),
-                oauth_token_secret: responseParams.get("oauth_token_secret"),
-                user_id: responseParams.get("user_id"),
-                screen_name: responseParams.get("screen_name")
-            };
-        } catch (error) {
-            console.log("[TWITTER] getAccessToken: ", (error as Error).toString());
-            return {};
-        }
     }
 }

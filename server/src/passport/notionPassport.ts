@@ -11,6 +11,7 @@ import { decodeJwt } from "../middlewares/checkJwt";
 import { NotionOAuthToken } from "module/passport-notion/strategy";
 import { GetUserResponse } from "@notionhq/client/build/src/api-endpoints";
 import { Request } from "express";
+import { OAuthState } from "routes/authRoutes";
 
 const successfullyAuthentificated = async (req: Request, accessToken: string, _: unknown, oauthData: NotionOAuthToken, profile: GetUserResponse, done?: (err: Error | undefined, user?: User, info?: unknown) => void): Promise<User | undefined> => {
     const userSchema = new UserSchema();
@@ -19,8 +20,9 @@ const successfullyAuthentificated = async (req: Request, accessToken: string, _:
     try {
         if (profile.type !== "person")
             throw "Invalid Notion user: " + profile.type;
-        if (typeof req.query.state === "string")
-            req.user = decodeJwt(req.query.state as string);
+        const state: OAuthState = JSON.parse(typeof req.query.state === "string" ? req.query.state : "{}");
+        if (state.token)
+            req.user = decodeJwt(state.token);
 
         const userId: string | undefined = req.user?.data.user_id;
         let providerUser: User | undefined = await userSchema.findByOAuthProviderId(OAuthProvider.NOTION, profile.id);

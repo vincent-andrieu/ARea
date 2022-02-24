@@ -1,9 +1,14 @@
 import "module-alias/register";
+import { env } from "process";
+import { sys } from "typescript";
+import ip from "ip";
 
 import Express from "./init/express";
 import DBDataset from "./init/DBDataset";
+import ProxySSL from "./init/proxy";
 import CronService from "./services/CronService";
-import { sys } from "typescript";
+
+console.info("Host IP:", ip.address());
 
 (async function() {
     // Connection to the database and loading of the dataset.
@@ -13,7 +18,15 @@ import { sys } from "typescript";
         console.error("DBDataset.init(): ", (error as Error).toString());
         sys.exit(1);
     }
-    Express.connect();
+    Express.connect().then(() => {
+        if (Number(env.SERVER_PROXY))
+            new ProxySSL(
+                () => console.log("ProxySSL closed !"),
+                (err) => {
+                    console.error("ProxySSL error:", err);
+                }
+            );
+    });
 
     // Action cron job
     CronService.setup();
