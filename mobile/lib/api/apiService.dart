@@ -27,7 +27,8 @@ class apiService {
       String route, String token, int exitExpect) async {
     Response result = await get(Uri.parse(srvUrl + route), headers: {
       HttpHeaders.contentTypeHeader: 'application/json',
-      HttpHeaders.authorizationHeader: 'Bearer $token'
+      HttpHeaders.authorizationHeader: 'Bearer $token',
+      HttpHeaders.refererHeader: 'Mobile'
     });
 
     if (result.statusCode == exitExpect) {
@@ -44,7 +45,8 @@ class apiService {
         body: json.encode(params),
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
-          HttpHeaders.authorizationHeader: 'Bearer $token'
+          HttpHeaders.authorizationHeader: 'Bearer $token',
+          HttpHeaders.refererHeader: 'Mobile'
         });
 
     if (result.statusCode == exitExpect) {
@@ -64,7 +66,8 @@ class apiService {
         body: json.encode(params),
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
-          HttpHeaders.authorizationHeader: 'Bearer $token'
+          HttpHeaders.authorizationHeader: 'Bearer $token',
+          HttpHeaders.refererHeader: 'Mobile'
         });
 
     if (result.statusCode == exitExpect) {
@@ -80,7 +83,8 @@ class apiService {
         body: json.encode(params),
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
-          HttpHeaders.authorizationHeader: 'Bearer $token'
+          HttpHeaders.authorizationHeader: 'Bearer $token',
+          HttpHeaders.refererHeader: 'Mobile'
         });
 
     if (result.statusCode == exitExpect) {
