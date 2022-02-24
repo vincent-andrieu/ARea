@@ -22,6 +22,17 @@
     "service": "TWITTER"
   },
   {
+    "type": "TWITTER_BANNER",
+    "parameters": [
+      {
+        "name": "noting",
+        "label": "URL",
+        "type": "URL"
+      }
+    ],
+    "service": "TWITTER"
+  },
+  {
     "type": "DISCORD_MSG",
     "parameters": [
       {
