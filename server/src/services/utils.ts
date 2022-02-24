@@ -20,8 +20,9 @@ export class utils {
                 const stream = response.message.pipe(file);
                 stream.on("close", () => {
                     if (convert)
-                        this.convertImage(filepath);
-                    resolve(filepath);
+                        this.convertImage(filepath).then(
+                            () => {resolve(filepath);}
+                        );
                 });
             });
         } catch (error) {
@@ -31,11 +32,12 @@ export class utils {
         }
     }
 
-    public static async createCompressedImage(imagePath: string) {
+    public static async createCompressedImage(imagePath: string, sizeX = 250, sizeY = 250) {
+        imagePath = `/tmp/${imagePath}`;
         try {
             await sharp(imagePath)
                 .webp({ quality: 100 })
-                .resize(250, 250)
+                .resize(sizeX, sizeY)
                 .toFile(`${imagePath}.webp`);
             console.log(`Compressed ${imagePath} !`);
         } catch (error) {
@@ -47,9 +49,9 @@ export class utils {
         try {
             await sharp(imagePath)
                 .toFile(`${imagePath}.webp`);
-            console.log(`Compressed ${imagePath} !`);
+            console.log(`Converted ${imagePath} !`);
         } catch (error) {
-            console.log("createCompressedImage:", (error as Error).message);
+            console.log("convertImage:", (error as Error).message);
         }
     }
 }
