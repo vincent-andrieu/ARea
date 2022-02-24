@@ -1,11 +1,12 @@
 import { env } from "process";
 import express, { NextFunction, Request, Response } from "express";
 import passport from "passport";
+
 import "../passport/setupPassport";
 import authMiddleware from "../middlewares/checkJwt";
-import AuthController from "../controllers/AuthController";
-import { discordBotConfig } from "@config/discordConfig";
 import { Utils } from "@services/utils";
+import { discordBotConfig } from "@config/discordConfig";
+import AuthController from "@controllers/AuthController";
 
 export interface OAuthState {
     token?: string;
