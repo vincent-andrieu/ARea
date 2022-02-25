@@ -63,6 +63,9 @@ export const servicesList = {
             }, {
                 name: "TWITTER_PP",
                 description: "Change your profile picture on twitter"
+            }, {
+                name: "TWITTER_BANNER",
+                description: "Change your banner picture on twitter"
             }]
         },
         {
