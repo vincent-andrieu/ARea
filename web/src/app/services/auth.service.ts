@@ -55,7 +55,7 @@ export class AuthService {
                 .subscribe((user: User | null) => {
                     if (!user)
                         return reject();
-                    this._cookieService.put(environment.cookiesKey.jwt, user.token);
+                    this._cookieService.put(environment.cookies.jwt.name, user.token, environment.cookies.jwt.options);
                     this.user = user;
                     resolve(user);
                 });
@@ -76,18 +76,19 @@ export class AuthService {
                 .subscribe((user: User | null) => {
                     if (!user)
                         return reject();
-                    this._cookieService.put(environment.cookiesKey.jwt, user.token);
+                    this._cookieService.put(environment.cookies.jwt.name, user.token, environment.cookies.jwt.options);
+                    this.user = user;
                     resolve(user);
                 });
         });
     }
 
     public loginToService(url: string): void {
-        const host = this._cookieService.get(environment.cookiesKey.serverHost);
+        const host = this._cookieService.get(environment.cookies.serverHost.name);
 
         url = `${host}${host.endsWith('/') ? 'auth' : '/auth'}${url.startsWith('/') ? url : '/' + url}`;
 
-        const token = this._cookieService.get(environment.cookiesKey.jwt);
+        const token = this._cookieService.get(environment.cookies.jwt.name);
 
         if (token && token.length > 0) {
             if (!url.endsWith('/'))
@@ -109,9 +110,9 @@ export class AuthService {
     }
 
     public logout(): void {
-        this._cookieService.remove(environment.cookiesKey.jwt);
+        this._cookieService.remove(environment.cookies.jwt.name);
 
-        const host = this._cookieService.get(environment.cookiesKey.serverHost);
+        const host = this._cookieService.get(environment.cookies.serverHost.name);
 
         window.location.href = `${host}${host.endsWith('/') ? 'auth' : '/auth'}/logout`;
     }

@@ -21,7 +21,7 @@ export class ServerGuard implements CanActivate {
     ) {}
 
     canActivate(): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-        if (this._cookieService.hasKey(environment.cookiesKey.serverHost))
+        if (this._cookieService.hasKey(environment.cookies.serverHost.name))
             return true;
 
         this._snackbarService.openCustomError("Server IP isn't set");

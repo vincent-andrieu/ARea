@@ -40,7 +40,7 @@ export class LoginComponent {
     }
 
     public async redirectToAppAuth(redirectRoute: string): Promise<void> {
-        if (this._cookieService.hasKey(environment.cookiesKey.jwt))
+        if (this._cookieService.hasKey(environment.cookies.jwt.name))
             await this._authService.logout();
         this._authService.loginToService(redirectRoute);
     }
