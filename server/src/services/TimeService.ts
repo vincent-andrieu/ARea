@@ -76,7 +76,7 @@ export default class TimeService {
                 console.error("TimeService::evalDatetime invalid area inputs.");
                 return false;
             }
-            if (timestamp && Date.now() >= timestamp) {
+            if (timestamp > 0 && Date.now() >= timestamp) {
                 (area.trigger.inputs as DateTimeConfig).time = 0;
                 this._areaSchema.edit(area); // disable action
                 return true;
