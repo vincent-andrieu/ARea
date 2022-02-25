@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from '@angular/core';
 import { Router } from "@angular/router";
-import { catchError, firstValueFrom, of } from "rxjs";
+import { catchError, of } from "rxjs";
 import { CookieService } from "ngx-cookie";
 
 import { environment } from "@environment";
