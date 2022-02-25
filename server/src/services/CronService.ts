@@ -30,7 +30,6 @@ export default class CronService {
     public static setup = (cronTime = "* * * * *") => {
         CronService._cron = cron.schedule(cronTime, this.execute, { scheduled: false });
         CronService.start();
-        CronService.execute(); // first execution
         DiscordService.connect();
         TimeService.initCronActions();
     };
