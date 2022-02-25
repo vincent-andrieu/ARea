@@ -24,8 +24,21 @@ const routes: Routes = [
         ]
     },
     { path: 'register', component: RegisterComponent, canActivate: [ServerGuard, LoginGuard] },
-    { path: 'areas', component: AReaListComponent, canActivate: [ServerGuard, AuthGuard] },
-    { path: 'areas/:areaId', component: AReaListComponent, canActivate: [ServerGuard, AuthGuard] },
+    {
+        path: 'areas',
+        component: AReaListComponent,
+        canActivate: [ServerGuard, AuthGuard],
+        resolve: {
+            user: UserResolver
+        } },
+    {
+        path: 'areas/:areaId',
+        component: AReaListComponent,
+        canActivate: [ServerGuard, AuthGuard],
+        resolve: {
+            user: UserResolver
+        }
+    },
     {
         path: 'settings',
         component: AReaSettingsComponent,
