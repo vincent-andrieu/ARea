@@ -39,7 +39,13 @@ export default class TimeService {
 
             if (schedule == undefined || cron.validate(schedule) == false || area._id == undefined)
                 return false;
-            const job: cron.ScheduledTask = cron.schedule(schedule, () => CronService.triggerReaction(area, user), {
+            const job: cron.ScheduledTask = cron.schedule(schedule, () => {
+                try {
+                    CronService.triggerReaction(area, user);
+                } catch (err) {
+                    console.error(`TimeService: cron action, an error occurred ${err}`);
+                }
+            }, {
                 timezone: "Europe/Paris"
             });
             this._tasks.push({ task: job, areaId: area._id as ObjectId });
@@ -57,7 +63,8 @@ export default class TimeService {
         });
         if (item != undefined) {
             item?.task.stop();
-            this._tasks = this._tasks.filter(el => el.areaId != areaId);
+            this._tasks = this._tasks.filter(el => JSON.stringify(el.areaId) !== JSON.stringify(areaId));
+            console.log("CRON action unregistered");
         }
     };
 
@@ -69,7 +76,7 @@ export default class TimeService {
                 console.error("TimeService::evalDatetime invalid area inputs.");
                 return false;
             }
-            if (timestamp && Date.now() >= timestamp) {
+            if (timestamp > 0 && Date.now() >= timestamp) {
                 (area.trigger.inputs as DateTimeConfig).time = 0;
                 this._areaSchema.edit(area); // disable action
                 return true;

@@ -90,9 +90,10 @@ export default class AreaController {
 
                 if (areaBody.trigger.action.type == ActionType.CRON) {
                     const user = await AreaController._userSchema.get(userId);
+                    const areaFull = await AreaController._areaSchema.getPopulate(area._id);
                     if (!user)
                         return res.status(400).send("Failed to get user");
-                    TimeService.registerCron(area, user); // start cron job
+                    TimeService.registerCron(areaFull, user); // start cron job
                 }
                 res.status(201).json({ _id: area._id, ...areaBody });
             } catch (error) {
@@ -171,8 +172,10 @@ export default class AreaController {
                 ...areaBody
             });
             if ((areaUpdate.trigger.action as Action)?.type == ActionType.CRON
-                && (area.trigger.action as Action)?.type != ActionType.CRON)
-                TimeService.registerCron(area, user); // start cron job
+                && (area.trigger.action as Action)?.type != ActionType.CRON && area._id) {
+                const areaFull = await AreaController._areaSchema.getPopulate(area._id);
+                TimeService.registerCron(areaFull, user); // start cron job
+            }
             res.status(200).json({
                 _id: areaUpdate._id,
                 ...areaBody
@@ -183,22 +186,34 @@ export default class AreaController {
     }
 
     static async delete(req: Request, res: Response) {
-        const areaId = req.params.id;
-        const userId = req.user?.data.user_id;
+        const areaId: string = req.params.id;
+        const userId: string | undefined = req.user?.data.user_id;
 
         try {
             if (!userId || userId.length === 0)
                 throw "Unknow user id";
-            const user = await AreaController._userSchema.get(userId, {
-                path: "areas",
-                populate: "action reaction" as unknown as PopulateOptions
-            });
-            const area = (user.areas as Array<ARea>)?.find((element) => getStrObjectId(element) === areaId);
-
-            if (!area)
-                return res.status(404).send(`Failed to find area with id: ${areaId}`);
-            if ((area.trigger.action as Action)?.type == ActionType.CRON)
-                TimeService.unregisterCron(area._id as ObjectId); // stop cron job
+            try {
+                const user = await AreaController._userSchema.get(userId, {
+                    path: "areas",
+                    populate: [
+                        {
+                            path: "trigger",
+                            populate: "action" as unknown as PopulateOptions
+                        },
+                        {
+                            path: "consequence",
+                            populate: "reaction" as unknown as PopulateOptions
+                        }
+                    ]
+                });
+                const area = (user.areas as Array<ARea>)?.find((element) => getStrObjectId(element) === areaId);
+                if (!area)
+                    return res.status(404).send(`Failed to find area with id: ${areaId}`);
+                if (area && (area.trigger.action as Action)?.type == ActionType.CRON)
+                    TimeService.unregisterCron(area._id as ObjectId); // stop cron job
+            } catch (err) {
+                return res.status(404).send("Failed to find user");
+            }
             await AreaController._areaSchema.delete(areaId);
             await AreaController._userSchema.removeARea(userId, areaId);
 
