@@ -83,7 +83,11 @@ export class AuthService {
         });
     }
 
-    public loginToService(url: string): void {
+    public loginToService(service: ServiceType): void {
+        let url: string | undefined = this.apps.find((app) => app.name === service)?.redirect;
+
+        if (!url)
+            throw "Service URL not found";
         const host = this._cookieService.get(environment.cookies.serverHost.name);
 
         url = `${host}${host.endsWith('/') ? 'auth' : '/auth'}${url.startsWith('/') ? url : '/' + url}`;
@@ -95,7 +99,10 @@ export class AuthService {
                 url = url.concat('/');
             url = url.concat('?token=', token);
         }
-        window.location.href = url;
+        if (service !== ServiceType.DISCORD)
+            window.location.href = url;
+        else
+            window.open(url, '_blank');
     }
 
     public disconnectFromService(name: string): Promise<void> {

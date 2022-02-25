@@ -36,7 +36,7 @@ export class RegisterComponent {
             .finally(() => this.isLoading = false);
     }
 
-    public redirectToAppAuth(redirectRoute: string): void {
-        this._authService.loginToService(redirectRoute);
+    public redirectToAppAuth(service: ServiceType): void {
+        this._authService.loginToService(service);
     }
 }
