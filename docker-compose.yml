@@ -30,15 +30,15 @@ services:
             - database
 
     database:
-        build: database
-        volumes:
-            - mongodb-data:/data/db
-        ports:
-            - "27017:27017"
+        image: mongo:4.4
         environment:
             MONGO_INITDB_DATABASE: area-db
             MONGO_INITDB_ROOT_USERNAME: root
             MONGO_INITDB_ROOT_PASSWORD: root_password
+        ports:
+            - "27017:27017"
+        volumes:
+            - mongodb-data:/data/db
         restart: always
 
 volumes:
