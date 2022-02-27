@@ -22,6 +22,7 @@ services:
         build: server
         ports:
             - "8080:8080"
+            - "8180:8180"
         environment:
             DB_HOST: database
             DB_USERNAME: root
