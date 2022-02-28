@@ -80,9 +80,7 @@ class IService {
     try {
       bool value = await api.disconnectService("/auth/disconnect/${getName()}");
 
-      if (value) {
-        connected = false;
-      }
+      await api.updateUser();
       return value;
     } catch (e) {
       log(e.toString());
