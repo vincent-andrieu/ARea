@@ -7,7 +7,6 @@ import 'package:mobile/service/dropbox.dart';
 import 'package:mobile/service/github.dart';
 import 'package:mobile/service/linkedin.dart';
 import 'package:mobile/service/notion.dart';
-import 'package:mobile/service/rss.dart';
 import 'package:mobile/service/twitch.dart';
 import 'package:mobile/service/twitter.dart';
 import 'package:mobile/service/unsplash.dart';
@@ -39,6 +38,7 @@ List<IService> getListService(Map<String, bool> oauth) {
 
 void callbackLogout(BuildContext context, areaService api) {
   api.logout();
+  Navigator.popUntil(context, (route) => false);
   Navigator.of(context).pushNamed('/SignIn');
 }
 
