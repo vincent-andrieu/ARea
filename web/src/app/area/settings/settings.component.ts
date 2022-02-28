@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { ServiceType } from "@classes/model/ServiceType";
 import { AuthService, ServiceData } from "@services/auth.service";
 
-class UserServiceData implements ServiceData {
+export class UserServiceData implements ServiceData {
     iconSvgPath: string;
     label: string;
     name: ServiceType;
@@ -47,7 +47,7 @@ export class AReaSettingsComponent {
             this._authService.disconnectFromService(service.name)
                 .then(() => service.isConnected = false);
         else
-            this._authService.loginToService(service.redirect);
+            this._authService.loginToService(service.name);
     }
 
     public logout(): void {

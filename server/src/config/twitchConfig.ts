@@ -7,4 +7,3 @@ export const twitchConfig = {
     clientSecret: env.TWITCH_CLIENT_SECRET,
     callbackURL: (Number(env.SERVER_PROXY) ? Utils.getServerProxyHost() : Utils.getServerHost()) + env.TWITCH_CALLBACK_URL
 };
-console.log(twitchConfig.callbackURL);

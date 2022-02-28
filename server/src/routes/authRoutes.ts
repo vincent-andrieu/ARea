@@ -46,13 +46,15 @@ router.get("/twitch/redirect", (req: Request, res: Response, next: NextFunction)
 router.get("/twitter", (req: Request, res: Response, next: NextFunction) => {
     if (!req.query.referer)
         req.query.referer = req.headers.referer;
-    return passport.authenticate("twitter", {
-        state: JSON.stringify(req.query || {})
-    })(req, res, next);
+
+    if (!req.session)
+        req.session = {};
+    req.session["state"] = req.query;
+    return passport.authenticate("twitter")(req, res, next);
 });
 
 router.get("/twitter/redirect", (req: Request, res: Response, next: NextFunction) => {
-    const state = getStateFromRequest(req);
+    const state: OAuthState = req.session?.state || {};
 
     if (!state.mobile && !state.referer)
         return res.status(400).send("Undefined referer");

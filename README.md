@@ -44,7 +44,7 @@ figured
  - Aurélien Joncour : Back-end developer
  - Simon Racaud : Back-end developer, Documentation
  - Sullivan Geslot : Pro mobile flutter developer
- - Vincent Andrieu : Front-end developer
+ - Vincent Andrieu : Full-Stack developer
 
 # Requirements
 - [Docker](https://docs.docker.com/get-docker/)

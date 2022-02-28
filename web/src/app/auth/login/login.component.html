@@ -35,7 +35,7 @@
 
         <div fxLayout="column" fxLayoutAlign="space-around center" fxLayoutGap="15px">
             <button *ngFor="let app of appsLoginButton" mat-raised-button class="login-app-button"
-                    (click)="redirectToAppAuth(app.redirect)" [disabled]="isLoading">
+                    (click)="redirectToAppAuth(app.name)" [disabled]="isLoading">
                 <img class="app-button-icon" [src]="app.iconSvgPath">
                 <span>Login with {{ app.label }}</span>
             </button>

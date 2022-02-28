@@ -39,7 +39,7 @@ afterAll(() => {
 /** TESTS */
 
 it("GET root", async () => {
-    const res = await request.get("/");
+    const res = await request.get("/").set("Authorization", "bearer " + token);
     expect(res.statusCode).toBe(204);
 });
 
@@ -223,9 +223,9 @@ describe("CRUD AREA", () => {
     it("DELETE /area", async () => {
         const res = await request.delete("/area/" + areaId)
             .set("Authorization", "bearer " + token);
-        if (res.statusCode != 200)
+        if (res.statusCode != 204)
             console.error(res.error);
-        expect(res.statusCode).toBe(200);
+        expect(res.statusCode).toBe(204);
     });
 });
 

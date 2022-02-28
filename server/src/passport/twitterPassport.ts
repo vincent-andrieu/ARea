@@ -1,7 +1,7 @@
+import { Request } from "express";
 import passport from "passport";
 import passportTwitter, { Profile } from "passport-twitter";
 
-import { Request } from "express";
 import { getStrObjectId } from "@classes/model.class";
 import User from "@classes/user.class";
 import { UserSchema } from "@schemas/user.schema";
@@ -9,7 +9,7 @@ import AuthController from "../controllers/AuthController";
 import { twitterConfig } from "@config/twitterConfig";
 import OAuthProvider from "../models/oAuthProvider.enum";
 import { decodeJwt } from "../middlewares/checkJwt";
-import { OAuthState } from "routes/authRoutes";
+import { OAuthState } from "../routes/authRoutes";
 
 const TwitterStrategy = passportTwitter.Strategy;
 
@@ -18,7 +18,7 @@ const successfullyAuthentificated = async (req: Request, accessToken: string, to
 
     console.log("Twitter:", profile);
     try {
-        const state: OAuthState = JSON.parse(typeof req.query.state === "string" ? req.query.state : "{}");
+        const state: OAuthState = req.session?.state || {};
         if (state.token)
             req.user = decodeJwt(state.token);
 

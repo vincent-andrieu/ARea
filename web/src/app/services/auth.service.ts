@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from '@angular/core';
 import { Router } from "@angular/router";
-import { catchError, firstValueFrom, of } from "rxjs";
+import { catchError, of } from "rxjs";
 import { CookieService } from "ngx-cookie";
 
 import { environment } from "@environment";
@@ -55,7 +55,7 @@ export class AuthService {
                 .subscribe((user: User | null) => {
                     if (!user)
                         return reject();
-                    this._cookieService.put(environment.cookiesKey.jwt, user.token);
+                    this._cookieService.put(environment.cookies.jwt.name, user.token, environment.cookies.jwt.options);
                     this.user = user;
                     resolve(user);
                 });
@@ -76,25 +76,33 @@ export class AuthService {
                 .subscribe((user: User | null) => {
                     if (!user)
                         return reject();
-                    this._cookieService.put(environment.cookiesKey.jwt, user.token);
+                    this._cookieService.put(environment.cookies.jwt.name, user.token, environment.cookies.jwt.options);
+                    this.user = user;
                     resolve(user);
                 });
         });
     }
 
-    public loginToService(url: string): void {
-        const host = this._cookieService.get(environment.cookiesKey.serverHost);
+    public loginToService(service: ServiceType): void {
+        let url: string | undefined = this.apps.find((app) => app.name === service)?.redirect;
+
+        if (!url)
+            throw "Service URL not found";
+        const host = this._cookieService.get(environment.cookies.serverHost.name);
 
         url = `${host}${host.endsWith('/') ? 'auth' : '/auth'}${url.startsWith('/') ? url : '/' + url}`;
 
-        const token = this._cookieService.get(environment.cookiesKey.jwt);
+        const token = this._cookieService.get(environment.cookies.jwt.name);
 
         if (token && token.length > 0) {
             if (!url.endsWith('/'))
                 url = url.concat('/');
             url = url.concat('?token=', token);
         }
-        window.location.href = url;
+        if (service !== ServiceType.DISCORD)
+            window.location.href = url;
+        else
+            window.open(url, '_blank');
     }
 
     public disconnectFromService(name: string): Promise<void> {
@@ -109,9 +117,9 @@ export class AuthService {
     }
 
     public logout(): void {
-        this._cookieService.remove(environment.cookiesKey.jwt);
+        this._cookieService.remove(environment.cookies.jwt.name);
 
-        const host = this._cookieService.get(environment.cookiesKey.serverHost);
+        const host = this._cookieService.get(environment.cookies.serverHost.name);
 
         window.location.href = `${host}${host.endsWith('/') ? 'auth' : '/auth'}/logout`;
     }

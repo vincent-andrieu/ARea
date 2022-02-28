@@ -24,12 +24,12 @@ export class APIInterceptor implements HttpInterceptor {
         if (
             !request.url.startsWith('http://')
             && !request.url.startsWith('https://')
-            && this._cookieService.hasKey(environment.cookiesKey.serverHost)
+            && this._cookieService.hasKey(environment.cookies.serverHost.name)
         ) {
-            apiRequest = apiRequest.clone({ url: `${this._cookieService.get(environment.cookiesKey.serverHost)}${apiRequest.url.startsWith("/") ? "" : "/"}${apiRequest.url}` });
+            apiRequest = apiRequest.clone({ url: `${this._cookieService.get(environment.cookies.serverHost.name)}${apiRequest.url.startsWith("/") ? "" : "/"}${apiRequest.url}` });
 
-            if (!request.headers.has('Authorization') && this._cookieService.hasKey(environment.cookiesKey.jwt))
-                apiRequest = apiRequest.clone({ headers: apiRequest.headers.append('Authorization', 'Bearer ' + this._cookieService.get(environment.cookiesKey.jwt)) });
+            if (!request.headers.has('Authorization') && this._cookieService.hasKey(environment.cookies.jwt.name))
+                apiRequest = apiRequest.clone({ headers: apiRequest.headers.append('Authorization', 'Bearer ' + this._cookieService.get(environment.cookies.jwt.name)) });
         }
 
         return next.handle(apiRequest);

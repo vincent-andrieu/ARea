@@ -23,7 +23,7 @@ export class LoginGuard implements CanActivate {
     ) {}
 
     canActivate(): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-        if (this._cookieService.hasKey(environment.cookiesKey.jwt))
+        if (this._cookieService.hasKey(environment.cookies.jwt.name))
             return new Promise<boolean | UrlTree>((resolve) => {
                 this._httpClient.get('/')
                     .pipe(catchError(() => {

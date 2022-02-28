@@ -24,9 +24,9 @@ export class AuthGuard implements CanActivate {
         const urlToken: string = route.queryParams['token'];
 
         if (urlToken && urlToken.length > 0)
-            this._cookieService.put(environment.cookiesKey.jwt, urlToken);
+            this._cookieService.put(environment.cookies.jwt.name, urlToken, environment.cookies.jwt.options);
 
-        if (this._cookieService.hasKey(environment.cookiesKey.jwt))
+        if (this._cookieService.hasKey(environment.cookies.jwt.name))
             return new Promise<boolean | UrlTree>((resolve) => {
                 this._httpClient.get('/')
                     .pipe(catchError(() => of(resolve(this._router.parseUrl('/login')))))

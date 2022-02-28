@@ -27,10 +27,8 @@ export class ServerService {
                 .pipe(catchError((err: HttpErrorResponse) => of(err)))
                 .subscribe((response) => {
                     if (response.status !== 0) {
-                        this._cookieService.remove(environment.cookiesKey.jwt);
-                        this._cookieService.put(environment.cookiesKey.serverHost, host, {
-                            sameSite: true
-                        });
+                        this._cookieService.remove(environment.cookies.jwt.name);
+                        this._cookieService.put(environment.cookies.serverHost.name, host, environment.cookies.serverHost.options);
                         resolve();
                         this.onHostUpdate.next(host);
 
@@ -41,7 +39,7 @@ export class ServerService {
     }
 
     public getHost(): string {
-        return this._cookieService.get(environment.cookiesKey.serverHost);
+        return this._cookieService.get(environment.cookies.serverHost.name);
     }
 
     public downloadMobileApp(): void {

@@ -11,7 +11,6 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { AReaListComponent } from './area/list/list.component';
-import { AReaEditModalComponent } from './area/edit-modal/edit-modal.component';
 import { AReaSettingsComponent } from './area/settings/settings.component';
 
 const routes: Routes = [
@@ -27,11 +26,18 @@ const routes: Routes = [
     { path: 'register', component: RegisterComponent, canActivate: [ServerGuard, LoginGuard] },
     {
         path: 'areas',
-        canActivate: [ServerGuard, AuthGuard],
         component: AReaListComponent,
-        children: [
-            { path: ':areaId', component: AReaEditModalComponent }
-        ]
+        canActivate: [ServerGuard, AuthGuard],
+        resolve: {
+            user: UserResolver
+        } },
+    {
+        path: 'areas/:areaId',
+        component: AReaListComponent,
+        canActivate: [ServerGuard, AuthGuard],
+        resolve: {
+            user: UserResolver
+        }
     },
     {
         path: 'settings',

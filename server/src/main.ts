@@ -1,14 +1,14 @@
 import "module-alias/register";
 import { env } from "process";
 import { sys } from "typescript";
-import ip from "ip";
 
 import Express from "./init/express";
 import DBDataset from "./init/DBDataset";
 import ProxySSL from "./init/proxy";
-import CronService from "./services/CronService";
+import { Utils } from "@services/utils";
+import CronService from "@services/CronService";
 
-console.info("Host IP:", ip.address());
+console.info("Host IP:", Number(env.SERVER_PROXY) ? Utils.getServerProxyHost() : Utils.getServerHost());
 
 (async function() {
     // Connection to the database and loading of the dataset.
