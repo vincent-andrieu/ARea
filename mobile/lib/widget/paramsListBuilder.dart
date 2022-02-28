@@ -105,7 +105,7 @@ class paramsListBuilder {
       ParameterType.DATETIME: datePickerWidget,
       ParameterType.NUMBER: numberWidget,
       ParameterType.TEXT: textWidget,
-      ParameterType.TIME: timePickerWidget,
+      ParameterType.TIME: textWidget,
       ParameterType.URL: urlWidget
     };
 

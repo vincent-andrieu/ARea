@@ -48,7 +48,7 @@ class settings_page extends StatelessWidget {
   late List<IService> serviceList;
 
   settings_page(this.api, {Key? key}) : super(key: key) {
-    serviceList = getListService(api.token!.oauth);
+    serviceList = getListService(api.user!.oauth);
   }
 
   @override
@@ -69,7 +69,7 @@ class settings_page extends StatelessWidget {
                     fontSize: 20),
                 textAlign: TextAlign.center,
               ),
-              Text('Welcome ${api.token!.username}',
+              Text('Welcome ${api.user!.username}',
                   style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: color_list.fourth,

@@ -41,17 +41,10 @@ class IService {
       final result = await FlutterWebAuth.authenticate(
           url: srv + getUrl(), callbackUrlScheme: "area");
 
-      var token = Uri.parse(result).queryParameters['code'];
+      final token = Uri.parse(result).queryParameters['token'];
 
-      bool value = false;
-      if (token != null) {
-        value = await api.updateServiceToken(token, "/auth/${getName()}/redirect/mobile");
-      } else {
-        token = Uri.parse(result).queryParameters['oauth_token'];
-        var verifier = Uri.parse(result).queryParameters['oauth_verifier'];
-
-        value = await api.updateServiceTokenAndVerifier(token!, verifier!, "/auth/${getName()}/redirect/mobile");
-      }
+      bool value = await api.updateServiceToken(
+          token!, "/auth/${getName()}/redirect/mobile");
 
       if (value) {
         nowConnected();
@@ -65,29 +58,21 @@ class IService {
 
   Future<bool> addUserService(String srv, areaService api) async {
     try {
-      var value = false;
-      /*log("addUserService  -> START");
       final result = await FlutterWebAuth.authenticate(
-          url: srv + getUrl(), callbackUrlScheme: "area");
+          url: srv + getUrl() + "&token=${api.user!.token}", callbackUrlScheme: "area");
 
-      var token = Uri.parse(result).queryParameters['code'];
+      final token = Uri.parse(result).queryParameters['token'];
 
-      bool value = false;
+    //   bool value = await api.addNewService(
+    //       token!, "/auth/${getName()}/mobile");
+
       if (token != null) {
-        value = await api.addNewService(token, "/auth/${getName()}/mobile?token=$token"); // TODO
-      } else {
-        token = Uri.parse(result).queryParameters['oauth_token'];
-        var verifier = Uri.parse(result).queryParameters['oauth_verifier'];
-
-        value = await api.addNewServiceTokenAndVerifier(token!, verifier!, "/auth/${getName()}/redirect/mobile"); // TODO
-      }*/
-
-      if (value) {
         nowConnected();
       }
-      return value;
+      await api.updateUser();
+      return true;
     } catch (e) {
-      log("addUserService -> ${e.toString()}");
+      log(e.toString());
       return false;
     }
   }
@@ -96,9 +81,7 @@ class IService {
     try {
       bool value = await api.disconnectService("/auth/disconnect/${getName()}");
 
-      if (value) {
-        connected = false;
-      }
+      await api.updateUser();
       return value;
     } catch (e) {
       log(e.toString());
