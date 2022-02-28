@@ -29,7 +29,8 @@ class list_ifttt extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Center(
+      body: SafeArea(
+        child: Center(
         child: Container(
           padding: const EdgeInsets.all(20.0),
           child: Column(
@@ -76,7 +77,7 @@ class list_ifttt extends StatelessWidget {
               ]),
         ),
       ),
-    );
+    ));
   }
 
   List<Widget> extractWidgetList(BuildContext context) {

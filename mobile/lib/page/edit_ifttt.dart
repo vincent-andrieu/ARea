@@ -57,7 +57,8 @@ class edit_ifttt extends StatelessWidget {
             area.consequence.map));
 
     return Scaffold(
-      body: Center(
+      body: SafeArea(
+      child: Center(
         child: Container(
             padding: const EdgeInsets.all(20.0),
             child: SingleChildScrollView(
@@ -178,7 +179,7 @@ class edit_ifttt extends StatelessWidget {
                   ]),
             )),
       ),
-    );
+    ));
   }
 
   Widget buildTopPage(BuildContext context) {

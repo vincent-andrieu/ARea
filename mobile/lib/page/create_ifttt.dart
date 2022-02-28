@@ -62,7 +62,8 @@ class create_ifttt extends StatelessWidget {
         serviceList, false, "Service", "Reaction", api.listService, null);
 
     return Scaffold(
-      body: Center(
+      body: SafeArea(
+        child: Center(
         child: Container(
             padding: const EdgeInsets.all(20.0),
             child: SingleChildScrollView(
@@ -135,7 +136,7 @@ class create_ifttt extends StatelessWidget {
                   ]),
             )),
       ),
-    );
+    ));
   }
 
   Widget buildTopPage(BuildContext context) {
