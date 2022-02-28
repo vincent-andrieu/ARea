@@ -1,22 +1,22 @@
 version: '3'
 
 services:
-    # client_web:
-    #     build: web
-    #     ports:
-    #         - "8081:80"
-    #     volumes:
-    #         - client:/usr/share/nginx/html/assets/client
-    #     depends_on:
-    #         - client_mobile
-    #         - server
+    client_web:
+        build: web
+        ports:
+            - "8081:80"
+        volumes:
+            - client:/usr/share/nginx/html/assets/client
+        depends_on:
+            - client_mobile
+            - server
 
-    # client_mobile:
-    #     build: mobile
-    #     environment:
-    #         MOBILE_APP_FILEPATH: /app/client/area_mobile.apk
-    #     volumes:
-    #         - client:/app/client
+    client_mobile:
+        build: mobile
+        environment:
+            MOBILE_APP_FILEPATH: /app/client/area_mobile.apk
+        volumes:
+            - client:/app/client
 
     server:
         build: server
