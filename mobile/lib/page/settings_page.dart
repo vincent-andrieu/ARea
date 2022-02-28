@@ -33,7 +33,6 @@ List<IService> getListService(Map<String, bool> oauth) {
     notion(getValue("notion", oauth)),
     unsplash(getValue("unsplash", oauth)),
     dropbox(getValue("dropbox", oauth)),
-    rss(getValue("rss", oauth)),
   ];
   return list;
 }

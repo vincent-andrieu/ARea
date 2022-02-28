@@ -52,12 +52,10 @@ class auth_page extends StatelessWidget {
     github(false),
     twitch(false),
     twitter(false),
-    discord(false),
     linkedin(false),
     notion(false),
     unsplash(false),
     dropbox(false),
-    rss(false),
   ];
 
   auth_page(authentication_e typeSrc, areaService apiSrc, {Key? key})
