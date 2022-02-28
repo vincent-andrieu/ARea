@@ -10,10 +10,15 @@
 
         <div class="connection-list" fxLayout="row wrap" fxLayoutAlign="center">
             <button *ngFor="let service of services" mat-raised-button class="login-service-button"
-                    [color]="service.isConnected ? 'warn' : undefined"
+                    [color]="service.name !== eServiceType.DISCORD && service.isConnected ? 'warn' : undefined"
                     (click)="redirectToServiceAuth(service)" fxLayoutAlign="center">
                 <img class="service-button-icon" [src]="service.iconSvgPath">
-                <span *ngIf="!service.isConnected">Connect to {{ service.label }}</span>
+                <span *ngIf="service.name === eServiceType.DISCORD">
+                    Add ARea bot to a server
+                </span>
+                <span *ngIf="service.name !== eServiceType.DISCORD && !service.isConnected">
+                    Connect to {{ service.label }}
+                </span>
                 <span *ngIf="service.isConnected">Disconnect from {{ service.label }}</span>
             </button>
         </div>
