@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:mobile/api/areaService.dart';
 import 'package:mobile/service/IService.dart';
+import 'package:mobile/service/discord.dart';
 import 'package:mobile/service/loaded.dart';
 import 'package:mobile/service/undefined.dart';
 
@@ -21,6 +22,7 @@ List<IService> serviceListBuilder(areaService api, bool addNone) {
     }
   }
   if (addNone) {
+    services.add(discord(true));
     services.add(undefined(true));
   }
   return services;
