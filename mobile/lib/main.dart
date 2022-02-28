@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mobile/api/areaService.dart';
 import 'package:mobile/enum/authentication_e.dart';
 import 'package:mobile/page/auth_page.dart';
@@ -33,6 +34,7 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
     return MaterialApp(
         debugShowCheckedModeBanner: false, routes: buildRouteApp());
   }
