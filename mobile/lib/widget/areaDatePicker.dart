@@ -10,22 +10,12 @@ class areaDatePicker extends StatefulWidget {
   areaDatePicker(this.desc, this.hint, String defaultValue, {Key? key}) : super(key: key) {
     if (defaultValue.isEmpty) {
       controller = TextEditingController(
-          text: "${selectedDate.day}/${selectedDate.month}/${selectedDate.year} ${selectedDate.hour}:${selectedDate.minute}:${selectedDate.second}"
+          text: (selectedDate.millisecondsSinceEpoch * 1000).toString()
       );
     } else {
-      String date = defaultValue.split(' ')[0];
-      String time = defaultValue.split(' ')[1];
+      int milli = int.parse(defaultValue);
       controller = TextEditingController(text: defaultValue);
-      selectedDate = DateTime.utc(
-        int.parse(date.split('/')[2]),
-        int.parse(date.split('/')[1]),
-        int.parse(date.split('/')[0]),
-        int.parse(time.split(':')[0]),
-        int.parse(time.split(':')[1]),
-        int.parse(time.split(':')[2]),
-        0,
-        0,
-      );
+      selectedDate = DateTime.fromMillisecondsSinceEpoch(milli ~/ 1000);
     }
   }
 
@@ -45,14 +35,14 @@ class _areaDatePickerState extends State<areaDatePicker> {
     final DateTime? selected = await showDatePicker(
       context: context,
       initialDate: selectedDate,
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2025),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2042),
 
     );
     if (selected != null && selected != selectedDate) {
       setState(() {
         selectedDate = selected;
-        controller.text = "${selectedDate.day}/${selectedDate.month}/${selectedDate.year} ${selectedDate.hour}:${selectedDate.minute}:${selectedDate.second}";
+        controller.text = (selectedDate.millisecondsSinceEpoch * 1000).toString();
       });
     }
   }
