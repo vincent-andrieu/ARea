@@ -3,17 +3,16 @@ import 'package:mobile/api/areaService.dart';
 import 'package:mobile/enum/authentication_e.dart';
 import 'package:mobile/page/color_list.dart';
 import 'package:mobile/service/IService.dart';
-import 'package:mobile/service/discord.dart';
 import 'package:mobile/service/dropbox.dart';
 import 'package:mobile/service/github.dart';
 import 'package:mobile/service/linkedin.dart';
 import 'package:mobile/service/notion.dart';
-import 'package:mobile/service/rss.dart';
 import 'package:mobile/service/twitch.dart';
 import 'package:mobile/service/twitter.dart';
 import 'package:mobile/service/unsplash.dart';
 import 'package:mobile/widget/global_connexion_list.dart';
 import 'package:mobile/widget/input_custom.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 void callbackSignInSwitch(BuildContext context) {
   Navigator.of(context).pushNamed('/SignUp');
@@ -27,14 +26,40 @@ void callbackSignInConnexion(
     BuildContext context, areaService api, String user, String pass) {
   Future<bool> tmp = api.tryConnexion(user, pass);
 
-  tmp.then((value) => {if (value) Navigator.of(context).pushNamed('/List')});
+  tmp.then((value) => {
+    if (value)
+      Navigator.of(context).pushNamed('/List')
+    else
+      Fluttertoast.showToast(
+          msg: "Registration failed retry",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 5,
+          backgroundColor: color_list.secondary,
+          textColor: color_list.fifth,
+          fontSize: 16.0
+      )
+  });
 }
 
 void callbackSignUpConnexion(
     BuildContext context, areaService api, String user, String pass) {
   Future<bool> tmp = api.createUserAndConnexion(user, pass);
 
-  tmp.then((value) => {if (value) Navigator.of(context).pushNamed('/List')});
+  tmp.then((value) => {
+    if (value)
+      Navigator.of(context).pushNamed('/List')
+    else
+      Fluttertoast.showToast(
+          msg: "Connexion failed retry",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 5,
+          backgroundColor: color_list.secondary,
+          textColor: color_list.fifth,
+          fontSize: 16.0
+      )
+  });
 }
 
 class auth_page extends StatelessWidget {

@@ -5,6 +5,7 @@ import 'package:mobile/page/color_list.dart';
 import 'package:mobile/service/IService.dart';
 import 'package:mobile/tools/serviceListBuilder.dart';
 import 'package:mobile/widget/DynamicList.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 void buildRedirection(String action, String reaction, BuildContext context) {
   String route = '/Create\${$action|$reaction}';
@@ -29,7 +30,19 @@ void callbackClose(BuildContext context) {
 void callbackSaveIfttt(
     BuildContext context, createAreaRequest newArea, areaService api) {
   api.createIfttt(newArea).then((value) => {
-        if (value) {Navigator.of(context).pushNamed('/List')}
+        if (value) {
+          Navigator.of(context).pushNamed('/List')
+        } else {
+          Fluttertoast.showToast(
+              msg: "Save failed retry",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 5,
+              backgroundColor: color_list.secondary,
+              textColor: color_list.fifth,
+              fontSize: 16.0
+          )
+        }
       });
 }
 
