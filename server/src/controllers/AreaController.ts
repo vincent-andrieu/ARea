@@ -14,6 +14,7 @@ import { ActionSelector, ReactionSelector } from "models/AreaSelector";
 import TimeService from "../services/TimeService";
 import Reaction from "@classes/reaction.class";
 import { Parameter } from "../models/Parameters";
+import DiscordService from "@services/DiscordService";
 
 export default class AreaController {
 
@@ -94,7 +95,9 @@ export default class AreaController {
                     if (!user)
                         return res.status(400).send("Failed to get user");
                     TimeService.registerCron(areaFull, user); // start cron job
-                }
+                } else if (areaBody.trigger.action.type == ActionType.DISCORD_MSG)
+                    DiscordService.refreshListenerList();
+
                 res.status(201).json({ _id: area._id, ...areaBody });
             } catch (error) {
                 console.error("AreaController::create ", (error as Error).toString());
@@ -175,7 +178,9 @@ export default class AreaController {
                 && (area.trigger.action as Action)?.type != ActionType.CRON && area._id) {
                 const areaFull = await AreaController._areaSchema.getPopulate(area._id);
                 TimeService.registerCron(areaFull, user); // start cron job
-            }
+            } else if ((areaUpdate.trigger.action as Action)?.type == ActionType.DISCORD_MSG)
+                DiscordService.refreshListenerList();
+
             res.status(200).json({
                 _id: areaUpdate._id,
                 ...areaBody
@@ -192,34 +197,35 @@ export default class AreaController {
         try {
             if (!userId || userId.length === 0)
                 throw "Unknow user id";
-            try {
-                const user = await AreaController._userSchema.get(userId, {
-                    path: "areas",
-                    populate: [
-                        {
-                            path: "trigger",
-                            populate: "action" as unknown as PopulateOptions
-                        },
-                        {
-                            path: "consequence",
-                            populate: "reaction" as unknown as PopulateOptions
-                        }
-                    ]
-                });
-                const area = (user.areas as Array<ARea>)?.find((element) => getStrObjectId(element) === areaId);
-                if (!area)
-                    return res.status(404).send(`Failed to find area with id: ${areaId}`);
-                if (area && (area.trigger.action as Action)?.type == ActionType.CRON)
-                    TimeService.unregisterCron(area._id as ObjectId); // stop cron job
-            } catch (err) {
-                return res.status(404).send("Failed to find user");
-            }
+            const user = await AreaController._userSchema.get(userId, {
+                path: "areas",
+                populate: [
+                    {
+                        path: "trigger",
+                        populate: "action" as unknown as PopulateOptions
+                    },
+                    {
+                        path: "consequence",
+                        populate: "reaction" as unknown as PopulateOptions
+                    }
+                ]
+            });
+            const area = (user.areas as Array<ARea>)?.find((element) => getStrObjectId(element) === areaId);
+            if (!area)
+                return res.status(404).send(`Failed to find area with id: ${areaId}`);
+
+            if (area && (area.trigger.action as Action)?.type == ActionType.CRON)
+                TimeService.unregisterCron(area._id as ObjectId); // stop cron job
+
             await AreaController._areaSchema.delete(areaId);
             await AreaController._userSchema.removeARea(userId, areaId);
 
+            if (area && (area.trigger.action as Action)?.type == ActionType.DISCORD_MSG)
+                DiscordService.refreshListenerList();
+
             return res.sendStatus(204);
         } catch (error) {
-            return res.status(500).send((error as Error).toString());
+            return res.status(400).send((error as Error).toString());
         }
     }
 }
