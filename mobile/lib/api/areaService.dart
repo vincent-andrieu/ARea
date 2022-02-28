@@ -82,7 +82,7 @@ class areaService {
           url, "", tokenAndVerifier(token, verifier), 200);
 
       developer.log("updateServiceToken fromJson");
-      this.token = registerResponse.fromJson(response);
+      _token = registerResponse.fromJson(response).token;
       developer.log("updateServiceToken END");
       await fetchDataConfig();
       await getListIfttt();
@@ -95,20 +95,13 @@ class areaService {
 
   Future<bool> updateServiceToken(String token, String url) async {
     try {
-      developer.log("updateServiceToken START");
-      this._token = token;
-    //   dynamic response = await api.makeRequestPost<codeRequest>(
-    //       url, "", codeRequest(token), 200);
+      _token = token;
 
-      developer.log("updateServiceToken fromJson");
-    //   this.token = registerResponse.fromJson(response);
-      developer.log("updateServiceToken END");
       await updateUser();
       await fetchDataConfig();
       await getListIfttt();
       return true;
     } catch (e) {
-      developer.log("updateServiceToken  -> ${e.toString()}");
       return false;
     }
   }
