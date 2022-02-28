@@ -7,6 +7,7 @@ import { discordBotConfig } from "@config/discordConfig";
 import { DiscordMessageConfig } from "../models/ActionConfig";
 import CronService from "./CronService";
 import { UserSchema } from "@schemas/user.schema";
+import { isTemplateExpression } from "typescript";
 
 interface ChannelListenerItem {
     channelId: string,
@@ -39,6 +40,7 @@ export default class DiscordService {
     static async refreshListenerList() {
         const list: ARea[] = await this.areaSchema.fetchByAction(ActionType.DISCORD_MSG);
 
+        DiscordService.channelListenerList = [];
         list.forEach((value: ARea) => {
             try {
                 const inputs = value.trigger.inputs as DiscordMessageConfig;
@@ -81,6 +83,10 @@ export default class DiscordService {
                 if (result != undefined) {
                     // fetch action-reaction
                     const area: ARea = await this.areaSchema.getPopulate(result.areaId);
+                    area.trigger.outputs = {
+                        channelId: message.channel.id,
+                        message: message.content
+                    };
 
                     const user: User = await this.userSchema.getUserByAReaId(area);
                     // TRIGGER REACTION
