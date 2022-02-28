@@ -69,6 +69,7 @@ class IService {
       if (token != null) {
         nowConnected();
       }
+      await api.updateUser();
       return true;
     } catch (e) {
       log(e.toString());
