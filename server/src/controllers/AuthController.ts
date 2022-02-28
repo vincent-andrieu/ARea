@@ -60,7 +60,7 @@ export default class AuthController {
         try {
             clientHost = Utils.getClientHost(req);
         } catch (error) {
-            console.log("logout: ", (error as Error).toString());
+            console.error("logout: ", (error as Error).toString());
         }
         res.redirect(`${clientHost}/login`);
     }
