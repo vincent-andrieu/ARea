@@ -12,7 +12,7 @@ const router = express.Router();
 router.get("/about.json", (req, res) => {
     const aboutJson = {
         client: {
-            host: req.ip
+            host: req.headers.host || req.ip
         },
         server: {
             current_time: moment().unix(),
