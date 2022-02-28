@@ -55,8 +55,14 @@ export default class AuthController {
     }
 
     public static async logout(req: Request, res: Response) {
-        req.session = null;
-        res.redirect(`${Utils.getClientHost(req)}/login`);
+        let clientHost = "http://localhost:4200";
+
+        try {
+            clientHost = Utils.getClientHost(req);
+        } catch (error) {
+            console.log("logout: ", (error as Error).toString());
+        }
+        res.redirect(`${clientHost}/login`);
     }
 
     public static async register(req: Request, res: Response) {
