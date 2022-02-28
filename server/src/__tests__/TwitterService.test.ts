@@ -25,8 +25,8 @@ beforeAll(async () => {
         //        //expressInit.connect();
 
         // mongoose.connection.dropDatabase();
-        await Express.connect();
-        await Database.connect(); // TODO: ask aurelien why does not contain same data than in application
+        // await Express.connect();
+        // await Database.connect(); // TODO: ask simon why does not contain same data than in application
     } catch (err) {
         console.log(err);
     }

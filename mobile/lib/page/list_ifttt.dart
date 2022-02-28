@@ -41,7 +41,7 @@ class list_ifttt extends StatelessWidget {
                     buildTopPage(context),
                     FittedBox(
                         fit: BoxFit.fitWidth,
-                        child: Text('Welcome ${api.token!.username}',
+                        child: Text('Welcome ${api.user!.username}',
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               color: color_list.fourth,
@@ -82,8 +82,8 @@ class list_ifttt extends StatelessWidget {
   List<Widget> extractWidgetList(BuildContext context) {
     List<Widget> list = [];
 
-    if (api.token != null) {
-      for (var element in api.token!.areas) {
+    if (api.user != null) {
+      for (var element in api.user!.areas) {
         list.add(buildCard(element.id, element, context));
       }
     }

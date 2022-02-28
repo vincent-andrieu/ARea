@@ -25,6 +25,6 @@ class twitch extends IService {
 
   @override
   String getUrl() {
-    return "/auth/twitch/mobile";
+    return "/auth/twitch?mobile=true";
   }
 }
