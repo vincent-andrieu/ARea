@@ -5,7 +5,6 @@ WORKDIR /app
 COPY ./.browserslistrc /app/
 COPY ./karma.conf.js /app/
 COPY ./angular.json /app/
-COPY ./nginx.conf /app/
 COPY ./tsconfig.app.json /app/
 COPY ./tsconfig.json /app/
 COPY ./package.json /app/
@@ -18,5 +17,5 @@ RUN npm run build
 
 FROM nginx:1.21.5-alpine
 
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /app/dist/ /usr/share/nginx/html/
-COPY /app/nginx.conf /etc/nginx/conf.d/default.conf
