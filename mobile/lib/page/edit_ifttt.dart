@@ -13,6 +13,7 @@ import 'package:mobile/tools/preBuildTools.dart';
 import 'package:mobile/tools/serviceListBuilder.dart';
 import 'package:mobile/widget/DynamicList.dart';
 import 'create_ifttt.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class edit_ifttt extends StatelessWidget {
   late areaService api;
@@ -91,11 +92,20 @@ class edit_ifttt extends StatelessWidget {
                             child: ElevatedButton(
                               onPressed: () {
                                 api.deleteIfttt(args).then((value) => {
-                                      if (value)
-                                        {
-                                          Navigator.of(context)
-                                              .pushNamed('/List')
-                                        }
+                                      if (value) {
+                                        Navigator.of(context)
+                                            .pushNamed('/List')
+                                      } else {
+                                        Fluttertoast.showToast(
+                                            msg: "Delete failed retry",
+                                            toastLength: Toast.LENGTH_LONG,
+                                            gravity: ToastGravity.BOTTOM,
+                                            timeInSecForIosWeb: 5,
+                                            backgroundColor: color_list.secondary,
+                                            textColor: color_list.fifth,
+                                            fontSize: 16.0
+                                        )
+                                      }
                                     });
                               },
                               style: ElevatedButton.styleFrom(
@@ -129,11 +139,20 @@ class edit_ifttt extends StatelessWidget {
                                           reaction.actionParameter.getParams(),
                                         ))
                                     .then((value) => {
-                                          if (value)
-                                            {
-                                              Navigator.of(context)
-                                                  .pushNamed('/List')
-                                            }
+                                          if (value) {
+                                            Navigator.of(context)
+                                                .pushNamed('/List')
+                                          } else {
+                                            Fluttertoast.showToast(
+                                                msg: "Save failed retry",
+                                                toastLength: Toast.LENGTH_LONG,
+                                                gravity: ToastGravity.BOTTOM,
+                                                timeInSecForIosWeb: 5,
+                                                backgroundColor: color_list.secondary,
+                                                textColor: color_list.fifth,
+                                                fontSize: 16.0
+                                            )
+                                          }
                                         });
                               },
                               style: ElevatedButton.styleFrom(

@@ -29,6 +29,6 @@ WORKDIR /app/android
 COPY ./ /app/
 
 RUN gradle --refresh-dependencies
-RUN flutter build apk --release -v
+RUN flutter build apk --release
 
 CMD mv ../build/app/outputs/apk/release/app-release.apk $MOBILE_APP_FILEPATH
