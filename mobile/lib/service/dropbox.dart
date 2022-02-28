@@ -25,6 +25,6 @@ class dropbox extends IService {
 
   @override
   String getUrl() {
-    return "/auth/dropbox/mobile";
+    return "/auth/dropbox?mobile=true";
   }
 }
