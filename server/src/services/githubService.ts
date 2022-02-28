@@ -3,16 +3,18 @@ import { env } from "process";
 import { Octokit } from "octokit";
 // import User from "@classes/user.class";
 import ARea from "@classes/area.class";
-import { GithubResult, UnsplashPostResult } from "@models/ActionResult";
+import { DateTimeResult, DiscordMessageResult, GithubResult, RSSResult, TwitchStreamResult, TwitterTweetResult, UnsplashPostResult } from "@models/ActionResult";
 import { GithubIssueConfig, GithubPullReqConfig } from "@models/ActionConfig";
 import User from "@classes/user.class";
 import Action, { ActionType } from "@classes/action.class";
 import { GithubCreateIssueConfig, GithubCreatePullRequestConfig } from "@models/ReactionConfig";
+import { AReaSchema } from "@schemas/area.schema";
 
 const pagination = 10;
 
 export default class githubService {
 
+    private static _areaSchema = new AReaSchema();
 
     private static launchOctokit(personnalAccessToken: string): Octokit | null {
 
@@ -35,13 +37,13 @@ export default class githubService {
             return false;
         if (last.lastId === id)
             return false;
-        last.lastId = id;
         return true;
     }
 
-    private static areaSetInfos(area: ARea, repo: string, owner: string, pr) {
-        const result: GithubResult = area.trigger.outputs as GithubResult;
+    private static async areaSetInfos(area: ARea, repo: string, owner: string, pr) {
+        const result: GithubResult = area.trigger.outputs as GithubResult || {};
 
+        result.lastId = pr.id;
         result.owner = owner;
         result.repository = repo;
         result.url = pr.url;
@@ -55,10 +57,13 @@ export default class githubService {
         result.userUrl = pr.user.html_url;
         result.body = pr.body;
         result.created_at = pr.created_at;
-        if (!Array.isArray(pr.labels) || !Array.isArray(result.labels))
-            return;
-        for (const label of pr.labels)
-            result.labels.push(label.name);
+        if (Array.isArray(pr.labels)) {
+            result.labels = [];
+            for (const label of pr.labels)
+                result.labels.push(label.name);
+        }
+        area.trigger.outputs = result;
+        await githubService._areaSchema.edit(area);
     }
 
 
@@ -79,9 +84,11 @@ export default class githubService {
 
         if (!pullRequests || !pullRequests.data[0])
             return false;
-        if (!githubService.isNewId(area, pullRequests.data[0].id))
+        if (!githubService.isNewId(area, pullRequests.data[0].id)) {
+            await this.areaSetInfos(area, repo, owner, pullRequests.data[0]);
             return false;
-        githubService.areaSetInfos(area, repo, owner, pullRequests.data[0]);
+        }
+        await this.areaSetInfos(area, repo, owner, pullRequests.data[0]);
         console.log("pullRequest : ", pullRequests.data[0]);
 
         return true;
@@ -104,10 +111,12 @@ export default class githubService {
 
         if (!issues || !issues.data || !issues.data[0])
             return false;
-        console.log(issues.data[0])
-        if (!githubService.isNewId(area, issues.data[0].id))
+        console.log(issues.data[0]);
+        if (!githubService.isNewId(area, issues.data[0].id)) {
+            await this.areaSetInfos(area, repo, owner, issues.data[0]);
             return false;
-        githubService.areaSetInfos(area, repo, owner, issues.data[0]);
+        }
+        await githubService.areaSetInfos(area, repo, owner, issues.data[0]);
 
         return true;
     }
@@ -138,19 +147,165 @@ export default class githubService {
         return true;
     }
 
+    private static rea_dateTimeIssue(area: ARea, config: GithubCreateIssueConfig): GithubCreateIssueConfig {
+        const actionResult: DateTimeResult = area.trigger.outputs as DateTimeResult;
+
+        if (!config.body)
+            config.body = "";
+        else
+            config.body += "\n";
+        config.body += "Issue created at " + actionResult.time;
+        return config;
+    }
+
+    private static rea_discordIssue(area: ARea, config: GithubCreateIssueConfig): GithubCreateIssueConfig {
+        const actionResult: DiscordMessageResult = area.trigger.outputs as DiscordMessageResult;
+
+        if (!config.body)
+            config.body = "";
+        else
+            config.body += "\n";
+
+        config.body += actionResult.message;
+        return config;
+    }
+
+    private static rea_githubIssueIssue(area: ARea, config: GithubCreateIssueConfig): GithubCreateIssueConfig {
+        const actionResult: GithubResult = area.trigger.outputs as GithubResult;
+
+        if (!config.title)
+            config.title = "";
+        else
+            config.title += "\n";
+
+        config.title += actionResult.title;
+        if (!config.body)
+            config.body = "";
+        else
+            config.body += "\n";
+        config.body += actionResult.body;
+
+        return config;
+    }
+
+    private static rea_githubPullReqIssue(area: ARea, config: GithubCreateIssueConfig): GithubCreateIssueConfig {
+        const actionResult: GithubResult = area.trigger.outputs as GithubResult;
+
+        if (!config.title)
+            config.title = "";
+        config.title += actionResult.title;
+        if (!config.body)
+            config.body = "";
+        else
+            config.body += "\n";
+        config.body += actionResult.body;
+
+        return config;
+    }
+
+    private static rea_RSSIssue(area: ARea, config: GithubCreateIssueConfig): GithubCreateIssueConfig {
+        const actionResult: RSSResult = area.trigger.outputs as RSSResult;
+
+        if (!config.body)
+            config.body = "";
+        else
+            config.body += "\n";
+        config.body += actionResult.url;
+        return config;
+    }
+
+    private static rea_twitchIssue(area: ARea, config: GithubCreateIssueConfig): GithubCreateIssueConfig {
+        const actionResult: TwitchStreamResult = area.trigger.outputs as TwitchStreamResult;
+
+        if (!config.body)
+            config.body = "";
+        else
+            config.body += "\n";
+        config.title += "New stream by " + actionResult.Username + "\n";
+        config.body += "Playing : " + actionResult.StreamGame + "\n";
+        config.body += "Stream title : " + actionResult.StreamTitle + "\n";
+        config.body += "Number of viewers : " + actionResult.StreamViewers.toString + "\n";
+        config.body += "Speaking : " + actionResult.StreamLanguage + "\n";
+        config.body += "Stream thumbnail" + actionResult.StreamThumbnailUrl + "\n";
+        return config;
+    }
+
+    private static rea_twitterMsgIssue(area: ARea, config: GithubCreateIssueConfig): GithubCreateIssueConfig {
+        const actionResult: TwitterTweetResult = area.trigger.outputs as TwitterTweetResult;
+
+        if (!config.title)
+            config.title = "";
+        else
+            config.title += "\n";
+        config.title += "New tweet by " + actionResult.username;
+        if (!config.body)
+            config.body = "";
+        else
+            config.body += "\n";
+        config.body += "Content : " + actionResult.text + "\n";
+        config.body += "Coordinates : " + actionResult.coordinates + "\n";
+        config.body += "Timestamp : " + actionResult.created_at + "\n";
+        config.body += "Language : " + actionResult.lang + "\n";
+        config.body += "Number of likes : " + actionResult.like_count + "\n";
+        config.body += "Number of quotes : " + actionResult.quote_count + "\n";
+        config.body += "Number of replies : " + actionResult.reply_count + "\n";
+        config.body += "Number of retweets : " + actionResult.retweet_count + "\n";
+        return config;
+    }
+
+    private static rea_unsplashPostIssue(area: ARea, config: GithubCreateIssueConfig): GithubCreateIssueConfig {
+        const actionResult: UnsplashPostResult = area.trigger.outputs as UnsplashPostResult;
+
+        if (!config.title)
+            config.title = "";
+        else
+            config.title += "\n";
+        config.title += "New unsplash post by " + actionResult.name + " " + actionResult.lastname;
+        if (!config.body)
+            config.body = "";
+        else
+            config.title += "\n";
+        config.body += "Post desctiption : " + actionResult.description + "\n";
+        config.body += "Timestamp : " + actionResult.created_at + "\n";
+        config.body += "Number of likes : " + actionResult.likes + "\n";
+        return config;
+    }
+
     public static async rea_CreateIssue(area: ARea, user: User) {
         const action: Action = area.trigger.action as Action;
         const config = area.consequence.inputs as GithubCreateIssueConfig;
 
         try {
             switch (action.type) {
+                case ActionType.DATETIME:
+                    this.rea_dateTimeIssue(area, config);
+                    break;
+                case ActionType.DISCORD_MSG:
+                    this.rea_discordIssue(area, config);
+                    break;
+                case ActionType.GITHUB_ISSUE:
+                    this.rea_githubIssueIssue(area, config);
+                    break;
+                case ActionType.GITHUB_PULL_REQ:
+                    this.rea_githubPullReqIssue(area, config);
+                    break;
+                case ActionType.RSS_ENTRY:
+                    this.rea_RSSIssue(area, config);
+                    break;
+                case ActionType.TWITCH_STREAM:
+                    this.rea_twitchIssue(area, config);
+                    break;
+                case ActionType.TWITTER_MSG:
+                    this.rea_twitterMsgIssue(area, config);
+                    break;
                 case ActionType.UNSPLASH_POST:
-                    const result = area.trigger.outputs as UnsplashPostResult;
-                    // config.body += result.lastPostId; // find something interesting to add to issue
-
+                    this.rea_unsplashPostIssue(area, config);
+                    break;
+                case ActionType.UNSPLASH_RANDOM_POST:
+                    this.rea_unsplashPostIssue(area, config);
                     break;
                 default:
-                    console.log("todo: default action");
+                    console.log("Default action");
 
             }
             githubService.CreateIssue(user, config);
@@ -189,19 +344,165 @@ export default class githubService {
         return true;
     }
 
+    private static rea_dateTimePullReq(area: ARea, config: GithubCreatePullRequestConfig): GithubCreatePullRequestConfig {
+        const actionResult: DateTimeResult = area.trigger.outputs as DateTimeResult;
+
+        if (!config.body)
+            config.body = "";
+        else
+            config.body += "\n";
+        config.body += "PullReq created at " + actionResult.time;
+        return config;
+    }
+
+    private static rea_discordPullReq(area: ARea, config: GithubCreatePullRequestConfig): GithubCreatePullRequestConfig {
+        const actionResult: DiscordMessageResult = area.trigger.outputs as DiscordMessageResult;
+
+        if (!config.body)
+            config.body = "";
+        else
+            config.body += "\n";
+
+        config.body += actionResult.message;
+        return config;
+    }
+
+    private static rea_githubIssuePullReq(area: ARea, config: GithubCreatePullRequestConfig): GithubCreatePullRequestConfig {
+        const actionResult: GithubResult = area.trigger.outputs as GithubResult;
+
+        if (!config.title)
+            config.title = "";
+        else
+            config.title += "\n";
+
+        config.title += actionResult.title;
+        if (!config.body)
+            config.body = "";
+        else
+            config.body += "\n";
+        config.body += actionResult.body;
+
+        return config;
+    }
+
+    private static rea_githubPullReqPullReq(area: ARea, config: GithubCreatePullRequestConfig): GithubCreatePullRequestConfig {
+        const actionResult: GithubResult = area.trigger.outputs as GithubResult;
+
+        if (!config.title)
+            config.title = "";
+        config.title += actionResult.title;
+        if (!config.body)
+            config.body = "";
+        else
+            config.body += "\n";
+        config.body += actionResult.body;
+
+        return config;
+    }
+
+    private static rea_RSSPullReq(area: ARea, config: GithubCreatePullRequestConfig): GithubCreatePullRequestConfig {
+        const actionResult: RSSResult = area.trigger.outputs as RSSResult;
+
+        if (!config.body)
+            config.body = "";
+        else
+            config.body += "\n";
+        config.body += actionResult.url;
+        return config;
+    }
+
+    private static rea_twitchPullReq(area: ARea, config: GithubCreatePullRequestConfig): GithubCreatePullRequestConfig {
+        const actionResult: TwitchStreamResult = area.trigger.outputs as TwitchStreamResult;
+
+        if (!config.body)
+            config.body = "";
+        else
+            config.body += "\n";
+        config.title += "New stream by " + actionResult.Username + "\n";
+        config.body += "Playing : " + actionResult.StreamGame + "\n";
+        config.body += "Stream title : " + actionResult.StreamTitle + "\n";
+        config.body += "Number of viewers : " + actionResult.StreamViewers.toString + "\n";
+        config.body += "Speaking : " + actionResult.StreamLanguage + "\n";
+        config.body += "Stream thumbnail" + actionResult.StreamThumbnailUrl + "\n";
+        return config;
+    }
+
+    private static rea_twitterMsgPullReq(area: ARea, config: GithubCreatePullRequestConfig): GithubCreatePullRequestConfig {
+        const actionResult: TwitterTweetResult = area.trigger.outputs as TwitterTweetResult;
+
+        if (!config.title)
+            config.title = "";
+        else
+            config.title += "\n";
+        config.title += "New tweet by " + actionResult.username;
+        if (!config.body)
+            config.body = "";
+        else
+            config.body += "\n";
+        config.body += "Content : " + actionResult.text + "\n";
+        config.body += "Coordinates : " + actionResult.coordinates + "\n";
+        config.body += "Timestamp : " + actionResult.created_at + "\n";
+        config.body += "Language : " + actionResult.lang + "\n";
+        config.body += "Number of likes : " + actionResult.like_count + "\n";
+        config.body += "Number of quotes : " + actionResult.quote_count + "\n";
+        config.body += "Number of replies : " + actionResult.reply_count + "\n";
+        config.body += "Number of retweets : " + actionResult.retweet_count + "\n";
+        return config;
+    }
+
+    private static rea_unsplashPostPullReq(area: ARea, config: GithubCreatePullRequestConfig): GithubCreatePullRequestConfig {
+        const actionResult: UnsplashPostResult = area.trigger.outputs as UnsplashPostResult;
+
+        if (!config.title)
+            config.title = "";
+        else
+            config.title += "\n";
+        config.title += "New unsplash post by " + actionResult.name + " " + actionResult.lastname;
+        if (!config.body)
+            config.body = "";
+        else
+            config.title += "\n";
+        config.body += "Post desctiption : " + actionResult.description + "\n";
+        config.body += "Timestamp : " + actionResult.created_at + "\n";
+        config.body += "Number of likes : " + actionResult.likes + "\n";
+        return config;
+    }
+
     public static async rea_CreatePullRequest(area: ARea, user: User) {
         const action: Action = area.trigger.action as Action;
         const config = area.consequence.inputs as GithubCreatePullRequestConfig;
 
         try {
             switch (action.type) {
+                case ActionType.DATETIME:
+                    this.rea_dateTimePullReq(area, config);
+                    break;
+                case ActionType.DISCORD_MSG:
+                    this.rea_discordPullReq(area, config);
+                    break;
+                case ActionType.GITHUB_ISSUE:
+                    this.rea_githubIssuePullReq(area, config);
+                    break;
+                case ActionType.GITHUB_PULL_REQ:
+                    this.rea_githubPullReqPullReq(area, config);
+                    break;
+                case ActionType.RSS_ENTRY:
+                    this.rea_RSSPullReq(area, config);
+                    break;
+                case ActionType.TWITCH_STREAM:
+                    this.rea_twitchPullReq(area, config);
+                    break;
+                case ActionType.TWITTER_MSG:
+                    this.rea_twitterMsgPullReq(area, config);
+                    break;
                 case ActionType.UNSPLASH_POST:
-                    const result = area.trigger.outputs as UnsplashPostResult;
-                    // config.body += result.lastPostId; // find something interesting to add to issue
-
+                    this.rea_unsplashPostPullReq(area, config);
+                    break;
+                case ActionType.UNSPLASH_RANDOM_POST:
+                    this.rea_unsplashPostPullReq(area, config);
                     break;
                 default:
-                    console.log("todo: default action");
+                    console.log("Default action");
 
             }
             githubService.CreatePullRequest(user, config);

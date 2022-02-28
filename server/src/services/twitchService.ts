@@ -3,7 +3,6 @@ import { ApiClient, HelixStream } from "@twurple/api";
 import { ClientCredentialsAuthProvider } from "@twurple/auth";
 import ARea from "../classes/area.class";
 import { TwitchStreamResult } from "models/ActionResult";
-import axios from "axios";
 import { AReaSchema } from "@schemas/area.schema";
 
 export class TwitchService {
@@ -58,53 +57,5 @@ export class TwitchService {
             return false;
         }
         return true;
-    }
-
-    public static async getAccessToken(code: string) {
-
-        const clientId = env.TWITCH_CLIENT_ID;
-        const clientSecret = env.TWITCH_CLIENT_SECRET;
-        const redirectUri = env.TWITCH_CALLBACK_MOBILE;
-        if (!clientId || !clientSecret || !redirectUri)
-            return;
-
-        const url = "https://id.twitch.tv/oauth2/token";
-        const params = new URLSearchParams();
-        params.append("client_id", clientId);
-        params.append("client_secret", clientSecret);
-        params.append("code", code);
-        params.append("grant_type", "authorization_code");
-        params.append("redirect_uri", redirectUri);
-
-        try {
-            const response = await axios.post(`${url}?${params}`);
-            return response.data;
-        } catch (error) {
-            console.log("[TWITCH] getAccessToken: ", (error as Error).toString());
-            return;
-        }
-    }
-
-    public static async getUserProfile(accessToken: string) {
-
-        const clientId = env.TWITCH_CLIENT_ID;
-        if (!clientId)
-            return;
-
-        try {
-            const res = await axios.get("https://api.twitch.tv/helix/users", {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                    "Client-Id": clientId
-                }
-            });
-            return {
-                ...res.data.data[0],
-                provider: "twitch"
-            };
-        } catch (error) {
-            console.log("[TWITCH] getUserProfile: ", (error as Error).toString());
-            return;
-        }
     }
 }

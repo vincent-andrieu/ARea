@@ -53,7 +53,7 @@
                     </mat-form-field>
                     <mat-form-field *ngSwitchCase="eParamType.DATETIME" fxFlex>
                         <mat-label>{{ parameter.label }}</mat-label>
-                        <input matInput [min]="dateNow()"
+                        <input matInput [min]="currentDate"
                                [ngxMatDatetimePicker]="datePicker"
                                [formControlName]="action.service + '-' + action.type + '-actionParam-' + parameter.name">
                         <mat-datepicker-toggle matSuffix [for]="$any(datePicker)"></mat-datepicker-toggle>
@@ -117,7 +117,7 @@
                     </mat-form-field>
                     <mat-form-field *ngSwitchCase="eParamType.DATETIME" fxFlex>
                         <mat-label>{{ parameter.label }}</mat-label>
-                        <input matInput [min]="dateNow()"
+                        <input matInput [min]="currentDate"
                                [ngxMatDatetimePicker]="datePicker"
                                [formControlName]="reaction.service + '-' + reaction.type + '-reactionParam-' + parameter.name">
                         <mat-datepicker-toggle matSuffix [for]="$any(datePicker)"></mat-datepicker-toggle>

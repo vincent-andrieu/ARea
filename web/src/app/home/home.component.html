@@ -4,7 +4,7 @@
     <form [formGroup]="form" (ngSubmit)="submitForm()" class="server-form-group" fxLayout="column">
         <mat-form-field>
             <mat-label>Server IP</mat-label>
-            <input matInput formControlName="serverIp" placeholder="ex: http://localhost:8080" type="text" autofocus>
+            <input matInput formControlName="serverIp" placeholder="ex: http://localhost:8080" type="url" autofocus>
             <mat-error *ngIf="form.get('serverIp')?.hasError('required')">
                 This field is required
             </mat-error>

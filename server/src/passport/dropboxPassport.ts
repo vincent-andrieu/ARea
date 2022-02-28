@@ -9,6 +9,7 @@ import { UserSchema } from "@schemas/user.schema";
 import AuthController from "@controllers/AuthController";
 import OAuthProvider from "@models/oAuthProvider.enum";
 import { decodeJwt } from "../middlewares/checkJwt";
+import { OAuthState } from "routes/authRoutes";
 
 const DropboxStrategy = passportDropbox.Strategy;
 
@@ -17,8 +18,9 @@ async function successfullyAuthentificated(req: Request, accessToken: string, re
 
     console.log("Dropbox:", profile);
     try {
-        if (typeof req.query.state === "string")
-            req.user = decodeJwt(req.query.state as string);
+        const state: OAuthState = JSON.parse(typeof req.query.state === "string" ? req.query.state : "{}");
+        if (state.token)
+            req.user = decodeJwt(state.token);
 
         const userId: string | undefined = req.user?.data.user_id;
         let providerUser = await userSchema.findByOAuthProviderId(OAuthProvider.DROPBOX, profile.id);
@@ -91,7 +93,7 @@ async function successfullyAuthentificated(req: Request, accessToken: string, re
     }
 }
 
-passport.use("dropbox-oauth2-web", new DropboxStrategy(
+passport.use("dropbox", new DropboxStrategy(
     { apiVersion: "2", ...dropboxConfig, passReqToCallback: true },
     successfullyAuthentificated
 ));

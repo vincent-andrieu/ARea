@@ -1,5 +1,3 @@
-import { env } from "process";
-
 import { Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
@@ -10,6 +8,7 @@ import { UserSchema } from "@schemas/user.schema";
 import { JwtData } from "../middlewares/checkJwt";
 import { ServiceType } from "@models/ServiceType";
 import User from "@classes/user.class";
+import { Utils } from "@services/utils";
 
 export default class AuthController {
 
@@ -57,7 +56,7 @@ export default class AuthController {
 
     public static async logout(req: Request, res: Response) {
         req.session = null;
-        res.redirect(`${env.CLIENT_HOST}/login`);
+        res.redirect(`${Utils.getClientHost(req)}/login`);
     }
 
     public static async register(req: Request, res: Response) {

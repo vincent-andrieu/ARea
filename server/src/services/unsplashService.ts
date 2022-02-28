@@ -1,16 +1,13 @@
 import { env } from "process";
 
 import nodeFetch from "node-fetch";
-import axios from "axios";
 import { createApi } from "unsplash-js";
 import { Full, Random } from "unsplash-js/dist/methods/photos/types";
 
 import ARea from "@classes/area.class";
 import { UnsplashPostResult } from "@models/ActionResult";
-import { utils } from "./utils";
-import { unsplashConfig } from "@config/unsplashConfig";
+import { Utils } from "./utils";
 import { AReaSchema } from "@schemas/area.schema";
-import OAuthProvider from "@models/oAuthProvider.enum";
 
 export default class unsplashService {
 
@@ -74,7 +71,7 @@ export default class unsplashService {
             const dlPic = await unsplash.photos.trackDownload({ downloadLocation: pic.response?.links.download });
             if (!dlPic.response?.url)
                 return false;
-            await utils.DownloadUrl(dlPic.response?.url, downloadPath, true);
+            await Utils.DownloadUrl(dlPic.response?.url, downloadPath, true);
             await this.setDownloadInfos(area, downloadPath, pic.response);
         } catch (error) {
             const some_error = error as Error;
@@ -105,7 +102,7 @@ export default class unsplashService {
             const dlPic = await unsplash.photos.trackDownload({ downloadLocation: pic.response?.links.download });
             if (!dlPic.response?.url)
                 return false;
-            await utils.DownloadUrl(dlPic.response?.url, downloadPath, true);
+            await Utils.DownloadUrl(dlPic.response?.url, downloadPath, true);
             this.setDownloadInfos(area, downloadPath, pic.response);
         } catch (error) {
             const some_error = error as Error;
@@ -114,58 +111,5 @@ export default class unsplashService {
             return false;
         }
         return true;
-    }
-
-    public static async getAccessToken(code: string) {
-
-        const clientId = unsplashConfig.clientID;
-        const clientSecret = unsplashConfig.clientSecret;
-        const redirectUri = env.UNSPLASH_CALLBACK_MOBILE;
-
-        if (!clientId || !clientSecret || !redirectUri)
-            return;
-
-        const url = "https://unsplash.com/oauth/token";
-        const params = new URLSearchParams();
-        params.append("client_id", clientId);
-        params.append("client_secret", clientSecret);
-        params.append("code", code);
-        params.append("grant_type", "authorization_code");
-        params.append("redirect_uri", redirectUri);
-
-        try {
-            const response = await axios.post(`${url}?${params}`);
-            return response.data;
-        } catch (error) {
-            console.log("[UNSPLASH] getAccessToken: ", (error as Error).toString());
-            return;
-        }
-    }
-
-    public static async getUserProfile(accessToken: string): Promise<Profile> {
-
-        try {
-            const res = await axios.get("https://api.unsplash.com/me", {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            });
-            const parsedData = res.data;
-            const profile: Profile = {
-                provider: OAuthProvider.UNSPLASH,
-                name: {
-                    givenName: parsedData.first_name,
-                    familyName: parsedData.last_name
-                },
-                id: parsedData.uid,
-                username: parsedData.username,
-                displayName: parsedData.username || parsedData.uid,
-                email: parsedData.email
-
-            };
-            return profile;
-        } catch (error) {
-            throw "[TWITCH] getUserProfile: " + (error as Error).toString();
-        }
     }
 }

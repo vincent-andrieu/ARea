@@ -8,7 +8,7 @@ import User from "@classes/user.class";
 import Reaction, { ReactionType } from "@classes/reaction.class";
 import Action, { ActionType } from "@classes/action.class";
 
-import { TwitchStreamConfig, UnsplashPostConfig } from "models/ActionConfig";
+import { GithubIssueConfig, TwitchStreamConfig, UnsplashPostConfig } from "models/ActionConfig";
 import { DiscordPostMsgConfig } from "models/ReactionConfig";
 
 import { TwitterService } from "@services/twitterService";
@@ -20,6 +20,7 @@ import TimeService from "@services/TimeService";
 import { UserSchema } from "@schemas/user.schema";
 import notionService from "./notionService";
 import { DropboxService } from "./DropboxService";
+import githubService from "./githubService";
 
 export default class CronService {
 
@@ -96,11 +97,17 @@ export default class CronService {
                 break;
             }
             case ActionType.GITHUB_ISSUE: {
-                // TODO:
+                const githubConfig = area.trigger.inputs as GithubIssueConfig;
+
+                if (await githubService.getIfNewIssue(area, user, githubConfig.repository, githubConfig.owner))
+                    CronService.triggerReaction(area, user);
                 break;
             }
             case ActionType.GITHUB_PULL_REQ: {
-                // TODO:
+                const githubConfig = area.trigger.inputs as GithubIssueConfig;
+
+                if (await githubService.getIfNewPullRequest(area, user, githubConfig.repository, githubConfig.owner))
+                    CronService.triggerReaction(area, user);
                 break;
             }
             case ActionType.DISCORD_MSG: {
@@ -151,7 +158,7 @@ export default class CronService {
                 break;
             }
             case ReactionType.GITHUB_ISSUE:
-                // githubService.rea_CreateIssue(area, user);
+                githubService.rea_CreateIssue(area, user);
                 break;
             case ReactionType.GITHUB_PULL:
                 // githubService.rea_CreatePullRequest(area, user);

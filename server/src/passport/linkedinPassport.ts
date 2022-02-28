@@ -9,6 +9,7 @@ import { UserSchema } from "@schemas/user.schema";
 import OAuthProvider from "../models/oAuthProvider.enum";
 import { decodeJwt } from "../middlewares/checkJwt";
 import AuthController from "../controllers/AuthController";
+import { OAuthState } from "routes/authRoutes";
 
 const LinkedinStrategy = passportLinkedin.Strategy;
 
@@ -17,8 +18,9 @@ async function successfullyAuthentificated(req: Request, accessToken: string, re
 
     console.log("Linkedin:", profile);
     try {
-        if (typeof req.query.state === "string")
-            req.user = decodeJwt(req.query.state as string);
+        const state: OAuthState = JSON.parse(typeof req.query.state === "string" ? req.query.state : "{}");
+        if (state.token)
+            req.user = decodeJwt(state.token);
 
         const userId: string | undefined = req.user?.data.user_id;
         let providerUser = await userSchema.findByOAuthProviderId(OAuthProvider.LINKEDIN, profile.id);
