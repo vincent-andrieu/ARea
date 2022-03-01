@@ -252,7 +252,7 @@ export class AReaEditModalComponent {
             result[param.name] = this.form.get(action.service + '-' + action.type + '-actionParam-' + param.name)?.value;
 
             if (param.type === ParameterType.DATETIME)
-                result[param.name] = (result[param.name] as Date).getTime() / 1000;
+                result[param.name] = (result[param.name] as Date).getTime().toString();
         });
         return result as unknown as ActionConfig;
     }
@@ -265,7 +265,7 @@ export class AReaEditModalComponent {
             result[param.name] = this.form.get(reaction.service + '-' + reaction.type + '-reactionParam-' + param.name)?.value;
 
             if (param.type === ParameterType.DATETIME)
-                result[param.name] = (result[param.name] as Date).getTime() / 1000;
+                result[param.name] = (result[param.name] as Date).getTime().toString();
         });
         return result as unknown as ReactionConfig;
     }

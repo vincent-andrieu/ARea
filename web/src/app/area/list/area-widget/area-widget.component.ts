@@ -51,7 +51,7 @@ export class AreaWidgetComponent implements OnInit {
 
         switch (trigger.action.type) {
         case 'DATETIME':
-            return moment((trigger.inputs as DateTimeConfig).time).format('LLL');
+            return moment(parseInt((trigger.inputs as DateTimeConfig).time)).format('LLL');
         case 'CRON':
             return (trigger.inputs as TimeConfig).time;
         case 'DISCORD_MSG':

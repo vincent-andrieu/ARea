@@ -70,20 +70,20 @@ export default class TimeService {
 
     static evalDatetime = (area: ARea): boolean => {
         try {
-            const timestamp: number | undefined = (area.trigger.inputs as DateTimeConfig)?.time;
+            const timestamp: number | undefined = parseInt((area.trigger.inputs as DateTimeConfig)?.time);
 
-            if (timestamp == undefined) {
+            if (timestamp == undefined || isNaN(timestamp)) {
                 console.error("TimeService::evalDatetime invalid area inputs.");
                 return false;
             }
             if (timestamp > 0 && Date.now() >= timestamp) {
-                (area.trigger.inputs as DateTimeConfig).time = 0;
+                (area.trigger.inputs as DateTimeConfig).time = "0";
                 this._areaSchema.edit(area); // disable action
                 return true;
             }
             return false;
-        } catch (err: any) {
-            console.error("TimeService::evalDatetime error ", err.message);
+        } catch (err) {
+            console.error("TimeService::evalDatetime error ", (err as Error).message);
             return false;
         }
     };

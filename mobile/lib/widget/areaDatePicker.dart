@@ -10,12 +10,12 @@ class areaDatePicker extends StatefulWidget {
   areaDatePicker(this.desc, this.hint, String defaultValue, {Key? key}) : super(key: key) {
     if (defaultValue.isEmpty) {
       controller = TextEditingController(
-          text: (selectedDate.millisecondsSinceEpoch * 1000).toString()
+          text: (selectedDate.millisecondsSinceEpoch).toString()
       );
     } else {
       int milli = int.parse(defaultValue);
       controller = TextEditingController(text: defaultValue);
-      selectedDate = DateTime.fromMillisecondsSinceEpoch(milli ~/ 1000);
+      selectedDate = DateTime.fromMillisecondsSinceEpoch(milli);
     }
   }
 
@@ -42,7 +42,7 @@ class _areaDatePickerState extends State<areaDatePicker> {
     if (selected != null && selected != selectedDate) {
       setState(() {
         selectedDate = selected;
-        controller.text = (selectedDate.millisecondsSinceEpoch * 1000).toString();
+        controller.text = (selectedDate.millisecondsSinceEpoch).toString();
       });
     }
   }

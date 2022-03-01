@@ -4,7 +4,7 @@ export const actionConfig = {
         required: ["time"],
         properties: {
             time: {
-                type: "number",
+                type: "string",
                 description: "timestamp for the action"
             }
         }

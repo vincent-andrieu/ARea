@@ -1,5 +1,5 @@
 export interface DateTimeConfig {
-    time: number; // timestamp
+    time: string; // timestamp
 }
 
 export interface TimeConfig {
