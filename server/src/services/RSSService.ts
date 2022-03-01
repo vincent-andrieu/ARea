@@ -46,7 +46,7 @@ export default class RSSService {
                 outputs.prevHash = hash;
                 outputs.url = config.url;
                 area.trigger.outputs = outputs;
-                this.areaSchema.edit(area);
+                await this.areaSchema.edit(area);
                 return true;
             }
         } catch (err) {
