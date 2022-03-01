@@ -10,6 +10,7 @@ services:
         depends_on:
             # - client_mobile
             - server
+        restart: always
 
     # client_mobile:
     #     build: mobile
@@ -29,6 +30,7 @@ services:
             DB_PASSWORD: AReaAvionAReactionDBPassword
         depends_on:
             - database
+        restart: always
 
     database:
         image: mongo:4.4
