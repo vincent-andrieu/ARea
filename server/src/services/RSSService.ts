@@ -3,6 +3,7 @@ import ARea from "../classes/area.class";
 import { RSSConfig } from "../models/ActionConfig";
 import axios from "axios";
 import bcrypt from "bcryptjs";
+import { RSSResult } from "@models/ActionResult";
 
 // interface ArticleListenerItem {
 //     url: string,
@@ -35,13 +36,16 @@ export default class RSSService {
     static async evalAction(area: ARea): Promise<boolean> {
         try {
             const config = area.trigger.inputs as RSSConfig;
+            const outputs = area.trigger.outputs as RSSResult || {};
             const response = await axios.get(config.url);
 
             const body: string = response.data;
             const hash: string = body.substring(0, 1024) + body.length.toString();
 
-            if (config.prevHash != hash) {
-                (area.trigger.inputs as RSSConfig).prevHash = hash;
+            if (outputs.prevHash != hash) {
+                outputs.prevHash = hash;
+                outputs.url = config.url;
+                area.trigger.outputs = outputs;
                 this.areaSchema.edit(area);
                 return true;
             }
