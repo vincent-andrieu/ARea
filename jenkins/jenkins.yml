@@ -1,0 +1,44 @@
+jenkins:
+  systemMessage: "Surprise, Surprise motherf*kers, the King is Back"
+
+  remotingSecurity:
+    enabled: true
+
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: admin
+          password: ${JENKINS_USER_PASSWORD}
+          name: Admin
+
+  authorizationStrategy:
+    roleBased:
+      roles:
+        global:
+          - name: "adminRole"
+            permissions:
+              - "Overall/Administer"
+            assignments:
+              - "admin"
+
+jobs:
+  - file: ${JENKINS_HOME}/job_dsl/jenkins.groovy
+
+security:
+  GlobalJobDslSecurityConfiguration:
+    useScriptSecurity: false
+
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - basicSSHUserPrivateKey:
+              scope: GLOBAL
+              id: my_id
+              username: "${CREDENTIAL_USERNAME}"
+              passphrase: "${CREDENTIAL_PASSPHRASE}"
+              description: "this is the description"
+              privateKeySource:
+                directEntry:
+                  privateKey: "${CREDENTIAL_PRIVATEKEY}"

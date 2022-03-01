@@ -41,22 +41,11 @@ export class TwitterService {
         });
     }
 
-    private static getClientAfterAuth(accessToken: string, secretToken: string) {
-
-        if (!env.TWITTER_API_KEY || !env.TWITTER_API_SECRET_KEY)
-            throw "Invalid twitter credentials";
-        return new TwitterApi({
-            appKey: env.TWITTER_API_KEY,
-            appSecret: env.TWITTER_API_SECRET_KEY,
-            accessToken: accessToken,
-            accessSecret: secretToken
-        });
-    }
-
-    private static async setTweetInfos(area: ARea, tweet: TweetV2) {
+    private static async setTweetInfos(area: ARea, tweet: TweetV2, username: string) {
         const result: TwitterTweetResult = area.trigger.outputs as TwitterTweetResult || {};
 
         result.text = tweet.text;
+        result.username = username;
         result.lastTweetId = tweet.id;
         if (tweet.lang)
             result.lang = tweet.lang;
@@ -66,13 +55,13 @@ export class TwitterService {
         }
         if (tweet.created_at)
             result.created_at = tweet.created_at;
-        if (tweet.public_metrics && tweet.public_metrics.like_count)
+        if (tweet.public_metrics?.like_count !== undefined)
             result.like_count = tweet.public_metrics?.like_count;
-        if (tweet.public_metrics?.quote_count)
+        if (tweet.public_metrics?.quote_count !== undefined)
             result.quote_count = tweet.public_metrics?.quote_count;
-        if (tweet.public_metrics?.reply_count)
+        if (tweet.public_metrics?.reply_count !== undefined)
             result.reply_count = tweet.public_metrics?.reply_count;
-        if (tweet.public_metrics?.retweet_count)
+        if (tweet.public_metrics?.retweet_count !== undefined)
             result.retweet_count = tweet.public_metrics?.retweet_count;
         area.trigger.outputs = result;
         await TwitterService._areaSchema.edit(area);
@@ -89,7 +78,8 @@ export class TwitterService {
                 return false;
             const userTimeline = await client.v2.userTimeline(userTweeting.data.id, {
                 expansions: ["attachments.media_keys", "attachments.poll_ids", "referenced_tweets.id"],
-                "media.fields": ["url"]
+                "media.fields": ["url"],
+                "tweet.fields": ["created_at", "geo", "lang", "public_metrics"]
             });
             if (!userTimeline)
                 return false;
@@ -97,11 +87,11 @@ export class TwitterService {
                 if (tweet.referenced_tweets && tweet.referenced_tweets["type"] != "tweeted")
                     continue;
                 if (!TwitterService.IsNewPost(area, tweet.id)) {
-                    await this.setTweetInfos(area, tweet);
+                    await this.setTweetInfos(area, tweet, username);
                     return false;
                 }
                 console.log("A new tweet is detected !", tweet);
-                await this.setTweetInfos(area, tweet);
+                await this.setTweetInfos(area, tweet, username);
                 break;
             }
         } catch (error: unknown) {

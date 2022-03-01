@@ -2,11 +2,10 @@
 import Action, { ActionType } from "@classes/action.class";
 import ARea from "@classes/area.class";
 import User from "@classes/user.class";
-import { TwitterTweetConfig } from "@models/ActionConfig";
 import { DiscordMessageResult, GithubResult, RSSResult, TwitchStreamResult, TwitterTweetResult, UnsplashPostResult } from "@models/ActionResult";
 
-import { NotionAddMessageConfig, } from "@models/ReactionConfig";
-
+import { NotionAddMessageConfig } from "@models/ReactionConfig";
+import moment from "moment";
 import { Client } from "@notionhq/client";
 
 const notionBlockIdRexexp = /([a-z0-9]+)$/;
@@ -56,26 +55,28 @@ export default class NotionService {
         line += "Url : " + github.url + "\n";
         return line;
     }
+
     private static rea_discordLine(area: ARea): string {
         const discord: DiscordMessageResult = area.trigger.outputs as DiscordMessageResult;
 
         return "New discord message (channel : " + discord.channelId + ") : " + discord.message;
     }
+
     private static rea_RSSLine(area: ARea): string {
         const RSS: RSSResult = area.trigger.outputs as RSSResult;
 
         return "New RSS at : " + RSS.url;
     }
 
-    private static rea_twittterLine(area: ARea): string {
+    private static rea_twitterLine(area: ARea): string {
         const twitter: TwitterTweetResult = area.trigger.outputs as TwitterTweetResult;
-
+        const time = moment(twitter.created_at).format("DD/MM/YYYY HH:mm");
         let line = "";
 
         line += "New tweet by : " + twitter.username + "\n";
         line += "Content : " + twitter.text + "\n";
-        line += "Coordinates : " + twitter.coordinates + "\n";
-        line += "Creation time : " + twitter.created_at + "\n";
+        line += twitter.coordinates === undefined ? "" : "Coordinates : " + twitter.coordinates + "\n";
+        line += "Creation time : " + time + "\n";
         line += "language : " + twitter.lang + "\n";
         line += "Actual number of likes : " + twitter.like_count + "\n";
         line += "Actual number of quotes : " + twitter.quote_count + "\n";
@@ -96,6 +97,7 @@ export default class NotionService {
         line += "Language : " + twitch.StreamLanguage + "\n";
         return line;
     }
+
     private static rea_unsplashLine(area: ARea): string {
         const unsplash: UnsplashPostResult = area.trigger.outputs as UnsplashPostResult;
         let line = "";
@@ -116,7 +118,7 @@ export default class NotionService {
             return;
         switch (action.type) {
             case ActionType.TWITTER_MSG:
-                line += this.rea_twittterLine(area);
+                line += this.rea_twitterLine(area);
                 break;
             case ActionType.GITHUB_ISSUE:
                 line += this.rea_githubLine(area, "issue");

@@ -54,7 +54,8 @@ class settings_page extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Center(
+      body: SafeArea(
+        child: Center(
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -108,7 +109,7 @@ class settings_page extends StatelessWidget {
               const Padding(padding: EdgeInsets.only(top: 20.0)),
             ]),
       ),
-    );
+    ));
   }
 
   Widget buildTopPage(BuildContext context) {

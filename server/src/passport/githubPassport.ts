@@ -12,7 +12,6 @@ import { decodeJwt } from "../middlewares/checkJwt";
 import { OAuthState } from "routes/authRoutes";
 
 const GithubStrategy = passportGithub2.Strategy;
-//TODO: do the setting part
 
 async function successfullyAuthentificated(req: Request, accessToken: string, refreshToken: string, profile: Profile, done?: (err?: Error | null, user?: User, info?: object) => void): Promise<User | undefined> {
     const userSchema = new UserSchema();

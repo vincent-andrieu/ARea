@@ -24,7 +24,6 @@ import githubService from "./githubService";
 
 export default class CronService {
 
-    private static _areSchema: AReaSchema = new AReaSchema();
     private static _userSchema: UserSchema = new UserSchema();
     private static _cron?: cron.ScheduledTask = undefined;
 
@@ -139,7 +138,6 @@ export default class CronService {
      */
     public static triggerReaction(area: ARea, user: User) {
         const reaction: Reaction = area.consequence.reaction as Reaction;
-        const action: Action = area.trigger.action as Action;
 
         switch (reaction.type) {
             case ReactionType.TWITTER_MSG:
@@ -152,9 +150,7 @@ export default class CronService {
                 TwitterService.rea_UpdatePP(area, user);
                 break;
             case ReactionType.DISCORD_MSG: {
-                const input: DiscordPostMsgConfig = area.consequence.inputs as DiscordPostMsgConfig;
-
-                DiscordService.sendMessage(input.channelId, input.message);
+                DiscordService.rea_Message(area, user);
                 break;
             }
             case ReactionType.GITHUB_ISSUE:
