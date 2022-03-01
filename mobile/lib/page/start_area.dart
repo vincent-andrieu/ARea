@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/api/areaService.dart';
 import 'package:mobile/page/color_list.dart';
+import 'package:mobile/tools/ShakeYourDevice.dart';
 import 'package:mobile/widget/input_custom.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class start_area extends StatelessWidget {
   areaService api;
+  ShakeYourDevice? shake;
 
   start_area(this.api, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    shake ??= ShakeYourDevice(context);
     InputCustom input = InputCustom(
         'IP address', 'Enter server IP address', 'http://5.135.150.139:8080', false, null);
     return Scaffold(
