@@ -25,6 +25,6 @@ class github extends IService {
 
   @override
   String getUrl() {
-    return "/auth/github/mobile";
+    return "/auth/github?mobile=true";
   }
 }
