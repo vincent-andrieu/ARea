@@ -28,6 +28,6 @@ class unsplash extends IService {
 
   @override
   String getUrl() {
-    return "/auth/unsplash/mobile";
+    return "/auth/unsplash?mobile=true";
   }
 }

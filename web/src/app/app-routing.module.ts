@@ -6,6 +6,7 @@ import { AuthGuard } from '@guards/auth.guard';
 import { LoginGuard } from '@guards/login.guard';
 import { AppRedirectFailureGuard } from "@guards/app-redirect-failure.guard";
 import { UserResolver } from "@resolvers/user.resolver";
+import { ClientApkResolver } from "@resolvers/client-apk.resolver";
 
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './auth/login/login.component';
@@ -47,6 +48,7 @@ const routes: Routes = [
             user: UserResolver
         }
     },
+    { path: 'client.apk', resolve: { client: ClientApkResolver }, component: HomeComponent },
     { path: '**', redirectTo: '/', pathMatch: 'full' }
 ];
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/api/areaService.dart';
 import 'package:mobile/page/color_list.dart';
 import 'package:mobile/widget/input_custom.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class start_area extends StatelessWidget {
   areaService api;
@@ -11,7 +12,7 @@ class start_area extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     InputCustom input = InputCustom(
-        'IP address', 'Enter server IP address', 'http://5.135.150.139:8080/', false, null);
+        'IP address', 'Enter server IP address', 'http://5.135.150.139:8080', false, null);
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Center(
@@ -41,10 +42,17 @@ class start_area extends StatelessWidget {
                           api.api.ping().then((value) => {
                                 if (value)
                                   {Navigator.of(context).pushNamed('/SignIn')}
-                                else
-                                  {
-                                    // TODO FAILED PING SERVER
-                                  }
+                                else {
+                                  Fluttertoast.showToast(
+                                    msg: "${input.controller.text}: do not answer",
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 5,
+                                    backgroundColor: color_list.secondary,
+                                    textColor: color_list.fifth,
+                                    fontSize: 16.0
+                                  )
+                                }
                               });
                         },
                         style: ElevatedButton.styleFrom(

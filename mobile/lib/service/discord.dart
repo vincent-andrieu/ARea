@@ -25,6 +25,6 @@ class discord extends IService {
 
   @override
   String getUrl() {
-    return "/auth/discord/mobile";
+    return "/auth/discord?mobile=true";
   }
 }

@@ -75,7 +75,7 @@ export class Utils {
         const envType: EEnvType = env.ENV_TYPE as EEnvType;
 
         if (envType === EEnvType.PROD)
-            return `http://${ip.address()}:${env.SERVER_PORT}`;
+            return `http://${env.SERVER_IP || ip.address()}:${env.SERVER_PORT}`;
         else if (envType === EEnvType.DEV)
             return `http://localhost:${env.SERVER_PORT}`;
         else
@@ -88,7 +88,7 @@ export class Utils {
         const envType: EEnvType = env.ENV_TYPE as EEnvType;
 
         if (envType === EEnvType.PROD)
-            return `https://${ip.address()}:${env.SERVER_PROXY_PORT}`;
+            return `https://${env.SERVER_IP || ip.address()}:${env.SERVER_PROXY_PORT}`;
         else if (envType === EEnvType.DEV)
             return `https://localhost:${env.SERVER_PROXY_PORT}`;
         else

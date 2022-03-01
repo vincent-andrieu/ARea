@@ -27,6 +27,7 @@ export class UserServiceData implements ServiceData {
 })
 export class AReaSettingsComponent {
     public services: Array<UserServiceData>;
+    public eServiceType = ServiceType;
 
     constructor(private _authService: AuthService) {
         if (!this._authService.user?.oauth) {
