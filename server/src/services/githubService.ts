@@ -9,6 +9,7 @@ import User from "@classes/user.class";
 import Action, { ActionType } from "@classes/action.class";
 import { GithubCreateIssueConfig, GithubCreatePullRequestConfig } from "@models/ReactionConfig";
 import { AReaSchema } from "@schemas/area.schema";
+import moment from "moment";
 
 const pagination = 10;
 
@@ -232,6 +233,7 @@ export default class githubService {
 
     private static rea_twitterMsgIssue(area: ARea, config: GithubCreateIssueConfig): GithubCreateIssueConfig {
         const actionResult: TwitterTweetResult = area.trigger.outputs as TwitterTweetResult;
+        const time = moment(actionResult.created_at).format("DD/MM/YYYY HH:mm");
 
         if (!config.title)
             config.title = "";
@@ -244,7 +246,7 @@ export default class githubService {
             config.body += "\n";
         config.body += "Content : " + actionResult.text + "\n";
         config.body += "Coordinates : " + actionResult.coordinates + "\n";
-        config.body += "Timestamp : " + actionResult.created_at + "\n";
+        config.body += "Timestamp : " + time + "\n";
         config.body += "Language : " + actionResult.lang + "\n";
         config.body += "Number of likes : " + actionResult.like_count + "\n";
         config.body += "Number of quotes : " + actionResult.quote_count + "\n";
@@ -255,6 +257,7 @@ export default class githubService {
 
     private static rea_unsplashPostIssue(area: ARea, config: GithubCreateIssueConfig): GithubCreateIssueConfig {
         const actionResult: UnsplashPostResult = area.trigger.outputs as UnsplashPostResult;
+        const time = moment(actionResult.created_at).format("DD/MM/YYYY HH:mm");
 
         if (!config.title)
             config.title = "";
@@ -266,7 +269,7 @@ export default class githubService {
         else
             config.title += "\n";
         config.body += "Post desctiption : " + actionResult.description + "\n";
-        config.body += "Timestamp : " + actionResult.created_at + "\n";
+        config.body += "Timestamp : " + time + "\n";
         config.body += "Number of likes : " + actionResult.likes + "\n";
         return config;
     }
@@ -429,6 +432,7 @@ export default class githubService {
 
     private static rea_twitterMsgPullReq(area: ARea, config: GithubCreatePullRequestConfig): GithubCreatePullRequestConfig {
         const actionResult: TwitterTweetResult = area.trigger.outputs as TwitterTweetResult;
+        const time = moment(actionResult.created_at).format("DD/MM/YYYY HH:mm");
 
         if (!config.title)
             config.title = "";
@@ -441,7 +445,7 @@ export default class githubService {
             config.body += "\n";
         config.body += "Content : " + actionResult.text + "\n";
         config.body += "Coordinates : " + actionResult.coordinates + "\n";
-        config.body += "Timestamp : " + actionResult.created_at + "\n";
+        config.body += "Timestamp : " + time + "\n";
         config.body += "Language : " + actionResult.lang + "\n";
         config.body += "Number of likes : " + actionResult.like_count + "\n";
         config.body += "Number of quotes : " + actionResult.quote_count + "\n";
@@ -452,6 +456,7 @@ export default class githubService {
 
     private static rea_unsplashPostPullReq(area: ARea, config: GithubCreatePullRequestConfig): GithubCreatePullRequestConfig {
         const actionResult: UnsplashPostResult = area.trigger.outputs as UnsplashPostResult;
+        const time = moment(actionResult.created_at).format("DD/MM/YYYY HH:mm");
 
         if (!config.title)
             config.title = "";
@@ -463,7 +468,7 @@ export default class githubService {
         else
             config.title += "\n";
         config.body += "Post desctiption : " + actionResult.description + "\n";
-        config.body += "Timestamp : " + actionResult.created_at + "\n";
+        config.body += "Timestamp : " + time + "\n";
         config.body += "Number of likes : " + actionResult.likes + "\n";
         return config;
     }

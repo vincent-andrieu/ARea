@@ -36,6 +36,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle.dark
+    );
     return MaterialApp(
         debugShowCheckedModeBanner: false, routes: buildRouteApp());
   }
