@@ -41,6 +41,7 @@ export default class NotionService {
 
     private static rea_githubLine(area: ARea, type: string): string {
         const github: GithubResult = area.trigger.outputs as GithubResult;
+        const time = moment(github.created_at).format("DD/MM/YYYY HH:mm");
         let line = "";
 
         line += "New github " + type + " on repo : " + github.repository + " owned by " + github.owner + "\n";
@@ -49,7 +50,7 @@ export default class NotionService {
         line += "State : " + github.state + "\n";
         line += "Number : " + github.number + "\n";
         line += "Labels : " + github.labels + "\n";
-        line += "Creation time : " + github.created_at + "\n";
+        line += "Creation time : " + time + "\n";
         line += "ID : " + github.id + "\n";
         line += "Locked ? : " + github.locked + "\n";
         line += "Url : " + github.url + "\n";
@@ -100,12 +101,13 @@ export default class NotionService {
 
     private static rea_unsplashLine(area: ARea): string {
         const unsplash: UnsplashPostResult = area.trigger.outputs as UnsplashPostResult;
+        const time = moment(unsplash.created_at).format("DD/MM/YYYY HH:mm");
         let line = "";
 
         line += "New unsplash post by : " + unsplash.name + " " + unsplash.lastname + "\n";
         line += "description : " + unsplash.description + "\n";
         line += "Actual number of likes : " + unsplash.likes + "\n";
-        line += "Creation time : " + unsplash.created_at + "\n";
+        line += "Creation time : " + time + "\n";
         return line;
     }
 
