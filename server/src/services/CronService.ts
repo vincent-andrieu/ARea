@@ -157,7 +157,7 @@ export default class CronService {
                 githubService.rea_CreateIssue(area, user);
                 break;
             case ReactionType.GITHUB_PULL:
-                // githubService.rea_CreatePullRequest(area, user);
+                githubService.rea_CreatePullRequest(area, user);
                 break;
             case ReactionType.NOTION_MSG:
                 notionService.rea_appendTextToPage(area, user);

@@ -75,6 +75,47 @@
     "service": "GITHUB"
   },
   {
+    "type": "GITHUB_PULL",
+    "parameters": [
+      {
+        "name": "owner",
+        "label": "Owner",
+        "type": "TEXT"
+      },
+      {
+        "name": "repository",
+        "label": "Repository",
+        "type": "TEXT"
+      },
+      {
+        "name": "title",
+        "label": "Title",
+        "type": "TEXT"
+      },
+      {
+        "name": "body",
+        "label": "Body",
+        "type": "TEXT"
+      },
+      {
+        "name": "currentBranch",
+        "label": "Current Branch",
+        "type": "TEXT"
+      },
+      {
+        "name": "pullingBranch",
+        "label": "Pulling Branch",
+        "type": "TEXT"
+      },
+      {
+        "name": "maintainer_can_modify",
+        "label": "Maintainer Can Modify (boolean)",
+        "type": "NUMBER"
+      }
+    ],
+    "service": "GITHUB"
+  },
+  {
     "type": "NOTION_MSG",
     "parameters": [
       {

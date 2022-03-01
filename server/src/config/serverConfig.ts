@@ -99,6 +99,10 @@ export const servicesList = {
             reactions: [{
                 name: "GITHUB_ISSUE",
                 description: "Create a new github issue on a repository"
+            },
+            {
+                name: "GITHUB_PULL",
+                description: "Create a new github pull request on a repository"
             }]
         },
         {
