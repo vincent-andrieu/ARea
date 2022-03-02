@@ -104,7 +104,7 @@ export default class unsplashService {
             if (!dlPic.response?.url)
                 return false;
             await Utils.DownloadUrl(dlPic.response?.url, downloadPath, true);
-            this.setDownloadInfos(area, downloadPath, pic.response);
+            await this.setDownloadInfos(area, downloadPath, pic.response);
         } catch (error) {
             const some_error = error as Error;
 
