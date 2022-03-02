@@ -3,13 +3,32 @@ body {
 }
 
 .title {
+    height: fit-content;
+    padding: 15px !important;
     font-size: xxx-large;
     font-weight: bold;
+}
+
+.area-list-page-content {
+    height: 100%;
+}
+
+.area-list {
+    overflow-y: scroll;
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
 }
 
 .new-button {
     width: 15%;
     min-width: 100px;
+    margin: 12px;
 }
 
 .settings-button {
