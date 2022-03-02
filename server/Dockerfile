@@ -7,7 +7,7 @@ COPY ./tsconfig.json /app/
 COPY ./src/ /app/src/
 COPY ./.env /app/
 
-RUN npm i
+RUN npm i --only=prod
 
 ENV NODE_OPTIONS --max_old_space_size=4096
 
