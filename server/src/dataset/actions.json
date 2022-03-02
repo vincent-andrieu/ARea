@@ -112,5 +112,16 @@
             }
         ],
         "service": "UNSPLASH"
+    },
+    {
+        "type": "UNSPLASH_RANDOM_POST",
+        "parameters": [
+            {
+                "name": "downloadPath",
+                "label": "Download Path",
+                "type": "TEXT"
+            }
+        ],
+        "service": "UNSPLASH"
     }
 ]
