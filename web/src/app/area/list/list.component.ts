@@ -1,5 +1,5 @@
 import { Location } from "@angular/common";
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from "@angular/material/dialog";
 import { ActivatedRoute } from "@angular/router";
 
@@ -11,7 +11,8 @@ import { AReaEditModalComponent } from "../edit-modal/edit-modal.component";
 @Component({
     selector: 'app-area-list',
     templateUrl: './list.component.html',
-    styleUrls: ['./list.component.scss']
+    styleUrls: ['./list.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class AReaListComponent {
     public areas: Array<ARea> = [];
