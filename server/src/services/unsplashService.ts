@@ -37,6 +37,7 @@ export default class unsplashService {
             result.description = post.description;
         result.likes = post.likes;
         result.link = post.links.html;
+        result.username = post.user.username;
         area.trigger.outputs = result;
         await unsplashService._areaSchema.edit(area);
     }

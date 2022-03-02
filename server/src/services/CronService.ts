@@ -149,10 +149,9 @@ export default class CronService {
             case ReactionType.TWITTER_PP:
                 TwitterService.rea_UpdatePP(area, user);
                 break;
-            case ReactionType.DISCORD_MSG: {
+            case ReactionType.DISCORD_MSG:
                 DiscordService.rea_Message(area, user);
                 break;
-            }
             case ReactionType.GITHUB_ISSUE:
                 githubService.rea_CreateIssue(area, user);
                 break;
