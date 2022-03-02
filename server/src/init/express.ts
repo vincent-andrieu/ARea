@@ -39,10 +39,11 @@ export function preinitExpress() {
 
     app.use((request, _, next) => {
         const logs: Array<string> = [];
+        const host = request.headers.host || request.headers.referer || request.ip;
 
-        if (request.headers.referer)
+        if (host)
             logs.push("\x1b[36m%s\x1b[0m",
-                request.headers.referer,
+                host,
                 "=>");
         console.log(
             ...logs,
