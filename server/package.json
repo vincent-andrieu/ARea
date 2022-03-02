@@ -122,6 +122,12 @@
             "@controllers/(.*)": "<rootDir>/build/controllers/$1",
             "@services/(.*)": "<rootDir>/build/services/$1",
             "@models/(.*)": "<rootDir>/build/models/$1"
-        }
+        },
+        "modulePathIgnorePatterns": [
+            "src/__tests__/TwitterService.test.ts",
+            "src/__tests__/TwitchService.test.ts",
+            "src/__tests__/UnsplashService.test.ts",
+            "src/__tests__/githubService.test.ts"
+        ]
     }
 }
