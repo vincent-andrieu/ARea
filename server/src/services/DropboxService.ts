@@ -5,18 +5,18 @@ import { readFile } from "fs";
 import ARea from "@classes/area.class";
 import { DropboxUploadConfig } from "@models/ReactionConfig";
 import Action, { ActionType } from "@classes/action.class";
-import { DiscordMessageConfig, UnsplashPostConfig } from "@models/ActionConfig";
+import { UnsplashPostConfig } from "@models/ActionConfig";
 import User from "@classes/user.class";
-import { GithubResult, RSSResult, TwitchStreamResult, TwitterTweetResult } from "@models/ActionResult";
+import { TwitchStreamResult } from "@models/ActionResult";
 import { Utils } from "./utils";
 
-// import User from "../classes/user.class";
-
 export class DropboxService {
-    static uploadFile(user: User, filepath: string, dropboxFilepath: string) {
+    static uploadFile(user: User, filepath: string, dropboxFilepath: string): void {
 
         if (!env.DROPBOX_API_KEY || !env.DROPBOX_API_SECRET_KEY || !user || !user.oauth || !user.oauth.dropbox)
             return;
+        if (!filepath.startsWith("/tmp/"))
+            filepath = `/tmp/${filepath}`;
         const client = new Dropbox({ clientId: env.DROPBOX_API_KEY, clientSecret: env.DROPBOX_API_SECRET_KEY, accessToken: user.oauth.dropbox?.accessToken });
 
         readFile(filepath, (err, contents) => {
@@ -25,6 +25,8 @@ export class DropboxService {
 
             if (!client)
                 return;
+            console.log("dropboxFilepath :", dropboxFilepath);
+            dropboxFilepath = "/" + dropboxFilepath;
             client.filesUpload({ path: dropboxFilepath, contents })
                 .then((response: any) => {
                     console.log(response);
@@ -41,17 +43,21 @@ export class DropboxService {
         const configUnsplash: UnsplashPostConfig = area.trigger.inputs as UnsplashPostConfig;
         const dropboxFilepath = (config.localFilepath ? config.localFilepath : configUnsplash.downloadPath);
 
-        DropboxService.uploadFile(user, "/tmp/" + configUnsplash.downloadPath + ".webp", "/" + dropboxFilepath + ".webp");
+        DropboxService.uploadFile(user, configUnsplash.downloadPath + ".webp", "/" + dropboxFilepath + ".webp");
     }
 
-    private static rea_twitchUplaodThumbnail(area: ARea, user: User, config: DropboxUploadConfig) {
+    private static async rea_twitchUplaodThumbnail(area: ARea, user: User, config: DropboxUploadConfig) {
         const configTwitch: TwitchStreamResult = area.trigger.outputs as TwitchStreamResult;
         const twitchThumbnailTmpDownloadPath = "twitchThumbnailTmpDownloadPath";
-        Utils.DownloadUrl(configTwitch.StreamThumbnailUrl, twitchThumbnailTmpDownloadPath);
-
+        try {
+            await Utils.DownloadUrl(configTwitch.StreamThumbnailUrl, twitchThumbnailTmpDownloadPath, true);
+        } catch (error) {
+            console.error("Error downloading file from Twitch thumbnail: ", (error as Error).toString());
+            return;
+        }
         if (!config.remoteFilepath)
             return;
-        this.uploadFile(user, twitchThumbnailTmpDownloadPath, config.remoteFilepath);
+        this.uploadFile(user, twitchThumbnailTmpDownloadPath + ".webp", config.remoteFilepath + ".webp");
     }
 
     public static rea_uploadFile(area: ARea, user: User) {
@@ -77,9 +83,6 @@ export class DropboxService {
                 break;
             } case ActionType.TWITCH_STREAM: {
                 this.rea_twitchUplaodThumbnail(area, user, configDropbox);
-                break;
-            } case ActionType.TWITTER_MSG: {
-                // TODO: get image if in tweet (I think I did try it but did not work)
                 break;
             } default:
                 console.log("todo upload file from parameter given");

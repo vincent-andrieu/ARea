@@ -15,7 +15,8 @@ export class Utils {
         try {
             const client = new HttpClient("clientTest");
             const response = await client.get(url);
-            filepath = `/tmp/${filepath}`;
+            if (!filepath.startsWith("/tmp/"))
+                filepath = `/tmp/${filepath}`;
             const file: NodeJS.WritableStream = createWriteStream(filepath);
 
             if (response.message.statusCode !== 200) {
@@ -23,14 +24,20 @@ export class Utils {
                 err["httpStatusCode"] = response.message.statusCode;
                 throw err;
             }
+            console.log("moncul");
+            console.log("url : ", url);
+            console.log("filepath : ", filepath);
+
             return new Promise((resolve, reject) => {
                 file.on("error", (err) => reject(err));
                 const stream = response.message.pipe(file);
                 stream.on("close", () => {
                     if (convert)
                         this.convertImage(filepath).then(
-                            () => {resolve(filepath);}
+                            () => resolve(filepath)
                         );
+                    else
+                        resolve(filepath);
                 });
             });
         } catch (error) {
