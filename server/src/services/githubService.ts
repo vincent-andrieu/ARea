@@ -47,7 +47,7 @@ export default class githubService {
         result.lastId = pr.id;
         result.owner = owner;
         result.repository = repo;
-        result.url = pr.url;
+        result.url = pr.html_url;
         result.id = pr.id;
         result.number = pr.number;
         result.state = pr.state;
