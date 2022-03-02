@@ -8,6 +8,7 @@ import { GithubResult, RSSResult, TwitchStreamResult, TwitterTweetResult, Unspla
 import { TwitterPostTweetConfig } from "@models/ReactionConfig";
 import Action, { ActionType } from "@classes/action.class";
 import { Utils } from "./utils";
+import moment from "moment";
 
 // doc :
 // https://www.npmjs.com/package/twitter-v2
@@ -171,6 +172,14 @@ export class TwitterService {
 
         return tweet;
     }
+    private static async rea_TweetUnsplashRandomPost(area: ARea, client: TwitterApi): Promise<SendTweetV2Params> {
+        const post: UnsplashPostResult = area.trigger.outputs as UnsplashPostResult;
+        const mediaIds = await Promise.all([client.v1.uploadMedia(post.downloadPath)]);
+        const text = "Here is a picture from unsplash !" + post.link;
+        const tweet: SendTweetV2Params = { text: text, media: { media_ids: mediaIds } };
+
+        return tweet;
+    }
 
     private static async rea_TweetGithub(area: ARea, type: string): Promise<SendTweetV2Params> {
         const github: GithubResult = area.trigger.outputs as GithubResult;
@@ -227,14 +236,13 @@ export class TwitterService {
                 tweet = await TwitterService.rea_TweetUnsplashPost(area, client);
                 break;
             case ActionType.UNSPLASH_RANDOM_POST:
-                tweet = await TwitterService.rea_TweetUnsplashPost(area, client);
+                tweet = await TwitterService.rea_TweetUnsplashRandomPost(area, client);
                 break;
             case ActionType.TWITCH_STREAM:
                 tweet = await TwitterService.rea_TweetTwitchStream(area);
                 break;
             default:
                 tweet = await TwitterService.rea_TweetTweet(area);
-
             }
         } catch (error: unknown) {
             const some_error = error as Error;
@@ -280,8 +288,7 @@ export class TwitterService {
                 imagePath = await TwitterService.rea_TwitchStream(area);
                 break;
             default:
-                console.log("create deafault tweet for this action");
-
+                console.log("for this action create default banner");
             }
         } catch (error: unknown) {
             const some_error = error as Error;
@@ -313,8 +320,7 @@ export class TwitterService {
                 imagePath = await TwitterService.rea_TwitchStream(area);
                 break;
             default:
-                console.log("todo: default action");
-
+                console.log("for this action create default pp");
             }
         } catch (error: unknown) {
             const some_error = error as Error;
