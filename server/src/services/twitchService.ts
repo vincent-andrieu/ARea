@@ -27,6 +27,8 @@ export class TwitchService {
         result.Username = stream.userDisplayName;
         result.StreamLanguage = stream.language;
         result.StreamThumbnailUrl = stream.thumbnailUrl;
+        result.StreamThumbnailUrl = result.StreamThumbnailUrl.replace("{width}", "1920");
+        result.StreamThumbnailUrl = result.StreamThumbnailUrl.replace("{height}", "1080");
         result.StreamViewers = stream.viewers;
         area.trigger.outputs = result;
         await TwitchService._areaSchema.edit(area);

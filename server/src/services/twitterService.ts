@@ -4,10 +4,11 @@ import TwitterApi, { SendTweetV2Params, TweetV2 } from "twitter-api-v2";
 import User from "../classes/user.class";
 import ARea from "../classes/area.class";
 import { AReaSchema } from "@schemas/area.schema";
-import { TwitchStreamResult, TwitterTweetResult, UnsplashPostResult } from "@models/ActionResult";
+import { GithubResult, RSSResult, TwitchStreamResult, TwitterTweetResult, UnsplashPostResult } from "@models/ActionResult";
 import { TwitterPostTweetConfig } from "@models/ReactionConfig";
 import Action, { ActionType } from "@classes/action.class";
 import { Utils } from "./utils";
+import moment from "moment";
 
 // doc :
 // https://www.npmjs.com/package/twitter-v2
@@ -166,8 +167,43 @@ export class TwitterService {
     private static async rea_TweetUnsplashPost(area: ARea, client: TwitterApi): Promise<SendTweetV2Params> {
         const post: UnsplashPostResult = area.trigger.outputs as UnsplashPostResult;
         const mediaIds = await Promise.all([client.v1.uploadMedia(post.downloadPath)]);
-        const text = post.username + " just posted a new picture on splash !";
+        const text = post.username + " just posted a new picture on unsplash !";
         const tweet: SendTweetV2Params = { text: text, media: { media_ids: mediaIds } };
+
+        return tweet;
+    }
+    private static async rea_TweetUnsplashRandomPost(area: ARea, client: TwitterApi): Promise<SendTweetV2Params> {
+        const post: UnsplashPostResult = area.trigger.outputs as UnsplashPostResult;
+        const mediaIds = await Promise.all([client.v1.uploadMedia(post.downloadPath)]);
+        const text = "Here is a picture from unsplash !";
+        const tweet: SendTweetV2Params = { text: text, media: { media_ids: mediaIds } };
+
+        return tweet;
+    }
+    private static async rea_TweetGithub(area: ARea, client: TwitterApi, type: string): Promise<SendTweetV2Params> {
+        const github: GithubResult = area.trigger.outputs as GithubResult;
+        const time = moment(github.created_at).format("DD/MM/YYYY HH:mm");
+        let text = "";
+
+        text += "New github " + type + " on repo : " + github.repository + " owned by " + github.owner + "\n";
+        text += "Title : " + github.title + "\n";
+        text += "Body : " + github.body + "\n";
+        text += "State : " + github.state + "\n";
+        text += "Number : " + github.number + "\n";
+        text += "Labels : " + github.labels + "\n";
+        text += "Creation time : " + time + "\n";
+        text += "ID : " + github.id + "\n";
+        text += "Locked ? : " + github.locked + "\n";
+        text += "Url : " + github.url + "\n";
+        const tweet: SendTweetV2Params = { text: text };
+
+        return tweet;
+    }
+    private static async rea_TweetRSSEntry(area: ARea, client: TwitterApi): Promise<SendTweetV2Params> {
+        const rss: RSSResult = area.trigger.outputs as RSSResult;
+        const text = "New rss entry : " + rss.url;
+
+        const tweet: SendTweetV2Params = { text: text };
 
         return tweet;
     }
@@ -180,15 +216,26 @@ export class TwitterService {
         try {
 
             switch (action.type) {
-            case ActionType.UNSPLASH_POST:
-                tweet = await TwitterService.rea_TweetUnsplashPost(area, client);
-                console.log("action was unsplash post");
-                break;
-            case ActionType.TWITCH_STREAM:
-                tweet = await TwitterService.rea_TweetTwitchStream(area, client);
-                break;
-            default:
-                tweet = await TwitterService.rea_TweetTweet(area, client);
+                case ActionType.UNSPLASH_POST:
+                    tweet = await TwitterService.rea_TweetUnsplashPost(area, client);
+                    break;
+                case ActionType.UNSPLASH_RANDOM_POST:
+                    tweet = await TwitterService.rea_TweetUnsplashRandomPost(area, client);
+                    break;
+                case ActionType.TWITCH_STREAM:
+                    tweet = await TwitterService.rea_TweetTwitchStream(area, client);
+                    break;
+                case ActionType.GITHUB_ISSUE:
+                    tweet = await TwitterService.rea_TweetGithub(area, client, "issue");
+                    break;
+                case ActionType.GITHUB_PULL_REQ:
+                    tweet = await TwitterService.rea_TweetGithub(area, client, "pull request");
+                    break;
+                case ActionType.RSS_ENTRY:
+                    tweet = await TwitterService.rea_TweetRSSEntry(area, client);
+                    break;
+                default:
+                    tweet = await TwitterService.rea_TweetTweet(area, client);
 
             }
         } catch (error: unknown) {
@@ -225,17 +272,17 @@ export class TwitterService {
         try {
 
             switch (action.type) {
-            case ActionType.UNSPLASH_POST:
-                imagePath = await TwitterService.rea_UnsplashPost(area);
-                break;
-            case ActionType.UNSPLASH_RANDOM_POST:
-                imagePath = await TwitterService.rea_UnsplashPost(area);
-                break;
-            case ActionType.TWITCH_STREAM:
-                imagePath = await TwitterService.rea_TwitchStream(area);
-                break;
-            default:
-                console.log("todo: default action");
+                case ActionType.UNSPLASH_POST:
+                    imagePath = await TwitterService.rea_UnsplashPost(area);
+                    break;
+                case ActionType.UNSPLASH_RANDOM_POST:
+                    imagePath = await TwitterService.rea_UnsplashPost(area);
+                    break;
+                case ActionType.TWITCH_STREAM:
+                    imagePath = await TwitterService.rea_TwitchStream(area);
+                    break;
+                default:
+                    console.log("todo: default action");
 
             }
         } catch (error: unknown) {
@@ -258,17 +305,17 @@ export class TwitterService {
 
         try {
             switch (action.type) {
-            case ActionType.UNSPLASH_POST:
-                imagePath = await TwitterService.rea_UnsplashPost(area);
-                break;
-            case ActionType.UNSPLASH_RANDOM_POST:
-                imagePath = await TwitterService.rea_UnsplashPost(area);
-                break;
-            case ActionType.TWITCH_STREAM:
-                imagePath = await TwitterService.rea_TwitchStream(area);
-                break;
-            default:
-                console.log("todo: default action");
+                case ActionType.UNSPLASH_POST:
+                    imagePath = await TwitterService.rea_UnsplashPost(area);
+                    break;
+                case ActionType.UNSPLASH_RANDOM_POST:
+                    imagePath = await TwitterService.rea_UnsplashPost(area);
+                    break;
+                case ActionType.TWITCH_STREAM:
+                    imagePath = await TwitterService.rea_TwitchStream(area);
+                    break;
+                default:
+                    console.log("todo: default action");
 
             }
         } catch (error: unknown) {

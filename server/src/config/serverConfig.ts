@@ -48,6 +48,9 @@ export const servicesList = {
             actions: [{
                 name: "UNSPLASH_POST",
                 description: "A new image is posted on unsplash"
+            }, {
+                name: "UNSPLASH_RANDOM_POST",
+                description: "An image is fetched randomly from unsplash"
             }],
             reactions: []
         },
