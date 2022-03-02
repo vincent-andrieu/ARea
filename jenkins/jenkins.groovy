@@ -14,6 +14,6 @@ job("Project") {
         }
     }
     steps {
-        shell('cp /app/.env server/.env && docker-compose up -d --build')
+        shell('cp /app/.env server/.env && docker-compose down && docker-compose up -d --build')
     }
 }
