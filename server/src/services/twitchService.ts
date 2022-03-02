@@ -45,11 +45,11 @@ export class TwitchService {
                 await TwitchService._areaSchema.edit(area);
                 return false;
             }
-            await this.areaSetStreamInfos(area, stream);
             if (area.trigger.outputs && (area.trigger.outputs as TwitchStreamResult).StreamGame) {
-                console.log("Stream already launch.");
+                await this.areaSetStreamInfos(area, stream);
                 return false;
             }
+            await this.areaSetStreamInfos(area, stream);
         } catch (error) {
             const some_error = error as Error;
 
