@@ -225,7 +225,7 @@ export default class githubService {
         config.title += "New stream by " + actionResult.Username + "\n";
         config.body += "Playing : " + actionResult.StreamGame + "\n";
         config.body += "Stream title : " + actionResult.StreamTitle + "\n";
-        config.body += "Number of viewers : " + actionResult.StreamViewers.toString + "\n";
+        config.body += "Number of viewers : " + actionResult.StreamViewers.toString() + "\n";
         config.body += "Speaking : " + actionResult.StreamLanguage + "\n";
         config.body += "Stream thumbnail" + actionResult.StreamThumbnailUrl + "\n";
         return config;
