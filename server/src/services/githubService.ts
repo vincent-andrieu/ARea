@@ -4,7 +4,6 @@ import { Octokit } from "octokit";
 // import User from "@classes/user.class";
 import ARea from "@classes/area.class";
 import { DateTimeResult, DiscordMessageResult, GithubResult, RSSResult, TwitchStreamResult, TwitterTweetResult, UnsplashPostResult } from "@models/ActionResult";
-import { GithubIssueConfig, GithubPullReqConfig } from "@models/ActionConfig";
 import User from "@classes/user.class";
 import Action, { ActionType } from "@classes/action.class";
 import { GithubCreateIssueConfig, GithubCreatePullRequestConfig } from "@models/ReactionConfig";
