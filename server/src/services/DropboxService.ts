@@ -5,8 +5,10 @@ import { readFile } from "fs";
 import ARea from "@classes/area.class";
 import { DropboxUploadConfig } from "@models/ReactionConfig";
 import Action, { ActionType } from "@classes/action.class";
-import { UnsplashPostConfig } from "@models/ActionConfig";
+import { DiscordMessageConfig, UnsplashPostConfig } from "@models/ActionConfig";
 import User from "@classes/user.class";
+import { GithubResult, RSSResult, TwitchStreamResult, TwitterTweetResult } from "@models/ActionResult";
+import { Utils } from "./utils";
 
 // import User from "../classes/user.class";
 
@@ -42,6 +44,16 @@ export class DropboxService {
         DropboxService.uploadFile(user, "/tmp/" + configUnsplash.downloadPath + ".webp", "/" + dropboxFilepath + ".webp");
     }
 
+    private static rea_twitchUplaodThumbnail(area: ARea, user: User, config: DropboxUploadConfig) {
+        const configTwitch: TwitchStreamResult = area.trigger.outputs as TwitchStreamResult;
+        const twitchThumbnailTmpDownloadPath = "twitchThumbnailTmpDownloadPath";
+        Utils.DownloadUrl(configTwitch.StreamThumbnailUrl, twitchThumbnailTmpDownloadPath);
+
+        if (!config.remoteFilepath)
+            return;
+        this.uploadFile(user, twitchThumbnailTmpDownloadPath, config.remoteFilepath);
+    }
+
     public static rea_uploadFile(area: ARea, user: User) {
         const action: Action = area.trigger.action as Action;
         const configDropbox: DropboxUploadConfig = area.consequence.inputs as DropboxUploadConfig;
@@ -52,6 +64,22 @@ export class DropboxService {
                 break;
             } case ActionType.UNSPLASH_RANDOM_POST: {
                 this.rea_unsplashUploadFile(area, user, configDropbox);
+                break;
+            } case ActionType.CRON: {
+                if (!configDropbox.localFilepath || !configDropbox.remoteFilepath)
+                    break;
+                this.uploadFile(user, configDropbox.localFilepath, configDropbox.remoteFilepath);
+                break;
+            } case ActionType.DATETIME: {
+                if (!configDropbox.localFilepath || !configDropbox.remoteFilepath)
+                    break;
+                this.uploadFile(user, configDropbox.localFilepath, configDropbox.remoteFilepath);
+                break;
+            } case ActionType.TWITCH_STREAM: {
+                this.rea_twitchUplaodThumbnail(area, user, configDropbox);
+                break;
+            } case ActionType.TWITTER_MSG: {
+                // TODO: get image if in tweet (I think I did try it but did not work)
                 break;
             } default:
                 console.log("todo upload file from parameter given");
