@@ -271,6 +271,7 @@ export default class githubService {
         config.body += "Post desctiption : " + actionResult.description + "\n";
         config.body += "Timestamp : " + time + "\n";
         config.body += "Number of likes : " + actionResult.likes + "\n";
+        config.body += "Link to the post : " + actionResult.link + "\n";
         return config;
     }
 
@@ -470,6 +471,7 @@ export default class githubService {
         config.body += "Post desctiption : " + actionResult.description + "\n";
         config.body += "Timestamp : " + time + "\n";
         config.body += "Number of likes : " + actionResult.likes + "\n";
+        config.body += "Link to the post : " + actionResult.link + "\n";
         return config;
     }
 

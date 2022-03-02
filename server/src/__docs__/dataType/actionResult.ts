@@ -255,6 +255,11 @@ export const actionResult = {
                     type: "number",
                     description: "Number of likes on the post",
                     example: 197
+                },
+                link: {
+                    type: "string",
+                    description: "Direct link to the unsplash post",
+                    example: "https://unsplash.com/photos/AP3aaysyTtM"
                 }
             }
         }

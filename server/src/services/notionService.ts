@@ -108,6 +108,7 @@ export default class NotionService {
         line += "description : " + unsplash.description + "\n";
         line += "Actual number of likes : " + unsplash.likes + "\n";
         line += "Creation time : " + time + "\n";
+        line += "Link to the post : " + unsplash.link + "\n";
         return line;
     }
 

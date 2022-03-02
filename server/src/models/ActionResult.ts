@@ -66,6 +66,7 @@ export interface UnsplashPostResult {
     created_at: string;
     description: string;
     likes: number;
+    link: string;
 }
 
 export type ActionResult = DateTimeResult | TimeResult

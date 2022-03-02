@@ -49,7 +49,7 @@ export default class Action extends Model {
         case 'UNSPLASH_POST':
             return "Post";
         case 'UNSPLASH_RANDOM_POST':
-            return "Post a random post";
+            return "Get a random post";
 
         default: {
             console.error("Unknow action type:", this.type);
