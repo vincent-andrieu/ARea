@@ -49,10 +49,6 @@ export const actionConfig = {
             url: {
                 type: "string",
                 description: "url of the rss flux"
-            },
-            prevHash: {
-                type: "string",
-                description: "must be empty"
             }
         }
     },

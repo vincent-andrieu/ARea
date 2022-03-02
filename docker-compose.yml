@@ -10,6 +10,7 @@ services:
         depends_on:
             # - client_mobile
             - server
+        restart: always
 
     # client_mobile:
     #     build: mobile
@@ -26,16 +27,17 @@ services:
         environment:
             DB_HOST: database
             DB_USERNAME: root
-            DB_PASSWORD: root_password
+            DB_PASSWORD: AReaAvionAReactionDBPassword
         depends_on:
             - database
+        restart: always
 
     database:
         image: mongo:4.4
         environment:
             MONGO_INITDB_DATABASE: area-db
             MONGO_INITDB_ROOT_USERNAME: root
-            MONGO_INITDB_ROOT_PASSWORD: root_password
+            MONGO_INITDB_ROOT_PASSWORD: AReaAvionAReactionDBPassword
         ports:
             - "27017:27017"
         volumes:

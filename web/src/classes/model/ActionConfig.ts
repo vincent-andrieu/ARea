@@ -16,7 +16,6 @@ export interface TwitterTweetConfig {
 
 export interface RSSConfig {
     url: string;
-    prevHash?: string;
 }
 
 export interface DiscordMessageConfig {

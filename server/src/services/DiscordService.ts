@@ -1,13 +1,15 @@
-import { ActionType } from "@classes/action.class";
+import Action, { ActionType } from "@classes/action.class";
 import ARea from "@classes/area.class";
 import User from "@classes/user.class";
 import { AReaSchema } from "@schemas/area.schema";
 import { Client, Message, TextChannel } from "discord.js";
 import { discordBotConfig } from "@config/discordConfig";
 import { DiscordMessageConfig } from "../models/ActionConfig";
+import { DiscordPostMsgConfig } from "models/ReactionConfig";
 import CronService from "./CronService";
 import { UserSchema } from "@schemas/user.schema";
-import { isTemplateExpression } from "typescript";
+import { DiscordMessageResult, GithubResult, RSSResult, TwitchStreamResult, TwitterTweetResult, UnsplashPostResult } from "@models/ActionResult";
+import moment from "moment";
 
 interface ChannelListenerItem {
     channelId: string,
@@ -60,7 +62,7 @@ export default class DiscordService {
      * @param channelId string
      * @param message string
      */
-    static async sendMessage(channelId: string, message: string): Promise<void> {
+    private static async sendMessage(channelId: string, message: string): Promise<void> {
         try {
             const channel = await DiscordService.client.channels.fetch(channelId) as TextChannel;
 
@@ -68,6 +70,113 @@ export default class DiscordService {
         } catch (err) {
             console.error("Discord.sendMessage: fail to fetch channel or to send message.");
         }
+    }
+
+    private static rea_githubLine(area: ARea, type: string): string {
+        const github: GithubResult = area.trigger.outputs as GithubResult;
+        const time = moment(github.created_at).format("DD/MM/YYYY HH:mm");
+        let line = "";
+
+        line += "New github " + type + " on repo : " + github.repository + " owned by " + github.owner + "\n";
+        line += "Title : " + github.title + "\n";
+        line += "Body : " + github.body + "\n";
+        line += "State : " + github.state + "\n";
+        line += "Number : " + github.number + "\n";
+        line += "Labels : " + github.labels + "\n";
+        line += "Creation time : " + time + "\n";
+        line += "ID : " + github.id + "\n";
+        line += "Locked ? : " + github.locked + "\n";
+        line += "Url : " + github.url + "\n";
+        return line;
+    }
+
+    private static rea_discordLine(area: ARea): string {
+        const discord: DiscordMessageResult = area.trigger.outputs as DiscordMessageResult;
+
+        return "New discord message (channel : " + discord.channelId + ") : " + discord.message;
+    }
+
+    private static rea_RSSLine(area: ARea): string {
+        const RSS: RSSResult = area.trigger.outputs as RSSResult;
+
+        return "New RSS at : " + RSS.url;
+    }
+
+    private static rea_twitterLine(area: ARea): string {
+        const twitter: TwitterTweetResult = area.trigger.outputs as TwitterTweetResult;
+        const time = moment(twitter.created_at).format("DD/MM/YYYY HH:mm");
+        let line = "";
+
+        line += "New tweet by : " + twitter.username + "\n";
+        line += "Content : " + twitter.text + "\n";
+        line += twitter.coordinates === undefined ? "" : "Coordinates : " + twitter.coordinates + "\n";
+        line += "Creation time : " + time + "\n";
+        line += "language : " + twitter.lang + "\n";
+        line += "Actual number of likes : " + twitter.like_count + "\n";
+        line += "Actual number of quotes : " + twitter.quote_count + "\n";
+        line += "Actual number of replies : " + twitter.reply_count + "\n";
+        line += "Actual number of retweets : " + twitter.retweet_count + "\n";
+        return line;
+    }
+
+    private static rea_twitchLine(area: ARea): string {
+        const twitch: TwitchStreamResult = area.trigger.outputs as TwitchStreamResult;
+        let line = "";
+
+        line += "New Twitch stream by : " + twitch.Username + "\n";
+        line += "Name : " + twitch.StreamTitle + "\n";
+        line += "Game : " + twitch.StreamGame + "\n";
+        line += "Actual number of viewers : " + twitch.StreamViewers + "\n";
+        line += "Language : " + twitch.StreamLanguage + "\n";
+        return line;
+    }
+
+    private static rea_unsplashLine(area: ARea): string {
+        const unsplash: UnsplashPostResult = area.trigger.outputs as UnsplashPostResult;
+        const time = moment(unsplash.created_at).format("DD/MM/YYYY HH:mm");
+        let line = "";
+
+        line += "New unsplash post by : " + unsplash.name + " " + unsplash.lastname + "\n";
+        line += "description : " + unsplash.description + "\n";
+        line += "Actual number of likes : " + unsplash.likes + "\n";
+        line += "Creation time : " + time + "\n";
+        return line;
+    }
+
+    public static async rea_Message(area: ARea, user: User) {
+        const action: Action = area.trigger.action as Action;
+        const config = area.consequence.inputs as DiscordPostMsgConfig;
+        let line: string = config.message + "\n";
+
+        switch (action.type) {
+        case ActionType.TWITTER_MSG:
+            line += this.rea_twitterLine(area);
+            break;
+        case ActionType.GITHUB_ISSUE:
+            line += this.rea_githubLine(area, "issue");
+            break;
+        case ActionType.GITHUB_PULL_REQ:
+            line += this.rea_githubLine(area, "pull request");
+            break;
+        case ActionType.DISCORD_MSG:
+            line += this.rea_discordLine(area);
+            break;
+        case ActionType.RSS_ENTRY:
+            line += this.rea_RSSLine(area);
+            break;
+        case ActionType.TWITCH_STREAM:
+            line += this.rea_twitchLine(area);
+            break;
+        case ActionType.UNSPLASH_POST:
+            line += this.rea_unsplashLine(area);
+            break;
+        case ActionType.UNSPLASH_RANDOM_POST:
+            line += this.rea_unsplashLine(area);
+            break;
+        default:
+            line += "";
+        }
+        this.sendMessage(config.channelId, line);
     }
 
     /**
