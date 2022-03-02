@@ -2,6 +2,17 @@
     font-size: x-large;
 }
 
+.subtitle {
+    max-width: inherit;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.card-element {
+    max-width: 300px;
+}
+
 .action-to-reaction-arrow {
     height: 32px;
 }
