@@ -35,7 +35,7 @@ export default class githubService {
         const last: GithubResult = area.trigger.outputs as GithubResult;
 
         if (!last || !last.lastId)
-            return false;
+            return true;
         if (last.lastId === id)
             return false;
         return true;
