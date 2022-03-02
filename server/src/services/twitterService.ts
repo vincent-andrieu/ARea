@@ -166,7 +166,7 @@ export class TwitterService {
 
     private static async rea_TweetUnsplashPost(area: ARea, client: TwitterApi): Promise<SendTweetV2Params> {
         const post: UnsplashPostResult = area.trigger.outputs as UnsplashPostResult;
-        const mediaIds = await Promise.all([client.v1.uploadMedia(post.downloadPath)]);
+        const mediaIds = await Promise.all([client.v1.uploadMedia(`/tmp/${post.downloadPath}.webp`)]);
         const text = post.username + " just posted a new picture on unsplash ! " + post.link;
         const tweet: SendTweetV2Params = { text: text, media: { media_ids: mediaIds } };
 
@@ -174,7 +174,7 @@ export class TwitterService {
     }
     private static async rea_TweetUnsplashRandomPost(area: ARea, client: TwitterApi): Promise<SendTweetV2Params> {
         const post: UnsplashPostResult = area.trigger.outputs as UnsplashPostResult;
-        const mediaIds = await Promise.all([client.v1.uploadMedia(post.downloadPath)]);
+        const mediaIds = await Promise.all([client.v1.uploadMedia(`/tmp/${post.downloadPath}.webp`)]);
         const text = "Here is a picture from unsplash !" + post.link;
         const tweet: SendTweetV2Params = { text: text, media: { media_ids: mediaIds } };
 

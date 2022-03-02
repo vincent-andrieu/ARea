@@ -1,4 +1,4 @@
-import { createWriteStream } from "fs";
+import { createWriteStream , unlinkSync, existsSync} from "fs";
 import { env } from "process";
 import { Request } from "express";
 import ip from "ip";
@@ -17,6 +17,8 @@ export class Utils {
             const response = await client.get(url);
             if (!filepath.startsWith("/tmp/"))
                 filepath = `/tmp/${filepath}`;
+            if (existsSync(filepath))
+                unlinkSync(filepath); //If the file already exist, delete it before download
             const file: NodeJS.WritableStream = createWriteStream(filepath);
 
             if (response.message.statusCode !== 200) {
@@ -49,6 +51,8 @@ export class Utils {
 
     public static async createCompressedImage(imagePath: string, sizeX = 250, sizeY = 250) {
         imagePath = `/tmp/${imagePath}`;
+        if (existsSync(`${imagePath}.webp`))
+            unlinkSync(`${imagePath}.webp`); //If the file already exist, delete it before download
         try {
             await sharp(imagePath)
                 .webp({ quality: 100 })
@@ -61,6 +65,8 @@ export class Utils {
     }
 
     public static async convertImage(imagePath: string) {
+        if (existsSync(`${imagePath}.webp`))
+            unlinkSync(`${imagePath}.webp`); //If the file already exist, delete it before download
         try {
             await sharp(imagePath)
                 .toFile(`${imagePath}.webp`);
