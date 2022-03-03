@@ -265,9 +265,9 @@ export class TwitterService {
 
     private static async rea_TwitchStream(area: ARea): Promise<string> {
         const stream: TwitchStreamResult = area.trigger.outputs as TwitchStreamResult;
-        const filepath = stream.StreamTitle;
+        const filepath = `${stream.Username}_live_thumbnail`;
 
-        Utils.DownloadUrl(stream.StreamThumbnailUrl, filepath);
+        Utils.DownloadUrl(stream.StreamThumbnailUrl, filepath, true);
         return filepath;
     }
 
