@@ -10,6 +10,7 @@ import { serviceType } from "./serviceType";
 import { userInput } from "./userInput";
 import { user } from "./user";
 import { oauthLoginProvider } from "./oauthLoginProvider";
+import { actionResult } from "./actionResult";
 
 export = {
     ...oauthLoginProvider,
@@ -22,6 +23,7 @@ export = {
     ...actionType,
     ...reactionConfig,
     ...actionConfig,
+    ...actionResult,
     ...parameters,
     ...serviceResponse
 };
