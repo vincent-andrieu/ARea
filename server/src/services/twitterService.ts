@@ -267,7 +267,7 @@ export class TwitterService {
         const stream: TwitchStreamResult = area.trigger.outputs as TwitchStreamResult;
         const filepath = `${stream.Username}_live_thumbnail`;
 
-        Utils.DownloadUrl(stream.StreamThumbnailUrl, filepath, true);
+        await Utils.DownloadUrl(stream.StreamThumbnailUrl, filepath, true);
         return filepath;
     }
 
@@ -275,7 +275,7 @@ export class TwitterService {
         const config: TwitterUpdatePictureConfig = area.consequence.inputs as TwitterUpdatePictureConfig;
         const filepath = `${area._id}_image_twitter`;
 
-        Utils.DownloadUrl(config.nothing, filepath, true);
+        await Utils.DownloadUrl(config.nothing, filepath, true);
         return filepath;
     }
 
