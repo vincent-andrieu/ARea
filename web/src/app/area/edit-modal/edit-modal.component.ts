@@ -253,6 +253,8 @@ export class AReaEditModalComponent {
 
             if (param.type === ParameterType.DATETIME)
                 result[param.name] = (result[param.name] as Date).getTime().toString();
+            else if (param.type === ParameterType.NUMBER)
+                result[param.name] = (result[param.name] as number).toString();
         });
         return result as unknown as ActionConfig;
     }
@@ -266,6 +268,8 @@ export class AReaEditModalComponent {
 
             if (param.type === ParameterType.DATETIME)
                 result[param.name] = (result[param.name] as Date).getTime().toString();
+            else if (param.type === ParameterType.NUMBER)
+                result[param.name] = (result[param.name] as number).toString();
         });
         return result as unknown as ReactionConfig;
     }
