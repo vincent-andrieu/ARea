@@ -98,7 +98,7 @@ export class TwitterService {
         } catch (error: unknown) {
             const some_error = error as Error;
 
-            console.log(some_error);
+            console.error(some_error);
             return false;
         }
         return true;
@@ -115,7 +115,7 @@ export class TwitterService {
         } catch (error) {
             const some_error = error as Error;
 
-            console.log(some_error);
+            console.error(some_error);
         }
     }
 
@@ -131,7 +131,7 @@ export class TwitterService {
         } catch (error) {
             const some_error = error as Error;
 
-            console.log(some_error);
+            console.error(some_error);
         }
     }
 
@@ -147,7 +147,7 @@ export class TwitterService {
         } catch (error) {
             const some_error = error as Error;
 
-            console.log(some_error);
+            console.error(some_error);
         }
     }
 
@@ -247,15 +247,12 @@ export class TwitterService {
         } catch (error: unknown) {
             const some_error = error as Error;
 
-            console.log(some_error);
+            console.error(some_error);
             return;
         }
 
-        if (tweet) {
-            console.log("tweet will be :", tweet);
+        if (tweet)
             TwitterService.TweetATweet(tweet, user);
-        }
-
     }
     private static async rea_UnsplashPost(area: ARea): Promise<string> {
         const post: UnsplashPostResult = area.trigger.outputs as UnsplashPostResult;
@@ -301,15 +298,12 @@ export class TwitterService {
         } catch (error: unknown) {
             const some_error = error as Error;
 
-            console.log(some_error);
+            console.error(some_error);
             return;
         }
 
-        if (imagePath) {
-            console.log("new banner will be :", imagePath);
+        if (imagePath)
             TwitterService.UpdateProfileBanner(imagePath, user);
-        }
-
     }
 
     public static async rea_UpdatePP(area: ARea, user: User) {
@@ -333,14 +327,12 @@ export class TwitterService {
         } catch (error: unknown) {
             const some_error = error as Error;
 
-            console.log(some_error);
+            console.error(some_error);
             return;
         }
 
-        if (imagePath) {
-            console.log("new PP will be :", imagePath);
+        if (imagePath)
             await TwitterService.UpdateProfileImage(imagePath, user);
-        }
 
     }
 

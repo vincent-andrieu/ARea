@@ -59,7 +59,7 @@ export default class CronService {
                 try {
                     await this.executeAction(area, user);
                 } catch (error) {
-                    console.log(`Unable to execute action: area id: ${area._id}: ${error}`);
+                    console.error(`Unable to execute action: area id: ${area._id}: ${error}`);
                 }
             });
         });

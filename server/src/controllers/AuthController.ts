@@ -115,7 +115,7 @@ export default class AuthController {
                 await AuthController._userSchema.edit(user);
                 res.sendStatus(204);
             } catch (error: unknown) {
-                console.log("disconnectService: ", (error as Error).toString());
+                console.error("disconnectService: ", (error as Error).toString());
                 res.status(500).send((error as Error).toString());
             }
         else

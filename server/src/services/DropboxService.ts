@@ -21,7 +21,7 @@ export class DropboxService {
 
         readFile(filepath, (err, contents) => {
             if (err)
-                console.log("Error: ", err);
+                console.error("Error: ", err);
 
             if (!client)
                 return;
@@ -34,7 +34,7 @@ export class DropboxService {
                 .catch((error: unknown) => {
                     const uploadErr = error as Error/* <files.UploadError> */;
 
-                    console.log(uploadErr);
+                    console.error(uploadErr);
                 });
         });
     }
@@ -71,21 +71,12 @@ export class DropboxService {
             } case ActionType.UNSPLASH_RANDOM_POST: {
                 this.rea_unsplashUploadFile(area, user, configDropbox);
                 break;
-            } case ActionType.CRON: {
-                if (!configDropbox.localFilepath || !configDropbox.remoteFilepath)
-                    break;
-                this.uploadFile(user, configDropbox.localFilepath, configDropbox.remoteFilepath);
-                break;
-            } case ActionType.DATETIME: {
-                if (!configDropbox.localFilepath || !configDropbox.remoteFilepath)
-                    break;
-                this.uploadFile(user, configDropbox.localFilepath, configDropbox.remoteFilepath);
-                break;
             } case ActionType.TWITCH_STREAM: {
                 this.rea_twitchUplaodThumbnail(area, user, configDropbox);
                 break;
-            } default:
-                console.log("todo upload file from parameter given");
+            } default: {
+                console.log("Dropbox upload reaction has no compatible action");
+            }
         }
     }
 
