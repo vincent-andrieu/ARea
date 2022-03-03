@@ -28,27 +28,27 @@ export default class Reaction extends Model {
 
     public get label(): string {
         switch (this.type) {
-        case 'TWITTER_MSG':
-            return "Send message";
-        case 'TWITTER_BANNER':
-            return "Edit banner";
-        case 'TWITTER_PP':
-            return "Edit PP";
-        case 'DISCORD_MSG':
-            return "Send message";
-        case 'GITHUB_ISSUE':
-            return "Add issue";
-        case 'GITHUB_PULL':
-            return "Add pull request";
-        case 'NOTION_MSG':
-            return "Add message";
-        case 'DROPBOX_UPLOAD':
-            return "Upload";
+            case 'TWITTER_MSG':
+                return "Send message";
+            case 'TWITTER_BANNER':
+                return "Edit banner";
+            case 'TWITTER_PP':
+                return "Edit PP";
+            case 'DISCORD_MSG':
+                return "Send message";
+            case 'GITHUB_ISSUE':
+                return "Add issue";
+            case 'GITHUB_PULL':
+                return "Add pull request";
+            case 'NOTION_MSG':
+                return "Add message";
+            case 'DROPBOX_UPLOAD':
+                return "Upload";
 
-        default: {
-            console.error("Unknow reaction type:", this.type);
-            return "";
-        }
+            default: {
+                console.error("Unknow reaction type:", this.type);
+                return "";
+            }
         }
     }
 }

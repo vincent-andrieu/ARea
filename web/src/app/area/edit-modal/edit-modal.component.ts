@@ -204,10 +204,13 @@ export class AReaEditModalComponent {
     }
 
     private _onActionUpdate(action: Action): void {
-        action.parameters.forEach((param) =>
+        action.parameters.forEach((param) => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            this.form.setControl(action.service + '-' + action.type + '-actionParam-' + param.name, new FormControl(this.area ? (this.area.trigger.inputs as { [key: string]: any })[param.name] : undefined))
-        );
+            let value = this.area ? (this.area.trigger.inputs as { [key: string]: any })[param.name] : undefined;
+            if (param.type === ParameterType.DATETIME)
+                value = new Date((value as number) * 1);
+            this.form.setControl(action.service + '-' + action.type + '-actionParam-' + param.name, new FormControl(value));
+        });
     }
 
     // Reaction updates
@@ -253,6 +256,8 @@ export class AReaEditModalComponent {
 
             if (param.type === ParameterType.DATETIME)
                 result[param.name] = (result[param.name] as Date).getTime().toString();
+            else if (param.type === ParameterType.NUMBER)
+                result[param.name] = (result[param.name] as number).toString();
         });
         return result as unknown as ActionConfig;
     }
@@ -266,6 +271,8 @@ export class AReaEditModalComponent {
 
             if (param.type === ParameterType.DATETIME)
                 result[param.name] = (result[param.name] as Date).getTime().toString();
+            else if (param.type === ParameterType.NUMBER)
+                result[param.name] = (result[param.name] as number).toString();
         });
         return result as unknown as ReactionConfig;
     }

@@ -5,7 +5,7 @@ import User from "../classes/user.class";
 import ARea from "../classes/area.class";
 import { AReaSchema } from "@schemas/area.schema";
 import { GithubResult, RSSResult, TwitchStreamResult, TwitterTweetResult, UnsplashPostResult, DiscordMessageResult } from "@models/ActionResult";
-import { TwitterPostTweetConfig } from "@models/ReactionConfig";
+import { TwitterPostTweetConfig, TwitterUpdatePictureConfig } from "@models/ReactionConfig";
 import Action, { ActionType } from "@classes/action.class";
 import { Utils } from "./utils";
 import moment from "moment";
@@ -264,7 +264,15 @@ export class TwitterService {
         const stream: TwitchStreamResult = area.trigger.outputs as TwitchStreamResult;
         const filepath = `${stream.Username}_live_thumbnail`;
 
-        Utils.DownloadUrl(stream.StreamThumbnailUrl, filepath, true);
+        await Utils.DownloadUrl(stream.StreamThumbnailUrl, filepath, true);
+        return filepath;
+    }
+
+    private static async rea_DownloadDefault(area: ARea): Promise<string> {
+        const config: TwitterUpdatePictureConfig = area.consequence.inputs as TwitterUpdatePictureConfig;
+        const filepath = `${area._id}_image_twitter`;
+
+        await Utils.DownloadUrl(config.nothing, filepath, true);
         return filepath;
     }
 
@@ -285,7 +293,7 @@ export class TwitterService {
                 imagePath = await TwitterService.rea_TwitchStream(area);
                 break;
             default:
-                console.log("for this action create default banner");
+                imagePath = await TwitterService.rea_DownloadDefault(area);
             }
         } catch (error: unknown) {
             const some_error = error as Error;
@@ -314,7 +322,7 @@ export class TwitterService {
                 imagePath = await TwitterService.rea_TwitchStream(area);
                 break;
             default:
-                console.log("for this action create default pp"); // TODO: todo
+                imagePath = await TwitterService.rea_DownloadDefault(area);
             }
         } catch (error: unknown) {
             const some_error = error as Error;
@@ -324,7 +332,8 @@ export class TwitterService {
         }
 
         if (imagePath)
-            TwitterService.UpdateProfileImage(imagePath, user);
+            await TwitterService.UpdateProfileImage(imagePath, user);
+
     }
 
     public static parseProfileUser(json) {
