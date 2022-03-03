@@ -80,7 +80,7 @@ export default class TimeService {
                 return false;
             }
             if (timestamp > 0 && Date.now() >= timestamp) {
-                result.time = moment((area.trigger.inputs as DateTimeConfig).time).format("DD/MM/YYYY HH:mm");
+                result.time = moment(parseInt((area.trigger.inputs as DateTimeConfig).time)).format("DD/MM/YYYY HH:mm");
                 area.trigger.outputs = result;
                 (area.trigger.inputs as DateTimeConfig).time = "0";
                 this._areaSchema.edit(area); // disable action
