@@ -50,6 +50,7 @@ export class Utils {
     }
 
     public static async createCompressedImage(imagePath: string, sizeX = 250, sizeY = 250) {
+        sharp.cache(false);
         imagePath = `/tmp/${imagePath}`;
         if (existsSync(`${imagePath}.webp`))
             unlinkSync(`${imagePath}.webp`); //If the file already exist, delete it before download
@@ -65,6 +66,7 @@ export class Utils {
     }
 
     public static async convertImage(imagePath: string) {
+        sharp.cache(false);
         if (existsSync(`${imagePath}.webp`))
             unlinkSync(`${imagePath}.webp`); //If the file already exist, delete it before download
         try {
