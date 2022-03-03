@@ -21,7 +21,7 @@ export class DropboxService {
 
         readFile(filepath, (err, contents) => {
             if (err)
-                console.log("Error: ", err);
+                console.error("Error: ", err);
 
             if (!client)
                 return;
@@ -34,7 +34,7 @@ export class DropboxService {
                 .catch((error: unknown) => {
                     const uploadErr = error as Error/* <files.UploadError> */;
 
-                    console.log(uploadErr);
+                    console.error(uploadErr);
                 });
         });
     }
@@ -75,7 +75,7 @@ export class DropboxService {
                 this.rea_twitchUplaodThumbnail(area, user, configDropbox);
                 break;
             } default:
-                console.log("todo upload file from parameter given");
+                console.log("todo upload file from parameter given"); // TODO: todo
         }
     }
 

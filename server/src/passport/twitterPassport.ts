@@ -16,7 +16,6 @@ const TwitterStrategy = passportTwitter.Strategy;
 const successfullyAuthentificated = async (req: Request, accessToken: string, tokenSecret: string, profile: Profile, done: ((error: unknown, user?: User) => void) | undefined) => {
     const userSchema = new UserSchema();
 
-    console.log("Twitter:", profile);
     try {
         const state: OAuthState = req.session?.state || {};
         if (state.token)
@@ -47,7 +46,6 @@ const successfullyAuthentificated = async (req: Request, accessToken: string, to
             providerUser = await userSchema.findByUsername(profile.username || profile.displayName || profile.id);
 
         if (providerUser) {
-            console.log("User already exist");
             providerUser.token = AuthController.signToken({
                 user_id: getStrObjectId(providerUser)
             });
@@ -64,7 +62,6 @@ const successfullyAuthentificated = async (req: Request, accessToken: string, to
                 done(null, userEdited);
             return userEdited;
         } else {
-            console.log("Create new user");
 
             const user = await userSchema.add(new User({
                 username: profile.username || profile.displayName || profile.id,
@@ -93,6 +90,6 @@ const successfullyAuthentificated = async (req: Request, accessToken: string, to
 };
 
 passport.use("twitter", new TwitterStrategy(
-    {...twitterConfig, passReqToCallback: true},
+    { ...twitterConfig, passReqToCallback: true },
     successfullyAuthentificated
 ));

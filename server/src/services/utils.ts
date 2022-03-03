@@ -1,4 +1,4 @@
-import { createWriteStream , unlinkSync, existsSync} from "fs";
+import { createWriteStream, unlinkSync, existsSync } from "fs";
 import { env } from "process";
 import { Request } from "express";
 import ip from "ip";
@@ -26,9 +26,6 @@ export class Utils {
                 err["httpStatusCode"] = response.message.statusCode;
                 throw err;
             }
-            console.log("moncul");
-            console.log("url : ", url);
-            console.log("filepath : ", filepath);
 
             return new Promise((resolve, reject) => {
                 file.on("error", (err) => reject(err));
@@ -45,7 +42,7 @@ export class Utils {
         } catch (error) {
             const some_error = error as Error;
 
-            console.log(some_error);
+            console.error(some_error);
         }
     }
 
@@ -58,9 +55,9 @@ export class Utils {
                 .webp({ quality: 100 })
                 .resize(sizeX, sizeY)
                 .toFile(`${imagePath}.webp`);
-            console.log(`Compressed ${imagePath} !`);
+            // console.log(`Compressed ${imagePath} !`);
         } catch (error) {
-            console.log("createCompressedImage:", (error as Error).message);
+            console.error("createCompressedImage:", (error as Error).message);
         }
     }
 

@@ -35,7 +35,7 @@ export default class NotionService {
         } catch (error) {
             const some_error = error as Error;
 
-            console.log(some_error);
+            console.error(some_error);
         }
     }
 

@@ -17,7 +17,7 @@ export default class UserController {
 
             res.status(200).send(result.toRaw());
         } catch (error) {
-            console.log((error as Error).toString());
+            console.error((error as Error).toString());
             return res.status(400).send((error as Error).toString());
         }
     }

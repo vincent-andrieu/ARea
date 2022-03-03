@@ -16,7 +16,6 @@ const TwitchStrategy = passportTwitch.Strategy;
 const successfullyAuthentificated = async (req: Request, accessToken: string, refreshToken: string, profile: Profile, done?: (error: Error | null, user?: User) => void): Promise<User | undefined> => {
     const userSchema = new UserSchema();
 
-    console.log("Twitch:", profile);
     try {
         const state: OAuthState = JSON.parse(typeof req.query.state === "string" ? req.query.state : "{}");
         if (state.token)
@@ -47,7 +46,6 @@ const successfullyAuthentificated = async (req: Request, accessToken: string, re
             providerUser = await userSchema.findByUsername(profile.email || profile.login || profile.display_name);
 
         if (providerUser) {
-            console.log("User already exist");
             const token = AuthController.signToken({
                 user_id: getStrObjectId(providerUser)
             });
@@ -66,7 +64,6 @@ const successfullyAuthentificated = async (req: Request, accessToken: string, re
                 done(null, user);
             return user;
         } else {
-            console.log("Create new user");
 
             const user = await userSchema.add(new User({
                 username: profile.email || profile.login || profile.display_name,
@@ -88,7 +85,7 @@ const successfullyAuthentificated = async (req: Request, accessToken: string, re
             return userEdited;
         }
     } catch (error) {
-        console.log("twitchStrategy callback error: ", (error as Error).toString());
+        console.error("twitchStrategy callback error: ", (error as Error).toString());
         if (done)
             done(error as Error);
         return undefined;

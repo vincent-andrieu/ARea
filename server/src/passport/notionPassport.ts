@@ -16,7 +16,6 @@ import { OAuthState } from "routes/authRoutes";
 const successfullyAuthentificated = async (req: Request, accessToken: string, _: unknown, oauthData: NotionOAuthToken, profile: GetUserResponse, done?: (err: Error | undefined, user?: User, info?: unknown) => void): Promise<User | undefined> => {
     const userSchema = new UserSchema();
 
-    console.log("Notion:", profile);
     try {
         if (profile.type !== "person")
             throw "Invalid Notion user: " + profile.type;
@@ -48,7 +47,6 @@ const successfullyAuthentificated = async (req: Request, accessToken: string, _:
             providerUser = await userSchema.findByUsername(profile.person.email || profile.name || profile.id);
 
         if (providerUser) {
-            console.log("User already exist");
             providerUser.token = AuthController.signToken({
                 user_id: getStrObjectId(providerUser)
             });
@@ -65,7 +63,6 @@ const successfullyAuthentificated = async (req: Request, accessToken: string, _:
                 done(undefined, user);
             return user;
         } else {
-            console.log("Create new user");
 
             const user = await userSchema.add(new User({
                 username: profile.person.email || profile.name || profile.id,

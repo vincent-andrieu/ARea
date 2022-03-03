@@ -141,7 +141,7 @@ export default class githubService {
         } catch (error: unknown) {
             const some_error = error as Error;
 
-            console.log(some_error);
+            console.error(some_error);
             return false;
         }
         return true;
@@ -315,7 +315,7 @@ export default class githubService {
         } catch (error: unknown) {
             const some_error = error as Error;
 
-            console.log(some_error);
+            console.error(some_error);
             return;
         }
     }
@@ -341,7 +341,7 @@ export default class githubService {
         } catch (error: unknown) {
             const some_error = error as Error;
 
-            console.log(some_error);
+            console.error(some_error);
             return false;
         }
         return true;
@@ -515,7 +515,7 @@ export default class githubService {
         } catch (error: unknown) {
             const some_error = error as Error;
 
-            console.log(some_error);
+            console.error(some_error);
             return;
         }
     }
