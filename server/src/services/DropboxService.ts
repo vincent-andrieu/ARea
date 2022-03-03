@@ -71,16 +71,6 @@ export class DropboxService {
             } case ActionType.UNSPLASH_RANDOM_POST: {
                 this.rea_unsplashUploadFile(area, user, configDropbox);
                 break;
-            } case ActionType.CRON: {
-                if (!configDropbox.localFilepath || !configDropbox.remoteFilepath)
-                    break;
-                this.uploadFile(user, configDropbox.localFilepath, configDropbox.remoteFilepath);
-                break;
-            } case ActionType.DATETIME: {
-                if (!configDropbox.localFilepath || !configDropbox.remoteFilepath)
-                    break;
-                this.uploadFile(user, configDropbox.localFilepath, configDropbox.remoteFilepath);
-                break;
             } case ActionType.TWITCH_STREAM: {
                 this.rea_twitchUplaodThumbnail(area, user, configDropbox);
                 break;
