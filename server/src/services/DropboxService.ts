@@ -74,8 +74,9 @@ export class DropboxService {
             } case ActionType.TWITCH_STREAM: {
                 this.rea_twitchUplaodThumbnail(area, user, configDropbox);
                 break;
-            } default:
-                console.log("todo upload file from parameter given"); // TODO: todo
+            } default: {
+                console.log("Dropbox upload reaction has no compatible action");
+            }
         }
     }
 
