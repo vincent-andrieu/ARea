@@ -25,7 +25,7 @@
     "type": "TWITTER_BANNER",
     "parameters": [
       {
-        "name": "noting",
+        "name": "nothing",
         "label": "URL",
         "type": "URL"
       }
