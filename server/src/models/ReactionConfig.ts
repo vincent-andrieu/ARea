@@ -30,7 +30,7 @@ export interface GithubCreatePullRequestConfig {
     body?: string;
     currentBranch: string;
     pullingBranch: string;
-    maintainer_can_modify?: boolean;
+    maintainer_can_modify?: boolean | number;
 }
 
 export interface NotionAddMessageConfig {
