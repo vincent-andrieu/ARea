@@ -16,7 +16,6 @@ const DropboxStrategy = passportDropbox.Strategy;
 async function successfullyAuthentificated(req: Request, accessToken: string, refreshToken: string, profile: Profile, done?: (err?: Error | null, user?: User, info?: object) => void): Promise<User | undefined> {
     const userSchema = new UserSchema();
 
-    console.log("Dropbox:", profile);
     try {
         const state: OAuthState = JSON.parse(typeof req.query.state === "string" ? req.query.state : "{}");
         if (state.token)
@@ -47,7 +46,6 @@ async function successfullyAuthentificated(req: Request, accessToken: string, re
             providerUser = await userSchema.findByUsername(profile._json.email || profile.username || profile.displayName || profile.id);
 
         if (providerUser) {
-            console.log("User already exist");
             providerUser.token = AuthController.signToken({
                 user_id: getStrObjectId(providerUser)
             });
@@ -65,7 +63,6 @@ async function successfullyAuthentificated(req: Request, accessToken: string, re
                 done(null, user);
             return user;
         } else {
-            console.log("Create new user");
 
             const user = await userSchema.add(new User({
                 username: profile._json.email || profile.username || profile.displayName || profile.id,

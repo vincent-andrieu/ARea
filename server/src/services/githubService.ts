@@ -4,7 +4,6 @@ import { Octokit } from "octokit";
 // import User from "@classes/user.class";
 import ARea from "@classes/area.class";
 import { DateTimeResult, DiscordMessageResult, GithubResult, RSSResult, TwitchStreamResult, TwitterTweetResult, UnsplashPostResult } from "@models/ActionResult";
-import { GithubIssueConfig, GithubPullReqConfig } from "@models/ActionConfig";
 import User from "@classes/user.class";
 import Action, { ActionType } from "@classes/action.class";
 import { GithubCreateIssueConfig, GithubCreatePullRequestConfig } from "@models/ReactionConfig";
@@ -35,7 +34,7 @@ export default class githubService {
         const last: GithubResult = area.trigger.outputs as GithubResult;
 
         if (!last || !last.lastId)
-            return false;
+            return true;
         if (last.lastId === id)
             return false;
         return true;
@@ -47,7 +46,7 @@ export default class githubService {
         result.lastId = pr.id;
         result.owner = owner;
         result.repository = repo;
-        result.url = pr.url;
+        result.url = pr.html_url;
         result.id = pr.id;
         result.number = pr.number;
         result.state = pr.state;
@@ -142,7 +141,7 @@ export default class githubService {
         } catch (error: unknown) {
             const some_error = error as Error;
 
-            console.log(some_error);
+            console.error(some_error);
             return false;
         }
         return true;
@@ -225,9 +224,9 @@ export default class githubService {
         config.title += "New stream by " + actionResult.Username + "\n";
         config.body += "Playing : " + actionResult.StreamGame + "\n";
         config.body += "Stream title : " + actionResult.StreamTitle + "\n";
-        config.body += "Number of viewers : " + actionResult.StreamViewers.toString + "\n";
+        config.body += "Number of viewers : " + actionResult.StreamViewers.toString() + "\n";
         config.body += "Speaking : " + actionResult.StreamLanguage + "\n";
-        config.body += "Stream thumbnail" + actionResult.StreamThumbnailUrl + "\n";
+        config.body += "Stream thumbnail ![url](" + actionResult.StreamThumbnailUrl + ")\n";
         return config;
     }
 
@@ -271,6 +270,7 @@ export default class githubService {
         config.body += "Post desctiption : " + actionResult.description + "\n";
         config.body += "Timestamp : " + time + "\n";
         config.body += "Number of likes : " + actionResult.likes + "\n";
+        config.body += "Link to the post : " + actionResult.link + "\n";
         return config;
     }
 
@@ -315,7 +315,7 @@ export default class githubService {
         } catch (error: unknown) {
             const some_error = error as Error;
 
-            console.log(some_error);
+            console.error(some_error);
             return;
         }
     }
@@ -336,12 +336,12 @@ export default class githubService {
                 body: config.body,
                 head: config.currentBranch,
                 base: config.pullingBranch,
-                maintainer_can_modify: config.maintainer_can_modify
+                maintainer_can_modify: config.maintainer_can_modify ? true : false
             });
         } catch (error: unknown) {
             const some_error = error as Error;
 
-            console.log(some_error);
+            console.error(some_error);
             return false;
         }
         return true;
@@ -393,7 +393,7 @@ export default class githubService {
 
         if (!config.title)
             config.title = "";
-        config.title += actionResult.title;
+        config.title += ` ${actionResult.title}`;
         if (!config.body)
             config.body = "";
         else
@@ -421,12 +421,12 @@ export default class githubService {
             config.body = "";
         else
             config.body += "\n";
-        config.title += "New stream by " + actionResult.Username + "\n";
+        config.title += " New stream by " + actionResult.Username + "\n";
         config.body += "Playing : " + actionResult.StreamGame + "\n";
         config.body += "Stream title : " + actionResult.StreamTitle + "\n";
-        config.body += "Number of viewers : " + actionResult.StreamViewers.toString + "\n";
+        config.body += "Number of viewers : " + actionResult.StreamViewers.toString() + "\n";
         config.body += "Speaking : " + actionResult.StreamLanguage + "\n";
-        config.body += "Stream thumbnail" + actionResult.StreamThumbnailUrl + "\n";
+        config.body += "Stream thumbnail ![url](" + actionResult.StreamThumbnailUrl + ")\n";
         return config;
     }
 
@@ -470,41 +470,42 @@ export default class githubService {
         config.body += "Post desctiption : " + actionResult.description + "\n";
         config.body += "Timestamp : " + time + "\n";
         config.body += "Number of likes : " + actionResult.likes + "\n";
+        config.body += "Link to the post : " + actionResult.link + "\n";
         return config;
     }
 
     public static async rea_CreatePullRequest(area: ARea, user: User) {
         const action: Action = area.trigger.action as Action;
-        const config = area.consequence.inputs as GithubCreatePullRequestConfig;
+        let config = area.consequence.inputs as GithubCreatePullRequestConfig;
 
         try {
             switch (action.type) {
                 case ActionType.DATETIME:
-                    this.rea_dateTimePullReq(area, config);
+                    config = this.rea_dateTimePullReq(area, config);
                     break;
                 case ActionType.DISCORD_MSG:
-                    this.rea_discordPullReq(area, config);
+                    config = this.rea_discordPullReq(area, config);
                     break;
                 case ActionType.GITHUB_ISSUE:
-                    this.rea_githubIssuePullReq(area, config);
+                    config = this.rea_githubIssuePullReq(area, config);
                     break;
                 case ActionType.GITHUB_PULL_REQ:
-                    this.rea_githubPullReqPullReq(area, config);
+                    config = this.rea_githubPullReqPullReq(area, config);
                     break;
                 case ActionType.RSS_ENTRY:
-                    this.rea_RSSPullReq(area, config);
+                    config = this.rea_RSSPullReq(area, config);
                     break;
                 case ActionType.TWITCH_STREAM:
-                    this.rea_twitchPullReq(area, config);
+                    config = this.rea_twitchPullReq(area, config);
                     break;
                 case ActionType.TWITTER_MSG:
-                    this.rea_twitterMsgPullReq(area, config);
+                    config = this.rea_twitterMsgPullReq(area, config);
                     break;
                 case ActionType.UNSPLASH_POST:
-                    this.rea_unsplashPostPullReq(area, config);
+                    config = this.rea_unsplashPostPullReq(area, config);
                     break;
                 case ActionType.UNSPLASH_RANDOM_POST:
-                    this.rea_unsplashPostPullReq(area, config);
+                    config = this.rea_unsplashPostPullReq(area, config);
                     break;
                 default:
                     console.log("Default action");
@@ -514,7 +515,7 @@ export default class githubService {
         } catch (error: unknown) {
             const some_error = error as Error;
 
-            console.log(some_error);
+            console.error(some_error);
             return;
         }
     }

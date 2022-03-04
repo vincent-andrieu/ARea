@@ -12,7 +12,7 @@ COPY ./package-lock.json /app/
 COPY ./src/ /app/src/
 
 RUN rm package-lock.json
-RUN npm i
+RUN npm i --only=prod
 RUN npm run build
 
 FROM nginx:1.21.5-alpine

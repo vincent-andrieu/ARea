@@ -44,7 +44,8 @@ describe("UnsplashService", () => {
             lastPostId: "",
             created_at: "",
             description: "",
-            likes: 0
+            likes: 0,
+            link: "",
         };
         const twitterConfig: TwitterPostTweetConfig = { message: "" };
         const reaction: Reaction = { type: ReactionType.TWITTER_MSG, parameters: [], service: ServiceType.TWITTER };

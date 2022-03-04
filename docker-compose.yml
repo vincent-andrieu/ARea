@@ -8,16 +8,16 @@ services:
         volumes:
             - client:/usr/share/nginx/html/assets/client
         depends_on:
-            # - client_mobile
+            - client_mobile
             - server
         restart: always
 
-    # client_mobile:
-    #     build: mobile
-    #     environment:
-    #         MOBILE_APP_FILEPATH: /app/client/area_mobile.apk
-    #     volumes:
-    #         - client:/app/client
+    client_mobile:
+        build: mobile
+        environment:
+            MOBILE_APP_FILEPATH: /app/client/area_mobile.apk
+        volumes:
+            - client:/app/client
 
     server:
         build: server

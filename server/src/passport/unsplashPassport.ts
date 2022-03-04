@@ -16,7 +16,6 @@ const UnsplashStrategy = Unsplash.Strategy;
 async function successfullyAuthentificated(req: Request, accessToken: string, refreshToken: string, profile: Profile, done?: (error: Error | null, user?: User) => void): Promise<User | undefined> {
     const userSchema = new UserSchema();
 
-    console.log("Unsplash:", profile);
     try {
         const state: OAuthState = JSON.parse(typeof req.query.state === "string" ? req.query.state : "{}");
         if (state.token)
@@ -47,7 +46,6 @@ async function successfullyAuthentificated(req: Request, accessToken: string, re
             providerUser = await userSchema.findByUsername(profile.email || profile.username || profile._json.name || profile.id);
 
         if (providerUser) {
-            console.log("User already exist");
 
             const token = AuthController.signToken({
                 user_id: getStrObjectId(providerUser)
@@ -66,7 +64,6 @@ async function successfullyAuthentificated(req: Request, accessToken: string, re
                 done(null, userEdited);
             return userEdited;
         } else {
-            console.log("Create new user");
 
             const user = await userSchema.add(new User({
                 username: profile.email || profile.username || profile._json.name || profile.id,
@@ -95,6 +92,6 @@ async function successfullyAuthentificated(req: Request, accessToken: string, re
 }
 
 passport.use("unsplash", new UnsplashStrategy(
-    {...unsplashConfig, passReqToCallback: true},
+    { ...unsplashConfig, passReqToCallback: true },
     successfullyAuthentificated
 ));

@@ -1,4 +1,4 @@
-import { createWriteStream } from "fs";
+import { createWriteStream, unlinkSync, existsSync } from "fs";
 import { env } from "process";
 import { Request } from "express";
 import ip from "ip";
@@ -15,7 +15,10 @@ export class Utils {
         try {
             const client = new HttpClient("clientTest");
             const response = await client.get(url);
-            filepath = `/tmp/${filepath}`;
+            if (!filepath.startsWith("/tmp/"))
+                filepath = `/tmp/${filepath}`;
+            if (existsSync(filepath))
+                unlinkSync(filepath); //If the file already exist, delete it before download
             const file: NodeJS.WritableStream = createWriteStream(filepath);
 
             if (response.message.statusCode !== 200) {
@@ -23,37 +26,46 @@ export class Utils {
                 err["httpStatusCode"] = response.message.statusCode;
                 throw err;
             }
+
             return new Promise((resolve, reject) => {
                 file.on("error", (err) => reject(err));
                 const stream = response.message.pipe(file);
                 stream.on("close", () => {
                     if (convert)
                         this.convertImage(filepath).then(
-                            () => {resolve(filepath);}
+                            () => resolve(filepath)
                         );
+                    else
+                        resolve(filepath);
                 });
             });
         } catch (error) {
             const some_error = error as Error;
 
-            console.log(some_error);
+            console.error(some_error);
         }
     }
 
     public static async createCompressedImage(imagePath: string, sizeX = 250, sizeY = 250) {
+        sharp.cache(false);
         imagePath = `/tmp/${imagePath}`;
+        if (existsSync(`${imagePath}.webp`))
+            unlinkSync(`${imagePath}.webp`); //If the file already exist, delete it before download
         try {
             await sharp(imagePath)
                 .webp({ quality: 100 })
                 .resize(sizeX, sizeY)
                 .toFile(`${imagePath}.webp`);
-            console.log(`Compressed ${imagePath} !`);
+            // console.log(`Compressed ${imagePath} !`);
         } catch (error) {
-            console.log("createCompressedImage:", (error as Error).message);
+            console.error("createCompressedImage:", (error as Error).message);
         }
     }
 
     public static async convertImage(imagePath: string) {
+        sharp.cache(false);
+        if (existsSync(`${imagePath}.webp`))
+            unlinkSync(`${imagePath}.webp`); //If the file already exist, delete it before download
         try {
             await sharp(imagePath)
                 .toFile(`${imagePath}.webp`);

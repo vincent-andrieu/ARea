@@ -1,5 +1,5 @@
 export interface DateTimeResult {
-    time: number; // timestamp
+    time: string; // timestamp
 }
 
 export interface TimeResult {
@@ -66,6 +66,7 @@ export interface UnsplashPostResult {
     created_at: string;
     description: string;
     likes: number;
+    link: string;
 }
 
 export type ActionResult = DateTimeResult | TimeResult

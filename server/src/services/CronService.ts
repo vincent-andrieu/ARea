@@ -59,7 +59,7 @@ export default class CronService {
                 try {
                     await this.executeAction(area, user);
                 } catch (error) {
-                    console.log(`Unable to execute action: area id: ${area._id}: ${error}`);
+                    console.error(`Unable to execute action: area id: ${area._id}: ${error}`);
                 }
             });
         });
@@ -149,10 +149,9 @@ export default class CronService {
             case ReactionType.TWITTER_PP:
                 TwitterService.rea_UpdatePP(area, user);
                 break;
-            case ReactionType.DISCORD_MSG: {
+            case ReactionType.DISCORD_MSG:
                 DiscordService.rea_Message(area, user);
                 break;
-            }
             case ReactionType.GITHUB_ISSUE:
                 githubService.rea_CreateIssue(area, user);
                 break;

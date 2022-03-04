@@ -104,7 +104,7 @@ export default class AreaController {
                 res.status(400).send("Invalid body: action reaction");
             }
         } catch (error) {
-            console.log("[AreaController] create :", (error as Error).toString());
+            console.error("[AreaController] create :", (error as Error).toString());
             res.status(400).send((error as Error).toString());
         }
     }

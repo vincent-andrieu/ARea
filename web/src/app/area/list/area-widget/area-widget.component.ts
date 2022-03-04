@@ -3,7 +3,7 @@ import * as moment from 'moment';
 
 import ARea, { AReaConsequence, AReaTrigger } from "@classes/area.class";
 import { DateTimeConfig, DiscordMessageConfig, GithubIssueConfig, GithubPullReqConfig, RSSConfig, TimeConfig, TwitchStreamConfig, TwitterTweetConfig, UnsplashPostConfig } from "@classes/model/ActionConfig";
-import { DiscordPostMsgConfig, DropboxUploadConfig, GithubCreateIssueConfig, LinkedinPostConfig, NotionAddMessageConfig, TwitterPostTweetConfig, TwitterUpdatePictureConfig } from "@classes/model/ReactionConfig";
+import { DiscordPostMsgConfig, DropboxUploadConfig, GithubCreateIssueConfig, GithubCreatePullRequestConfig, NotionAddMessageConfig, TwitterPostTweetConfig, TwitterUpdatePictureConfig } from "@classes/model/ReactionConfig";
 import { AuthService } from "@services/auth.service";
 import { isObjectId } from "utils";
 import { ServiceType } from "@classes/model/ServiceType";
@@ -89,12 +89,12 @@ export class AreaWidgetComponent implements OnInit {
             return (consequence.inputs as TwitterUpdatePictureConfig).nothing;
         case 'TWITTER_PP':
             return (consequence.inputs as TwitterUpdatePictureConfig).nothing;
-        case 'LINKEDIN_MSG':
-            return (consequence.inputs as LinkedinPostConfig).message;
         case 'DISCORD_MSG':
             return (consequence.inputs as DiscordPostMsgConfig).message;
         case 'GITHUB_ISSUE':
             return (consequence.inputs as GithubCreateIssueConfig).owner + "/" + (consequence.inputs as GithubCreateIssueConfig).repository;
+        case 'GITHUB_PULL':
+            return (consequence.inputs as GithubCreatePullRequestConfig).owner + "/" + (consequence.inputs as GithubCreatePullRequestConfig).repository;
         case 'NOTION_MSG':
             return (consequence.inputs as NotionAddMessageConfig).urlPage;
         case 'DROPBOX_UPLOAD':

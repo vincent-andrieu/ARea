@@ -7,6 +7,8 @@ import CronService from "./CronService";
 import { ObjectId } from "@classes/model.class";
 import { ActionType } from "@classes/action.class";
 import { UserSchema } from "@schemas/user.schema";
+import { DateTimeResult } from "@models/ActionResult";
+import moment from "moment";
 
 interface TaskItem {
     task: cron.ScheduledTask;
@@ -71,12 +73,15 @@ export default class TimeService {
     static evalDatetime = (area: ARea): boolean => {
         try {
             const timestamp: number | undefined = parseInt((area.trigger.inputs as DateTimeConfig)?.time);
+            const result: DateTimeResult = ({} as DateTimeResult);
 
             if (timestamp == undefined || isNaN(timestamp)) {
                 console.error("TimeService::evalDatetime invalid area inputs.");
                 return false;
             }
             if (timestamp > 0 && Date.now() >= timestamp) {
+                result.time = moment(parseInt((area.trigger.inputs as DateTimeConfig).time)).format("DD/MM/YYYY HH:mm");
+                area.trigger.outputs = result;
                 (area.trigger.inputs as DateTimeConfig).time = "0";
                 this._areaSchema.edit(area); // disable action
                 return true;

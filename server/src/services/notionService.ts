@@ -35,7 +35,7 @@ export default class NotionService {
         } catch (error) {
             const some_error = error as Error;
 
-            console.log(some_error);
+            console.error(some_error);
         }
     }
 
@@ -108,6 +108,7 @@ export default class NotionService {
         line += "description : " + unsplash.description + "\n";
         line += "Actual number of likes : " + unsplash.likes + "\n";
         line += "Creation time : " + time + "\n";
+        line += "Link to the post : " + unsplash.link + "\n";
         return line;
     }
 

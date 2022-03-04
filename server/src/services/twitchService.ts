@@ -27,6 +27,8 @@ export class TwitchService {
         result.Username = stream.userDisplayName;
         result.StreamLanguage = stream.language;
         result.StreamThumbnailUrl = stream.thumbnailUrl;
+        result.StreamThumbnailUrl = result.StreamThumbnailUrl.replace("{width}", "1920");
+        result.StreamThumbnailUrl = result.StreamThumbnailUrl.replace("{height}", "1080");
         result.StreamViewers = stream.viewers;
         area.trigger.outputs = result;
         await TwitchService._areaSchema.edit(area);
@@ -45,15 +47,15 @@ export class TwitchService {
                 await TwitchService._areaSchema.edit(area);
                 return false;
             }
-            await this.areaSetStreamInfos(area, stream);
             if (area.trigger.outputs && (area.trigger.outputs as TwitchStreamResult).StreamGame) {
-                console.log("Stream already launch.");
+                await this.areaSetStreamInfos(area, stream);
                 return false;
             }
+            await this.areaSetStreamInfos(area, stream);
         } catch (error) {
             const some_error = error as Error;
 
-            console.log(some_error.toString());
+            console.error(some_error);
             return false;
         }
         return true;

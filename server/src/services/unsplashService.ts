@@ -36,6 +36,8 @@ export default class unsplashService {
         if (post.description)
             result.description = post.description;
         result.likes = post.likes;
+        result.link = post.links.html;
+        result.username = post.user.username;
         area.trigger.outputs = result;
         await unsplashService._areaSchema.edit(area);
     }
@@ -55,19 +57,10 @@ export default class unsplashService {
             const pic = await unsplash.photos.get({ photoId: pics.response?.results[0].id });
             if (!pic.response?.links.download)
                 return false;
-            //ONLY LOG FOR DEBUG
-            pics.response?.results.map((elem) => {
-                console.log("Fetch image:");
-                console.log(elem.id);
-                console.log(elem.urls.raw);
-            });
             if (!unsplashService.IsNewPost(area, pics.response?.results[0].id)) {
-                console.log("Not a new post");
                 await this.setDownloadInfos(area, downloadPath, pic.response);
                 return false;
             }
-            console.log("It's a new post: ", pic.response?.links.download);
-            console.log("Downloaded at: ", downloadPath);
             const dlPic = await unsplash.photos.trackDownload({ downloadLocation: pic.response?.links.download });
             if (!dlPic.response?.url)
                 return false;
@@ -76,7 +69,7 @@ export default class unsplashService {
         } catch (error) {
             const some_error = error as Error;
 
-            console.log(some_error);
+            console.error(some_error);
             return false;
         }
         return true;
@@ -103,11 +96,11 @@ export default class unsplashService {
             if (!dlPic.response?.url)
                 return false;
             await Utils.DownloadUrl(dlPic.response?.url, downloadPath, true);
-            this.setDownloadInfos(area, downloadPath, pic.response);
+            await this.setDownloadInfos(area, downloadPath, pic.response);
         } catch (error) {
             const some_error = error as Error;
 
-            console.log(some_error);
+            console.error(some_error);
             return false;
         }
         return true;

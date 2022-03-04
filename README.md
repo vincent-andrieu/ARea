@@ -204,6 +204,7 @@ There are also several endpoints used to register or login the user on the appli
 	- Action: When a CRON schedule condition is true
 - Unsplash
 	- Action: When an user post a new picture
+	- Action: Get a random post
 
 # User manual
 

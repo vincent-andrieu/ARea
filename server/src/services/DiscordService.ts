@@ -137,6 +137,7 @@ export default class DiscordService {
         let line = "";
 
         line += "New unsplash post by : " + unsplash.name + " " + unsplash.lastname + "\n";
+        line += "Link to the post : " + unsplash.link + "\n";
         line += "description : " + unsplash.description + "\n";
         line += "Actual number of likes : " + unsplash.likes + "\n";
         line += "Creation time : " + time + "\n";
