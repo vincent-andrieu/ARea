@@ -156,6 +156,7 @@ class _TestListState extends State<TestList> {
                   } else {
                     listChild = getChildListReaction(textChild.text);
                   }
+                  actionParameter.tools = null;
                   actionParameter.setService(
                       textChild.text, controllerSecond.text);
                 });
@@ -211,6 +212,7 @@ class _TestListState extends State<TestList> {
               onChanged: (String? newValue) {
                 setState(() {
                   controllerSecond.text = newValue!;
+                  actionParameter.tools = null;
                   actionParameter.setService(
                       textChild.text, controllerSecond.text);
                 });
