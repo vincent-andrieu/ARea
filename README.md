@@ -51,6 +51,9 @@ figured
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
 # Usages
+
+You should complete the ```server/.env``` file with all the api keys.
+
 To start the program, run at the root of the project:
 > docker-compose up
 
